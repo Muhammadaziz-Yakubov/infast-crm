@@ -11,10 +11,15 @@ const setupSecurity = require('./middleware/security');
 const logger = require('./utils/logger');
 const startPaymentChecker = require('./cron/paymentChecker');
 
+const cors = require('cors');
+
 // MongoDB Connection
 connectDB();
 
 const app = express();
+
+// Trust proxy for Render/Vercel (required for rate limiter to use real IP)
+app.set('trust proxy', 1);
 
 // Performance Optimization
 app.use(compression());
@@ -26,11 +31,33 @@ if (config.env === 'development') {
     app.use(morgan('combined', { stream: { write: (message) => logger.http(message.trim()) } }));
 }
 
-// Security & Body Parsing
-setupSecurity(app);
-app.use(express.json({ limit: '10kb' })); // Body limit to prevent large JSON attacks
+// Enable CORS early!
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://infasteducrm.vercel.app'
+];
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(...process.env.FRONTEND_URL.split(',').map(u => u.trim()));
+}
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        return callback(null, true); // Verceldan kelgan so'rovlarga ulanishga ruxsat
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+}));
+
+// Body Parsing - MUST BE BEFORE SANITIZERS!
+app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
+
+// Security Middlewares
+setupSecurity(app);
 
 // Static folder (for uploaded files if any)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
