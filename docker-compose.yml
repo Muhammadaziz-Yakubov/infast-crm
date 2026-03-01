@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: infast_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - infast_network
+
+  redis:
+    image: redis:alpine
+    container_name: infast_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - infast_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: infast_backend
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/infastnewcrm
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET:-your_default_jwt_secret}
+      - JWT_EXPIRE=7d
+      - ENABLE_REDIS=true
+    volumes:
+      - ./backend/logs:/app/logs
+    networks:
+      - infast_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: infast_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - infast_network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+
+networks:
+  infast_network:
+    driver: bridge

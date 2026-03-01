@@ -1,0 +1,159 @@
+const { Upload } = require('@aws-sdk/lib-storage');
+const r2Client = require('../config/r2');
+const Task = require('../models/Task');
+const Submission = require('../models/Submission');
+const Student = require('../models/Student');
+const Group = require('../models/Group');
+const path = require('path');
+
+// R2 Upload helper
+const uploadToR2 = async (file, folder = 'tasks') => {
+    const fileName = `${folder}/${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
+    const upload = new Upload({
+        client: r2Client,
+        params: {
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: fileName,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+        },
+    });
+
+    await upload.done();
+    const publicUrl = `${process.env.R2_PUBLIC_URL}/${fileName}`;
+    return publicUrl;
+};
+
+// --- ADMIN CONTROLLERS ---
+
+// Create Task
+exports.createTask = async (req, res) => {
+    try {
+        const { title, description, maxScore, deadline, groupId } = req.body;
+
+        let imageUrl = '';
+        if (req.file) {
+            imageUrl = await uploadToR2(req.file, 'task-covers');
+        }
+
+        const task = await Task.create({
+            title,
+            description,
+            maxScore,
+            deadline,
+            group: groupId,
+            image: imageUrl,
+            creator: req.user._id
+        });
+
+        res.status(201).json({
+            success: true,
+            data: task
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// Get Submissions for a Task
+exports.getTaskSubmissions = async (req, res) => {
+    try {
+        const submissions = await Submission.find({ task: req.params.taskId })
+            .populate('student', 'ism telefon username')
+            .sort('-submittedAt');
+
+        res.json({
+            success: true,
+            data: submissions
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// Grade Submission
+exports.gradeSubmission = async (req, res) => {
+    try {
+        const { score } = req.body;
+        const submission = await Submission.findByIdAndUpdate(
+            req.params.id,
+            { score, status: 'graded' },
+            { new: true }
+        );
+
+        res.json({
+            success: true,
+            data: submission
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// --- STUDENT CONTROLLERS ---
+
+// Get Tasks (Admin sees all, Student sees their group's)
+exports.getMyTasks = async (req, res) => {
+    try {
+        let tasks;
+        if (req.user.role === 'student') {
+            // Find tasks for current student's group
+            tasks = await Task.find({ group: req.user.guruh }).sort('-createdAt');
+
+            // Check if student has submitted for each task
+            const submissions = await Submission.find({ student: req.user._id });
+
+            tasks = tasks.map(task => {
+                const submission = submissions.find(s => s.task.toString() === task._id.toString());
+                return {
+                    ...task.toObject(),
+                    submission: submission || null,
+                    isSubmitted: !!submission
+                };
+            });
+        } else {
+            // Admin sees all tasks
+            tasks = await Task.find().populate('group', 'nomi').sort('-createdAt');
+            console.log("Admin tasks found:", tasks.length);
+        }
+
+        res.json({
+            success: true,
+            data: tasks
+        });
+    } catch (error) {
+        console.error("Error in getMyTasks:", error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// Submit Task (Student)
+exports.submitTask = async (req, res) => {
+    try {
+        const { taskId, comment } = req.body;
+
+        // Multi-file upload
+        const imageUrls = [];
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const url = await uploadToR2(file, 'submissions');
+                imageUrls.push(url);
+            }
+        }
+
+        const submission = await Submission.create({
+            task: taskId,
+            student: req.user._id,
+            images: imageUrls,
+            comment,
+            status: 'pending'
+        });
+
+        res.status(201).json({
+            success: true,
+            data: submission
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
