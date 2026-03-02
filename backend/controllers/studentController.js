@@ -189,6 +189,27 @@ exports.deleteStudent = async (req, res) => {
     }
 };
 
+// @desc    Bir necha o'quvchini birdan o'chirish
+// @route   POST /api/students/bulk-delete
+exports.bulkDeleteStudents = async (req, res) => {
+    try {
+        const { ids } = req.body;
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ success: false, message: "O'quvchilar tanlanmagan" });
+        }
+
+        const result = await Student.deleteMany({ _id: { $in: ids } });
+
+        res.json({
+            success: true,
+            message: `${result.deletedCount} ta o'quvchi muvaffaqiyatli o'chirildi`,
+            deletedCount: result.deletedCount
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi' });
+    }
+};
+
 // @desc    Qarzdorlar ro'yxati
 // @route   GET /api/students/debtors/list
 exports.getDebtors = async (req, res) => {

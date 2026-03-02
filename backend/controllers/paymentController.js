@@ -94,6 +94,56 @@ exports.createPayment = async (req, res) => {
     }
 };
 
+// @desc    Bir necha o'quvchiga birdan to'lov qilish
+// @route   POST /api/payments/bulk
+exports.bulkCreatePayment = async (req, res) => {
+    try {
+        const { studentIds, tolovTuri, izoh } = req.body;
+        if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
+            return res.status(400).json({ success: false, message: "O'quvchilar tanlanmagan" });
+        }
+
+        const now = new Date();
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const studentId of studentIds) {
+            try {
+                const student = await Student.findById(studentId).populate('kurs', 'narx');
+                if (!student) { failCount++; continue; }
+
+                const summa = student.oylikTolov || student.kurs?.narx || 0;
+
+                await Payment.create({
+                    oquvchi: studentId,
+                    summa,
+                    oy: now.getMonth() + 1,
+                    yil: now.getFullYear(),
+                    tolovTuri: tolovTuri || 'naqd',
+                    izoh: izoh || 'Ommaviy to\'lov',
+                    kurs: student.kurs?._id || student.kurs,
+                    guruh: student.guruh
+                });
+
+                student.tolovHolati = 'tolangan';
+                await student.save();
+                successCount++;
+            } catch (err) {
+                failCount++;
+            }
+        }
+
+        res.status(201).json({
+            success: true,
+            message: `${successCount} ta to'lov muvaffaqiyatli amalga oshirildi${failCount > 0 ? `, ${failCount} ta xatolik` : ''}`,
+            successCount,
+            failCount
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
+    }
+};
+
 // @desc    Dashboard statistika
 // @route   GET /api/payments/dashboard
 exports.getDashboard = async (req, res) => {

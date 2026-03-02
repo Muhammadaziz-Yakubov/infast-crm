@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
     HiOutlineCash, HiOutlineFilter, HiOutlinePhone, HiOutlineCalendar,
-    HiOutlineBadgeCheck, HiOutlineUserCircle
+    HiOutlineBadgeCheck, HiOutlineUserCircle, HiOutlineX, HiOutlineCheckCircle
 } from 'react-icons/hi';
 
 const Students = () => {
@@ -22,6 +22,10 @@ const Students = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [search, setSearch] = useState('');
     const [filterHolat, setFilterHolat] = useState('');
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [bulkPayModalOpen, setBulkPayModalOpen] = useState(false);
+    const [bulkPayForm, setBulkPayForm] = useState({ tolovTuri: 'naqd', izoh: '' });
+    const [bulkLoading, setBulkLoading] = useState(false);
     const [filterGuruh, setFilterGuruh] = useState('');
 
     const [form, setForm] = useState({
@@ -155,6 +159,63 @@ const Students = () => {
         }
     };
 
+    // Tanlash funksiyalari
+    const toggleSelect = (id) => {
+        setSelectedIds(prev =>
+            prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
+        );
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedIds.length === students.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(students.map(s => s._id));
+        }
+    };
+
+    const clearSelection = () => setSelectedIds([]);
+
+    // Ommaviy to'lov qilish
+    const handleBulkPay = async (e) => {
+        e.preventDefault();
+        if (selectedIds.length === 0) return;
+        setBulkLoading(true);
+        try {
+            const res = await paymentAPI.bulkCreate({
+                studentIds: selectedIds,
+                tolovTuri: bulkPayForm.tolovTuri,
+                izoh: bulkPayForm.izoh
+            });
+            toast.success(res.data.message);
+            setBulkPayModalOpen(false);
+            setSelectedIds([]);
+            setBulkPayForm({ tolovTuri: 'naqd', izoh: '' });
+            fetchStudents();
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Xatolik');
+        } finally {
+            setBulkLoading(false);
+        }
+    };
+
+    // Ommaviy o'chirish
+    const handleBulkDelete = async () => {
+        if (selectedIds.length === 0) return;
+        if (!window.confirm(`${selectedIds.length} ta o'quvchini o'chirishni xohlaysizmi? Bu amalni qaytarib bo'lmaydi!`)) return;
+        setBulkLoading(true);
+        try {
+            const res = await studentAPI.bulkDelete(selectedIds);
+            toast.success(res.data.message);
+            setSelectedIds([]);
+            fetchStudents();
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Xatolik');
+        } finally {
+            setBulkLoading(false);
+        }
+    };
+
     const filteredGroups = form.kurs ? groups.filter(g => (g.kurs?._id || g.kurs) === form.kurs) : groups;
 
     const getStatusBadge = (status) => {
@@ -234,13 +295,68 @@ const Students = () => {
                 </div>
             </div>
 
+            {/* Ommaviy amallar paneli */}
+            {selectedIds.length > 0 && (
+                <div className="bg-gradient-to-r from-primary-600 to-purple-600 rounded-3xl p-5 shadow-xl shadow-primary-500/20 animate-fade-in">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                                <HiOutlineCheckCircle className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-white font-black text-sm">{selectedIds.length} ta o'quvchi tanlandi</p>
+                                <p className="text-white/60 text-xs font-bold">Ommaviy amal tanlang</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setBulkPayModalOpen(true)}
+                                disabled={bulkLoading}
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 text-white font-black text-xs uppercase tracking-wider
+                                    shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 active:scale-95 transition-all disabled:opacity-50"
+                            >
+                                <HiOutlineCash className="w-4 h-4" />
+                                To'lov qilish
+                            </button>
+                            <button
+                                onClick={handleBulkDelete}
+                                disabled={bulkLoading}
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-red-500 text-white font-black text-xs uppercase tracking-wider
+                                    shadow-lg shadow-red-500/30 hover:bg-red-400 active:scale-95 transition-all disabled:opacity-50"
+                            >
+                                <HiOutlineTrash className="w-4 h-4" />
+                                O'chirish
+                            </button>
+                            <button
+                                onClick={clearSelection}
+                                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-white/20 text-white font-black text-xs uppercase tracking-wider
+                                    hover:bg-white/30 active:scale-95 transition-all"
+                            >
+                                <HiOutlineX className="w-4 h-4" />
+                                Bekor
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Students List Container */}
             <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto overflow-y-hidden custom-scrollbar">
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-gray-50 dark:border-dark-700/50 bg-gray-50/50 dark:bg-dark-900/50">
-                                <th className="px-8 py-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">O'quvchi</th>
+                                <th className="pl-8 pr-2 py-6 text-center w-12">
+                                    <input
+                                        type="checkbox"
+                                        checked={students.length > 0 && selectedIds.length === students.length}
+                                        onChange={toggleSelectAll}
+                                        className="w-5 h-5 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-primary-600
+                                            focus:ring-primary-500 focus:ring-offset-0 cursor-pointer transition-all
+                                            checked:bg-primary-600 checked:border-primary-600"
+                                    />
+                                </th>
+                                <th className="px-4 py-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">O'quvchi</th>
                                 <th className="px-6 py-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Ma'lumotlar</th>
                                 <th className="px-6 py-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] hidden lg:table-cell">Guruh / Kurs</th>
                                 <th className="px-6 py-6 text-center text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Holat</th>
@@ -250,7 +366,7 @@ const Students = () => {
                         <tbody className="divide-y divide-gray-50 dark:divide-dark-700/50">
                             {students.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="text-center py-24">
+                                    <td colSpan="6" className="text-center py-24">
                                         <div className="flex flex-col items-center opacity-30">
                                             <HiOutlineUserCircle className="w-16 h-16 mb-4" />
                                             <p className="font-black text-lg">O'quvchilar ro'yxati bo'sh</p>
@@ -261,10 +377,20 @@ const Students = () => {
                                 students.map((s, i) => (
                                     <tr
                                         key={s._id}
-                                        className="group hover:bg-gray-50/80 dark:hover:bg-dark-900/30 transition-all"
+                                        className={`group hover:bg-gray-50/80 dark:hover:bg-dark-900/30 transition-all ${selectedIds.includes(s._id) ? 'bg-primary-50/50 dark:bg-primary-900/10' : ''}`}
                                         style={{ animationDelay: `${i * 30}ms` }}
                                     >
-                                        <td className="px-8 py-6">
+                                        <td className="pl-8 pr-2 py-6 text-center w-12">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedIds.includes(s._id)}
+                                                onChange={() => toggleSelect(s._id)}
+                                                className="w-5 h-5 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-primary-600
+                                                    focus:ring-primary-500 focus:ring-offset-0 cursor-pointer transition-all
+                                                    checked:bg-primary-600 checked:border-primary-600"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-6">
                                             <div className="flex items-center gap-4">
                                                 <div className="relative">
                                                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 
@@ -450,6 +576,40 @@ const Students = () => {
                     </div>
                     <button type="submit" className="w-full py-5 rounded-2xl font-black text-white bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-95 transition-all">
                         To'lovni tasdiqlash
+                    </button>
+                </form>
+            </Modal>
+
+            {/* Ommaviy to'lov qilish modali */}
+            <Modal isOpen={bulkPayModalOpen} onClose={() => setBulkPayModalOpen(false)} title={`${selectedIds.length} ta o'quvchiga to'lov`} size="sm">
+                <form onSubmit={handleBulkPay} className="space-y-6">
+                    <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-900 to-emerald-800 text-white shadow-xl">
+                        <p className="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1">Ommaviy to'lov</p>
+                        <h4 className="text-xl font-black">{selectedIds.length} ta o'quvchi tanlandi</h4>
+                        <p className="text-xs font-bold mt-2 opacity-70">
+                            Har bir o'quvchiga ularning kurs narxiga teng to'lov yoziladi
+                        </p>
+                    </div>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">To'lov turi</label>
+                            <select value={bulkPayForm.tolovTuri} onChange={e => setBulkPayForm({ ...bulkPayForm, tolovTuri: e.target.value })}
+                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-bold cursor-pointer">
+                                <option value="naqd">💵 Naqd pul</option>
+                                <option value="karta">💳 Plastik karta</option>
+                                <option value="online">📱 Online o'tkazma</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Izoh (ixtiyoriy)</label>
+                            <input type="text" value={bulkPayForm.izoh} onChange={e => setBulkPayForm({ ...bulkPayForm, izoh: e.target.value })}
+                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-bold"
+                                placeholder="Masalan: Mart oyi to'lovi" />
+                        </div>
+                    </div>
+                    <button type="submit" disabled={bulkLoading}
+                        className="w-full py-5 rounded-2xl font-black text-white bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        {bulkLoading ? 'Yuklanmoqda...' : `${selectedIds.length} ta to'lovni tasdiqlash`}
                     </button>
                 </form>
             </Modal>
