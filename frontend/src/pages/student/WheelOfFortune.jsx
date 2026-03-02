@@ -16,14 +16,14 @@ const WheelOfFortune = () => {
     const wheelRef = useRef(null);
 
     const segments = [
-        { amount: 10, label: "10", color: "#6366f1" },
-        { amount: 20, label: "20", color: "#8b5cf6" },
-        { amount: 50, label: "50", color: "#a855f7" },
-        { amount: 100, label: "100", color: "#d946ef" },
-        { amount: 200, label: "200", color: "#ec4899" },
-        { amount: 500, label: "500", color: "#f43f5e" },
-        { amount: 10, label: "10", color: "#6366f1" },
-        { amount: 20, label: "20", color: "#8b5cf6" },
+        { amount: 0, label: "0", color: "#4b5563" },     // Grey (Tried your luck)
+        { amount: 19, label: "19", color: "#6366f1" },
+        { amount: 25, label: "25", color: "#8b5cf6" },
+        { amount: 100, label: "100", color: "#a855f7" },
+        { amount: 200, label: "200", color: "#d946ef" },
+        { amount: 300, label: "300", color: "#ec4899" },
+        { amount: 500, label: "500", color: "#f43f5e" }, // Red (Jackpot)
+        { amount: 19, label: "19", color: "#6366f1" },
     ];
 
     const segmentAngle = 360 / segments.length;

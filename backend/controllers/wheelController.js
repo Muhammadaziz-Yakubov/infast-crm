@@ -26,12 +26,13 @@ exports.spinWheel = async (req, res) => {
 
         // Mukofotlar ehtimolligi (probabilistlik)
         const prizes = [
-            { amount: 10, label: "10 Coin", weight: 30 },
-            { amount: 20, label: "20 Coin", weight: 25 },
-            { amount: 50, label: "50 Coin", weight: 20 },
-            { amount: 100, label: "100 Coin", weight: 15 },
-            { amount: 200, label: "200 Coin", weight: 7 },
-            { amount: 500, label: "500 Coin (Jackpot!)", weight: 3 },
+            { amount: 0, label: "Omadingiz kelmadi", weight: 35 },
+            { amount: 19, label: "19 Coin", weight: 20 },
+            { amount: 25, label: "25 Coin", weight: 15 },
+            { amount: 100, label: "100 Coin", weight: 12 },
+            { amount: 200, label: "200 Coin", weight: 8 },
+            { amount: 300, label: "300 Coin", weight: 7 },
+            { amount: 500, label: "500 Coin (JACKPOT!)", weight: 3 },
         ];
 
         // Tasodifiy mukofot tanlash
