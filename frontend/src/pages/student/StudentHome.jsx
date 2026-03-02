@@ -44,16 +44,6 @@ const StudentHome = () => {
 
     return (
         <div className="min-h-screen bg-transparent pb-32 animate-fade-in lg:pb-10">
-            {/* Native style Header - Mobile Only or consistent */}
-            <header className="sticky top-0 z-[40] bg-gray-50/80 dark:bg-dark-900/80 backdrop-blur-xl pt-4 pb-4 mb-6 flex items-center justify-between lg:static lg:bg-transparent lg:backdrop-blur-none lg:px-0">
-                <div className="space-y-0.5">
-                    <p className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em] italic">Xush kelibsiz</p>
-                    <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight lg:text-3xl">{student.ism.split(' ')[0]} 👋</h2>
-                </div>
-                <Link to="/profile" className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-black text-lg shadow-xl shadow-primary-500/20 border-2 border-white dark:border-dark-800 lg:hidden">
-                    {student.ism?.charAt(0)}
-                </Link>
-            </header>
 
             <div className="space-y-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
