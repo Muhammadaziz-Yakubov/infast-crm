@@ -4,6 +4,7 @@ const Task = require('../models/Task');
 const Submission = require('../models/Submission');
 const Student = require('../models/Student');
 const Group = require('../models/Group');
+const { sendTaskNotification } = require('../services/telegramBot');
 const path = require('path');
 
 // R2 Upload helper
@@ -45,6 +46,18 @@ exports.createTask = async (req, res) => {
             image: imageUrl,
             creator: req.user._id
         });
+
+        // Telegram guruh chatiga xabar yuborish
+        try {
+            await sendTaskNotification(groupId, {
+                title,
+                deadline,
+                maxScore
+            });
+        } catch (telegramErr) {
+            console.error('Telegram xabar yuborishda xatolik:', telegramErr.message);
+            // Telegram xatosi bo'lsa ham vazifa yaratilgan
+        }
 
         res.status(201).json({
             success: true,

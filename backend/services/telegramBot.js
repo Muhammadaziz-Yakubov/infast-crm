@@ -70,8 +70,41 @@ const sendGroupBallReport = async (groupId) => {
     }
 };
 
+// Guruhga yangi vazifa haqida xabar yuborish
+const sendTaskNotification = async (groupId, taskData) => {
+    try {
+        const group = await Group.findById(groupId);
+        if (!group || !group.telegramChatId) {
+            console.log('⚠️ Guruh yoki Telegram Chat ID topilmadi, xabar yuborilmadi');
+            return { success: false, message: 'Guruh yoki Telegram Chat ID topilmadi' };
+        }
+
+        const deadlineDate = new Date(taskData.deadline);
+        const formattedDeadline = deadlineDate.toLocaleDateString('uz-UZ', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const message = `📋 *YANGI VAZIFA BERILDI!*\n\n` +
+            `📌 *Sarlavha:* ${taskData.title}\n` +
+            `📅 *Deadline:* ${formattedDeadline}\n` +
+            `🏆 *Maksimal ball:* ${taskData.maxScore}\n\n` +
+            `⚠️ *ESLATMA:* Agar 2 ta vazifani bajarmasangiz, guruhdan chiqarilasiz!\n\n` +
+            `💪 Vazifani o'z vaqtida bajaring va yuqori ball to'plang!`;
+
+        await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'Markdown' });
+        console.log(`✅ Telegram xabar yuborildi: ${group.nomi} guruhiga`);
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Telegram vazifa xabari xatosi:', error.message);
+        return { success: false, message: error.message };
+    }
+};
+
 module.exports = {
     bot,
     initScheduler,
-    sendGroupBallReport
+    sendGroupBallReport,
+    sendTaskNotification
 };
