@@ -7,7 +7,7 @@ import {
     HiOutlineCash,
     HiOutlineUsers,
     HiOutlineUserGroup,
-    HiOutlineHistory,
+    HiOutlineClock,
     HiOutlinePlusCircle,
     HiOutlineMinusCircle,
     HiOutlineCheckCircle
@@ -161,7 +161,7 @@ const CoinManager = () => {
                 <div className="px-8 py-6 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-dark-900 flex items-center justify-center text-primary-500">
-                            <HiOutlineHistory className="w-5 h-5" />
+                            <HiOutlineClock className="w-5 h-5" />
                         </div>
                         <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Oxirgi Amallar</h3>
                     </div>
