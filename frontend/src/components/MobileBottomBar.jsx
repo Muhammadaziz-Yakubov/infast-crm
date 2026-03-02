@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom';
 import {
     HiOutlineHome, HiOutlineAcademicCap, HiOutlineCalendar,
-    HiOutlineCreditCard, HiOutlineUserCircle, HiOutlineClipboardList
+    HiOutlineCreditCard, HiOutlineUserCircle, HiOutlineClipboardList,
+    HiOutlineTrendingUp
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,7 +15,7 @@ const MobileBottomBar = () => {
     const navItems = [
         { path: '/', icon: HiOutlineHome, label: 'Asosiy' },
         { path: '/tasks', icon: HiOutlineClipboardList, label: 'Vazifalar' },
-        { path: '/attendance', icon: HiOutlineCalendar, label: 'Davomat' },
+        { path: '/rating', icon: HiOutlineTrendingUp, label: 'Reyting' },
         { path: '/payments', icon: HiOutlineCreditCard, label: 'To\'lov' },
         { path: '/profile', icon: HiOutlineUserCircle, label: 'Profil' },
     ];

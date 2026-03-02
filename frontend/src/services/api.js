@@ -69,6 +69,7 @@ export const studentAPI = {
     delete: (id) => api.delete(`/students/${id}`),
     bulkDelete: (ids) => api.post('/students/bulk-delete', { ids }),
     getDebtors: () => api.get('/students/debtors/list'),
+    getRating: (params) => api.get('/students/rating', { params }),
     getMyDashboard: () => api.get('/students/me/dashboard'),
     updateMe: (data) => api.put('/students/me/update', data),
 };

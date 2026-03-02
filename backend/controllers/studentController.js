@@ -303,3 +303,96 @@ exports.updateMe = async (req, res) => {
         res.status(400).json({ success: false, message: error.message });
     }
 };
+
+// @desc    Reyting olish (umumiy va guruh bo'yicha)
+// @route   GET /api/students/rating
+exports.getRating = async (req, res) => {
+    try {
+        const { guruhId } = req.query;
+        const Submission = require('../models/Submission');
+        const Attendance = require('../models/Attendance');
+
+        // Barcha faol o'quvchilarni olish
+        let studentQuery = { holati: 'faol' };
+        if (guruhId) {
+            studentQuery.guruh = guruhId;
+        }
+
+        const students = await Student.find(studentQuery)
+            .populate('kurs', 'nomi')
+            .populate('guruh', 'nomi')
+            .select('ism guruh kurs ball');
+
+        // Har bir o'quvchi uchun ballni hisoblash
+        const ratingsPromises = students.map(async (student) => {
+            // 1. Vazifa ballari — graded submissions'dan
+            const submissions = await Submission.find({
+                student: student._id,
+                status: 'graded'
+            });
+            const taskScore = submissions.reduce((sum, s) => sum + (s.score || 0), 0);
+            const taskCount = submissions.length;
+
+            // 2. Davomat ballari — har bir kelgan dars uchun +2 ball
+            const attendanceRecords = await Attendance.find({
+                'oquvchilar.oquvchi': student._id
+            });
+
+            let attendancePresent = 0;
+            let attendanceTotal = 0;
+            attendanceRecords.forEach(record => {
+                const studentRecord = record.oquvchilar.find(
+                    o => o.oquvchi.toString() === student._id.toString()
+                );
+                if (studentRecord) {
+                    attendanceTotal++;
+                    if (studentRecord.keldi) {
+                        attendancePresent++;
+                    }
+                }
+            });
+
+            const attendanceScore = attendancePresent * 2; // Har kelgan dars uchun +2
+
+            // Umumiy ball
+            const totalScore = taskScore + attendanceScore;
+
+            // O'quvchining ball sifatini yangilash
+            if (student.ball !== totalScore) {
+                await Student.findByIdAndUpdate(student._id, { ball: totalScore });
+            }
+
+            return {
+                _id: student._id,
+                ism: student.ism,
+                guruh: student.guruh,
+                kurs: student.kurs,
+                taskScore,
+                taskCount,
+                attendanceScore,
+                attendancePresent,
+                attendanceTotal,
+                attendancePercent: attendanceTotal > 0 ? Math.round((attendancePresent / attendanceTotal) * 100) : 0,
+                totalScore
+            };
+        });
+
+        const ratings = await Promise.all(ratingsPromises);
+
+        // Ballga qarab tartiblash
+        ratings.sort((a, b) => b.totalScore - a.totalScore);
+
+        // Rank (o'rin) berish
+        ratings.forEach((r, i) => {
+            r.rank = i + 1;
+        });
+
+        res.json({
+            success: true,
+            count: ratings.length,
+            data: ratings
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
+    }
+};
