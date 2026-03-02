@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { attendanceAPI } from '../services/api';
+import { attendanceAPI } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { HiOutlineCamera, HiOutlineCheckCircle, HiOutlineArrowLeft } from 'react-icons/hi';
