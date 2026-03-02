@@ -6,11 +6,12 @@ import {
     HiOutlineSearch, HiOutlineCash, HiOutlineCalendar,
     HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineFilter,
     HiOutlineClock, HiOutlineCreditCard, HiOutlineDeviceMobile,
-    HiOutlineCurrencyDollar, HiOutlineCollection
+    HiOutlineCurrencyDollar, HiOutlineCollection, HiOutlineTrash
 } from 'react-icons/hi';
 
 const Payments = () => {
     const [payments, setPayments] = useState([]);
+    const [deletingId, setDeletingId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -58,6 +59,20 @@ const Payments = () => {
 
     const formatMoney = (amount) => {
         return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
+    };
+
+    const handleDelete = async (paymentId) => {
+        if (!window.confirm("Bu to'lovni o'chirishni xohlaysizmi? Bu amalni qaytarib bo'lmaydi!")) return;
+        setDeletingId(paymentId);
+        try {
+            await paymentAPI.delete(paymentId);
+            toast.success("To'lov muvaffaqiyatli o'chirildi");
+            fetchPayments();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "To'lovni o'chirishda xatolik");
+        } finally {
+            setDeletingId(null);
+        }
     };
 
     const formatDate = (date) => {
@@ -176,13 +191,14 @@ const Payments = () => {
                                 <th className="px-6 py-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Summa</th>
                                 <th className="px-6 py-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] hidden md:table-cell">Guruh / Kurs</th>
                                 <th className="px-6 py-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] hidden md:table-cell">Turi</th>
-                                <th className="px-8 py-6 text-right text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Sana va Vaqt</th>
+                                <th className="px-6 py-6 text-right text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Sana va Vaqt</th>
+                                <th className="px-6 py-6 text-center text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Amallar</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50 dark:divide-dark-700/50 text-gray-800 dark:text-gray-200">
                             {payments.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="text-center py-24 opacity-30">
+                                    <td colSpan="6" className="text-center py-24 opacity-30">
                                         <HiOutlineCash className="w-16 h-16 mx-auto mb-4" />
                                         <h3 className="text-xl font-black">To'lovlar mavjud emas</h3>
                                     </td>
@@ -216,7 +232,7 @@ const Payments = () => {
                                         <td className="px-6 py-6 hidden md:table-cell">
                                             {getPaymentTypeBadge(p.tolovTuri)}
                                         </td>
-                                        <td className="px-8 py-6 text-right">
+                                        <td className="px-6 py-6 text-right">
                                             <div className="flex flex-col items-end gap-1">
                                                 <span className="text-xs font-black uppercase tracking-tight text-gray-900 dark:text-white">{formatDate(p.sana)}</span>
                                                 <div className="flex items-center gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
@@ -224,6 +240,22 @@ const Payments = () => {
                                                     <span className="text-[10px] font-bold">{new Date(p.sana).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
                                             </div>
+                                        </td>
+                                        <td className="px-6 py-6 text-center">
+                                            <button
+                                                onClick={() => handleDelete(p._id)}
+                                                disabled={deletingId === p._id}
+                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl 
+                                                    bg-red-500/10 text-red-600 dark:text-red-400 
+                                                    hover:bg-red-500 hover:text-white 
+                                                    transition-all duration-200 text-[10px] font-black uppercase tracking-wider
+                                                    disabled:opacity-50 disabled:cursor-not-allowed
+                                                    hover:shadow-lg hover:shadow-red-500/20 active:scale-95"
+                                                title="To'lovni o'chirish"
+                                            >
+                                                <HiOutlineTrash className={`w-3.5 h-3.5 ${deletingId === p._id ? 'animate-spin' : ''}`} />
+                                                <span className="hidden lg:inline">O'chirish</span>
+                                            </button>
                                         </td>
                                     </tr>
                                 ))

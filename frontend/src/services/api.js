@@ -76,6 +76,7 @@ export const studentAPI = {
 export const paymentAPI = {
     getAll: (params) => api.get('/payments', { params }),
     create: (data) => api.post('/payments', data),
+    delete: (id) => api.delete(`/payments/${id}`),
     getDashboard: () => api.get('/payments/dashboard'),
     exportDebtors: () => api.get('/payments/export/debtors', { responseType: 'blob' }),
 };

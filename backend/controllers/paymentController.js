@@ -192,6 +192,59 @@ exports.getDashboard = async (req, res) => {
     }
 };
 
+// @desc    To'lovni o'chirish (xato to'lov uchun)
+// @route   DELETE /api/payments/:id
+exports.deletePayment = async (req, res) => {
+    try {
+        const payment = await Payment.findById(req.params.id);
+        if (!payment) {
+            return res.status(404).json({ success: false, message: "To'lov topilmadi" });
+        }
+
+        const studentId = payment.oquvchi;
+        const paymentOy = payment.oy;
+        const paymentYil = payment.yil;
+
+        // To'lovni o'chirish
+        await Payment.findByIdAndDelete(req.params.id);
+
+        // O'quvchining shu oy uchun boshqa to'lovi bormi tekshirish
+        const otherPayment = await Payment.findOne({
+            oquvchi: studentId,
+            oy: paymentOy,
+            yil: paymentYil
+        });
+
+        // Agar boshqa to'lov yo'q bo'lsa, o'quvchi holatini yangilash
+        if (!otherPayment) {
+            const student = await Student.findById(studentId);
+            if (student) {
+                const now = new Date();
+                const currentMonth = now.getMonth() + 1;
+                const currentYear = now.getFullYear();
+
+                // Faqat joriy oy uchun to'lov o'chirilgan bo'lsa holatni o'zgartirish
+                if (paymentOy === currentMonth && paymentYil === currentYear) {
+                    const currentDay = now.getDate();
+                    if (currentDay >= student.tolovKuni) {
+                        student.tolovHolati = 'qarzdor';
+                    } else {
+                        student.tolovHolati = 'tolanmagan';
+                    }
+                    await student.save();
+                }
+            }
+        }
+
+        res.json({
+            success: true,
+            message: "To'lov muvaffaqiyatli o'chirildi"
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
+    }
+};
+
 // @desc    Qarzdorlarni Excel ga eksport qilish
 // @route   GET /api/payments/export/debtors
 exports.exportDebtors = async (req, res) => {
