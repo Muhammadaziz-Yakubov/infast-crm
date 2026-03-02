@@ -119,18 +119,19 @@
   }
 }
 
-.modal-content {
-  animation: scaleIn 0.2s ease-out;
+.modal-content,
+.animate-scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes scaleIn {
   0% {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.95) translateY(10px);
   }
 
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
