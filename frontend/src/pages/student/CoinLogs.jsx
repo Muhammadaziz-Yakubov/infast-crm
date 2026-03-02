@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { marketAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { HiOutlineArrowCircleUp, HiOutlineArrowCircleDown, HiOutlineClock } from 'react-icons/hi';
-import { format } from 'date-fns';
-import { uz } from 'date-fns/locale';
 
 const CoinLogs = () => {
     const [logs, setLogs] = useState([]);
@@ -22,6 +20,16 @@ const CoinLogs = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('uz-UZ', {
+            day: 'numeric',
+            month: 'long',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
     };
 
     if (loading) return <LoadingSpinner text="Tarix yuklanmoqda..." />;
@@ -65,7 +73,7 @@ const CoinLogs = () => {
                                     {log.reason}
                                 </h4>
                                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">
-                                    {format(new Date(log.sana), "d-MMMM, HH:mm", { locale: uz })}
+                                    {formatDate(log.sana)}
                                 </p>
                             </div>
                             <div className={`text-right ${log.type === 'plus' ? 'text-emerald-500' : 'text-red-500'}`}>
