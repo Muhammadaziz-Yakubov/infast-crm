@@ -120,3 +120,87 @@ exports.saveAttendance = async (req, res) => {
         res.status(400).json({ success: false, message: error.message });
     }
 };
+
+// @desc    QR-kod orqali avtomatik davomat
+// @route   POST /api/attendance/scan
+exports.scanAttendance = async (req, res) => {
+    try {
+        const studentId = req.user._id;
+        const student = await Student.findById(studentId).populate('guruh');
+
+        if (!student) return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
+        if (!student.guruh) return res.status(400).json({ success: false, message: "Siz guruhga biriktirilmagansiz" });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Guruh jadvalini tekshirish (Vaqt cheklovi - ixtiyoriy lekin xavfsiz)
+        // Hozircha sodda: faqat bugun dars bo'lsa va dars vaqtiga yaqin bo'lsa
+        const now = new Date();
+        const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+        // Agar guruh jadvalida vaqt bo'lsa, tekshiramiz (Masalan: 09:00-11:00)
+        if (student.guruh.jadval?.vaqt) {
+            const [startTime] = student.guruh.jadval.vaqt.split('-');
+            const [h, m] = startTime.split(':');
+            const startLimit = new Date();
+            startLimit.setHours(parseInt(h) - 1, parseInt(m), 0, 0); // Darsdan 1 soat oldin
+
+            const endLimit = new Date();
+            endLimit.setHours(parseInt(h) + 3, parseInt(m), 0, 0); // Darsdan 3 soat keyingacha
+
+            if (now < startLimit || now > endLimit) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Davomat faqat dars vaqtida olinadi (Sizning darsingiz: ${student.guruh.jadval.vaqt})`
+                });
+            }
+        }
+
+        let attendance = await Attendance.findOne({
+            guruh: student.guruh._id,
+            sana: { $gte: today, $lte: new Date(today.getTime() + 24 * 60 * 60 * 1000) }
+        });
+
+        if (!attendance) {
+            // Agar bugun uchun hali davomat ochilmagan bo'lsa (birinchi o'quvchi kelsa)
+            const allStudents = await Student.find({ guruh: student.guruh._id, holati: 'faol' });
+            attendance = await Attendance.create({
+                guruh: student.guruh._id,
+                sana: today,
+                oquvchilar: allStudents.map(s => ({
+                    oquvchi: s._id,
+                    keldi: s._id.toString() === studentId.toString() ? true : false
+                }))
+            });
+        } else {
+            // Mavjud o'quvchini "Keldi" deb belgilash
+            const oquvchiIndex = attendance.oquvchilar.findIndex(o => o.oquvchi.toString() === studentId.toString());
+
+            if (oquvchiIndex !== -1) {
+                if (attendance.oquvchilar[oquvchiIndex].keldi) {
+                    return res.status(400).json({ success: false, message: "Siz bugun davomatdan o'tgansiz" });
+                }
+                attendance.oquvchilar[oquvchiIndex].keldi = true;
+                await attendance.save();
+            } else {
+                // Agar o'quvchi ro'yxatda yo'q bo'lsa (yangi qo'shilgan bo'lsa)
+                attendance.oquvchilar.push({ oquvchi: studentId, keldi: true });
+                await attendance.save();
+            }
+        }
+
+        // Ball va Coin qo'shish
+        await Student.findByIdAndUpdate(studentId, { $inc: { ball: 1 } });
+        await updateCoins(studentId, 50, 'QR-kod orqali davomat: Darsga keldi');
+
+        res.json({
+            success: true,
+            message: "Davomat muvaffaqiyatli belgilandi! +50 coin qo'shildi 🪙",
+            data: attendance
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

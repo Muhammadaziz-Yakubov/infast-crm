@@ -4,8 +4,9 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import {
     HiOutlineUserGroup, HiOutlineExclamationCircle, HiOutlineCash,
     HiOutlineTrendingUp, HiOutlineAcademicCap, HiOutlineBookOpen,
-    HiOutlineArrowNarrowRight
+    HiOutlineArrowNarrowRight, HiOutlineQrcode
 } from 'react-icons/hi';
+import { QRCodeCanvas } from 'qrcode.react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const Dashboard = () => {
@@ -180,6 +181,75 @@ const Dashboard = () => {
                         <button className="w-full mt-6 py-4 rounded-2xl bg-primary-600 text-white font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary-500/20 active:scale-95 transition-all">
                             Barcha to'lovlar
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Central QR Code Section for Admin */}
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                <div className="xl:col-span-12 bg-gradient-to-br from-primary-600 to-indigo-700 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12 transition-transform hover:scale-110 duration-700">
+                        <HiOutlineQrcode className="w-64 h-64" />
+                    </div>
+
+                    <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12">
+                        <div className="space-y-6 flex-1 text-center lg:text-left">
+                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-[0.2em]">
+                                Doimiy QR Tizimi
+                            </div>
+                            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight italic">
+                                Markaz uchun <br /> <span className="text-white/80">Doimiy QR Kod</span>
+                            </h2>
+                            <p className="text-primary-100 font-medium md:text-lg max-w-xl">
+                                Ushbu QR kodni chop etib, markaz eshigiga yoki darsxonalarga yopishtiring.
+                                O'quvchilar o'z kabinetlari orqali skaner qilib, avtomatik davomatdan o'tadilar va coin yutadilar.
+                            </p>
+
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                                <button
+                                    onClick={() => {
+                                        const canvas = document.getElementById("central-qr");
+                                        if (canvas) {
+                                            const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                                            let downloadLink = document.createElement("a");
+                                            downloadLink.href = pngUrl;
+                                            downloadLink.download = "InFast_CRM_Central_QR.png";
+                                            document.body.appendChild(downloadLink);
+                                            downloadLink.click();
+                                            document.body.removeChild(downloadLink);
+                                        }
+                                    }}
+                                    className="px-8 py-4 rounded-2xl bg-white text-primary-600 font-black text-xs uppercase tracking-widest shadow-xl hover:-translate-y-1 transition-all active:scale-95"
+                                >
+                                    QR Kodni Yuklab Olish (PNG)
+                                </button>
+                                <div className="px-5 py-3 rounded-2xl bg-white/10 border border-white/10 flex items-center gap-3">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Tizim Faol</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="relative group">
+                            <div className="absolute -inset-4 bg-white/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="relative bg-white p-8 rounded-[3rem] shadow-3xl transform transition-transform group-hover:scale-105 duration-500">
+                                <QRCodeCanvas
+                                    id="central-qr"
+                                    value={`${window.location.origin}/scan`}
+                                    size={220}
+                                    level="H"
+                                    includeMargin={false}
+                                    imageSettings={{
+                                        src: "/favicon.ico",
+                                        x: undefined,
+                                        y: undefined,
+                                        height: 40,
+                                        width: 40,
+                                        excavate: true,
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

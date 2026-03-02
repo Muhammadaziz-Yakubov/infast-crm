@@ -3,7 +3,8 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MobileBottomBar from './MobileBottomBar';
 import { useAuth } from '../context/AuthContext';
-import { HiOutlineMenuAlt2 } from 'react-icons/hi';
+import { HiOutlineMenuAlt2, HiOutlineQrcode } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
 const Layout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,25 +27,44 @@ const Layout = () => {
                 <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
 
 
-                {/* Mobile Header - Glassmorphism - Hidden for students */}
-                {!isStudent && (
-                    <header className="lg:hidden sticky top-0 z-40 bg-white/60 dark:bg-dark-950/60 backdrop-blur-xl border-b border-gray-200/50 dark:border-white/5 px-6 py-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <button
-                                    onClick={() => setSidebarOpen(true)}
-                                    className="p-2.5 rounded-2xl bg-white dark:bg-dark-800 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-white/5"
-                                >
-                                    <HiOutlineMenuAlt2 className="w-6 h-6" />
-                                </button>
-                                <div className="flex flex-col">
-                                    <span className="text-sm font-black tracking-tight gradient-text leading-none">InFast CRM</span>
-                                    <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Premium Dashboard</span>
-                                </div>
-                            </div>
+                {/* Mobile Header - Glassmorphism - For Admin show Sidebar toggle, for Student show QR scan */}
+                <header className="lg:hidden sticky top-0 z-40 bg-white/60 dark:bg-dark-950/60 backdrop-blur-xl border-b border-gray-200/50 dark:border-white/5 px-6 py-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            {!isStudent ? (
+                                <>
+                                    <button
+                                        onClick={() => setSidebarOpen(true)}
+                                        className="p-2.5 rounded-2xl bg-white dark:bg-dark-800 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-white/5"
+                                    >
+                                        <HiOutlineMenuAlt2 className="w-6 h-6" />
+                                    </button>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-black tracking-tight gradient-text leading-none">InFast CRM</span>
+                                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Premium Dashboard</span>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-black tracking-tight gradient-text leading-none capitalize">{user?.ism || 'O\'quvchi'}</span>
+                                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Mening Kabinetim</span>
+                                    </div>
+                                </>
+                            )}
                         </div>
-                    </header>
-                )}
+
+                        {isStudent && (
+                            <Link
+                                to="/scan"
+                                className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary-500 text-white shadow-lg shadow-primary-500/30 active:scale-95 transition-all"
+                            >
+                                <HiOutlineQrcode className="w-5 h-5" />
+                                <span className="text-xs font-black uppercase tracking-widest leading-none">Scan</span>
+                            </Link>
+                        )}
+                    </div>
+                </header>
 
                 {/* Page Content Container */}
                 <section className="flex-1 relative z-10">
