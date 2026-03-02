@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { marketAPI } from '../../services/api';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import { marketAPI } from '../services/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 import { HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlinePhotograph, HiOutlineShoppingBag } from 'react-icons/hi';
 
