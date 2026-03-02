@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { taskAPI, groupAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Modal from '../components/Modal';
+import ConfirmDialog from '../components/ConfirmDialog';
 import toast from 'react-hot-toast';
 import {
     HiOutlinePlus, HiOutlineViewGrid, HiOutlineUsers,
@@ -356,42 +358,41 @@ const Tasks = () => {
             )}
 
             {/* Grading Modal */}
-            {gradingSubmission && (
-                <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" onClick={() => setGradingSubmission(null)} />
-                    <div className="relative bg-white dark:bg-dark-800 w-full max-w-sm rounded-[3rem] p-10 shadow-2xl animate-modal-in">
-                        <div className="space-y-6">
-                            <div className="text-center">
-                                <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Ball Qo'yish</h3>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Max Score: {selectedTask.maxScore}</p>
-                            </div>
-                            <input
-                                type="number"
-                                className="w-full px-6 py-6 rounded-3xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none font-black text-3xl text-center"
-                                value={scoreValue}
-                                onChange={e => setScoreValue(e.target.value)}
-                                min="0"
-                                max={selectedTask.maxScore}
-                                autoFocus
-                            />
-                            <div className="flex gap-3">
-                                <button
-                                    onClick={() => setGradingSubmission(null)}
-                                    className="flex-1 py-4 rounded-2xl bg-gray-100 dark:bg-dark-700 text-gray-500 font-black text-[10px] uppercase tracking-widest"
-                                >
-                                    Bekor qilish
-                                </button>
-                                <button
-                                    onClick={handleGrade}
-                                    className="flex-1 py-4 rounded-2xl bg-primary-600 text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary-500/20"
-                                >
-                                    Saqlash
-                                </button>
-                            </div>
-                        </div>
+            <Modal
+                isOpen={!!gradingSubmission}
+                onClose={() => setGradingSubmission(null)}
+                title="Ball Qo'yish"
+                size="sm"
+            >
+                <div className="space-y-6 py-4">
+                    <div className="text-center">
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Max Score: {selectedTask?.maxScore}</p>
+                    </div>
+                    <input
+                        type="number"
+                        className="w-full px-6 py-6 rounded-3xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none font-black text-3xl text-center"
+                        value={scoreValue}
+                        onChange={e => setScoreValue(e.target.value)}
+                        min="0"
+                        max={selectedTask?.maxScore}
+                        autoFocus
+                    />
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => setGradingSubmission(null)}
+                            className="flex-1 py-4 rounded-2xl bg-gray-100 dark:bg-dark-700 text-gray-500 font-black text-[10px] uppercase tracking-widest"
+                        >
+                            Bekor qilish
+                        </button>
+                        <button
+                            onClick={handleGrade}
+                            className="flex-1 py-4 rounded-2xl bg-primary-600 text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary-500/20"
+                        >
+                            Saqlash
+                        </button>
                     </div>
                 </div>
-            )}
+            </Modal>
         </div>
     );
 };

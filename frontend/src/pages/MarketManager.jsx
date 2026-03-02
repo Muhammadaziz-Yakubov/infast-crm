@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { marketAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Modal from '../components/Modal';
 import toast from 'react-hot-toast';
 import { HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlinePhotograph, HiOutlineShoppingBag } from 'react-icons/hi';
 
@@ -129,83 +130,80 @@ const MarketManager = () => {
             </div>
 
             {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white dark:bg-dark-800 w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl relative animate-slide-up border border-white/10">
-                        <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase italic mb-6">
-                            {editingProduct ? 'Mahsulotni tahrirlash' : 'Yangi mahsulot qo\'shish'}
-                        </h2>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Mahsulot nomi</label>
-                                <input
-                                    type="text"
-                                    required
-                                    className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all uppercase tracking-tight"
-                                    value={formData.nomi}
-                                    onChange={(e) => setFormData({ ...formData, nomi: e.target.value })}
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Narxi (Coin)</label>
-                                    <input
-                                        type="number"
-                                        required
-                                        className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all italic"
-                                        value={formData.narxi}
-                                        onChange={(e) => setFormData({ ...formData, narxi: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Soni (Omborda)</label>
-                                    <input
-                                        type="number"
-                                        required
-                                        className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all italic"
-                                        value={formData.soni}
-                                        onChange={(e) => setFormData({ ...formData, soni: e.target.value })}
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Rasm URL</label>
-                                <input
-                                    type="text"
-                                    required
-                                    className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
-                                    placeholder="https://example.com/image.jpg"
-                                    value={formData.rasm}
-                                    onChange={(e) => setFormData({ ...formData, rasm: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Tavsif</label>
-                                <textarea
-                                    className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all min-h-[100px]"
-                                    value={formData.tavsif}
-                                    onChange={(e) => setFormData({ ...formData, tavsif: e.target.value })}
-                                />
-                            </div>
-                            <div className="flex gap-3 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="flex-1 py-4 bg-gray-100 dark:bg-dark-900 text-gray-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-200 transition-all"
-                                >
-                                    Bekor qilish
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 py-4 bg-primary-500 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20"
-                                >
-                                    Saqlash
-                                </button>
-                            </div>
-                        </form>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title={editingProduct ? 'Mahsulotni tahrirlash' : 'Yangi mahsulot qo\'shish'}
+            >
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Mahsulot nomi</label>
+                        <input
+                            type="text"
+                            required
+                            className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all uppercase tracking-tight"
+                            value={formData.nomi}
+                            onChange={(e) => setFormData({ ...formData, nomi: e.target.value })}
+                        />
                     </div>
-                </div>
-            )}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Narxi (Coin)</label>
+                            <input
+                                type="number"
+                                required
+                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all italic"
+                                value={formData.narxi}
+                                onChange={(e) => setFormData({ ...formData, narxi: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Soni (Omborda)</label>
+                            <input
+                                type="number"
+                                required
+                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all italic"
+                                value={formData.soni}
+                                onChange={(e) => setFormData({ ...formData, soni: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Rasm URL</label>
+                        <input
+                            type="text"
+                            required
+                            className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
+                            placeholder="https://example.com/image.jpg"
+                            value={formData.rasm}
+                            onChange={(e) => setFormData({ ...formData, rasm: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Tavsif</label>
+                        <textarea
+                            className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all min-h-[100px]"
+                            value={formData.tavsif}
+                            onChange={(e) => setFormData({ ...formData, tavsif: e.target.value })}
+                        />
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                        <button
+                            type="button"
+                            onClick={() => setIsModalOpen(false)}
+                            className="flex-1 py-4 bg-gray-100 dark:bg-dark-900 text-gray-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-200 transition-all"
+                        >
+                            Bekor qilish
+                        </button>
+                        <button
+                            type="submit"
+                            className="flex-1 py-4 bg-primary-500 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20"
+                        >
+                            Saqlash
+                        </button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 };
