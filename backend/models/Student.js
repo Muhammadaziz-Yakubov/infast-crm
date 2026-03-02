@@ -68,6 +68,11 @@ const studentSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    coins: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
     qoshilganSana: {
         type: Date,
         default: Date.now

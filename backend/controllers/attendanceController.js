@@ -1,5 +1,6 @@
 const Attendance = require('../models/Attendance');
 const Student = require('../models/Student');
+const { updateCoins } = require('../services/coinService');
 
 // @desc    Guruh va sana bo'yicha davomatni olish
 // @route   GET /api/attendance/:groupId/:date
@@ -65,7 +66,6 @@ exports.saveAttendance = async (req, res) => {
 
         if (attendance) {
             // Yangilashdan oldin eski davomatni tekshirish
-            // Ballarni qayta hisoblash uchun
             const oldMap = new Map();
             attendance.oquvchilar.forEach(o => oldMap.set(o.oquvchi.toString(), o.keldi));
 
@@ -74,18 +74,20 @@ exports.saveAttendance = async (req, res) => {
             attendance.izoh = izoh;
             await attendance.save();
 
-            // Ballarni yangilash
+            // Ballarni va Coinlarni yangilash
             for (const item of oquvchilar) {
-                const oquvchiId = item.oquvchi._id || item.oquvchi;
-                const wasPresent = oldMap.get(oquvchiId.toString());
+                const oquvchiId = (item.oquvchi._id || item.oquvchi).toString();
+                const wasPresent = oldMap.get(oquvchiId);
                 const isPresent = item.keldi;
 
                 if (isPresent && !wasPresent) {
-                    // Yangi keldi -> Ball +1
+                    // Yangi keldi -> Ball +1, Coin +100 (oldin kelmadi edi, endi keldi, demak -50 edi, uni +50 ga o'zgartirish uchun +100)
                     await Student.findByIdAndUpdate(oquvchiId, { $inc: { ball: 1 } });
+                    await updateCoins(oquvchiId, 100, `Davomat: Kelmagandan Keldi holatiga o'zgartirildi (+50)`);
                 } else if (!isPresent && wasPresent) {
-                    // Keldi edi, endi kelmagan -> Ball -1
+                    // Keldi edi, endi kelmagan -> Ball -1, Coin -100
                     await Student.findByIdAndUpdate(oquvchiId, { $inc: { ball: -1 } });
+                    await updateCoins(oquvchiId, -100, `Davomat: Keldidan Kelmadi holatiga o'zgartirildi (-50)`);
                 }
             }
         } else {
@@ -97,11 +99,14 @@ exports.saveAttendance = async (req, res) => {
                 izoh
             });
 
-            // Ballarni qo'shish
+            // Ballarni va Coinlarni qo'shish
             for (const item of oquvchilar) {
+                const oquvchiId = (item.oquvchi._id || item.oquvchi).toString();
                 if (item.keldi) {
-                    const oquvchiId = item.oquvchi._id || item.oquvchi;
                     await Student.findByIdAndUpdate(oquvchiId, { $inc: { ball: 1 } });
+                    await updateCoins(oquvchiId, 50, 'Davomat: Darsga keldi');
+                } else {
+                    await updateCoins(oquvchiId, -50, 'Davomat: Darsga kelmadi');
                 }
             }
         }

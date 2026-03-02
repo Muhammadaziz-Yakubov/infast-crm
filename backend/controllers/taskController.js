@@ -88,11 +88,18 @@ exports.getTaskSubmissions = async (req, res) => {
 exports.gradeSubmission = async (req, res) => {
     try {
         const { score } = req.body;
-        const submission = await Submission.findByIdAndUpdate(
-            req.params.id,
-            { score, status: 'graded' },
-            { new: true }
-        );
+        const submission = await Submission.findById(req.params.id);
+
+        if (!submission) {
+            return res.status(404).json({ success: false, message: 'Topshiriq topilmadi' });
+        }
+
+        submission.score = score;
+        submission.status = 'graded';
+        await submission.save();
+
+        // Coin qo'shish (+100)
+        await updateCoins(submission.student, 100, `Vazifa baholandi: ${score} ball`);
 
         res.json({
             success: true,

@@ -106,4 +106,14 @@ export const taskAPI = {
     }),
 };
 
+// Market
+export const marketAPI = {
+    getProducts: () => api.get('/market/products'),
+    createProduct: (data) => api.post('/market/products', data),
+    updateProduct: (id, data) => api.put(`/market/market/products/${id}`, data),
+    deleteProduct: (id) => api.delete(`/market/products/${id}`),
+    buyProduct: (productId) => api.post('/market/buy', { productId }),
+    getCoinLogs: () => api.get('/market/logs'),
+};
+
 export default api;

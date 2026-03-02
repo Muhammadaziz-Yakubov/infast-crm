@@ -25,6 +25,9 @@ const Attendance = React.lazy(() => import('./pages/Attendance'));
 const Tasks = React.lazy(() => import('./pages/Tasks'));
 const StudentTasks = React.lazy(() => import('./pages/student/StudentTasks'));
 const StudentRating = React.lazy(() => import('./pages/student/StudentRating'));
+const StudentMarket = React.lazy(() => import('./pages/student/StudentMarket'));
+const CoinLogs = React.lazy(() => import('./pages/student/CoinLogs'));
+const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 
 
 const ProtectedRoute = ({ children }) => {
@@ -98,11 +101,14 @@ const AppContent = () => {
                     <Route path="/profile" element={<StudentProfile />} />
                     <Route path="/tasks" element={user?.role === 'student' ? <StudentTasks /> : <Tasks />} />
                     <Route path="/rating" element={<StudentRating />} />
+                    <Route path="/market" element={user?.role === 'student' ? <StudentMarket /> : <MarketManager />} />
+                    <Route path="/market/logs" element={<CoinLogs />} />
 
                     {/* Admin only routes */}
                     <Route path="/students" element={<Students />} />
                     <Route path="/groups" element={<Groups />} />
                     <Route path="/debtors" element={<Debtors />} />
+                    <Route path="/market-manager" element={<MarketManager />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
