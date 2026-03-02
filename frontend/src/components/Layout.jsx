@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MobileBottomBar from './MobileBottomBar';
 import { useAuth } from '../context/AuthContext';
-import { HiOutlineMenuAlt2, HiOutlineQrcode } from 'react-icons/hi';
+import { HiOutlineMenuAlt2, HiOutlineQrcode, HiOutlineGift } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
 const Layout = () => {
@@ -55,13 +55,22 @@ const Layout = () => {
                         </div>
 
                         {isStudent && (
-                            <Link
-                                to="/scan"
-                                className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary-500 text-white shadow-lg shadow-primary-500/30 active:scale-95 transition-all"
-                            >
-                                <HiOutlineQrcode className="w-5 h-5" />
-                                <span className="text-xs font-black uppercase tracking-widest leading-none">Scan</span>
-                            </Link>
+                            <div className="flex items-center gap-2">
+                                <Link
+                                    to="/wheel"
+                                    className="p-2.5 rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-500/30 active:scale-95 transition-all"
+                                    title="Omad G'ildiragi"
+                                >
+                                    <HiOutlineGift className="w-5 h-5" />
+                                </Link>
+                                <Link
+                                    to="/scan"
+                                    className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary-500 text-white shadow-lg shadow-primary-500/30 active:scale-95 transition-all"
+                                >
+                                    <HiOutlineQrcode className="w-5 h-5" />
+                                    <span className="text-xs font-black uppercase tracking-widest leading-none">Scan</span>
+                                </Link>
+                            </div>
                         )}
                     </div>
                 </header>

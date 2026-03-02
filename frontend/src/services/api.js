@@ -122,4 +122,9 @@ export const coinAPI = {
     getGlobalLogs: () => api.get('/coins/logs'),
 };
 
+export const wheelAPI = {
+    spin: () => api.post('/wheels/spin'),
+    getLogs: () => api.get('/wheels/logs'),
+};
+
 export default api;
