@@ -61,7 +61,16 @@ const Attendance = () => {
         setAttendanceData(prev => ({
             ...prev,
             oquvchilar: prev.oquvchilar.map(item =>
-                item.oquvchi._id === studentId ? { ...item, keldi: status } : item
+                item.oquvchi._id === studentId ? { ...item, keldi: status, ball: status ? (item.ball || 0) : 0 } : item
+            )
+        }));
+    };
+
+    const handleBallChange = (studentId, ball) => {
+        setAttendanceData(prev => ({
+            ...prev,
+            oquvchilar: prev.oquvchilar.map(item =>
+                item.oquvchi._id === studentId ? { ...item, ball: parseInt(ball) || 0 } : item
             )
         }));
     };
@@ -82,7 +91,8 @@ const Attendance = () => {
                 sana: selectedDate,
                 oquvchilar: attendanceData.oquvchilar.map(item => ({
                     oquvchi: item.oquvchi._id,
-                    keldi: item.keldi
+                    keldi: item.keldi,
+                    ball: item.ball || 0
                 })),
                 izoh
             };
@@ -255,8 +265,8 @@ const Attendance = () => {
                                             {/* Avatar */}
                                             <div className="relative">
                                                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-primary-500/10 transition-transform group-hover:scale-105 ${item.keldi
-                                                        ? 'bg-gradient-to-br from-primary-400 to-primary-600'
-                                                        : 'bg-gradient-to-br from-gray-400 to-gray-500 grayscale'
+                                                    ? 'bg-gradient-to-br from-primary-400 to-primary-600'
+                                                    : 'bg-gradient-to-br from-gray-400 to-gray-500 grayscale'
                                                     }`}>
                                                     {item.oquvchi.ism?.charAt(0)}
                                                 </div>
@@ -283,26 +293,41 @@ const Attendance = () => {
                                             </div>
                                         </div>
 
-                                        {/* Toggle Controls */}
-                                        <div className="flex items-center p-1 bg-gray-100/80 dark:bg-dark-900/60 rounded-2xl gap-1">
-                                            <button
-                                                onClick={() => handleToggle(item.oquvchi._id, true)}
-                                                className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${item.keldi
+                                        {/* Toggle and Ball Controls */}
+                                        <div className="flex flex-col md:flex-row items-center gap-3">
+                                            {item.keldi && (
+                                                <div className="flex items-center gap-2 bg-gray-50 dark:bg-dark-900 px-3 py-1.5 rounded-xl border border-gray-100 dark:border-white/5">
+                                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Faollik:</span>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        max="10"
+                                                        value={item.ball || 0}
+                                                        onChange={(e) => handleBallChange(item.oquvchi._id, e.target.value)}
+                                                        className="w-12 bg-transparent text-center font-black text-sm text-primary-500 focus:outline-none"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className="flex items-center p-1 bg-gray-100/80 dark:bg-dark-900/60 rounded-2xl gap-1">
+                                                <button
+                                                    onClick={() => handleToggle(item.oquvchi._id, true)}
+                                                    className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${item.keldi
                                                         ? 'bg-white dark:bg-dark-800 text-emerald-600 dark:text-emerald-400 shadow-sm scale-105 ring-2 ring-emerald-500/20'
                                                         : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                                                    }`}
-                                            >
-                                                KELDI
-                                            </button>
-                                            <button
-                                                onClick={() => handleToggle(item.oquvchi._id, false)}
-                                                className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${!item.keldi
+                                                        }`}
+                                                >
+                                                    KELDI
+                                                </button>
+                                                <button
+                                                    onClick={() => handleToggle(item.oquvchi._id, false)}
+                                                    className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${!item.keldi
                                                         ? 'bg-white dark:bg-dark-800 text-red-600 dark:text-red-400 shadow-sm scale-105 ring-2 ring-red-500/20'
                                                         : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                                                    }`}
-                                            >
-                                                KELMADI
-                                            </button>
+                                                        }`}
+                                                >
+                                                    KELMADI
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
