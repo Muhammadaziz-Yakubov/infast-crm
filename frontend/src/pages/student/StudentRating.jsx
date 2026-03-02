@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import {
     HiOutlineStar, HiOutlineFire,
-    HiOutlineSparkles, HiOutlineLightningBolt, HiOutlineTrophy
+    HiOutlineSparkles, HiOutlineLightningBolt, HiOutlineAcademicCap
 } from 'react-icons/hi';
 
 const StudentRating = () => {
@@ -61,7 +61,7 @@ const StudentRating = () => {
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">O'quv markazi bo'yicha jami ballar</p>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-primary-500/10 flex items-center justify-center text-primary-500 shadow-lg shadow-primary-500/10">
-                    <HiOutlineTrophy className="w-6 h-6" />
+                    <HiOutlineAcademicCap className="w-6 h-6" />
                 </div>
             </header>
 
@@ -78,8 +78,8 @@ const StudentRating = () => {
                             <div className="flex items-center gap-4">
                                 <div className="relative">
                                     <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white shadow-xl ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-amber-600' :
-                                            i === 1 ? 'bg-gradient-to-br from-slate-300 to-slate-500' :
-                                                'bg-gradient-to-br from-orange-500 to-orange-700'
+                                        i === 1 ? 'bg-gradient-to-br from-slate-300 to-slate-500' :
+                                            'bg-gradient-to-br from-orange-500 to-orange-700'
                                         }`}>
                                         {r.ism?.charAt(0)}
                                     </div>
@@ -113,8 +113,8 @@ const StudentRating = () => {
                         <div
                             key={r._id}
                             className={`group p-3.5 rounded-2xl border transition-all active:scale-[0.98] ${isMe
-                                    ? 'bg-primary-50/50 dark:bg-primary-900/10 border-primary-200 dark:border-primary-500/30 shadow-md'
-                                    : 'bg-white dark:bg-dark-800 border-gray-100 dark:border-white/5 shadow-sm'
+                                ? 'bg-primary-50/50 dark:bg-primary-900/10 border-primary-200 dark:border-primary-500/30 shadow-md'
+                                : 'bg-white dark:bg-dark-800 border-gray-100 dark:border-white/5 shadow-sm'
                                 }`}
                         >
                             <div className="flex items-center gap-3.5">
