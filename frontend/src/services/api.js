@@ -116,4 +116,9 @@ export const marketAPI = {
     getCoinLogs: () => api.get('/market/logs'),
 };
 
+export const coinAPI = {
+    manualUpdate: (data) => api.post('/coins/update', data),
+    getGlobalLogs: () => api.get('/coins/logs'),
+};
+
 export default api;
