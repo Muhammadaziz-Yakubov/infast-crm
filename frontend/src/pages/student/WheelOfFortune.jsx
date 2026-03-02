@@ -3,6 +3,7 @@ import { wheelAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 import { HiOutlineArrowLeft, HiOutlineGift, HiOutlineClock, HiOutlineSparkles } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const WheelOfFortune = () => {
