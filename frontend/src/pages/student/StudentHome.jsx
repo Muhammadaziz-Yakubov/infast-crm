@@ -74,6 +74,10 @@ const StudentHome = () => {
                                     <p className="text-[8px] lg:text-[10px] font-black text-amber-500/80 uppercase tracking-widest mb-1 italic">Ballarim</p>
                                     <p className="text-base lg:text-xl font-black text-amber-500">{student.ball || 0}</p>
                                 </div>
+                                <div className="flex-1 p-3 lg:p-4 rounded-3xl bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20">
+                                    <p className="text-[8px] lg:text-[10px] font-black text-emerald-500/80 uppercase tracking-widest mb-1 italic">Coinlarim</p>
+                                    <p className="text-base lg:text-xl font-black text-emerald-500">{student.coins || 0} 🪙</p>
+                                </div>
                             </div>
                         </div>
                     </div>

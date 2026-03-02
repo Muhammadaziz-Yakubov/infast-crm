@@ -59,7 +59,9 @@ exports.login = async (req, res) => {
                     id: account._id,
                     username: account.username,
                     fullName: account.fullName || account.ism,
-                    role: account.role || role
+                    role: account.role || role,
+                    coins: account.coins || 0,
+                    ball: account.ball || 0
                 }
             }
         });

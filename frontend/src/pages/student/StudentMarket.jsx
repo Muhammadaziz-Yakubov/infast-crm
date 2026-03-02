@@ -7,13 +7,14 @@ import { HiOutlineShoppingBag, HiOutlineClock, HiOutlineTrendingUp, HiOutlineLig
 import { useNavigate } from 'react-router-dom';
 
 const StudentMarket = () => {
-    const { user } = useAuth();
+    const { user, checkAuth } = useAuth();
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [buying, setBuying] = useState(null);
 
     useEffect(() => {
+        checkAuth();
         fetchProducts();
     }, []);
 
@@ -120,8 +121,8 @@ const StudentMarket = () => {
                                     onClick={() => handleBuy(product)}
                                     disabled={buying === product._id || product.soni <= 0 || (user?.coins || 0) < product.narxi}
                                     className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-xs flex items-center justify-center gap-3 transition-all active:scale-95 ${(user?.coins || 0) >= product.narxi && product.soni > 0
-                                            ? 'bg-primary-500 text-white shadow-xl shadow-primary-500/20 hover:bg-primary-600'
-                                            : 'bg-gray-100 dark:bg-dark-700 text-gray-400 cursor-not-allowed'
+                                        ? 'bg-primary-500 text-white shadow-xl shadow-primary-500/20 hover:bg-primary-600'
+                                        : 'bg-gray-100 dark:bg-dark-700 text-gray-400 cursor-not-allowed'
                                         }`}
                                 >
                                     {buying === product._id ? (

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const WheelOfFortune = () => {
+    const { user, checkAuth } = useAuth();
     const navigate = useNavigate();
     const [spinning, setSpinning] = useState(false);
     const [prize, setPrize] = useState(null);
@@ -28,6 +29,7 @@ const WheelOfFortune = () => {
     const segmentAngle = 360 / segments.length;
 
     useEffect(() => {
+        checkAuth();
         fetchLogs();
     }, []);
 
@@ -69,6 +71,7 @@ const WheelOfFortune = () => {
                 setPrize(selectedPrize);
                 toast.success(res.data.message);
                 fetchLogs();
+                checkAuth();
             }, 5000); // Match CSS transition duration
 
         } catch (err) {
@@ -93,7 +96,11 @@ const WheelOfFortune = () => {
                     <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter">
                         Omad <span className="text-primary-500">G'ildiragi</span>
                     </h1>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1 italic">Har kuni 1 marta imkoniyat</p>
+                    <div className="flex items-center justify-center gap-2 mt-1">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Har kuni 1 marta imkoniyat</p>
+                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                        <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest italic">{user?.coins || 0} Coin 🪙</p>
+                    </div>
                 </div>
                 <div className="w-12" />
             </div>
