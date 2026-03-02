@@ -118,49 +118,58 @@ const WheelOfFortune = () => {
                             </div>
                         </div>
 
-                        {/* The Wheel */}
+                        {/* The Wheel with SVG for perfect rendering */}
                         <div
                             ref={wheelRef}
                             style={{
                                 transform: `rotate(${rotation}deg)`,
                                 transition: spinning ? 'transform 5s cubic-bezier(0.15, 0, 0.15, 1)' : 'none'
                             }}
-                            className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border-[12px] border-white dark:border-dark-800 shadow-2xl relative overflow-hidden bg-white dark:bg-dark-900"
+                            className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border-[12px] border-white dark:border-dark-800 shadow-2xl relative bg-white dark:bg-dark-900 overflow-hidden"
                         >
-                            {segments.map((s, i) => (
-                                <div
-                                    key={i}
-                                    style={{
-                                        backgroundColor: s.color,
-                                        transform: `rotate(${i * segmentAngle}deg) skewY(${segmentAngle - 90}deg)`,
-                                        transformOrigin: '100% 100%',
-                                        width: '50%',
-                                        height: '50%',
-                                        position: 'absolute',
-                                        top: '0',
-                                        left: '0'
-                                    }}
-                                    className="border border-white/10"
-                                >
-                                    <div
-                                        style={{
-                                            transform: `skewY(${-(segmentAngle - 90)}deg) rotate(${segmentAngle / 2}deg)`,
-                                            width: '100%',
-                                            height: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: 'white',
-                                            fontWeight: '900',
-                                            fontSize: '18px',
-                                            paddingRight: '60px'
-                                        }}
-                                        className="text-shadow-sm font-black italic tracking-tighter"
-                                    >
-                                        {s.label}
-                                    </div>
-                                </div>
-                            ))}
+                            <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                                {segments.map((s, i) => {
+                                    const startAngle = i * segmentAngle;
+                                    const endAngle = (i + 1) * segmentAngle;
+
+                                    // Calculate path for the wedge
+                                    const x1 = 50 + 50 * Math.cos(Math.PI * startAngle / 180);
+                                    const y1 = 50 + 50 * Math.sin(Math.PI * startAngle / 180);
+                                    const x2 = 50 + 50 * Math.cos(Math.PI * endAngle / 180);
+                                    const y2 = 50 + 50 * Math.sin(Math.PI * endAngle / 180);
+
+                                    const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`;
+
+                                    // Calculate text position
+                                    const textAngle = startAngle + segmentAngle / 2;
+                                    const tx = 50 + 35 * Math.cos(Math.PI * textAngle / 180);
+                                    const ty = 50 + 35 * Math.sin(Math.PI * textAngle / 180);
+
+                                    return (
+                                        <g key={i}>
+                                            <path
+                                                d={pathData}
+                                                fill={s.color}
+                                                stroke="rgba(255,255,255,0.1)"
+                                                strokeWidth="0.2"
+                                            />
+                                            <text
+                                                x={tx}
+                                                y={ty}
+                                                fill="white"
+                                                fontSize="6"
+                                                fontWeight="900"
+                                                className="italic font-black"
+                                                textAnchor="middle"
+                                                dominantBaseline="middle"
+                                                transform={`rotate(${textAngle + 90}, ${tx}, ${ty})`}
+                                            >
+                                                {s.label}
+                                            </text>
+                                        </g>
+                                    );
+                                })}
+                            </svg>
                             {/* Center Point */}
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white dark:bg-dark-800 rounded-full shadow-2xl z-10 flex items-center justify-center border-4 border-gray-100 dark:border-white/5">
                                 <span className="font-black text-primary-500 text-xs italic">IF</span>
