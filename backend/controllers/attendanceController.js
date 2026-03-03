@@ -205,7 +205,7 @@ exports.scanAttendance = async (req, res) => {
 
         res.json({
             success: true,
-            message: "Davomat muvaffaqiyatli belgilandi! +50 coin qo'shildi 🪙",
+            message: "Davomat qilindi +50 berildi",
             data: attendance
         });
 

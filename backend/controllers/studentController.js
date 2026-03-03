@@ -247,14 +247,14 @@ exports.getMyData = async (req, res) => {
         const payments = await Payment.find({ oquvchi: student._id }).sort({ sana: -1 });
         const attendance = await Attendance.find({
             guruh: student.guruh?._id,
-            'students.student': student._id
+            'oquvchilar.oquvchi': student._id
         }).sort({ sana: -1 }).limit(30);
 
         // Attendance processing to get student status only
         const processedAttendance = attendance.map(a => ({
             sana: a.sana,
-            keldi: a.students.find(s => s.student.toString() === student._id.toString())?.keldi,
-            izoh: a.students.find(s => s.student.toString() === student._id.toString())?.izoh
+            keldi: a.oquvchilar.find(o => o.oquvchi.toString() === student._id.toString())?.keldi,
+            izoh: a.oquvchilar.find(o => o.oquvchi.toString() === student._id.toString())?.izoh
         }));
 
         res.json({

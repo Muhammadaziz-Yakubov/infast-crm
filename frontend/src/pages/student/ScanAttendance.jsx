@@ -46,13 +46,13 @@ const ScanAttendance = () => {
         setLoading(true);
         try {
             const res = await attendanceAPI.scan();
-            setIsScanned(true);
-            toast.success(res.data.message || "Davomat muvaffaqiyatli belgilandi!");
+            setIsScanned(res.data.message || "Davomat qilindi +50 berildi");
+            toast.success(res.data.message || "Davomat qilindi +50 berildi");
 
-            // 3 soniyadan keyin asosiy sahifaga qaytish
+            // 1.5 soniyadan keyin asosiy sahifaga qaytish
             setTimeout(() => {
                 navigate('/');
-            }, 3000);
+            }, 1500);
         } catch (error) {
             toast.error(error.response?.data?.message || "Xatolik yuz berdi");
             // Xatolik bo'lsa, yana skanerlashga ruxsat berish uchun (ixtiyoriy)
@@ -104,7 +104,7 @@ const ScanAttendance = () => {
                             <HiOutlineCheckCircle className="w-16 h-16" />
                         </div>
                         <div className="space-y-2">
-                            <h2 className="text-2xl font-black text-gray-900 dark:text-white">Tayyor! ✅</h2>
+                            <h2 className="text-xl font-black text-gray-900 dark:text-white">{isScanned} ✅</h2>
                             <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Asosiy sahifaga qaytilmoqda...</p>
                         </div>
                     </div>
