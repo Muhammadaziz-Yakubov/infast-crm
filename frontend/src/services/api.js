@@ -89,6 +89,7 @@ export const attendanceAPI = {
     get: (groupId, date) => api.get(`/attendance/${groupId}/${date}`),
     save: (data) => api.post('/attendance', data),
     scan: () => api.post('/attendance/scan'),
+    sendReport: (groupId, date) => api.post(`/attendance/report/${groupId}/${date}`),
 };
 
 // Vazifalar

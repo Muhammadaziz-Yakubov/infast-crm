@@ -20,10 +20,6 @@ const attendanceSchema = new mongoose.Schema({
         keldi: {
             type: Boolean,
             default: false
-        },
-        ball: {
-            type: Number,
-            default: 0
         }
     }],
     izoh: {

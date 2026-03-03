@@ -74,19 +74,17 @@ exports.saveAttendance = async (req, res) => {
             attendance.izoh = izoh;
             await attendance.save();
 
-            // Ballarni va Coinlarni yangilash
+            // Coinlarni yangilash
             for (const item of oquvchilar) {
                 const oquvchiId = (item.oquvchi._id || item.oquvchi).toString();
                 const wasPresent = oldMap.get(oquvchiId);
                 const isPresent = item.keldi;
 
                 if (isPresent && !wasPresent) {
-                    // Yangi keldi -> Ball +1, Coin +100 (oldin kelmadi edi, endi keldi, demak -50 edi, uni +50 ga o'zgartirish uchun +100)
-                    await Student.findByIdAndUpdate(oquvchiId, { $inc: { ball: 1 } });
+                    // Yangi keldi -> Coin +100 (oldin kelmadi edi, endi keldi, demak -50 edi, uni +50 ga o'zgartirish uchun +100)
                     await updateCoins(oquvchiId, 100, `Davomat: Kelmagandan Keldi holatiga o'zgartirildi (+50)`);
                 } else if (!isPresent && wasPresent) {
-                    // Keldi edi, endi kelmagan -> Ball -1, Coin -100
-                    await Student.findByIdAndUpdate(oquvchiId, { $inc: { ball: -1 } });
+                    // Keldi edi, endi kelmagan -> Coin -100
                     await updateCoins(oquvchiId, -100, `Davomat: Keldidan Kelmadi holatiga o'zgartirildi (-50)`);
                 }
             }
@@ -99,11 +97,10 @@ exports.saveAttendance = async (req, res) => {
                 izoh
             });
 
-            // Ballarni va Coinlarni qo'shish
+            // Coinlarni qo'shish
             for (const item of oquvchilar) {
                 const oquvchiId = (item.oquvchi._id || item.oquvchi).toString();
                 if (item.keldi) {
-                    await Student.findByIdAndUpdate(oquvchiId, { $inc: { ball: 1 } });
                     await updateCoins(oquvchiId, 50, 'Davomat: Darsga keldi');
                 } else {
                     await updateCoins(oquvchiId, -50, 'Davomat: Darsga kelmadi');
@@ -199,8 +196,7 @@ exports.scanAttendance = async (req, res) => {
             }
         }
 
-        // Ball va Coin qo'shish
-        await Student.findByIdAndUpdate(studentId, { $inc: { ball: 1 } });
+        // Coin qo'shish
         await updateCoins(studentId, 50, 'QR-kod orqali davomat: Darsga keldi');
 
         res.json({
@@ -211,5 +207,39 @@ exports.scanAttendance = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Telegramga davomat hisobotini yuborish
+// @route   POST /api/attendance/report/:groupId/:date
+exports.sendAttendanceReport = async (req, res) => {
+    try {
+        const { groupId, date } = req.params;
+        const { sendAttendanceNotification } = require('../services/telegramBot');
+
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const attendance = await Attendance.findOne({
+            guruh: groupId,
+            sana: { $gte: startOfDay, $lte: endOfDay }
+        }).populate('oquvchilar.oquvchi', 'ism');
+
+        if (!attendance) {
+            return res.status(404).json({ success: false, message: 'Davomat topilmadi' });
+        }
+
+        const result = await sendAttendanceNotification(groupId, date, attendance);
+
+        if (result.success) {
+            res.json({ success: true, message: 'Davomat Telegramga yuborildi' });
+        } else {
+            res.status(400).json({ success: false, message: result.message });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi' });
     }
 };

@@ -333,14 +333,13 @@ exports.getRating = async (req, res) => {
             const taskScore = submissions.reduce((sum, s) => sum + (s.score || 0), 0);
             const taskCount = submissions.length;
 
-            // 2. Davomat ballari — har bir kelgan dars uchun +2 ball
+            // 2. Davomat statistikasi (faqat ko'rsatish uchun, ball berilmaydi)
             const attendanceRecords = await Attendance.find({
                 'oquvchilar.oquvchi': student._id
             });
 
             let attendancePresent = 0;
             let attendanceTotal = 0;
-            let classActivityScore = 0;
             attendanceRecords.forEach(record => {
                 const studentRecord = record.oquvchilar.find(
                     o => o.oquvchi.toString() === student._id.toString()
@@ -349,15 +348,12 @@ exports.getRating = async (req, res) => {
                     attendanceTotal++;
                     if (studentRecord.keldi) {
                         attendancePresent++;
-                        classActivityScore += (studentRecord.ball || 0); // Darsdagi faollik bali
                     }
                 }
             });
 
-            const attendanceScore = (attendancePresent * 2) + classActivityScore; // Har kelgan dars uchun +2 va faollik bali
-
-            // Umumiy ball
-            const totalScore = taskScore + attendanceScore;
+            // Umumiy ball (faqat vazifalardan)
+            const totalScore = taskScore;
 
             // O'quvchining ball sifatini yangilash
             if (student.ball !== totalScore) {

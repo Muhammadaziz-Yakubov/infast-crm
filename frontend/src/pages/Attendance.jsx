@@ -7,6 +7,7 @@ import {
     HiOutlineCalendar, HiOutlineSave, HiOutlineInformationCircle,
     HiOutlineCheckCircle, HiOutlineClock
 } from 'react-icons/hi';
+import { FaTelegramPlane } from 'react-icons/fa';
 
 const Attendance = () => {
     const [groups, setGroups] = useState([]);
@@ -16,6 +17,7 @@ const Attendance = () => {
     const [loading, setLoading] = useState(true);
     const [fetchingData, setFetchingData] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [sendingReport, setSendingReport] = useState(false);
     const [izoh, setIzoh] = useState('');
 
     useEffect(() => {
@@ -66,15 +68,6 @@ const Attendance = () => {
         }));
     };
 
-    const handleBallChange = (studentId, ball) => {
-        setAttendanceData(prev => ({
-            ...prev,
-            oquvchilar: prev.oquvchilar.map(item =>
-                item.oquvchi._id === studentId ? { ...item, ball: parseInt(ball) || 0 } : item
-            )
-        }));
-    };
-
     const handleMarkAll = (status) => {
         setAttendanceData(prev => ({
             ...prev,
@@ -91,8 +84,7 @@ const Attendance = () => {
                 sana: selectedDate,
                 oquvchilar: attendanceData.oquvchilar.map(item => ({
                     oquvchi: item.oquvchi._id,
-                    keldi: item.keldi,
-                    ball: item.ball || 0
+                    keldi: item.keldi
                 })),
                 izoh
             };
@@ -103,6 +95,18 @@ const Attendance = () => {
             toast.error(err.response?.data?.message || "Saqlashda xatolik");
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleSendReport = async () => {
+        try {
+            setSendingReport(true);
+            await attendanceAPI.sendReport(selectedGroup, selectedDate);
+            toast.success("Davomat xabari Telegramga yuborildi 🤖");
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Xabar yuborishda xatolik");
+        } finally {
+            setSendingReport(false);
         }
     };
 
@@ -239,6 +243,24 @@ const Attendance = () => {
                             </div>
                             <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </button>
+
+                        {/* Telegram Report Button */}
+                        <button
+                            onClick={handleSendReport}
+                            disabled={sendingReport || !attendanceData}
+                            className="group relative w-full py-4 px-8 rounded-3xl bg-blue-50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 
+                                font-bold border-2 border-blue-500/10 overflow-hidden transition-all
+                                hover:bg-blue-100 dark:hover:bg-blue-900/20 active:scale-95 disabled:opacity-50"
+                        >
+                            <div className="relative z-10 flex items-center justify-center gap-3">
+                                {sendingReport ? (
+                                    <div className="w-5 h-5 border-2 border-blue-400/30 border-t-blue-500 rounded-full animate-spin" />
+                                ) : (
+                                    <FaTelegramPlane className="w-5 h-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                                )}
+                                <span>{sendingReport ? 'Yuborilmoqda...' : 'Telegramga xabar yuborish'}</span>
+                            </div>
+                        </button>
                     </div>
 
                     {/* Main List Area */}
@@ -293,41 +315,25 @@ const Attendance = () => {
                                             </div>
                                         </div>
 
-                                        {/* Toggle and Ball Controls */}
-                                        <div className="flex flex-col md:flex-row items-center gap-3">
-                                            {item.keldi && (
-                                                <div className="flex items-center gap-2 bg-gray-50 dark:bg-dark-900 px-3 py-1.5 rounded-xl border border-gray-100 dark:border-white/5">
-                                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Faollik:</span>
-                                                    <input
-                                                        type="number"
-                                                        min="0"
-                                                        max="10"
-                                                        value={item.ball || 0}
-                                                        onChange={(e) => handleBallChange(item.oquvchi._id, e.target.value)}
-                                                        className="w-12 bg-transparent text-center font-black text-sm text-primary-500 focus:outline-none"
-                                                    />
-                                                </div>
-                                            )}
-                                            <div className="flex items-center p-1 bg-gray-100/80 dark:bg-dark-900/60 rounded-2xl gap-1">
-                                                <button
-                                                    onClick={() => handleToggle(item.oquvchi._id, true)}
-                                                    className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${item.keldi
-                                                        ? 'bg-white dark:bg-dark-800 text-emerald-600 dark:text-emerald-400 shadow-sm scale-105 ring-2 ring-emerald-500/20'
-                                                        : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                                                        }`}
-                                                >
-                                                    KELDI
-                                                </button>
-                                                <button
-                                                    onClick={() => handleToggle(item.oquvchi._id, false)}
-                                                    className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${!item.keldi
-                                                        ? 'bg-white dark:bg-dark-800 text-red-600 dark:text-red-400 shadow-sm scale-105 ring-2 ring-red-500/20'
-                                                        : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                                                        }`}
-                                                >
-                                                    KELMADI
-                                                </button>
-                                            </div>
+                                        <div className="flex items-center p-1 bg-gray-100/80 dark:bg-dark-900/60 rounded-2xl gap-1">
+                                            <button
+                                                onClick={() => handleToggle(item.oquvchi._id, true)}
+                                                className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${item.keldi
+                                                    ? 'bg-white dark:bg-dark-800 text-emerald-600 dark:text-emerald-400 shadow-sm scale-105 ring-2 ring-emerald-500/20'
+                                                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                                                    }`}
+                                            >
+                                                KELDI
+                                            </button>
+                                            <button
+                                                onClick={() => handleToggle(item.oquvchi._id, false)}
+                                                className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs font-black transition-all ${!item.keldi
+                                                    ? 'bg-white dark:bg-dark-800 text-red-600 dark:text-red-400 shadow-sm scale-105 ring-2 ring-red-500/20'
+                                                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                                                    }`}
+                                            >
+                                                KELMADI
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
@@ -365,7 +371,7 @@ const Attendance = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </div >
     );
 };
 

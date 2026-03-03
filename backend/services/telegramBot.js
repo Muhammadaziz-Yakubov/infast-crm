@@ -53,14 +53,14 @@ const sendGroupBallReport = async (groupId) => {
 
         const students = await Student.find({ guruh: groupId, holati: 'faol' }).sort({ ball: -1 });
 
-        let message = `🏆 *${group.nomi} guruhi bo'yicha ballar reytingi:* \n\n`;
+        let message = `📊 *${group.nomi} guruhi bo'yicha davomat va reyting:* \n\n`;
 
         students.forEach((s, index) => {
             const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '👤';
-            message += `${medal} ${s.ism} — *${s.ball}* ball\n`;
+            message += `${medal} ${s.ism}\n`;
         });
 
-        message += `\n📊 Doimiy darslarda qatnashing va ballaringizni oshiring!`;
+        message += `\n📊 Doimiy darslarda qatnashing va faol bo'ling!`;
 
         await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'Markdown' });
         return { success: true };
@@ -102,9 +102,53 @@ const sendTaskNotification = async (groupId, taskData) => {
     }
 };
 
+// Guruhga dars davomati hisobotini yuborish
+const sendAttendanceNotification = async (groupId, date, attendanceData) => {
+    try {
+        const group = await Group.findById(groupId);
+        if (!group || !group.telegramChatId) return { success: false, message: 'Guruh yoki Telegram Chat ID topilmadi' };
+
+        const formattedDate = new Date(date).toLocaleDateString('uz-UZ', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const present = attendanceData.oquvchilar.filter(o => o.keldi);
+        const absent = attendanceData.oquvchilar.filter(o => !o.keldi);
+
+        let message = `📝 *DAVOMAT HISOBOTI*\n` +
+            `📅 *Sana:* ${formattedDate}\n` +
+            `📚 *Guruh:* ${group.nomi}\n\n`;
+
+        if (present.length > 0) {
+            message += `✅ *Kelganlar (${present.length}):*\n`;
+            present.forEach(p => {
+                message += `• ${p.oquvchi.ism}\n`;
+            });
+        }
+
+        if (absent.length > 0) {
+            message += `\n❌ *Kelmaganlar (${absent.length}):*\n`;
+            absent.forEach(a => {
+                message += `• ${a.oquvchi.ism}\n`;
+            });
+        }
+
+        message += `\n📊 O'z vaqtida darslarga qatnashganlarga rahmat!`;
+
+        await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'Markdown' });
+        return { success: true };
+    } catch (error) {
+        console.error('Send attendance report error:', error);
+        return { success: false, message: error.message };
+    }
+};
+
 module.exports = {
     bot,
     initScheduler,
     sendGroupBallReport,
-    sendTaskNotification
+    sendTaskNotification,
+    sendAttendanceNotification
 };
