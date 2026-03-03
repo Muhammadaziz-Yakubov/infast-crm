@@ -136,20 +136,27 @@ exports.scanAttendance = async (req, res) => {
 
         // Guruh jadvalini tekshirish (Vaqt cheklovi - ixtiyoriy lekin xavfsiz)
         // Hozircha sodda: faqat bugun dars bo'lsa va dars vaqtiga yaqin bo'lsa
-        const now = new Date();
-        const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-        // Agar guruh jadvalida vaqt bo'lsa, tekshiramiz (Masalan: 09:00-11:00)
+        // Agar guruh jadvalida vaqt bo'lsa, tekshiramiz (Masalan: 14:30-16:00)
         if (student.guruh.jadval?.vaqt) {
             const [startTime] = student.guruh.jadval.vaqt.split('-');
-            const [h, m] = startTime.split(':');
-            const startLimit = new Date();
-            startLimit.setHours(parseInt(h) - 1, parseInt(m), 0, 0); // Darsdan 1 soat oldin
+            const [h, m] = startTime.split(':').map(Number);
 
-            const endLimit = new Date();
-            endLimit.setHours(parseInt(h) + 3, parseInt(m), 0, 0); // Darsdan 3 soat keyingacha
+            // Hozirgi vaqtni Asia/Tashkent vaqtida olish
+            const now = new Date();
+            const tashkentTime = now.toLocaleTimeString('en-GB', {
+                timeZone: 'Asia/Tashkent',
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const [currentH, currentM] = tashkentTime.split(':').map(Number);
 
-            if (now < startLimit || now > endLimit) {
+            // Jami minutlarda hisoblash (kunning boshidan boshlab)
+            const nowTotalMinutes = currentH * 60 + currentM;
+            const startTotalMinutes = h * 60 + m - 60; // Darsdan 1 soat oldin boshlanadi
+            const endTotalMinutes = h * 60 + m + 180; // Dars boshlanganidan keyin 3 soatgacha davom etadi
+
+            if (nowTotalMinutes < startTotalMinutes || nowTotalMinutes > endTotalMinutes) {
                 return res.status(400).json({
                     success: false,
                     message: `Davomat faqat dars vaqtida olinadi (Sizning darsingiz: ${student.guruh.jadval.vaqt})`
