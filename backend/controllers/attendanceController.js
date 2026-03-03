@@ -153,8 +153,10 @@ exports.scanAttendance = async (req, res) => {
 
             // Jami minutlarda hisoblash (kunning boshidan boshlab)
             const nowTotalMinutes = currentH * 60 + currentM;
-            const startTotalMinutes = h * 60 + m - 60; // Darsdan 1 soat oldin boshlanadi
-            const endTotalMinutes = h * 60 + m + 180; // Dars boshlanganidan keyin 3 soatgacha davom etadi
+            const startTotalMinutes = h * 60 + m - 120; // Darsdan 2 soat oldin boshlanadi
+            const endTotalMinutes = h * 60 + m + 360; // Dars boshlanganidan keyin 6 soatgacha davom etadi
+
+            console.log(`Time Check: Now=${tashkentTime} (${nowTotalMinutes}), ClassStart=${startTime}, Range=[${startTotalMinutes}, ${endTotalMinutes}]`);
 
             if (nowTotalMinutes < startTotalMinutes || nowTotalMinutes > endTotalMinutes) {
                 return res.status(400).json({
