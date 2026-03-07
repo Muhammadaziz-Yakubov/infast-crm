@@ -21,6 +21,7 @@ const Tasks = () => {
     const [selectedTask, setSelectedTask] = useState(null);
     const [submissions, setSubmissions] = useState([]);
     const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+    const [taskFilter, setTaskFilter] = useState('active'); // 'active' or 'completed'
 
     // Form state
     const [form, setForm] = useState({
@@ -118,6 +119,17 @@ const Tasks = () => {
         }
     };
 
+    const handleCompleteTask = async (taskId) => {
+        if (!window.confirm("Vazifani tugatishni tasdiqlaysizmi? Bu vazifa arxivga o'tadi.")) return;
+        try {
+            await taskAPI.complete(taskId);
+            toast.success("Vazifa tugatildi va arxivga olindi ✨");
+            fetchData();
+        } catch (err) {
+            toast.error("Xatolik yuz berdi");
+        }
+    };
+
     if (loading) return <LoadingSpinner />;
 
     return (
@@ -137,9 +149,25 @@ const Tasks = () => {
                 </button>
             </div>
 
+            {/* Filter Tabs */}
+            <div className="flex gap-4 p-2 bg-gray-100/50 dark:bg-dark-900/50 rounded-3xl w-fit">
+                <button
+                    onClick={() => setTaskFilter('active')}
+                    className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'active' ? 'bg-white dark:bg-dark-800 text-primary-500 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                >
+                    Faol Vazifalar
+                </button>
+                <button
+                    onClick={() => setTaskFilter('completed')}
+                    className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'completed' ? 'bg-white dark:bg-dark-800 text-emerald-500 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                >
+                    Arxiv (Tugatilgan)
+                </button>
+            </div>
+
             {/* Task Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {tasks.map((task) => (
+                {tasks.filter(t => (t.status || 'active') === taskFilter).map((task) => (
                     <div
                         key={task._id}
                         className="group bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl transition-all duration-500"
@@ -169,13 +197,24 @@ const Tasks = () => {
                                 </div>
                             </div>
 
-                            <button
-                                onClick={() => fetchSubmissions(task)}
-                                className="w-full py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 group-hover:bg-primary-600 group-hover:text-white transition-all shadow-sm"
-                            >
-                                <HiOutlineEye className="w-5 h-5" />
-                                Topshiriqlarni ko'rish
-                            </button>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    onClick={() => fetchSubmissions(task)}
+                                    className="py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
+                                >
+                                    <HiOutlineEye className="w-5 h-5" />
+                                    Ko'rish
+                                </button>
+                                {task.status !== 'completed' && (
+                                    <button
+                                        onClick={() => handleCompleteTask(task._id)}
+                                        className="py-4 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                                    >
+                                        <HiOutlineBadgeCheck className="w-5 h-5" />
+                                        Tugatish
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ))}

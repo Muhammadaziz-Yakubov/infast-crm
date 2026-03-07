@@ -110,6 +110,25 @@ exports.gradeSubmission = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+// Complete/Archive Task
+exports.completeTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
+        }
+        task.status = 'completed';
+        await task.save();
+
+        res.json({
+            success: true,
+            message: 'Vazifa muvaffaqiyatli yakunlandi va arxivga olindi',
+            data: task
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
 
 // --- STUDENT CONTROLLERS ---
 

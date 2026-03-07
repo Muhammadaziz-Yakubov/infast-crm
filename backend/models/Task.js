@@ -32,6 +32,11 @@ const taskSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'Yaratuvchi tanlanishi shart']
+    },
+    status: {
+        type: String,
+        enum: ['active', 'completed'],
+        default: 'active'
     }
 }, {
     timestamps: true

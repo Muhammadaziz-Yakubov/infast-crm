@@ -18,6 +18,7 @@ const StudentTasks = () => {
     const [files, setFiles] = useState([]);
     const [comment, setComment] = useState('');
     const [submitting, setSubmitting] = useState(false);
+    const [taskFilter, setTaskFilter] = useState('active'); // 'active' or 'completed'
 
     useEffect(() => {
         fetchTasks();
@@ -82,7 +83,23 @@ const StudentTasks = () => {
                 <p className="text-sm font-bold text-gray-500 uppercase tracking-widest opacity-60 italic">Bilimni mustahkamlash va ballar to'plash vaqti</p>
             </div>
 
-            {tasks.length === 0 ? (
+            {/* Filter Tabs */}
+            <div className="flex gap-4 p-2 bg-gray-100/50 dark:bg-dark-900/50 rounded-3xl w-fit mx-auto md:mx-0">
+                <button
+                    onClick={() => setTaskFilter('active')}
+                    className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'active' ? 'bg-white dark:bg-dark-800 text-primary-500 shadow-xl' : 'text-gray-400 hover:text-gray-600'}`}
+                >
+                    Faol
+                </button>
+                <button
+                    onClick={() => setTaskFilter('completed')}
+                    className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'completed' ? 'bg-white dark:bg-dark-800 text-emerald-500 shadow-xl' : 'text-gray-400 hover:text-gray-600'}`}
+                >
+                    Tugatilgan
+                </button>
+            </div>
+
+            {tasks.filter(t => (t.status || 'active') === taskFilter).length === 0 ? (
                 <div className="bg-white dark:bg-dark-800 rounded-[3rem] py-32 text-center border-2 border-dashed border-gray-100 dark:border-dark-700 shadow-inner">
                     <div className="w-24 h-24 bg-gray-50 dark:bg-dark-900 rounded-full flex items-center justify-center mx-auto mb-6">
                         <HiOutlineClipboardList className="w-12 h-12 text-gray-300" />
@@ -92,7 +109,7 @@ const StudentTasks = () => {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                    {tasks.map((task) => (
+                    {tasks.filter(t => (t.status || 'active') === taskFilter).map((task) => (
                         <div
                             key={task._id}
                             className="group bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"

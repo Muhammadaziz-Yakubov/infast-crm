@@ -6,6 +6,7 @@ const {
     createTask,
     getTaskSubmissions,
     gradeSubmission,
+    completeTask,
     getMyTasks,
     submitTask
 } = require('../controllers/taskController');
@@ -18,6 +19,7 @@ const upload = multer({ storage });
 router.post('/', protect, upload.single('image'), createTask);
 router.get('/:taskId/submissions', protect, getTaskSubmissions);
 router.patch('/submissions/:id/grade', protect, gradeSubmission);
+router.patch('/:id/complete', protect, completeTask);
 
 // Student routes
 router.get('/my', protect, getMyTasks);

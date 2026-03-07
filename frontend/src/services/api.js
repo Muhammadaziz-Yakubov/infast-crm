@@ -100,6 +100,7 @@ export const taskAPI = {
     }),
     getSubmissions: (taskId) => api.get(`/tasks/${taskId}/submissions`),
     gradeSubmission: (id, score) => api.patch(`/tasks/submissions/${id}/grade`, { score }),
+    complete: (id) => api.patch(`/tasks/${id}/complete`),
 
     // Student
     getMyTasks: () => api.get('/tasks/my'),
