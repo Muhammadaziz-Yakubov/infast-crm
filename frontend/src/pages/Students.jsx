@@ -235,34 +235,28 @@ const Students = () => {
         const currentMonth = now.getMonth();
         const today = now.getDate();
 
-        // Maqsadli oyni aniqlash
-        let targetMonth = currentMonth;
-        let targetYear = currentYear;
+        // Maqsadli sanani aniqlash: Shu oyning to'lov kuni
+        let targetDate = new Date(currentYear, currentMonth, tolovKuni);
 
-        // Agar bu oydagi to'lov kuni o'tib ketgan bo'lsa yoki 
-        // o'quvchi bu oy uchun to'lab bo'lgan bo'lsa, keyingi oyni hisoblaymiz
-        if (today > tolovKuni || tolovHolati === 'tolangan') {
-            targetMonth++;
-            if (targetMonth > 11) {
-                targetMonth = 0;
-                targetYear++;
-            }
+        // Agar bugun to'lov kunidan o'tib ketgan bo'lsa, keyingi oyni maqsad qilamiz
+        if (today > tolovKuni) {
+            targetDate.setMonth(targetDate.getMonth() + 1);
         }
 
-        const targetDate = new Date(targetYear, targetMonth, tolovKuni);
         const diffTime = targetDate - now;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (tolovHolati === 'tolangan') {
-            return `${diffDays} kun qoldi (To'langan ✅)`;
+        const statusText = tolovHolati === 'tolangan' ? " (To'langan ✅)" : "";
+
+        if (today === tolovKuni) {
+            return tolovHolati === 'tolangan' ? "Bugun (To'langan ✅)" : "Bugun 🔔";
         }
 
         if (today > tolovKuni && tolovHolati !== 'tolangan') {
             return "Muddati o'tgan ❌";
         }
 
-        if (diffDays === 0) return "Bugun 🔔";
-        return `${diffDays} kun qoldi`;
+        return `${diffDays} kun qoldi${statusText}`;
     };
 
     const openViewModal = (student) => {
