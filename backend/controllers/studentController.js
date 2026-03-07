@@ -367,7 +367,6 @@ exports.getRating = async (req, res) => {
                 kurs: student.kurs,
                 taskScore,
                 taskCount,
-                attendanceScore,
                 attendancePresent,
                 attendanceTotal,
                 attendancePercent: attendanceTotal > 0 ? Math.round((attendancePresent / attendanceTotal) * 100) : 0,

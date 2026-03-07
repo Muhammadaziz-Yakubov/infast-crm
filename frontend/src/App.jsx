@@ -33,6 +33,8 @@ const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 const CoinManager = React.lazy(() => import('./pages/CoinManager'));
 
 
+import { Analytics } from "@vercel/analytics/react";
+
 const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuth();
     if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
@@ -127,6 +129,7 @@ const App = () => {
         <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <ThemeProvider>
                 <AuthProvider>
+                    <Analytics />
                     <Toaster
                         position="top-right"
                         toastOptions={{

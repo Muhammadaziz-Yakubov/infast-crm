@@ -150,7 +150,7 @@ const StudentTasks = () => {
                                         <HiOutlineEye className="w-4 h-4" />
                                         Batafsil
                                     </button>
-                                    {!task.isSubmitted && (
+                                    {!task.isSubmitted && task.status !== 'completed' && (
                                         <button
                                             onClick={() => { setSelectedTask(task); setIsSubmitOpen(true); }}
                                             className="flex-1 py-4 rounded-2xl bg-primary-600 text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"

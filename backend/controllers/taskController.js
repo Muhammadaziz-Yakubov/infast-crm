@@ -172,6 +172,14 @@ exports.submitTask = async (req, res) => {
     try {
         const { taskId, comment } = req.body;
 
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
+        }
+        if (task.status === 'completed') {
+            return res.status(400).json({ success: false, message: 'Ushbu vazifa yakunlangan, topshirib bo\'lmaydi' });
+        }
+
         // Multi-file upload
         const imageUrls = [];
         if (req.files && req.files.length > 0) {
