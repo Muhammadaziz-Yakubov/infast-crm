@@ -48,6 +48,19 @@ exports.login = async (req, res) => {
             });
         }
 
+        // 3. Check payment status for students
+        if (role === 'student' && (account.tolovHolati === 'tolanmagan' || account.tolovHolati === 'qarzdor')) {
+            return res.status(403).json({
+                success: false,
+                isBlocked: true,
+                message: "To'lovni amalga oshiring, hisobingiz blocklangan!",
+                paymentDetails: {
+                    cardNumber: "8600314132449820",
+                    cardName: "N Yakubov"
+                }
+            });
+        }
+
         const token = generateToken(account._id);
 
         res.json({

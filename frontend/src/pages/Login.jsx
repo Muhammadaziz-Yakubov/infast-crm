@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
+import { HiOutlineEye, HiOutlineEyeOff, HiOutlineLockClosed, HiOutlineCreditCard } from 'react-icons/hi';
+import Modal from '../components/Modal';
 
 const Login = () => {
     const { login } = useAuth();
@@ -9,6 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [blockedData, setBlockedData] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,7 +23,11 @@ const Login = () => {
             await login(username, password);
             toast.success('Muvaffaqiyatli kirildi!');
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Xatolik yuz berdi');
+            if (err.response?.status === 403 && err.response?.data?.isBlocked) {
+                setBlockedData(err.response.data);
+            } else {
+                toast.error(err.response?.data?.message || 'Xatolik yuz berdi');
+            }
         } finally {
             setLoading(false);
         }
@@ -118,8 +124,74 @@ const Login = () => {
                     </p>
                 </div>
             </div>
-        </div>
 
+            {/* Blocked Account Modal */}
+            <Modal
+                isOpen={!!blockedData}
+                onClose={() => setBlockedData(null)}
+                title="Hisob Blocklangan 🔒"
+                size="sm"
+            >
+                <div className="space-y-8 py-2">
+                    <div className="flex flex-col items-center text-center space-y-4">
+                        <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center">
+                            <HiOutlineLockClosed className="w-10 h-10 text-red-500 animate-bounce" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Kechirasiz!</h3>
+                            <p className="text-sm font-bold text-gray-500 italic leading-relaxed">
+                                {blockedData?.message}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="p-8 rounded-[2rem] bg-gradient-to-br from-gray-900 to-indigo-900 shadow-2xl relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
+
+                        <div className="relative z-10 space-y-6">
+                            <div className="flex justify-between items-start">
+                                <HiOutlineCreditCard className="w-10 h-10 text-white/40" />
+                                <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Payme / Uzum</div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-white/50 uppercase tracking-widest italic ml-1">Karta raqami</p>
+                                <button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(blockedData?.paymentDetails?.cardNumber);
+                                        toast.success("Karta raqami nusxalandi! ✨");
+                                    }}
+                                    className="text-2xl font-black text-white tracking-[0.1em] hover:text-primary-400 transition-colors text-left"
+                                >
+                                    {blockedData?.paymentDetails?.cardNumber.replace(/(.{4})/g, '$1 ')}
+                                </button>
+                            </div>
+
+                            <div className="flex justify-between items-end">
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black text-white/50 uppercase tracking-widest italic ml-1">Karta egasi</p>
+                                    <p className="text-lg font-black text-white uppercase italic">{blockedData?.paymentDetails?.cardName}</p>
+                                </div>
+                                <div className="w-10 h-10 bg-white/10 rounded-xl backdrop-blur-md flex items-center justify-center">
+                                    <div className="w-6 h-4 bg-orange-500 rounded-sm opacity-50" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p className="text-[10px] font-black text-gray-400 text-center uppercase tracking-widest italic px-4">
+                        To'lovni amalga oshirgach, chekni adminstratorga yuboring va hisobingiz 5 daqiqa ichida faollashadi.
+                    </p>
+
+                    <button
+                        onClick={() => setBlockedData(null)}
+                        className="w-full py-5 rounded-2xl bg-gray-100 dark:bg-dark-700 text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.2em] text-xs hover:bg-gray-200 dark:hover:bg-dark-600 transition-all"
+                    >
+                        Tushunarli
+                    </button>
+                </div>
+            </Modal>
+        </div>
     );
 };
 
