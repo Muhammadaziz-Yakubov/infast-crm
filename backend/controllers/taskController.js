@@ -5,6 +5,7 @@ const Submission = require('../models/Submission');
 const Student = require('../models/Student');
 const Group = require('../models/Group');
 const { sendTaskNotification } = require('../services/telegramBot');
+const { updateCoins } = require('../services/coinService');
 const path = require('path');
 
 // R2 Upload helper
