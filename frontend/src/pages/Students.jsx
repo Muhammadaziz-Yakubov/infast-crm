@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
     HiOutlineCash, HiOutlineFilter, HiOutlinePhone, HiOutlineCalendar,
-    HiOutlineBadgeCheck, HiOutlineUserCircle, HiOutlineX, HiOutlineCheckCircle
+    HiOutlineBadgeCheck, HiOutlineUserCircle, HiOutlineX, HiOutlineCheckCircle,
+    HiOutlineEye
 } from 'react-icons/hi';
 
 const Students = () => {
@@ -470,6 +471,13 @@ const Students = () => {
                                                     </button>
                                                 )}
                                                 <button
+                                                    onClick={() => openViewModal(s)}
+                                                    className="p-3 rounded-xl bg-purple-500 text-white shadow-lg shadow-purple-500/20 hover:scale-110 active:scale-90 transition-all"
+                                                    title="Batafsil ko'rish"
+                                                >
+                                                    <HiOutlineEye className="w-5 h-5" />
+                                                </button>
+                                                <button
                                                     onClick={() => openEditModal(s)}
                                                     className="p-3 rounded-xl bg-blue-500 text-white shadow-lg shadow-blue-500/20 hover:scale-110 active:scale-90 transition-all"
                                                     title="Tahrirlash"
@@ -656,8 +664,8 @@ const Students = () => {
                                 </div>
                                 <div className="flex flex-col items-center md:items-end">
                                     <div className={`px-8 py-4 rounded-2xl text-center shadow-lg transform transition-transform hover:scale-105 active:scale-95 ${viewingStudent.tolovHolati === 'tolangan'
-                                            ? 'bg-emerald-500 shadow-emerald-500/30'
-                                            : 'bg-red-500 shadow-red-500/30'
+                                        ? 'bg-emerald-500 shadow-emerald-500/30'
+                                        : 'bg-red-500 shadow-red-500/30'
                                         }`}>
                                         <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">To'lovgacha</p>
                                         <p className="text-xl font-black text-white uppercase italic">{calculateDaysUntilPayment(viewingStudent.tolovKuni, viewingStudent.tolovHolati)}</p>
