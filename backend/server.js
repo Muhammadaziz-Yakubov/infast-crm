@@ -73,6 +73,7 @@ app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/market', require('./routes/marketRoutes'));
 app.use('/api/coins', require('./routes/coinRoutes'));
 app.use('/api/wheels', require('./routes/wheelRoutes'));
+app.use('/api/quizzes', require('./routes/quizRoutes'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {

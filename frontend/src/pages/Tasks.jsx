@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { taskAPI, groupAPI } from '../services/api';
+import { taskAPI, groupAPI, quizAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -9,7 +9,7 @@ import {
     HiOutlinePencil, HiOutlineTrash, HiOutlineCheckCircle,
     HiOutlineX, HiOutlinePhotograph, HiOutlineCalendar,
     HiOutlineBadgeCheck, HiOutlineEye, HiOutlineAnnotation,
-    HiOutlineUpload
+    HiOutlineUpload, HiOutlineLightBulb, HiOutlineStar
 } from 'react-icons/hi';
 
 const Tasks = () => {
@@ -21,7 +21,11 @@ const Tasks = () => {
     const [selectedTask, setSelectedTask] = useState(null);
     const [submissions, setSubmissions] = useState([]);
     const [loadingSubmissions, setLoadingSubmissions] = useState(false);
-    const [taskFilter, setTaskFilter] = useState('active'); // 'active' or 'completed'
+    const [taskFilter, setTaskFilter] = useState('active'); // 'active', 'completed', or 'quizzes'
+
+    // Quiz results state
+    const [quizResults, setQuizResults] = useState([]);
+    const [loadingResults, setLoadingResults] = useState(false);
 
     // Form state
     const [form, setForm] = useState({
@@ -45,20 +49,15 @@ const Tasks = () => {
     const fetchData = async () => {
         try {
             const [tasksRes, groupsRes] = await Promise.all([
-                taskAPI.getMyTasks(), // For admin this should return all tasks they created, but my controller is simple now. I'll adjust it if needed.
+                taskAPI.getMyTasks(),
                 groupAPI.getAll()
             ]);
-            // Currently my controller getMyTasks returns tasks for student group. 
-            // I should have a separate admin getAll tasks or adjust based on role.
-            // Let's assume for now admin gets all tasks via a search if I had implemented it, 
-            // but for this MVP I'll fetch tasks from a more global-like view or the same endpoint if I adjust controller.
-
-            // Wait, I didn't verify the admin task list endpoint. Let me check my controller.
-            // Controller: getMyTasks (Student), createTask (Admin), getTaskSubmissions (Admin), gradeSubmission (Admin).
-            // Actually, I should add a general getAllTasks for Admin.
-            console.log("Admin tasks from API:", tasksRes.data.data);
             setTasks(tasksRes.data.data);
             setGroups(groupsRes.data.data);
+
+            if (taskFilter === 'quizzes') {
+                fetchQuizResults();
+            }
         } catch (err) {
             console.error("Fetch data error:", err);
             toast.error("Ma'lumotlarni yuklashda xatolik");
@@ -66,6 +65,24 @@ const Tasks = () => {
             setLoading(false);
         }
     };
+
+    const fetchQuizResults = async () => {
+        setLoadingResults(true);
+        try {
+            const res = await quizAPI.getAdminResults();
+            setQuizResults(res.data.data);
+        } catch (err) {
+            toast.error("Quiz natijalarini yuklashda xatolik");
+        } finally {
+            setLoadingResults(false);
+        }
+    };
+
+    useEffect(() => {
+        if (taskFilter === 'quizzes') {
+            fetchQuizResults();
+        }
+    }, [taskFilter]);
 
     const handleCreateTask = async (e) => {
         e.preventDefault();
@@ -150,7 +167,7 @@ const Tasks = () => {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex gap-4 p-2 bg-gray-100/50 dark:bg-dark-900/50 rounded-3xl w-fit">
+            <div className="flex flex-wrap gap-4 p-2 bg-gray-100/50 dark:bg-dark-900/50 rounded-3xl w-fit">
                 <button
                     onClick={() => setTaskFilter('active')}
                     className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'active' ? 'bg-white dark:bg-dark-800 text-primary-500 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
@@ -163,62 +180,137 @@ const Tasks = () => {
                 >
                     Arxiv (Tugatilgan)
                 </button>
+                <button
+                    onClick={() => setTaskFilter('quizzes')}
+                    className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'quizzes' ? 'bg-white dark:bg-dark-800 text-indigo-500 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                >
+                    Test Natijalari
+                </button>
             </div>
 
-            {/* Task Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {tasks.filter(t => (t.status || 'active') === taskFilter).map((task) => (
-                    <div
-                        key={task._id}
-                        className="group bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl transition-all duration-500"
-                    >
-                        <div className="relative h-44 bg-gray-900">
-                            {task.image ? (
-                                <img src={task.image} alt="" className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-900 to-gray-900">
-                                    <HiOutlinePhotograph className="w-12 h-12 text-white/10" />
-                                </div>
-                            )}
-                            <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-widest border border-white/10">
-                                {task.maxScore} Ball
+            {/* Content Area */}
+            {taskFilter === 'quizzes' ? (
+                <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm">
+                    {loadingResults ? (
+                        <div className="py-20 flex justify-center"><LoadingSpinner /></div>
+                    ) : quizResults.length === 0 ? (
+                        <div className="py-32 text-center space-y-4">
+                            <div className="w-20 h-20 bg-gray-50 dark:bg-dark-900 rounded-full flex items-center justify-center mx-auto">
+                                <HiOutlineLightBulb className="w-10 h-10 text-gray-300" />
                             </div>
+                            <h3 className="text-xl font-black text-gray-400 uppercase tracking-widest italic">Natijalar yo'q</h3>
+                            <p className="text-sm text-gray-500 font-medium">O'quvchilar hali test topshirishmagan</p>
                         </div>
-                        <div className="p-8 space-y-6">
-                            <div className="space-y-2">
-                                <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight italic truncate">{task.title}</h3>
-                                <div className="flex items-center gap-3 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">
-                                    <HiOutlineUsers className="w-4 h-4 text-primary-500" />
-                                    {task.group?.nomi || 'Guruhsiz'}
-                                </div>
-                                <div className="flex items-center gap-3 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">
-                                    <HiOutlineCalendar className="w-4 h-4 text-amber-500" />
-                                    Deadline: {new Date(task.deadline).toLocaleDateString('uz')}
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <button
-                                    onClick={() => fetchSubmissions(task)}
-                                    className="py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
-                                >
-                                    <HiOutlineEye className="w-5 h-5" />
-                                    Ko'rish
-                                </button>
-                                {task.status !== 'completed' && (
-                                    <button
-                                        onClick={() => handleCompleteTask(task._id)}
-                                        className="py-4 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
-                                    >
-                                        <HiOutlineBadgeCheck className="w-5 h-5" />
-                                        Tugatish
-                                    </button>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-gray-50 dark:bg-dark-900/50">
+                                        <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic">O'quvchi</th>
+                                        <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic">Guruh</th>
+                                        <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic text-center">Natija</th>
+                                        <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic">Sana</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                                    {quizResults.map((res) => (
+                                        <tr key={res._id} className="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors group">
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-black text-sm">
+                                                        {res.student?.ism?.charAt(0)}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-black text-gray-900 dark:text-white uppercase italic text-sm">{res.student?.ism}</p>
+                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{res.student?.username || res.student?.telefon}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <span className="px-4 py-1.5 rounded-full bg-gray-100 dark:bg-dark-700 text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                                                    {res.student?.guruh?.nomi || 'Guruhsiz'}
+                                                </span>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <div className="flex gap-0.5">
+                                                        {[...Array(res.totalQuestions)].map((_, i) => (
+                                                            <div
+                                                                key={i}
+                                                                className={`w-2 h-2 rounded-full ${i < res.score ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-dark-700'}`}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                    <span className="ml-2 font-black text-gray-900 dark:text-white">{res.score}/{res.totalQuestions}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    {new Date(res.completedAt).toLocaleDateString('uz', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {tasks.filter(t => (t.status || 'active') === taskFilter).map((task) => (
+                        <div
+                            key={task._id}
+                            className="group bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl transition-all duration-500"
+                        >
+                            <div className="relative h-44 bg-gray-900">
+                                {task.image ? (
+                                    <img src={task.image} alt="" className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-900 to-gray-900">
+                                        <HiOutlinePhotograph className="w-12 h-12 text-white/10" />
+                                    </div>
                                 )}
+                                <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-widest border border-white/10">
+                                    {task.maxScore} Ball
+                                </div>
+                            </div>
+                            <div className="p-8 space-y-6">
+                                <div className="space-y-2">
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight italic truncate">{task.title}</h3>
+                                    <div className="flex items-center gap-3 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">
+                                        <HiOutlineUsers className="w-4 h-4 text-primary-500" />
+                                        {task.group?.nomi || 'Guruhsiz'}
+                                    </div>
+                                    <div className="flex items-center gap-3 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">
+                                        <HiOutlineCalendar className="w-4 h-4 text-amber-500" />
+                                        Deadline: {new Date(task.deadline).toLocaleDateString('uz')}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button
+                                        onClick={() => fetchSubmissions(task)}
+                                        className="py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
+                                    >
+                                        <HiOutlineEye className="w-5 h-5" />
+                                        Ko'rish
+                                    </button>
+                                    {task.status !== 'completed' && (
+                                        <button
+                                            onClick={() => handleCompleteTask(task._id)}
+                                            className="py-4 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                                        >
+                                            <HiOutlineBadgeCheck className="w-5 h-5" />
+                                            Tugatish
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
             {/* Create Task Modal */}
             {isCreateOpen && (
