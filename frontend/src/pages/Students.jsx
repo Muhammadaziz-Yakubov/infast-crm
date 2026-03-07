@@ -23,6 +23,8 @@ const Students = () => {
     const [search, setSearch] = useState('');
     const [filterHolat, setFilterHolat] = useState('');
     const [selectedIds, setSelectedIds] = useState([]);
+    const [viewModalOpen, setViewModalOpen] = useState(false);
+    const [viewingStudent, setViewingStudent] = useState(null);
     const [bulkPayModalOpen, setBulkPayModalOpen] = useState(false);
     const [bulkPayForm, setBulkPayForm] = useState({ tolovTuri: 'naqd', izoh: '' });
     const [bulkLoading, setBulkLoading] = useState(false);
@@ -226,6 +228,33 @@ const Students = () => {
         }
     };
 
+    const calculateDaysUntilPayment = (tolovKuni, tolovHolati) => {
+        if (tolovHolati === 'tolangan') return "Keyingi oy uchun";
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+        const today = now.getDate();
+
+        let targetDate = new Date(currentYear, currentMonth, tolovKuni);
+
+        // Agar to'lov kuni o'tib ketgan bo'lsa va to'lanmagan bo'lsa
+        if (today > tolovKuni) {
+            return "Muddati o'tgan";
+        }
+
+        const diffTime = targetDate - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return "Bugun";
+        return `${diffDays} kun qoldi`;
+    };
+
+    const openViewModal = (student) => {
+        setViewingStudent(student);
+        setViewModalOpen(true);
+    };
+
     if (loading) return <LoadingSpinner />;
 
     return (
@@ -400,9 +429,9 @@ const Students = () => {
                                                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white dark:border-dark-800 
                                                         ${s.tolovHolati === 'tolangan' ? 'bg-emerald-500' : 'bg-red-500'}`} />
                                                 </div>
-                                                <div className="space-y-0.5">
+                                                <div className="space-y-0.5 cursor-pointer" onClick={() => openViewModal(s)}>
                                                     <p className="font-black text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors uppercase tracking-tight">{s.ism || "Noma'lum"}</p>
-                                                    <p className="text-xs font-bold text-gray-400 dark:text-gray-500">ID: {s._id.slice(-6).toUpperCase()}</p>
+                                                    <p className="text-xs font-bold text-gray-400 dark:text-gray-500 underline decoration-primary-500/30">Profilni ko'rish</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -578,6 +607,124 @@ const Students = () => {
                         To'lovni tasdiqlash
                     </button>
                 </form>
+            </Modal>
+
+            {/* View Student Details Modal */}
+            <Modal isOpen={viewModalOpen} onClose={() => setViewModalOpen(false)} title="O'quvchi Profili" size="lg">
+                {viewingStudent && (
+                    <div className="space-y-8">
+                        {/* Profile Header */}
+                        <div className="flex flex-col md:flex-row gap-8 items-center p-8 rounded-[2.5rem] bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-2xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-8 opacity-10">
+                                <HiOutlineUserCircle className="w-32 h-32" />
+                            </div>
+
+                            <div className="relative">
+                                <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-primary-500 flex items-center justify-center text-4xl font-black shadow-2xl border-4 border-white/10 group-hover:rotate-6 transition-transform">
+                                    {viewingStudent.ism?.charAt(0)}
+                                </div>
+                                <div className={`absolute -bottom-2 -right-2 px-4 py-1.5 rounded-full border-4 border-gray-900 text-[10px] font-black uppercase tracking-widest shadow-xl
+                                    ${viewingStudent.tolovHolati === 'tolangan' ? 'bg-emerald-500' : 'bg-red-500'}`}>
+                                    {viewingStudent.tolovHolati}
+                                </div>
+                            </div>
+
+                            <div className="text-center md:text-left space-y-2 relative z-10">
+                                <h3 className="text-3xl font-black uppercase tracking-tight italic">{viewingStudent.ism}</h3>
+                                <p className="text-primary-400 font-bold tracking-[0.2em] text-xs uppercase italic">{viewingStudent.guruh?.nomi} • {viewingStudent.kurs?.nomi}</p>
+                                <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
+                                    <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                        <p className="text-[8px] font-black text-white/40 uppercase tracking-widest mb-0.5">Shaxsiy ID</p>
+                                        <p className="text-xs font-black tracking-widest">{viewingStudent._id.slice(-8).toUpperCase()}</p>
+                                    </div>
+                                    <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                        <p className="text-[8px] font-black text-white/40 uppercase tracking-widest mb-0.5">Balans (Coins)</p>
+                                        <p className="text-xs font-black text-amber-400">🪙 {viewingStudent.coins || 0}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Financial Card */}
+                        <div className={`p-8 rounded-[2.5rem] border-2 transition-all ${viewingStudent.tolovHolati === 'tolangan' ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-red-500/20 bg-red-500/5'}`}>
+                            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                                <div className="space-y-1 text-center md:text-left">
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Oylik to'lov muddati</p>
+                                    <h4 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic">
+                                        Har oyning <span className="text-primary-500">{viewingStudent.tolovKuni}</span>-sanasi
+                                    </h4>
+                                </div>
+                                <div className="flex flex-col items-center md:items-end">
+                                    <div className={`px-8 py-4 rounded-2xl text-center shadow-lg transform transition-transform hover:scale-105 active:scale-95 ${viewingStudent.tolovHolati === 'tolangan'
+                                            ? 'bg-emerald-500 shadow-emerald-500/30'
+                                            : 'bg-red-500 shadow-red-500/30'
+                                        }`}>
+                                        <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">To'lovgacha</p>
+                                        <p className="text-xl font-black text-white uppercase italic">{calculateDaysUntilPayment(viewingStudent.tolovKuni, viewingStudent.tolovHolati)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Detailed Info Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="p-6 rounded-3xl bg-gray-50 dark:bg-dark-900 border border-gray-100 dark:border-white/5 space-y-4">
+                                <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-200 dark:border-dark-700 pb-2">Aloqa ma'lumotlari</h5>
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-primary-500/10 text-primary-500 flex items-center justify-center"><HiOutlinePhone className="w-4 h-4" /></div>
+                                        <p className="text-sm font-black text-gray-700 dark:text-gray-300">{viewingStudent.telefon}</p>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center"><HiOutlineUserCircle className="w-4 h-4" /></div>
+                                        <p className="text-sm font-black text-gray-700 dark:text-gray-300">@{viewingStudent.username}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-6 rounded-3xl bg-gray-50 dark:bg-dark-900 border border-gray-100 dark:border-white/5 space-y-4">
+                                <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-200 dark:border-dark-700 pb-2">O'qish ma'lumotlari</h5>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Oylik to'lov</p>
+                                        <p className="text-sm font-black text-emerald-500 italic">{new Intl.NumberFormat('uz-UZ').format(viewingStudent.oylikTolov || viewingStudent.kurs?.narx)} so'm</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">To'plangan ball</p>
+                                        <p className="text-sm font-black text-blue-500 italic">{viewingStudent.ball || 0} ball</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Kurs</p>
+                                        <p className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase truncate">{viewingStudent.kurs?.nomi}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Guruh</p>
+                                        <p className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase truncate">{viewingStudent.guruh?.nomi}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Notes Section */}
+                        {viewingStudent.eslatmalar && (
+                            <div className="p-6 rounded-3xl bg-amber-500/5 border border-amber-500/10 space-y-2">
+                                <h5 className="text-[10px] font-black text-amber-600/60 uppercase tracking-widest">Admin eslatmasi</h5>
+                                <p className="text-sm font-bold text-gray-600 dark:text-gray-400 italic">"{viewingStudent.eslatmalar}"</p>
+                            </div>
+                        )}
+
+                        <div className="flex gap-4">
+                            <button onClick={() => { setViewModalOpen(false); openEditModal(viewingStudent); }}
+                                className="flex-1 py-4 rounded-2xl font-black text-white bg-blue-600 shadow-xl shadow-blue-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <HiOutlinePencil className="w-5 h-5" /> Tahrirlash
+                            </button>
+                            <button onClick={() => { setViewModalOpen(false); openPayModal(viewingStudent); }}
+                                className="flex-1 py-4 rounded-2xl font-black text-white bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <HiOutlineCash className="w-5 h-5" /> To'lov Qabul Qilish
+                            </button>
+                        </div>
+                    </div>
+                )}
             </Modal>
 
             {/* Ommaviy to'lov qilish modali */}
