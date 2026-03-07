@@ -87,14 +87,24 @@ const startPaymentChecker = () => {
 
             for (const student of futurePaymentStudents) {
                 // Shu oy uchun to'lov bormi tekshirish
+                // Agar bugun < to'lov kuni bo'lsa, demak o'quvchi hozir 
+                // o'tgan oydagi 27-sana dan boshlangan siklda turibdi.
+                // Shuning uchun o'tgan oy uchun to'lovni tekshiramiz.
+                let checkMonth = currentMonth - 1;
+                let checkYear = currentYear;
+                if (checkMonth < 1) {
+                    checkMonth = 12;
+                    checkYear--;
+                }
+
                 const thisMonthPayment = await Payment.findOne({
                     oquvchi: student._id,
-                    oy: currentMonth,
-                    yil: currentYear
+                    oy: checkMonth,
+                    yil: checkYear
                 });
 
                 if (!thisMonthPayment) {
-                    // Shu oy to'lov yo'q - "tolanmagan" (hali to'lov kuni kelmagan)
+                    // Shu oy (oldingi sikl) to'lov yo'q - "tolanmagan" (hali to'lov kuni kelmagan)
                     student.tolovHolati = 'tolanmagan';
                     await student.save();
                     resetCount++;

@@ -116,11 +116,26 @@ exports.createStudent = async (req, res) => {
         // Agar to'lov qilgan bo'lsa - payment yaratish
         if (shuOyTolagan === true || shuOyTolagan === 'ha') {
             const now = new Date();
+            const currentMonth = now.getMonth() + 1;
+            const currentYear = now.getFullYear();
+            const currentDay = now.getDate();
+
+            let billingMonth = currentMonth;
+            let billingYear = currentYear;
+
+            if (currentDay < student.tolovKuni) {
+                billingMonth--;
+                if (billingMonth < 1) {
+                    billingMonth = 12;
+                    billingYear--;
+                }
+            }
+
             await Payment.create({
                 oquvchi: student._id,
                 summa: student.oylikTolov,
-                oy: now.getMonth() + 1,
-                yil: now.getFullYear(),
+                oy: billingMonth,
+                yil: billingYear,
                 tolovTuri: 'naqd',
                 izoh: "Ro'yxatga olishda to'langan",
                 kurs: student.kurs,
