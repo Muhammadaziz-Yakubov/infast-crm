@@ -129,12 +129,4 @@ export const wheelAPI = {
     getLogs: () => api.get('/wheels/logs'),
 };
 
-// Quizzes
-export const quizAPI = {
-    getRandomQuestions: () => api.get('/quizzes/questions/random'),
-    submit: (data) => api.post('/quizzes/submit', data),
-    getMyResults: () => api.get('/quizzes/my-results'),
-    getAdminResults: () => api.get('/quizzes/admin/all-results'),
-};
-
 export default api;

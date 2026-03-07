@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { taskAPI, quizAPI } from '../../services/api';
+import { taskAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 import {
     HiOutlineClipboardList, HiOutlineClock, HiOutlinePhotograph,
     HiOutlineUpload, HiOutlineCheckCircle, HiOutlineExclamationCircle,
     HiOutlineInformationCircle, HiOutlinePlusSm, HiOutlineChatAlt2,
-    HiOutlineEye, HiOutlineBadgeCheck, HiOutlineLightBulb, HiOutlineLightningBolt
+    HiOutlineEye, HiOutlineBadgeCheck
 } from 'react-icons/hi';
 
 const StudentTasks = () => {
@@ -19,17 +19,6 @@ const StudentTasks = () => {
     const [comment, setComment] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [taskFilter, setTaskFilter] = useState('active'); // 'active' or 'completed'
-
-    // Quiz states
-    const [isQuizOpen, setIsQuizOpen] = useState(false);
-    const [quizQuestions, setQuizQuestions] = useState([]);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [quizAnswers, setQuizAnswers] = useState([]);
-    const [isQuizFinished, setIsQuizFinished] = useState(false);
-    const [quizScore, setQuizScore] = useState(null);
-    const [reward, setReward] = useState(0);
-    const [quizLoading, setQuizLoading] = useState(false);
 
     useEffect(() => {
         fetchTasks();
@@ -44,65 +33,6 @@ const StudentTasks = () => {
             toast.error("Vazifalarni yuklashda xatolik");
         } finally {
             setLoading(false);
-        }
-    };
-
-    const startQuiz = async () => {
-        setQuizLoading(true);
-        try {
-            const res = await quizAPI.getRandomQuestions();
-            setQuizQuestions(res.data.data);
-            setCurrentQuestionIndex(0);
-            setQuizAnswers([]);
-            setIsQuizOpen(true);
-            setIsQuizFinished(false);
-            setQuizScore(null);
-            setSelectedOption(null);
-        } catch (err) {
-            toast.error("Testlarni yuklashda xatolik");
-        } finally {
-            setQuizLoading(false);
-        }
-    };
-
-    const handleAnswer = () => {
-        if (selectedOption === null) return toast.error("Variantni tanlang");
-
-        const currentQuestion = quizQuestions[currentQuestionIndex];
-        const isCorrect = selectedOption === currentQuestion.correctOption;
-
-        const newAnswers = [...quizAnswers, {
-            question: currentQuestion._id,
-            selectedOption,
-            isCorrect
-        }];
-        setQuizAnswers(newAnswers);
-
-        if (currentQuestionIndex < quizQuestions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedOption(null);
-        } else {
-            submitQuiz(newAnswers);
-        }
-    };
-
-    const submitQuiz = async (finalAnswers) => {
-        setQuizLoading(true);
-        const score = finalAnswers.filter(a => a.isCorrect).length;
-        try {
-            const res = await quizAPI.submit({
-                score,
-                totalQuestions: quizQuestions.length,
-                answers: finalAnswers
-            });
-            setQuizScore(score);
-            setReward(res.data.reward);
-            setIsQuizFinished(true);
-            toast.success("Test yakunlandi!");
-        } catch (err) {
-            toast.error("Natijani saqlashda xatolik");
-        } finally {
-            setQuizLoading(false);
         }
     };
 
@@ -154,47 +84,19 @@ const StudentTasks = () => {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
-                <div className="flex gap-4 p-2 bg-gray-100/50 dark:bg-dark-900/50 rounded-3xl w-fit">
-                    <button
-                        onClick={() => setTaskFilter('active')}
-                        className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'active' ? 'bg-white dark:bg-dark-800 text-primary-500 shadow-xl' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                        Faol
-                    </button>
-                    <button
-                        onClick={() => setTaskFilter('completed')}
-                        className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'completed' ? 'bg-white dark:bg-dark-800 text-emerald-500 shadow-xl' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                        Tugatilgan
-                    </button>
-                </div>
-
-                {/* Quiz Banner */}
-                <div
-                    onClick={startQuiz}
-                    className="group relative overflow-hidden bg-gradient-to-r from-indigo-600 to-primary-600 p-6 md:p-8 rounded-[2.5rem] shadow-2xl shadow-primary-500/20 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all duration-500 w-full md:w-auto md:min-w-[400px]"
+            <div className="flex gap-4 p-2 bg-gray-100/50 dark:bg-dark-900/50 rounded-3xl w-fit mx-auto md:mx-0">
+                <button
+                    onClick={() => setTaskFilter('active')}
+                    className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'active' ? 'bg-white dark:bg-dark-800 text-primary-500 shadow-xl' : 'text-gray-400 hover:text-gray-600'}`}
                 >
-                    <div className="relative z-10 flex items-center justify-between gap-8">
-                        <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                                <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-[0.2em]">Skill Test</span>
-                                <span className="flex items-center gap-1 text-[10px] font-black text-yellow-300 uppercase tracking-widest">
-                                    <HiOutlineLightningBolt className="w-3 h-3" />
-                                    +100 Coins
-                                </span>
-                            </div>
-                            <h3 className="text-2xl font-black text-white uppercase italic tracking-tight">Bilimni <span className="text-yellow-300">Sinash</span></h3>
-                            <p className="text-xs text-white/70 font-bold uppercase tracking-widest">5 ta tasodifiy HTML/CSS savollari</p>
-                        </div>
-                        <div className="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500">
-                            <HiOutlineLightBulb className="w-8 h-8 text-white" />
-                        </div>
-                    </div>
-                    {/* Decorative Elements */}
-                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-colors" />
-                    <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary-400/20 rounded-full blur-3xl" />
-                </div>
+                    Faol
+                </button>
+                <button
+                    onClick={() => setTaskFilter('completed')}
+                    className={`px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${taskFilter === 'completed' ? 'bg-white dark:bg-dark-800 text-emerald-500 shadow-xl' : 'text-gray-400 hover:text-gray-600'}`}
+                >
+                    Tugatilgan
+                </button>
             </div>
 
             {tasks.filter(t => (t.status || 'active') === taskFilter).length === 0 ? (
@@ -422,112 +324,6 @@ const StudentTasks = () => {
                                 </button>
                             </form>
                         </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Quiz Modal */}
-            {isQuizOpen && (
-                <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-xl" />
-
-                    <div className="relative bg-white dark:bg-dark-800 w-full max-w-2xl rounded-[3rem] overflow-hidden shadow-2xl animate-modal-in">
-                        {!isQuizFinished ? (
-                            <div className="p-10 space-y-8">
-                                {/* Quiz Header */}
-                                <div className="flex items-center justify-between">
-                                    <div className="space-y-1">
-                                        <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Test <span className="text-primary-500">Savoli</span></h3>
-                                        <div className="flex gap-1">
-                                            {quizQuestions.map((_, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={`h-1.5 rounded-full transition-all duration-500 ${i === currentQuestionIndex ? 'w-8 bg-primary-500' : i < currentQuestionIndex ? 'w-4 bg-emerald-500' : 'w-4 bg-gray-200 dark:bg-dark-700'}`}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Savol</p>
-                                        <p className="text-2xl font-black text-gray-900 dark:text-white">{currentQuestionIndex + 1}/{quizQuestions.length}</p>
-                                    </div>
-                                </div>
-
-                                {/* Question Content */}
-                                <div className="space-y-8">
-                                    <div className="p-8 rounded-[2rem] bg-gray-50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5">
-                                        <h4 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white leading-relaxed">
-                                            {quizQuestions[currentQuestionIndex]?.question}
-                                        </h4>
-                                    </div>
-
-                                    {/* Options */}
-                                    <div className="grid grid-cols-1 gap-4">
-                                        {quizQuestions[currentQuestionIndex]?.options.map((option, idx) => (
-                                            <button
-                                                key={idx}
-                                                onClick={() => setSelectedOption(idx)}
-                                                className={`p-6 rounded-2xl text-left font-bold transition-all border-2 flex items-center justify-between group ${selectedOption === idx ? 'bg-primary-500 border-primary-500 text-white shadow-xl shadow-primary-500/20' : 'bg-white dark:bg-dark-800 border-gray-100 dark:border-white/5 text-gray-600 dark:text-gray-300 hover:border-primary-500/50'}`}
-                                            >
-                                                <span>{option}</span>
-                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedOption === idx ? 'border-white bg-white/20' : 'border-gray-200 dark:border-dark-600'}`}>
-                                                    {selectedOption === idx && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
-                                                </div>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Actions */}
-                                <div className="flex gap-4">
-                                    <button
-                                        onClick={() => setIsQuizOpen(false)}
-                                        className="px-8 py-5 rounded-2xl bg-gray-100 dark:bg-dark-700 text-gray-500 font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-dark-600 transition-all"
-                                    >
-                                        Bekor qilish
-                                    </button>
-                                    <button
-                                        onClick={handleAnswer}
-                                        disabled={selectedOption === null || quizLoading}
-                                        className="flex-1 py-5 rounded-2xl bg-primary-600 text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-xl shadow-primary-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                                    >
-                                        {quizLoading ? "Saqlanmoqda..." : (currentQuestionIndex === quizQuestions.length - 1 ? "Tugallash" : "Keyingi savol")}
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="p-12 text-center space-y-8">
-                                <div className="relative">
-                                    <div className="w-32 h-32 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <HiOutlineBadgeCheck className="w-16 h-16 text-emerald-500 animate-bounce" />
-                                    </div>
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 animate-ping bg-emerald-500/20 rounded-full" />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <h3 className="text-4xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Tabriklaymiz!</h3>
-                                    <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Siz testni muvaffaqiyatli yakunladingiz</p>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-6 max-w-sm mx-auto">
-                                    <div className="p-6 rounded-3xl bg-gray-50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5">
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Natija</p>
-                                        <p className="text-4xl font-black text-primary-500">{quizScore}/{quizQuestions.length}</p>
-                                    </div>
-                                    <div className="p-6 rounded-3xl bg-gray-50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5">
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Mukofot</p>
-                                        <p className="text-4xl font-black text-yellow-500">+{reward}</p>
-                                    </div>
-                                </div>
-
-                                <button
-                                    onClick={() => setIsQuizOpen(false)}
-                                    className="w-full py-6 rounded-[2rem] bg-gray-900 dark:bg-primary-600 text-white font-black uppercase tracking-[0.3em] shadow-3xl shadow-primary-500/20 active:scale-95 transition-all text-xs italic"
-                                >
-                                    Asosiy sahifaga qaytish
-                                </button>
-                            </div>
-                        )}
                     </div>
                 </div>
             )}
