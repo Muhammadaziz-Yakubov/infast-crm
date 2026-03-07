@@ -86,28 +86,37 @@ const startPaymentChecker = () => {
             });
 
             for (const student of futurePaymentStudents) {
-                // Shu oy uchun to'lov bormi tekshirish
-                // Agar bugun < to'lov kuni bo'lsa, demak o'quvchi hozir 
-                // o'tgan oydagi 27-sana dan boshlangan siklda turibdi.
-                // Shuning uchun o'tgan oy uchun to'lovni tekshiramiz.
-                let checkMonth = currentMonth - 1;
-                let checkYear = currentYear;
-                if (checkMonth < 1) {
-                    checkMonth = 12;
-                    checkYear--;
+                // Bugun < to'lov kuni (masalan: 8-mart < 25-mart)
+                // O'quvchi hozirda o'tgan oydan boshlangan siklda (25-fevral -> 25-mart)
+
+                let prevMonth = currentMonth - 1;
+                let prevYear = currentYear;
+                if (prevMonth < 1) {
+                    prevMonth = 12;
+                    prevYear--;
                 }
 
-                const thisMonthPayment = await Payment.findOne({
+                // Tekshirish: O'quvchida yoki o'tgan oy (oy: 2) uchun, 
+                // yoki joriy oy (oy: 3) uchun to'lov bormi?
+                // Chunki 1-martda qilingan to'lov ba'zan '3' deb yozilgan bo'lishi mumkin
+                const existingPayment = await Payment.findOne({
                     oquvchi: student._id,
-                    oy: checkMonth,
-                    yil: checkYear
+                    $or: [
+                        { oy: prevMonth, yil: prevYear },
+                        { oy: currentMonth, yil: currentYear }
+                    ]
                 });
 
-                if (!thisMonthPayment) {
-                    // Shu oy (oldingi sikl) to'lov yo'q - "tolanmagan" (hali to'lov kuni kelmagan)
+                if (!existingPayment) {
                     student.tolovHolati = 'tolanmagan';
                     await student.save();
                     resetCount++;
+                } else {
+                    // Agar to'lov bo'lsa, holatni 'tolangan' qilib mustahkamlaymiz
+                    if (student.tolovHolati !== 'tolangan') {
+                        student.tolovHolati = 'tolangan';
+                        await student.save();
+                    }
                 }
             }
 
