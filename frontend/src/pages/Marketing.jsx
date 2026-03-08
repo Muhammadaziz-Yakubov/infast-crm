@@ -435,12 +435,29 @@ const Marketing = () => {
                                             <span className="text-[10px] font-bold text-primary-500 uppercase tracking-widest">{lead.source}</span>
                                         </td>
                                         <td className="px-6 py-6">
-                                            <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest border shadow-sm
-                                                ${lead.status === 'O\'quvchi bo\'ldi' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                                                    lead.status === 'Yo\'qotildi' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
-                                                        'bg-amber-500/10 text-amber-500 border-amber-500/20'}`}>
-                                                {lead.status}
-                                            </span>
+                                            <div className="relative inline-block w-40">
+                                                <select
+                                                    defaultValue={lead.status}
+                                                    onChange={async (e) => {
+                                                        const newStatus = e.target.value;
+                                                        try {
+                                                            await leadAPI.update(lead._id, { status: newStatus });
+                                                            toast.success(`Holat: ${newStatus}`);
+                                                            fetchData();
+                                                        } catch (err) {
+                                                            toast.error('Xatolik yuz berdi');
+                                                        }
+                                                    }}
+                                                    className={`w-full px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest border shadow-sm cursor-pointer appearance-none text-center focus:ring-2 focus:ring-primary-500/20 transition-all
+                                                        ${lead.status === 'O\'quvchi bo\'ldi' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                                            lead.status === 'Yo\'qotildi' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                                                                'bg-amber-500/10 text-amber-500 border-amber-500/20'}`}
+                                                >
+                                                    {STATUSES.map(s => (
+                                                        <option key={s} value={s} className="bg-white dark:bg-dark-800 text-gray-900 dark:text-white text-xs font-bold uppercase">{s}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                         </td>
                                         <td className="px-6 py-6">
                                             <div className="flex items-center gap-2">
