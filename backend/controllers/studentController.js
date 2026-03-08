@@ -2,6 +2,8 @@ const Student = require('../models/Student');
 const Payment = require('../models/Payment');
 const Course = require('../models/Course');
 const Attendance = require('../models/Attendance');
+const { uploadToR2 } = require('../services/uploadService');
+const mongoose = require('mongoose');
 
 // @desc    Barcha o'quvchilarni olish
 // @route   GET /api/students
@@ -324,11 +326,100 @@ exports.updateMe = async (req, res) => {
                 id: student._id,
                 ism: student.ism,
                 telefon: student.telefon,
-                username: student.username
+                username: student.username,
+                profileImage: student.profileImage
             }
         });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Update student profile image
+// @route   PUT /api/students/me/profile-image
+exports.updateProfileImage = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: "Rasm tanlanmagan" });
+        }
+
+        const imageUrl = await uploadToR2(req.file, 'profiles');
+
+        await Student.findByIdAndUpdate(req.user.id, { profileImage: imageUrl });
+
+        res.json({
+            success: true,
+            message: "Profil rasmi muvaffaqiyatli yangilandi",
+            data: { profileImage: imageUrl }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Get classmates
+// @route   GET /api/students/classmates
+exports.getClassmates = async (req, res) => {
+    try {
+        if (!req.user.guruh) {
+            return res.status(400).json({ success: false, message: "Siz hali guruhga qo'shilmagansiz" });
+        }
+
+        const classmates = await Student.find({
+            guruh: req.user.guruh,
+            holati: 'faol'
+        })
+            .select('ism xp coins profileImage level progress username')
+            .sort({ ism: 1 });
+
+        // Calculate levels manually or use aggregation. For simple list, map is fine.
+        const processedClassmates = classmates.map(c => {
+            const xp = c.xp || 0;
+            return {
+                ...c.toObject(),
+                level: Math.floor(xp / 1000) + 1,
+                progress: Math.round(((xp % 1000) / 1000) * 100)
+            };
+        });
+
+        res.json({
+            success: true,
+            data: processedClassmates
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Get public profile of another student
+// @route   GET /api/students/public-profile/:id
+exports.getPublicProfile = async (req, res) => {
+    try {
+        const student = await Student.findById(req.params.id)
+            .select('ism xp coins profileImage username guruh')
+            .populate('guruh', 'nomi');
+
+        if (!student) {
+            return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
+        }
+
+        // Add level and stats
+        const xp = student.xp || 0;
+        const level = Math.floor(xp / 1000) + 1;
+        const progress = Math.round(((xp % 1000) / 1000) * 100);
+
+        res.json({
+            success: true,
+            data: {
+                ...student.toObject(),
+                level,
+                progress,
+                yutuqlar: "Tez Kunda",
+                sertifikatlar: "Tez Kunda"
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -393,7 +484,7 @@ exports.getRating = async (req, res) => {
                     _id: 1,
                     ism: 1,
                     xp: '$currentXP',
-                    coins: { $ifNull: ['$coins', 0] },
+                    profileImage: { $ifNull: ['$profileImage', ''] },
                     guruh: { nomi: '$guruhInfo.nomi' },
                     kurs: { nomi: '$kursInfo.nomi' },
                     taskCount: 1,

@@ -72,6 +72,11 @@ export const studentAPI = {
     getRating: (params) => api.get('/students/rating', { params }),
     getMyDashboard: () => api.get('/students/me/dashboard'),
     updateMe: (data) => api.put('/students/me/update', data),
+    updateProfileImage: (formData) => api.put('/students/me/profile-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+    getClassmates: () => api.get('/students/classmates'),
+    getPublicProfile: (id) => api.get(`/students/public-profile/${id}`),
     syncXP: () => api.post('/students/sync-xp'),
 };
 

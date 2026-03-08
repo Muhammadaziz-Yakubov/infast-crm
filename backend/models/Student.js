@@ -73,6 +73,10 @@ const studentSchema = new mongoose.Schema({
         default: 0,
         min: 0
     },
+    profileImage: {
+        type: String,
+        default: ''
+    },
     qoshilganSana: {
         type: Date,
         default: Date.now

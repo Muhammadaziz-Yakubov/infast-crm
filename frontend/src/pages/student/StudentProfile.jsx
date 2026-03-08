@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { studentAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import {
-    HiOutlineUser, HiOutlinePhone, HiOutlineLockClosed, HiOutlinePencilAlt, HiOutlineShieldCheck
+    HiOutlineUser, HiOutlinePhone, HiOutlineLockClosed, HiOutlinePencilAlt, HiOutlineShieldCheck, HiOutlineCamera
 } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
 const StudentProfile = () => {
+    const fileInputRef = useRef(null);
     const [student, setStudent] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
     const [form, setForm] = useState({
@@ -63,6 +65,33 @@ const StudentProfile = () => {
         }
     };
 
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validatsiya
+        if (!file.type.startsWith('image/')) {
+            return toast.error("Faqat rasm yuklash mumkin");
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            return toast.error("Rasm hajmi 5MB dan oshmasligi kerak");
+        }
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        setUploading(true);
+        try {
+            const res = await studentAPI.updateProfileImage(formData);
+            toast.success("Profil rasmi yangilandi ✨");
+            setStudent({ ...student, profileImage: res.data.data.profileImage });
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Rasm yuklashda xatolik");
+        } finally {
+            setUploading(false);
+        }
+    };
+
     if (loading) return <LoadingSpinner />;
     if (!student) return null;
 
@@ -76,9 +105,42 @@ const StudentProfile = () => {
             <div className="bg-white dark:bg-dark-800 rounded-[3rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-2xl group transition-all duration-500 hover:shadow-primary-500/10">
                 {/* Premium Profile Header */}
                 <div className="bg-gray-900 p-10 md:p-14 relative overflow-hidden flex flex-col items-center">
-                    <div className="relative z-10 w-28 h-28 md:w-36 md:h-36 rounded-[2.5rem] bg-gradient-to-br from-primary-500 to-orange-600 flex items-center justify-center text-5xl md:text-6xl font-black text-white shadow-3xl mb-6 transform group-hover:scale-110 transition-transform duration-500">
-                        {student.ism?.charAt(0)}
+
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageChange}
+                        className="hidden"
+                        accept="image/*"
+                    />
+
+                    <div className="relative mb-6 group/avatar">
+                        <div
+                            onClick={() => !uploading && fileInputRef.current.click()}
+                            className={`relative z-10 w-28 h-28 md:w-36 md:h-36 rounded-[2.5rem] bg-gradient-to-br from-primary-500 to-orange-600 flex items-center justify-center text-5xl md:text-6xl font-black text-white shadow-3xl transform group-hover:scale-110 transition-transform duration-500 cursor-pointer overflow-hidden border-4 border-white/10 ${uploading ? 'opacity-50' : ''}`}
+                        >
+                            {student.profileImage ? (
+                                <img src={student.profileImage} alt={student.ism} className="w-full h-full object-cover" />
+                            ) : (
+                                student.ism?.charAt(0)
+                            )}
+
+                            {/* Hover Overlay */}
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
+                                <HiOutlineCamera className="w-8 h-8 text-white" />
+                            </div>
+
+                            {uploading && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                                    <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Status Dot */}
+                        <div className="absolute bottom-2 right-2 w-6 h-6 bg-emerald-500 border-4 border-gray-900 rounded-full z-20 shadow-lg"></div>
                     </div>
+
                     <div className="relative z-10 text-center space-y-2">
                         <h2 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tight">{student.ism}</h2>
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-black text-primary-400 uppercase tracking-[0.3em] italic">
@@ -87,8 +149,8 @@ const StudentProfile = () => {
                     </div>
 
                     {/* Decorative gradients */}
-                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary-600/20 rounded-full blur-[100px]" />
-                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-primary-900/40 rounded-full blur-[100px]" />
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary-600/20 rounded-full blur-[100px] pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-primary-900/40 rounded-full blur-[100px] pointer-events-none" />
                 </div>
 
                 <div className="p-8 md:p-12">

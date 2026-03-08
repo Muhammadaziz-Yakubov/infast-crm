@@ -5,7 +5,7 @@ import {
     HiOutlineAcademicCap, HiOutlineCalendar, HiOutlineCreditCard,
     HiOutlineInformationCircle, HiOutlineCheckCircle, HiOutlineXCircle,
     HiOutlineClock, HiOutlineGift, HiOutlineShoppingBag, HiOutlineLightningBolt,
-    HiOutlineSparkles, HiOutlineStar, HiOutlineLibrary
+    HiOutlineSparkles, HiOutlineStar, HiOutlineLibrary, HiOutlineUserGroup
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
@@ -147,6 +147,12 @@ const StudentHome = () => {
                             <HiOutlineGift className="w-6 h-6" />
                         </div>
                         <p className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wider">Sovg'a</p>
+                    </Link>
+                    <Link to="/classmates" className="p-5 rounded-[2rem] bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 flex flex-col items-center justify-center text-center space-y-2 group active:scale-95 transition-all shadow-sm hover:shadow-xl hover:shadow-primary-500/5 hover:-translate-y-1">
+                        <div className="w-12 h-12 rounded-2xl bg-primary-100 dark:bg-primary-500/20 text-primary-600 flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition-all transform group-hover:rotate-6">
+                            <HiOutlineUserGroup className="w-6 h-6" />
+                        </div>
+                        <p className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wider">Guruhdoshlar</p>
                     </Link>
                 </div>
 

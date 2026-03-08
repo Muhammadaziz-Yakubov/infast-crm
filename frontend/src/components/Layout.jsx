@@ -43,9 +43,13 @@ const Layout = () => {
                                 </>
                             ) : (
                                 <>
-                                    <div className="w-9 h-9 rounded-xl overflow-hidden border border-primary-500/20 shadow-lg flex-shrink-0">
-                                        <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
-                                    </div>
+                                    <Link to="/profile" className="w-9 h-9 rounded-xl overflow-hidden border border-primary-500/20 shadow-lg flex-shrink-0 bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center">
+                                        {user?.profileImage ? (
+                                            <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
+                                        )}
+                                    </Link>
                                     <div className="flex flex-col min-w-0">
                                         <span className="text-xs font-black tracking-tight text-gray-900 dark:text-white leading-tight capitalize truncate">{user?.ism || 'InFast Academy'}</span>
                                         <span className="text-[8px] uppercase font-bold text-primary-500 tracking-wider">Student</span>
