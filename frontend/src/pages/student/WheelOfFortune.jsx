@@ -5,7 +5,7 @@ import { HiOutlineArrowLeft, HiOutlineGift, HiOutlineClock, HiOutlineSparkles, H
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import Logo from '../../assets/infastacademy.jpg';
+import Logo from '../../infastacademy.jpg';
 
 const WheelOfFortune = () => {
     const { user, checkAuth } = useAuth();
