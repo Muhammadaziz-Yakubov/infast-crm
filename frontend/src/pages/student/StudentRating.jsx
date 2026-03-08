@@ -98,11 +98,11 @@ const StudentRating = () => {
                                 </div>
 
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <h3 className={`font-black text-xl uppercase tracking-tighter truncate ${isMe ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-white'}`}>
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1 min-w-0">
+                                        <h3 className={`font-black text-base sm:text-xl uppercase tracking-tighter truncate leading-tight ${isMe ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-white'}`}>
                                             {r.ism}
                                         </h3>
-                                        <BadgeIcon className={`w-4 h-4 ${badge.color}`} />
+                                        <BadgeIcon className={`w-4 h-4 flex-shrink-0 ${badge.color}`} />
                                     </div>
                                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">{r.guruh?.nomi || 'Guruhsiz'}</p>
 
@@ -160,11 +160,11 @@ const StudentRating = () => {
                                     {r.ism?.charAt(0)}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                        <h4 className={`text-sm md:text-base font-black uppercase tracking-tight truncate ${isMe ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-white'}`}>
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 min-w-0">
+                                        <h4 className={`text-sm md:text-base font-black uppercase tracking-tight truncate leading-tight ${isMe ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-white'}`}>
                                             {r.ism}
                                         </h4>
-                                        <span className="bg-gray-100 dark:bg-dark-900 px-2 py-0.5 rounded-md text-[8px] font-black text-gray-500 uppercase">Lvl {r.level}</span>
+                                        <span className="bg-gray-100 dark:bg-dark-900 px-2 py-0.5 rounded-md text-[8px] font-black text-gray-500 uppercase w-fit">Lvl {r.level}</span>
                                     </div>
                                     <div className="flex items-center gap-2 mt-1">
                                         <BadgeIcon className={`w-3 h-3 ${badge.color}`} />

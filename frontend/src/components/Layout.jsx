@@ -46,8 +46,8 @@ const Layout = () => {
                                 </>
                             ) : (
                                 <>
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-black tracking-tight gradient-text leading-none capitalize">{user?.ism || 'O\'quvchi'}</span>
+                                    <div className="flex flex-col min-w-0">
+                                        <span className="text-sm font-black tracking-tight gradient-text leading-tight capitalize truncate">{user?.ism || 'O\'quvchi'}</span>
                                         <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Mening Kabinetim</span>
                                     </div>
                                 </>
