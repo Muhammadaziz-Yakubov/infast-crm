@@ -135,3 +135,13 @@
     transform: scale(1) translateY(0);
   }
 }
+
+/* Utilities */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

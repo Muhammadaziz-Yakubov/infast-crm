@@ -5,7 +5,8 @@ import {
     HiOutlineAcademicCap, HiOutlineCalendar, HiOutlineCreditCard,
     HiOutlinePhone, HiOutlineUserCircle, HiOutlineInformationCircle,
     HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineArrowRight,
-    HiOutlineClock, HiOutlineGift, HiOutlineShoppingBag, HiOutlineLightningBolt
+    HiOutlineClock, HiOutlineGift, HiOutlineShoppingBag, HiOutlineLightningBolt,
+    HiOutlineUserGroup, HiOutlineShieldCheck, HiOutlineSparkles
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
@@ -43,152 +44,187 @@ const StudentHome = () => {
     const { student, payments, attendance } = data;
 
     return (
-        <div className="min-h-screen bg-transparent pb-32 animate-fade-in lg:pb-10">
-            <div className="space-y-8">
-                {/* Featured Status Card */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <div className="lg:col-span-8 relative group overflow-hidden rounded-[2.5rem] bg-gray-900 p-8 md:p-12 text-white shadow-2xl border border-white/5">
-                        <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 group-hover:rotate-45 transition-transform duration-1000">
-                            <HiOutlineAcademicCap className="w-48 h-48 lg:w-64 lg:h-64" />
-                        </div>
-                        <div className="relative z-10 space-y-8">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[8px] lg:text-[10px] font-black uppercase tracking-widest italic">
-                                {student.guruh?.nomi} • {student.guruh?.jadval?.vaqt}
-                            </div>
-                            <div className="space-y-1">
-                                <p className="text-xs lg:text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">O'quv holati</p>
-                                <h3 className="text-3xl lg:text-5xl font-black uppercase italic tracking-tight">
-                                    {student.tolovHolati === 'tolangan' ? "Ta'lim Faol ✅" : "Tizim Cheklangan ⚠️"}
-                                </h3>
-                            </div>
-                            <div className="flex items-center gap-3 lg:gap-4 max-w-xl">
-                                <div className="flex-1 p-3 lg:p-4 rounded-3xl bg-white/5 backdrop-blur-md border border-white/5">
-                                    <p className="text-[8px] lg:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">To'lov kuni</p>
-                                    <p className="text-base lg:text-xl font-black">{student.tolovKuni}-sana</p>
-                                </div>
-                                <div className="flex-1 p-3 lg:p-4 rounded-3xl bg-white/5 backdrop-blur-md border border-white/5">
-                                    <p className="text-[8px] lg:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Guruhdoshlar</p>
-                                    <p className="text-base lg:text-xl font-black">12+</p>
-                                </div>
-                                <div className="flex-[2] p-3 lg:p-4 rounded-3xl bg-amber-500/10 backdrop-blur-md border border-amber-500/20 relative overflow-hidden group/ball">
-                                    <div className="absolute top-0 right-0 p-2 opacity-5 -rotate-12 group-hover/ball:rotate-12 transition-transform">
-                                        <HiOutlineLightningBolt className="w-16 h-16" />
-                                    </div>
-                                    <div className="relative z-10">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <p className="text-[8px] lg:text-[10px] font-black text-amber-500/80 uppercase tracking-widest italic">Tajribam</p>
-                                            <span className="bg-amber-500 text-white text-[7px] font-black px-2 py-0.5 rounded-full uppercase">Lvl {student.level}</span>
-                                        </div>
-                                        <p className="text-base lg:text-xl font-black text-amber-500 mb-2">{student.xp || 0} XP</p>
+        <div className="min-h-screen bg-transparent pb-32 animate-fade-in lg:pb-10 -mt-2">
+            <div className="space-y-6">
 
-                                        {/* Mini Progress Bar */}
-                                        <div className="space-y-1">
-                                            <div className="flex justify-between text-[6px] font-black text-amber-500/60 uppercase">
-                                                <span>Progress</span>
-                                                <span>{student.progress}%</span>
-                                            </div>
-                                            <div className="h-1 w-full bg-amber-500/10 rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full bg-amber-500 rounded-full transition-all duration-1000"
-                                                    style={{ width: `${student.progress}%` }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex-1 p-3 lg:p-4 rounded-3xl bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20">
-                                    <p className="text-[8px] lg:text-[10px] font-black text-emerald-500/80 uppercase tracking-widest mb-1 italic">Coinlarim</p>
-                                    <p className="text-base lg:text-xl font-black text-emerald-500">{student.coins || 0} 🪙</p>
-                                </div>
-                            </div>
-                        </div>
+                {/* Greeting & Quick Stats */}
+                <div className="flex items-center justify-between px-1">
+                    <div className="space-y-1">
+                        <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+                            Salom, {student.ism?.split(' ')[0]}! <span className="animate-bounce">👋</span>
+                        </h2>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest italic">O'qishlaringiz qanday ketmoqda?</p>
                     </div>
+                </div>
 
-                    {/* Quick Access Sidebar */}
-                    <div className="lg:col-span-4">
-                        <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 h-full">
-                            <Link to="/tasks" className="p-6 md:p-8 rounded-[2rem] bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 active:scale-95 transition-all space-y-4 flex flex-col justify-end">
-                                <div className="w-10 h-10 lg:w-14 lg:h-14 rounded-xl lg:rounded-2xl bg-white/20 flex items-center justify-center">
-                                    <HiOutlineCalendar className="w-6 h-6 lg:w-8 lg:h-8" />
+                {/* Main Card - Membership Style */}
+                <div className="relative group overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-gray-900 via-gray-800 to-black p-6 md:p-10 text-white shadow-2xl border border-white/10">
+                    <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 group-hover:rotate-45 transition-transform duration-1000">
+                        <HiOutlineAcademicCap className="w-48 h-48" />
+                    </div>
+                    <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-primary-500/20 rounded-full blur-[100px] pointer-events-none" />
+
+                    <div className="relative z-10 space-y-8">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-4">
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-widest italic">
+                                    <HiOutlineShieldCheck className="w-3.5 h-3.5 text-primary-400" />
+                                    {student.guruh?.nomi}
                                 </div>
-                                <p className="text-sm lg:text-lg font-black uppercase tracking-widest italic">Vazifalar</p>
-                            </Link>
-                            <Link to="/attendance" className="p-6 md:p-8 rounded-[2rem] bg-emerald-500 text-white shadow-xl shadow-emerald-500/20 active:scale-95 transition-all space-y-4 flex flex-col justify-end">
-                                <div className="w-10 h-10 lg:w-14 lg:h-14 rounded-xl lg:rounded-2xl bg-white/20 flex items-center justify-center">
-                                    <HiOutlineCheckCircle className="w-6 h-6 lg:w-8 lg:h-8" />
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Sizning holatingiz</p>
+                                    <h3 className="text-3xl font-black uppercase italic tracking-tight flex items-center gap-3">
+                                        {student.tolovHolati === 'tolangan' ? "Faol" : "Cheklangan"}
+                                        <div className={`w-3 h-3 rounded-full ${student.tolovHolati === 'tolangan' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+                                    </h3>
                                 </div>
-                                <p className="text-sm lg:text-lg font-black uppercase tracking-widest italic">Davomat</p>
-                            </Link>
+                            </div>
+                            <div className="w-16 h-16 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-2 flex items-center justify-center">
+                                <div className="text-center">
+                                    <p className="text-[8px] font-black uppercase text-gray-400 italic leading-none mb-1">LVL</p>
+                                    <p className="text-2xl font-black leading-none">{student.level || 1}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="p-4 rounded-3xl bg-white/5 backdrop-blur-md border border-white/5 space-y-2">
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic">Keyingi dars</p>
+                                <div className="flex items-center gap-2 text-primary-400">
+                                    <HiOutlineClock className="w-4 h-4" />
+                                    <p className="text-sm font-black">{student.guruh?.jadval?.vaqt}</p>
+                                </div>
+                            </div>
+                            <div className="p-4 rounded-3xl bg-amber-500/10 backdrop-blur-md border border-amber-500/20 space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <p className="text-[9px] font-black text-amber-500 uppercase tracking-widest italic">Tajriba</p>
+                                    <p className="text-[9px] font-black text-amber-500/60">{student.xp || 0} XP</p>
+                                </div>
+                                <div className="h-2 w-full bg-amber-500/10 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transition-all duration-1000"
+                                        style={{ width: `${student.progress || 0}%` }}
+                                    />
+                                </div>
+                                <p className="text-[7px] font-black text-amber-500/50 uppercase text-right">{student.progress || 0}% progress</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    {/* Progress (Davomat) Section */}
-                    <div className="lg:col-span-8 bg-white dark:bg-dark-800 rounded-[2.5rem] p-8 md:p-10 border border-gray-100 dark:border-white/5 shadow-sm space-y-8 flex flex-col justify-center">
+                {/* Quick Action Grid */}
+                <div className="grid grid-cols-4 gap-3">
+                    {[
+                        { to: '/tasks', icon: HiOutlineCalendar, label: 'Vazifalar', color: 'bg-indigo-500' },
+                        { to: '/attendance', icon: HiOutlineCheckCircle, label: 'Davomat', color: 'bg-emerald-500' },
+                        { to: '/market', icon: HiOutlineShoppingBag, label: 'Market', color: 'bg-rose-500' },
+                        { to: '/wheel', icon: HiOutlineGift, label: 'Sovg\'a', color: 'bg-amber-500' },
+                    ].map((item, idx) => (
+                        <Link
+                            key={idx}
+                            to={item.to}
+                            className="flex flex-col items-center gap-2 group active:scale-95 transition-all"
+                        >
+                            <div className={`w-14 h-14 rounded-2xl ${item.color} text-white shadow-lg flex items-center justify-center group-hover:-translate-y-1 transition-transform`}>
+                                <item.icon className="w-7 h-7" />
+                            </div>
+                            <span className="text-[9px] font-black uppercase text-gray-500 dark:text-gray-400 tracking-wider text-center">{item.label}</span>
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Second Row Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Attendance Analysis */}
+                    <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-6 border border-gray-100 dark:border-white/5 shadow-sm space-y-6">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-lg lg:text-xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Oylik Davomat</h3>
-                            <span className="text-xs font-black text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">
-                                {Math.round((attendance.filter(a => a.keldi).length / (attendance.length || 1)) * 100)}%
-                            </span>
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                    <HiOutlineSparkles className="w-5 h-5" />
+                                </div>
+                                <h3 className="text-sm font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Oylik Davomat</h3>
+                            </div>
+                            <div className="flex flex-col items-end">
+                                <span className="text-xl font-black text-emerald-500 italic">
+                                    {Math.round((attendance.filter(a => a.keldi).length / (attendance.length || 1)) * 100)}%
+                                </span>
+                                <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest italic">Muvaffaqiyat</span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2 lg:gap-3 flex-wrap">
-                            {attendance.slice(0, 12).map((a, i) => (
-                                <div key={i} className={`flex-1 min-w-[40px] h-12 lg:h-16 rounded-xl lg:rounded-2xl flex items-center justify-center transition-all ${a.keldi ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-red-500/20 text-red-500'}`}>
-                                    {a.keldi ? <HiOutlineCheckCircle className="w-5 h-5 lg:w-7 lg:h-7" /> : <HiOutlineXCircle className="w-5 h-5 lg:w-7 lg:h-7" />}
+
+                        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                            {attendance.slice(0, 10).map((a, i) => (
+                                <div
+                                    key={i}
+                                    className={`flex-shrink-0 w-10 h-14 rounded-2xl flex flex-col items-center justify-center transition-all ${a.keldi ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-red-500/10 text-red-500'}`}
+                                >
+                                    <span className="text-[7px] font-black mb-1 opacity-60 uppercase">{i + 1}</span>
+                                    {a.keldi ? <HiOutlineCheckCircle className="w-5 h-5" /> : <HiOutlineXCircle className="w-5 h-5" />}
                                 </div>
                             ))}
+                            {attendance.length === 0 && (
+                                <p className="text-[10px] font-black text-gray-400 uppercase italic py-4">Hali ma'lumot yo'q</p>
+                            )}
                         </div>
                     </div>
 
-                    <div className="lg:col-span-4 grid grid-cols-2 gap-4">
-                        <Link to="/wheel" className="p-6 rounded-[2rem] bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-xl shadow-amber-500/20 active:scale-95 transition-all space-y-3 flex flex-col items-center justify-center text-center">
-                            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                                <HiOutlineGift className="w-7 h-7" />
+                    {/* Finance Mini List */}
+                    <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-6 border border-gray-100 dark:border-white/5 shadow-sm space-y-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                                    <HiOutlineCreditCard className="w-5 h-5" />
+                                </div>
+                                <h3 className="text-sm font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Hamyon</h3>
                             </div>
-                            <p className="text-[10px] font-black uppercase tracking-widest italic leading-none">Omad G'ildiragi</p>
-                        </Link>
-                        <Link to="/market" className="p-6 rounded-[2rem] bg-gradient-to-br from-pink-500 to-rose-600 text-white shadow-xl shadow-rose-500/20 active:scale-95 transition-all space-y-3 flex flex-col items-center justify-center text-center">
-                            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                                <HiOutlineShoppingBag className="w-7 h-7" />
-                            </div>
-                            <p className="text-[10px] font-black uppercase tracking-widest italic leading-none">Coin Market</p>
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Finance Section */}
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between px-4">
-                        <h3 className="text-lg lg:text-xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight underline-offset-8 decoration-primary-500/30 underline">So'nggi To'lovlar</h3>
-                        <Link to="/payments" className="text-[10px] font-black text-primary-500 uppercase tracking-widest">Hammasi</Link>
-                    </div>
-                    {payments.length === 0 ? (
-                        <div className="bg-white dark:bg-dark-800 rounded-[2rem] p-10 text-center border-2 border-dashed border-gray-100 dark:border-dark-700">
-                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest italic">Ma'lumotlar yo'q</p>
+                            <Link to="/payments" className="text-[9px] font-black text-primary-500 uppercase tracking-tighter hover:underline">Tarix</Link>
                         </div>
-                    ) : (
+
                         <div className="space-y-3">
-                            {payments.slice(0, 3).map((p, i) => (
-                                <div key={i} className="bg-white dark:bg-dark-800 rounded-[2rem] p-5 border border-gray-100 dark:border-white/5 shadow-sm active:scale-[0.98] transition-all flex items-center justify-between group hover:bg-gray-50 dark:hover:bg-dark-700">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-2xl bg-gray-50 dark:bg-dark-900 flex items-center justify-center text-emerald-500">
-                                            <HiOutlineCreditCard className="w-6 h-6 lg:w-7 lg:h-7" />
+                            {payments.slice(0, 2).map((p, i) => (
+                                <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 dark:bg-dark-900 border border-transparent hover:border-gray-100 dark:hover:border-white/5 transition-all">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-dark-800 flex items-center justify-center text-emerald-500">
+                                            <HiOutlineCheckCircle className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <p className="font-black text-gray-900 dark:text-white tracking-tight lg:text-lg">{formatMoney(p.summa)}</p>
-                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{new Date(p.sana).toLocaleDateString('uz')}</p>
+                                            <p className="text-[11px] font-black text-gray-900 dark:text-white">{formatMoney(p.summa)}</p>
+                                            <p className="text-[8px] font-black text-gray-400 uppercase">{new Date(p.sana).toLocaleDateString('uz')}</p>
                                         </div>
                                     </div>
-                                    <span className="text-[8px] lg:text-[10px] font-black text-emerald-600 bg-emerald-500/10 px-3 py-1 lg:px-4 lg:py-1.5 rounded-full uppercase tracking-widest">Tasdiqlangan</span>
+                                    <span className="text-[7px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-full uppercase italic">Tasdiq</span>
                                 </div>
                             ))}
+                            {payments.length === 0 && (
+                                <div className="text-center py-4 space-y-2">
+                                    <p className="text-[10px] font-black text-gray-400 uppercase italic">To'lovlar topilmadi</p>
+                                    <button className="text-[8px] font-black bg-primary-500 text-white px-4 py-2 rounded-full uppercase tracking-widest">To'lov qilish</button>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </div>
+
+                {/* Extra Stats / Motivation */}
+                <div className="p-6 rounded-[2.5rem] bg-indigo-600 text-white relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 -rotate-12 group-hover:rotate-0 transition-transform">
+                        <HiOutlineLightningBolt className="w-24 h-24" />
+                    </div>
+                    <div className="relative z-10 flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                            <HiOutlineSparkles className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-black uppercase text-indigo-200 tracking-[0.2em] mb-0.5">Motivatsiya</p>
+                            <p className="text-xs font-bold leading-relaxed">Har kuni 1% yaxshiroq bo'lish, bir yilda 37 barobar kuchliroq bo'lish demakdir! 🚀</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
 };
 
 export default StudentHome;
+
