@@ -5,6 +5,7 @@ import { HiOutlineArrowLeft, HiOutlineGift, HiOutlineClock, HiOutlineSparkles, H
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import Logo from '../../assets/infastacademy.jpg';
 
 const WheelOfFortune = () => {
     const { user, checkAuth } = useAuth();
@@ -185,12 +186,9 @@ const WheelOfFortune = () => {
                                     );
                                 })}
                             </svg>
-                            {/* Inner Circle Decoration */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gray-900 rounded-full z-20 flex items-center justify-center border-4 border-white/10 text-white shadow-2xl">
-                                <div className="text-center">
-                                    <p className="text-[10px] font-black italic text-primary-400">IN</p>
-                                    <p className="text-[10px] font-black italic text-white -mt-1 tracking-widest">FAST</p>
-                                </div>
+                            {/* Inner Circle Decoration - Image Logo */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-24 md:h-24 bg-white rounded-full z-20 flex items-center justify-center border-4 border-gray-900 overflow-hidden shadow-2xl">
+                                <img src={Logo} alt="InFast Academy" className="w-full h-full object-cover" />
                             </div>
                         </div>
                     </div>
@@ -216,7 +214,7 @@ const WheelOfFortune = () => {
                                 {[1, 2, 3].map(i => (
                                     <div
                                         key={i}
-                                        className={`w-3 h-3 rounded-full border-2 transition-all duration-500 
+                                        className={`w-3 h-3 rounded-full border-2 transition-all duration-500
                                             ${i <= (3 - remainingSpins)
                                                 ? 'bg-primary-500 border-primary-500 animate-pulse'
                                                 : 'bg-transparent border-gray-300 dark:border-dark-600 opacity-30'}`}
@@ -305,4 +303,3 @@ const WheelOfFortune = () => {
 };
 
 export default WheelOfFortune;
-
