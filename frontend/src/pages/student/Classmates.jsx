@@ -134,7 +134,7 @@ const Classmates = () => {
                         <h3 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter leading-none">Guruh bilan rivojlaning! 🚀</h3>
                         <p className="text-sm font-bold text-primary-100 uppercase tracking-widest italic opacity-90">Guruhdoshlaringiz bilan xp ballar yig'ishda raqobat qiling</p>
                     </div>
-                    <Link to="/ranking" className="px-8 py-4 bg-white text-primary-600 rounded-[1.5rem] font-black text-xs uppercase tracking-widest italic shadow-xl hover:scale-105 active:scale-95 transition-all">
+                    <Link to="/rating" className="px-8 py-4 bg-white text-primary-600 rounded-[1.5rem] font-black text-xs uppercase tracking-widest italic shadow-xl hover:scale-105 active:scale-95 transition-all">
                         Reytingni ko'rish
                     </Link>
                 </div>
