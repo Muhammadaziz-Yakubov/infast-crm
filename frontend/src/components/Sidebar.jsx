@@ -18,11 +18,13 @@ import {
     HiOutlineClipboardList,
     HiOutlineTrendingUp,
     HiOutlineShoppingBag,
-    HiOutlineDatabase
+    HiOutlineDatabase,
+    HiOutlinePresentationChartLine
 } from 'react-icons/hi';
 
 const adminMenu = [
     { path: '/', label: 'Bosh sahifa', icon: HiOutlineHome },
+    { path: '/marketing', label: 'Marketing', icon: HiOutlinePresentationChartLine },
     { path: '/students', label: "O'quvchilar", icon: HiOutlineUserGroup },
     { path: '/groups', label: 'Guruhlar', icon: HiOutlineAcademicCap },
     { path: '/courses', label: 'Kurslar', icon: HiOutlineBookOpen },

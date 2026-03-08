@@ -130,4 +130,12 @@ export const wheelAPI = {
     getLogs: () => api.get('/wheels/logs'),
 };
 
+export const leadAPI = {
+    getAll: (params) => api.get('/leads', { params }),
+    getStats: () => api.get('/leads/stats'),
+    create: (data) => api.post('/leads', data),
+    update: (id, data) => api.put(`/leads/${id}`, data),
+    delete: (id) => api.delete(`/leads/${id}`),
+};
+
 export default api;

@@ -31,6 +31,7 @@ const ScanAttendance = React.lazy(() => import('./pages/student/ScanAttendance')
 const WheelOfFortune = React.lazy(() => import('./pages/student/WheelOfFortune'));
 const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 const CoinManager = React.lazy(() => import('./pages/CoinManager'));
+const Marketing = React.lazy(() => import('./pages/Marketing'));
 
 
 import { Analytics } from "@vercel/analytics/react";
@@ -117,6 +118,7 @@ const AppContent = () => {
                     <Route path="/debtors" element={<Debtors />} />
                     <Route path="/market-manager" element={<MarketManager />} />
                     <Route path="/coin-manager" element={<CoinManager />} />
+                    <Route path="/marketing" element={<Marketing />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
