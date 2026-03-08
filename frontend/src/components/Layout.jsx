@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MobileBottomBar from './MobileBottomBar';
 import { useAuth } from '../context/AuthContext';
