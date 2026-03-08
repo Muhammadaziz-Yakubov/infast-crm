@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
-    createProduct, getProducts, updateProduct, deleteProduct, buyProduct, getCoinLogs
+    createProduct, getProducts, updateProduct, deleteProduct, buyProduct, getCoinLogs, getOrders
 } = require('../controllers/marketController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -13,6 +13,7 @@ router.get('/logs', getCoinLogs);
 router.post('/buy', buyProduct);
 
 // Admin uchun maxsus
+router.get('/orders', authorize('admin'), getOrders);
 router.post('/products', authorize('admin'), createProduct);
 router.put('/products/:id', authorize('admin'), updateProduct);
 router.delete('/products/:id', authorize('admin'), deleteProduct);

@@ -42,6 +42,18 @@ exports.deleteProduct = async (req, res) => {
     }
 };
 
+exports.getOrders = async (req, res) => {
+    try {
+        const orders = await Order.find()
+            .populate('student', 'ism telefon')
+            .populate('product', 'nomi rasm')
+            .sort('-createdAt');
+        res.json({ success: true, data: orders });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 // --- STUDENT CONTROLLERS ---
 
 exports.buyProduct = async (req, res) => {

@@ -117,6 +117,7 @@ export const marketAPI = {
     deleteProduct: (id) => api.delete(`/market/products/${id}`),
     buyProduct: (productId) => api.post('/market/buy', { productId }),
     getCoinLogs: () => api.get('/market/logs'),
+    getOrders: () => api.get('/market/orders'),
 };
 
 export const coinAPI = {
