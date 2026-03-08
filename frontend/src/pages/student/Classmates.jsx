@@ -5,10 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
     HiOutlineUserGroup, HiOutlineArrowLeft, HiOutlineChevronRight,
     HiOutlineLightningBolt, HiOutlineSparkles, HiOutlineStatusOnline,
-    HiOutlineUserCircle
-} from 'react-icons/ai'; // Using AI icons for consistency if needed, but HI is fine
-import {
-    HiOutlineClipboardList, HiOutlineAcademicCap
+    HiOutlineUserCircle, HiOutlineClipboardList, HiOutlineAcademicCap
 } from 'react-icons/hi';
 
 const Classmates = () => {

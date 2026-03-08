@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import {
     HiOutlineArrowLeft, HiOutlineGift, HiOutlineClock,
     HiOutlineSparkles, HiOutlineLightningBolt, HiOutlineStar,
-    HiOutlineX, HiOutlineTrendingUp
+    HiOutlineX, HiOutlineTrendingUp, HiOutlineCheckCircle
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
