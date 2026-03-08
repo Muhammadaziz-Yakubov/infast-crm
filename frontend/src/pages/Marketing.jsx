@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { leadAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
@@ -20,7 +21,8 @@ import {
     HiOutlineXCircle,
     HiOutlineBell,
     HiOutlineAcademicCap,
-    HiOutlineTrendingUp
+    HiOutlineTrendingUp,
+    HiOutlineUserAdd
 } from 'react-icons/hi';
 import {
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend,
@@ -32,6 +34,7 @@ const STATUSES = ['Yangi Lead', 'Bog\'lanildi', 'Qiziqdi', 'Sinov darsi', 'O\'qu
 const SOURCES = ['Instagram', 'Telegram', 'YouTube', 'TikTok', 'Referral', 'Website'];
 
 const Marketing = () => {
+    const navigate = useNavigate();
     const [activeView, setActiveView] = useState('dashboard'); // dashboard, table, kanban
     const [leads, setLeads] = useState([]);
     const [stats, setStats] = useState(null);
@@ -126,6 +129,10 @@ const Marketing = () => {
             notes: lead.notes || ''
         });
         setIsModalOpen(true);
+    };
+
+    const handleEnroll = (lead) => {
+        navigate('/students', { state: { lead } });
     };
 
     // Drag and Drop Logic
@@ -454,6 +461,7 @@ const Marketing = () => {
                                         </td>
                                         <td className="px-8 py-6 text-right">
                                             <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                                <button onClick={() => handleEnroll(lead)} title="O'quvchi sifatida qo'shish" className="p-3 bg-white dark:bg-dark-900 rounded-xl text-emerald-500 hover:scale-110 shadow-lg border border-gray-100 dark:border-white/5 transition-transform"><HiOutlineUserAdd className="w-4 h-4" /></button>
                                                 <button onClick={() => openEditModal(lead)} className="p-3 bg-white dark:bg-dark-900 rounded-xl text-blue-500 hover:scale-110 shadow-lg border border-gray-100 dark:border-white/5 transition-transform"><HiOutlinePencil className="w-4 h-4" /></button>
                                                 <button onClick={() => handleDelete(lead._id)} className="p-3 bg-white dark:bg-dark-900 rounded-xl text-red-500 hover:scale-110 shadow-lg border border-gray-100 dark:border-white/5 transition-transform"><HiOutlineTrash className="w-4 h-4" /></button>
                                             </div>
@@ -499,6 +507,13 @@ const Marketing = () => {
                                                 <HiOutlineAcademicCap className="w-3 h-3 text-primary-500" />
                                                 {lead.course}
                                             </div>
+                                            <button
+                                                onClick={() => handleEnroll(lead)}
+                                                className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
+                                                title="O'quvchi sifatida qo'shish"
+                                            >
+                                                <HiOutlineUserAdd className="w-4 h-4" />
+                                            </button>
                                         </div>
                                     </div>
                                 ))}

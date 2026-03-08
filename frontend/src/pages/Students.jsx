@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { studentAPI, courseAPI, groupAPI, paymentAPI } from '../services/api';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -12,6 +13,7 @@ import {
 } from 'react-icons/hi';
 
 const Students = () => {
+    const location = useLocation();
     const [students, setStudents] = useState([]);
     const [courses, setCourses] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -39,7 +41,19 @@ const Students = () => {
 
     useEffect(() => {
         fetchAll();
-    }, []);
+
+        // Marketing sahifasidan lead kelgan bo'lsa
+        if (location.state?.lead) {
+            const lead = location.state.lead;
+            setForm(prev => ({
+                ...prev,
+                ism: lead.name,
+                telefon: lead.phone,
+                eslatmalar: `Marketingdan kelgan: ${lead.course} kursi bo'yicha. Izoh: ${lead.notes || ''}`
+            }));
+            setModalOpen(true);
+        }
+    }, [location.state]);
 
     const fetchAll = async () => {
         try {
