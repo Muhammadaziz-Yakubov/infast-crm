@@ -4,8 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import {
     HiOutlineStar, HiOutlineFire,
-    HiOutlineSparkles, HiOutlineLightningBolt, HiOutlineAcademicCap,
-    HiOutlineTrendingUp, HiOutlineEmojiHappy
+    HiOutlineSparkles, HiOutlineLightningBolt, HiOutlineAcademicCap
 } from 'react-icons/hi';
 
 const StudentRating = () => {
@@ -36,10 +35,10 @@ const StudentRating = () => {
     };
 
     const getRankStyle = (rank) => {
-        if (rank === 1) return { icon: '🥇', color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', gradient: 'from-amber-400 to-amber-600', ring: 'ring-amber-500/30' };
-        if (rank === 2) return { icon: '🥈', color: 'text-slate-400', bg: 'bg-slate-400/10', border: 'border-slate-400/20', gradient: 'from-slate-300 to-slate-500', ring: 'ring-slate-400/30' };
-        if (rank === 3) return { icon: '🥉', color: 'text-orange-600', bg: 'bg-orange-600/10', border: 'border-orange-600/20', gradient: 'from-orange-500 to-orange-700', ring: 'ring-orange-600/30' };
-        return { icon: null, color: 'text-gray-400', bg: 'bg-white/40 dark:bg-dark-900/40', border: 'border-white/20 dark:border-white/5', gradient: 'from-gray-100 to-gray-200', ring: 'ring-transparent' };
+        if (rank === 1) return { icon: '🥇', color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', gradient: 'from-amber-400 to-amber-600' };
+        if (rank === 2) return { icon: '🥈', color: 'text-slate-400', bg: 'bg-slate-400/10', border: 'border-slate-400/20', gradient: 'from-slate-300 to-slate-500' };
+        if (rank === 3) return { icon: '🥉', color: 'text-orange-600', bg: 'bg-orange-600/10', border: 'border-orange-600/20', gradient: 'from-orange-500 to-orange-700' };
+        return { icon: null, color: 'text-gray-400', bg: 'bg-white dark:bg-dark-800', border: 'border-gray-100 dark:border-white/5', gradient: 'from-gray-100 to-gray-200' };
     };
 
     const getScoreBadge = (xp) => {
@@ -50,155 +49,163 @@ const StudentRating = () => {
         return { label: 'Boshlang\'ich', icon: HiOutlineStar, color: 'text-gray-400' };
     };
 
-    if (loading) return <LoadingSpinner text="Peshqadamlar aniqlanmoqda..." />;
+    if (loading) return <LoadingSpinner text="Reyting hisoblanmoqda..." />;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-12 pb-32 lg:pb-16 px-4 animate-fade-in">
-
-            {/* --- HEADER --- */}
-            <header className="relative flex flex-col md:flex-row items-center justify-between gap-6 pt-6 text-center md:text-left">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-orange-500/10 blur-3xl opacity-50 pointer-events-none" />
-                <div className="relative space-y-2">
-                    <span className="text-[10px] font-black text-primary-500 uppercase tracking-[0.4em] italic mb-1 block">Raqobat & G'alaba</span>
-                    <h1 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter leading-none">
+        <div className="min-h-screen bg-transparent pb-32 lg:pb-10 animate-fade-in max-w-2xl mx-auto px-4">
+            {/* Header */}
+            <header className="flex items-center justify-between mb-10">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">
                         Peshqadamlar <span className="text-primary-500">Ligasi</span>
                     </h1>
-                    <p className="text-sm font-bold text-gray-500 uppercase tracking-widest opacity-60 italic">Eng kuchli o'quvchilar reytingi</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Markaz bo'yicha jami XP ballar</p>
                 </div>
-                <div className="relative group">
-                    <div className="absolute inset-0 bg-primary-500 blur-2xl opacity-20 group-hover:opacity-40 transition-opacity" />
-                    <div className="relative w-20 h-20 rounded-[2rem] bg-white/40 dark:bg-dark-900/40 backdrop-blur-xl border border-white/20 dark:border-white/5 flex items-center justify-center text-primary-500 shadow-2xl">
-                        <HiOutlineAcademicCap className="w-10 h-10" />
-                    </div>
+                <div className="w-14 h-14 rounded-2xl bg-primary-500/10 flex items-center justify-center text-primary-500 shadow-xl shadow-primary-500/10 border border-primary-500/20">
+                    <HiOutlineAcademicCap className="w-7 h-7" />
                 </div>
             </header>
 
-            {/* --- MY STATUS CARD --- */}
-            {myRank && (
-                <div className="bg-gradient-to-r from-primary-600 to-orange-600 rounded-[3rem] p-8 text-white shadow-2xl relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-                        <div className="flex items-center gap-6">
-                            <div className="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-2xl overflow-hidden">
-                                {myRank.profileImage ? (
-                                    <img src={myRank.profileImage} className="w-full h-full object-cover" />
-                                ) : (
-                                    <span className="text-3xl font-black italic">{myRank.ism?.charAt(0)}</span>
-                                )}
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-primary-100 uppercase tracking-widest italic leading-none mb-1">Mening o'rnim</p>
-                                <h3 className="text-3xl font-black italic uppercase leading-none">{myRank.rank}-o'rin</h3>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-center md:text-right">
-                            <div>
-                                <p className="text-[9px] font-black text-primary-100 uppercase tracking-widest italic leading-none mb-1">Jami XP</p>
-                                <p className="text-2xl font-black italic">{myRank.xp}</p>
-                            </div>
-                            <div>
-                                <p className="text-[9px] font-black text-primary-100 uppercase tracking-widest italic leading-none mb-1">Daraja</p>
-                                <p className="text-2xl font-black italic">Lvl {myRank.level}</p>
-                            </div>
-                            <div className="hidden md:block">
-                                <p className="text-[9px] font-black text-primary-100 uppercase tracking-widest italic leading-none mb-1">Mening statusim</p>
-                                <p className="text-2xl font-black italic uppercase text-amber-300 tracking-tighter">{getScoreBadge(myRank.xp).label}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* Top 3 Podium Selection */}
+            <div className="flex flex-col gap-6 mb-12">
+                {ratings.slice(0, 3).map((r) => {
+                    const style = getRankStyle(r.rank);
+                    const isMe = r._id === (user?.id || user?._id);
+                    const badge = getScoreBadge(r.xp);
+                    const BadgeIcon = badge.icon;
 
-            {/* --- LEADERBOARD LIST --- */}
-            <div className="space-y-6">
-                <div className="flex items-center justify-between px-4">
-                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] italic leading-none">Barcha Peshqadamlar</h3>
-                </div>
+                    return (
+                        <div
+                            key={r._id}
+                            className={`relative overflow-hidden group rounded-[2.5rem] p-6 border-2 transition-all duration-500 
+                                ${style.bg} ${style.border} ${isMe ? 'ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-dark-900 shadow-2xl scale-[1.02]' : 'hover:shadow-lg'}`}
+                        >
+                            <div className="absolute top-0 right-0 p-6 opacity-5 rotate-12 group-hover:rotate-45 transition-transform duration-1000">
+                                <HiOutlineLightningBolt className="w-32 h-32" />
+                            </div>
 
-                <div className="space-y-4">
-                    {ratings.map((student, index) => {
-                        const style = getRankStyle(student.rank);
-                        const badge = getScoreBadge(student.xp);
-                        const isMe = student._id === (user?.id || user?._id);
-                        const BadgeIcon = badge.icon;
-
-                        return (
-                            <div
-                                key={student._id}
-                                className={`group relative flex items-center gap-6 p-6 md:p-8 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-500 animate-slide-up bg-white/40 dark:bg-dark-900/40 border-white/20 dark:border-white/5 
-                                    ${isMe ? 'ring-4 ring-primary-500/20 shadow-2xl scale-[1.02] z-10' : 'hover:shadow-xl hover:bg-white/60 dark:hover:bg-dark-900/60'}`}
-                                style={{ animationDelay: `${index * 0.05}s` }}
-                            >
-                                {/* Rank Number / Icon */}
-                                <div className="flex-shrink-0 w-12 text-center">
-                                    {style.icon ? (
-                                        <span className="text-4xl drop-shadow-lg">{style.icon}</span>
-                                    ) : (
-                                        <span className="text-lg font-black text-gray-400 italic font-mono">{student.rank}</span>
-                                    )}
-                                </div>
-
-                                {/* Avatar */}
+                            <div className="flex items-center gap-6 relative z-10">
                                 <div className="relative">
-                                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-[1.8rem] flex items-center justify-center text-2xl font-black text-white shadow-xl overflow-hidden relative group-hover:scale-110 transition-transform bg-gradient-to-br ${style.gradient}`}>
-                                        {student.profileImage ? (
-                                            <img src={student.profileImage} alt={student.ism} className="w-full h-full object-cover" />
-                                        ) : (
-                                            student.ism?.charAt(0)
-                                        )}
-                                        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl font-black text-white shadow-2xl bg-gradient-to-br ${style.gradient}`}>
+                                        {r.ism?.charAt(0)}
                                     </div>
-                                    <div className="absolute -bottom-1 -right-1 bg-gray-900 dark:bg-dark-800 text-white text-[8px] font-black px-2 py-1 rounded-lg border-2 border-white dark:border-dark-900 shadow-lg">
-                                        Lvl {student.level}
+                                    <div className="absolute -top-4 -left-4 text-4xl transform -rotate-12 drop-shadow-lg">
+                                        {style.icon}
+                                    </div>
+                                    <div className="absolute -bottom-2 -right-2 bg-gray-900 text-white text-[10px] font-black px-2.5 py-1 rounded-full border-2 border-white dark:border-dark-800">
+                                        Lvl {r.level}
                                     </div>
                                 </div>
 
-                                {/* Name & Info */}
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <h4 className={`text-lg md:text-xl font-black uppercase italic tracking-tighter truncate ${isMe ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-white'}`}>
-                                            {student.ism}
-                                        </h4>
-                                        {isMe && <HiOutlineEmojiHappy className="w-5 h-5 text-primary-500 animate-bounce" />}
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1 min-w-0">
+                                        <h3 className={`font-black text-base sm:text-xl uppercase tracking-tighter truncate leading-tight ${isMe ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-white'}`}>
+                                            {r.ism}
+                                        </h3>
+                                        <BadgeIcon className={`w-4 h-4 flex-shrink-0 ${badge.color}`} />
                                     </div>
-                                    <div className="flex items-center gap-4">
-                                        <div className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest italic ${badge.color}`}>
-                                            <BadgeIcon className="w-3.5 h-3.5" />
-                                            {badge.label}
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">{r.guruh?.nomi || 'Guruhsiz'}</p>
+
+                                    {/* Progress Bar for Top 3 */}
+                                    <div className="mt-4 space-y-1.5">
+                                        <div className="flex justify-between text-[8px] font-black uppercase tracking-widest italic text-gray-400">
+                                            <span>Progress</span>
+                                            <span>{r.progress}%</span>
                                         </div>
-                                        <div className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
-                                        <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic">
-                                            {student.guruh?.nomi || 'InFast'}
+                                        <div className="h-2 w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full rounded-full bg-gradient-to-r ${style.gradient} transition-all duration-1000`}
+                                                style={{ width: `${r.progress}%` }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Score */}
-                                <div className="text-right">
-                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] italic mb-1 leading-none">Jami Ball</p>
-                                    <p className={`text-2xl md:text-3xl font-black italic tracking-tighter leading-none ${isMe ? 'text-primary-500' : 'text-gray-900 dark:text-white'}`}>
-                                        {student.xp}
-                                        <span className="text-xs ml-1 text-gray-400">XP</span>
-                                    </p>
+                                <div className="text-right pl-4 border-l border-gray-100 dark:border-white/5">
+                                    <p className="text-2xl font-black text-gray-900 dark:text-white leading-none tracking-tighter">{r.xp}</p>
+                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] mt-1">XP Total</p>
                                 </div>
-
-                                {isMe && (
-                                    <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-16 bg-primary-500 rounded-full shadow-lg shadow-primary-500/50" />
-                                )}
                             </div>
-                        );
-                    })}
-                </div>
+                        </div>
+                    );
+                })}
             </div>
 
-            {/* --- EMPTY STATE --- */}
-            {ratings.length === 0 && (
-                <div className="py-20 flex flex-col items-center justify-center bg-white/20 dark:bg-dark-900/20 backdrop-blur-md rounded-[4rem] border-4 border-dashed border-gray-100 dark:border-white/5">
-                    <HiOutlineTrendingUp className="w-20 h-20 text-gray-200 mb-6" />
-                    <h3 className="text-xl font-black text-gray-400 uppercase italic tracking-widest">Ma'lumotlar mavjud emas</h3>
+            {/* Others List - Enhanced */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between px-2 mb-4">
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] italic">Qolgan Ishtirokchilar</h4>
+                    <span className="text-[10px] font-black text-gray-400">{ratings.length > 3 ? ratings.length - 3 : 0} ta o'quvchi</span>
                 </div>
-            )}
 
+                {ratings.slice(3).map((r) => {
+                    const isMe = r._id === (user?.id || user?._id);
+                    const badge = getScoreBadge(r.xp);
+                    const BadgeIcon = badge.icon;
+
+                    return (
+                        <div
+                            key={r._id}
+                            className={`group p-4 rounded-3xl border transition-all active:scale-[0.98] ${isMe
+                                ? 'bg-primary-50/50 dark:bg-primary-900/10 border-primary-200 dark:border-primary-500/30 shadow-xl scale-[1.01]'
+                                : 'bg-white dark:bg-dark-800 border-gray-100 dark:border-white/5 hover:border-primary-200 shadow-sm'
+                                }`}
+                        >
+                            <div className="flex items-center gap-5">
+                                <div className={`text-[12px] font-black w-6 text-center ${isMe ? 'text-primary-500' : 'text-gray-300'}`}>
+                                    {r.rank}
+                                </div>
+                                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center text-white font-black text-sm shadow-lg ${isMe ? 'bg-primary-500' : 'bg-gray-900'
+                                    }`}>
+                                    {r.ism?.charAt(0)}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 min-w-0">
+                                        <h4 className={`text-sm md:text-base font-black uppercase tracking-tight truncate leading-tight ${isMe ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-white'}`}>
+                                            {r.ism}
+                                        </h4>
+                                        <span className="bg-gray-100 dark:bg-dark-900 px-2 py-0.5 rounded-md text-[8px] font-black text-gray-500 uppercase w-fit">Lvl {r.level}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <BadgeIcon className={`w-3 h-3 ${badge.color}`} />
+                                        <span className={`text-[8px] font-black uppercase tracking-widest ${badge.color}`}>
+                                            {badge.label}
+                                        </span>
+                                    </div>
+
+                                    {/* Small Progress for others */}
+                                    <div className="mt-3 h-1 w-24 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-primary-500 transition-all duration-1000"
+                                            style={{ width: `${r.progress}%` }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-lg font-black text-gray-900 dark:text-white leading-none tracking-tighter">{r.xp}</p>
+                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mt-1">XP</p>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Dynamic Footer Section */}
+            <div className="mt-12 p-8 rounded-[3rem] bg-gradient-to-br from-gray-900 to-black text-white text-center relative overflow-hidden shadow-2xl">
+                <div className="absolute top-0 left-0 w-full h-full opacity-10">
+                    <HiOutlineSparkles className="w-full h-full scale-150 rotate-12" />
+                </div>
+                <div className="relative z-10 space-y-4">
+                    <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-2 text-primary-400">
+                        <HiOutlineLightningBolt className="w-6 h-6 animate-pulse" />
+                    </div>
+                    <h4 className="text-xs font-black uppercase tracking-[0.3em] italic">Natijangizni oshiring!</h4>
+                    <p className="text-[10px] text-gray-400 font-medium leading-relaxed max-w-xs mx-auto">
+                        Vazifalarni mukammal topshiring va omad g'ildiragida coinlar yutib, XP darajangizni rekord darajaga ko'taring!
+                    </p>
+                </div>
+            </div>
         </div>
     );
 };
