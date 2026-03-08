@@ -22,8 +22,8 @@ const leadSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['New Lead', 'Contacted', 'Interested', 'Trial Lesson', 'Enrolled', 'Lost'],
-        default: 'New Lead'
+        enum: ['Yangi Lead', 'Bog\'lanildi', 'Qiziqdi', 'Sinov darsi', 'O\'quvchi bo\'ldi', 'Yo\'qotildi'],
+        default: 'Yangi Lead'
     },
     assignedManager: {
         type: mongoose.Schema.Types.ObjectId,

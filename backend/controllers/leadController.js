@@ -43,8 +43,8 @@ exports.getLeadStats = async (req, res) => {
         today.setHours(0, 0, 0, 0);
         const newLeadsToday = await Lead.countDocuments({ createdAt: { $gte: today } });
 
-        const contactedLeads = await Lead.countDocuments({ status: 'Contacted' });
-        const enrolledLeads = await Lead.countDocuments({ status: 'Enrolled' });
+        const contactedLeads = await Lead.countDocuments({ status: 'Bog\'lanildi' });
+        const enrolledLeads = await Lead.countDocuments({ status: 'O\'quvchi bo\'ldi' });
         const conversionRate = totalLeads > 0 ? ((enrolledLeads / totalLeads) * 100).toFixed(1) : 0;
 
         // Manbalar bo'yicha taqsimot
@@ -74,10 +74,10 @@ exports.getLeadStats = async (req, res) => {
         // Funnel Data
         const funnelData = [
             { name: 'Lead', count: totalLeads },
-            { name: 'Contacted', count: await Lead.countDocuments({ status: 'Contacted' }) },
-            { name: 'Interested', count: await Lead.countDocuments({ status: 'Interested' }) },
-            { name: 'Trial', count: await Lead.countDocuments({ status: 'Trial Lesson' }) },
-            { name: 'Enrolled', count: await Lead.countDocuments({ status: 'Enrolled' }) }
+            { name: 'Bog\'lanildi', count: await Lead.countDocuments({ status: 'Bog\'lanildi' }) },
+            { name: 'Qiziqdi', count: await Lead.countDocuments({ status: 'Qiziqdi' }) },
+            { name: 'Sinov darsi', count: await Lead.countDocuments({ status: 'Sinov darsi' }) },
+            { name: 'O\'quvchi bo\'ldi', count: await Lead.countDocuments({ status: 'O\'quvchi bo\'ldi' }) }
         ];
 
         res.status(200).json({

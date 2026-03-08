@@ -28,7 +28,7 @@ import {
     BarChart, Bar, LabelList
 } from 'recharts';
 
-const STATUSES = ['New Lead', 'Contacted', 'Interested', 'Trial Lesson', 'Enrolled', 'Lost'];
+const STATUSES = ['Yangi Lead', 'Bog\'lanildi', 'Qiziqdi', 'Sinov darsi', 'O\'quvchi bo\'ldi', 'Yo\'qotildi'];
 const SOURCES = ['Instagram', 'Telegram', 'YouTube', 'TikTok', 'Referral', 'Website'];
 
 const Marketing = () => {
@@ -50,7 +50,7 @@ const Marketing = () => {
         phone: '',
         course: '',
         source: 'Telegram',
-        status: 'New Lead',
+        status: 'Yangi Lead',
         followUpDate: '',
         notes: ''
     });
@@ -203,7 +203,7 @@ const Marketing = () => {
                     <button
                         onClick={() => {
                             setEditingLead(null);
-                            setFormData({ name: '', phone: '', course: '', source: 'Telegram', status: 'New Lead', followUpDate: '', notes: '' });
+                            setFormData({ name: '', phone: '', course: '', source: 'Telegram', status: 'Yangi Lead', followUpDate: '', notes: '' });
                             setIsModalOpen(true);
                         }}
                         className="bg-primary-500 text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/20 active:scale-95 flex items-center gap-3"
@@ -429,8 +429,8 @@ const Marketing = () => {
                                         </td>
                                         <td className="px-6 py-6">
                                             <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest border shadow-sm
-                                                ${lead.status === 'Enrolled' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                                                    lead.status === 'Lost' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                                                ${lead.status === 'O\'quvchi bo\'ldi' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                                    lead.status === 'Yo\'qotildi' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
                                                         'bg-amber-500/10 text-amber-500 border-amber-500/20'}`}>
                                                 {lead.status}
                                             </span>
