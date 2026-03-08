@@ -25,50 +25,50 @@ const Layout = () => {
                 <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Mobile Header */}
-                <header className="lg:hidden sticky top-0 z-40 bg-white/70 dark:bg-dark-950/70 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                <header className="lg:hidden sticky top-0 z-40 bg-white/80 dark:bg-dark-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 px-4 h-16 flex items-center">
+                    <div className="flex items-center justify-between w-full gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
                             {!isStudent ? (
                                 <>
                                     <button
                                         onClick={() => setSidebarOpen(true)}
-                                        className="p-2.5 rounded-2xl bg-white dark:bg-dark-800 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-white/5"
+                                        className="p-2 rounded-xl bg-white dark:bg-dark-800 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-white/5 flex-shrink-0"
                                     >
-                                        <HiOutlineMenuAlt2 className="w-6 h-6" />
+                                        <HiOutlineMenuAlt2 className="w-5 h-5" />
                                     </button>
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-black tracking-tight text-gray-900 dark:text-white leading-none">InFast CRM</span>
-                                        <span className="text-[10px] uppercase font-bold text-primary-500 tracking-wider">Admin Panel</span>
+                                    <div className="flex flex-col min-w-0">
+                                        <span className="text-xs font-black tracking-tight text-gray-900 dark:text-white leading-none truncate">InFast CRM</span>
+                                        <span className="text-[8px] uppercase font-bold text-primary-500 tracking-wider">Admin</span>
                                     </div>
                                 </>
                             ) : (
                                 <>
-                                    <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-500/20 shadow-lg">
+                                    <div className="w-9 h-9 rounded-xl overflow-hidden border border-primary-500/20 shadow-lg flex-shrink-0">
                                         <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
                                     </div>
                                     <div className="flex flex-col min-w-0">
-                                        <span className="text-sm font-black tracking-tight text-gray-900 dark:text-white leading-tight capitalize truncate">{user?.ism || 'Lumo Academy'}</span>
-                                        <span className="text-[10px] uppercase font-bold text-primary-500 tracking-wider">Student Hub</span>
+                                        <span className="text-xs font-black tracking-tight text-gray-900 dark:text-white leading-tight capitalize truncate">{user?.ism || 'InFast Academy'}</span>
+                                        <span className="text-[8px] uppercase font-bold text-primary-500 tracking-wider">Student</span>
                                     </div>
                                 </>
                             )}
                         </div>
 
                         {isStudent && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-shrink-0">
                                 <Link
                                     to="/wheel"
-                                    className="p-2.5 rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-500/30 active:scale-95 transition-all"
+                                    className="w-10 h-10 rounded-xl bg-amber-500 text-white shadow-lg shadow-amber-500/20 active:scale-90 transition-all flex items-center justify-center"
                                     title="Omad G'ildiragi"
                                 >
                                     <HiOutlineGift className="w-5 h-5" />
                                 </Link>
                                 <Link
                                     to="/scan"
-                                    className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary-500 text-white shadow-lg shadow-primary-500/30 active:scale-95 transition-all"
+                                    className="w-10 h-10 rounded-xl bg-primary-500 text-white shadow-lg shadow-primary-500/20 active:scale-90 transition-all flex items-center justify-center"
+                                    title="Skaner"
                                 >
                                     <HiOutlineQrcode className="w-5 h-5" />
-                                    <span className="text-xs font-black uppercase tracking-widest leading-none">Scan</span>
                                 </Link>
                             </div>
                         )}
