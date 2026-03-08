@@ -22,7 +22,8 @@ import {
     HiOutlineBell,
     HiOutlineAcademicCap,
     HiOutlineTrendingUp,
-    HiOutlineUserAdd
+    HiOutlineUserAdd,
+    HiOutlineLink
 } from 'react-icons/hi';
 import {
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend,
@@ -40,6 +41,8 @@ const Marketing = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+    const [linkSource, setLinkSource] = useState('Instagram');
     const [editingLead, setEditingLead] = useState(null);
 
     // Filters & Search
@@ -135,6 +138,12 @@ const Marketing = () => {
         navigate('/students', { state: { lead } });
     };
 
+    const copyLink = () => {
+        const link = `${window.location.origin}/join/${linkSource}`;
+        navigator.clipboard.writeText(link);
+        toast.success(`Nusxalandi: ${linkSource} linki 🔗`);
+    };
+
     // Drag and Drop Logic
     const onDragStart = (e, leadId) => {
         e.dataTransfer.setData('leadId', leadId);
@@ -207,6 +216,13 @@ const Marketing = () => {
                             <HiOutlineCollection className="w-5 h-5" />
                         </button>
                     </div>
+                    <button
+                        onClick={() => setIsLinkModalOpen(true)}
+                        className="bg-white dark:bg-dark-800 text-gray-900 dark:text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-50 border border-gray-100 dark:border-white/5 transition-all shadow-xl shadow-gray-200/20 active:scale-95 flex items-center gap-3"
+                    >
+                        <HiOutlineLink className="w-5 h-5 text-primary-500" />
+                        Link Yaratish
+                    </button>
                     <button
                         onClick={() => {
                             setEditingLead(null);
@@ -636,6 +652,47 @@ const Marketing = () => {
                         </button>
                     </div>
                 </form>
+            </Modal>
+            {/* Link Modal */}
+            <Modal isOpen={isLinkModalOpen} onClose={() => setIsLinkModalOpen(false)} title="Marketing Link Yaratish">
+                <div className="p-8 space-y-8">
+                    <div className="space-y-4">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic">Manbani Tanlang</label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            {SOURCES.map(s => (
+                                <button
+                                    key={s}
+                                    onClick={() => setLinkSource(s)}
+                                    className={`px-4 py-3 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all border
+                                        ${linkSource === s ? 'bg-primary-500 text-white border-primary-500 shadow-lg shadow-primary-500/20' : 'bg-gray-50 dark:bg-dark-900/50 text-gray-500 border-gray-100 dark:border-white/5 hover:bg-gray-100 dark:hover:bg-dark-900'}`}
+                                >
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="space-y-4 p-6 bg-primary-500/5 rounded-3xl border border-primary-500/10">
+                        <label className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em] italic">Tayyor Link</label>
+                        <div className="flex items-center gap-4 bg-white dark:bg-dark-900 p-2 rounded-2xl border border-gray-100 dark:border-white/5">
+                            <input
+                                readOnly
+                                value={`${window.location.origin}/join/${linkSource}`}
+                                className="flex-1 bg-transparent border-none text-[10px] font-black text-gray-600 dark:text-gray-400 italic px-4 focus:ring-0"
+                            />
+                            <button
+                                onClick={copyLink}
+                                className="bg-primary-500 text-white p-3 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary-500/20"
+                            >
+                                <HiOutlineLink className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest italic leading-relaxed">
+                        * Ushbu linkni ijtimoiy tarmoqlarga yoki reklama tugmalariga joylang. Link orqali kelgan leadlar avtomatik "{linkSource}" manbasi bilan saqlanadi.
+                    </p>
+                </div>
             </Modal>
         </div>
     );

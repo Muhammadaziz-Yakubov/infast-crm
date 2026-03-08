@@ -9,7 +9,10 @@ const {
 } = require('../controllers/leadController');
 const { protect, authorize } = require('../middleware/auth');
 
-// Faqat admin ruxsati
+// Ommaviy yo'nalish (Marketing formasi uchun)
+router.post('/public', createLead);
+
+// Faqat admin ruxsati uchun himoyalangan yo'nalishlar
 router.use(protect);
 router.use(authorize('admin'));
 

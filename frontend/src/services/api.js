@@ -136,6 +136,7 @@ export const leadAPI = {
     create: (data) => api.post('/leads', data),
     update: (id, data) => api.put(`/leads/${id}`, data),
     delete: (id) => api.delete(`/leads/${id}`),
+    publicCreate: (data) => api.post('/leads/public', data),
 };
 
 export default api;

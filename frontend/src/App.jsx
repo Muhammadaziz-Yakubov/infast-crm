@@ -32,6 +32,7 @@ const WheelOfFortune = React.lazy(() => import('./pages/student/WheelOfFortune')
 const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 const CoinManager = React.lazy(() => import('./pages/CoinManager'));
 const Marketing = React.lazy(() => import('./pages/Marketing'));
+const LeadForm = React.lazy(() => import('./pages/public/LeadForm'));
 
 
 import { Analytics } from "@vercel/analytics/react";
@@ -95,6 +96,7 @@ const AppContent = () => {
                 <Route path="/login" element={
                     <PublicRoute><Login /></PublicRoute>
                 } />
+                <Route path="/join/:source" element={<LeadForm />} />
                 <Route element={
                     <ProtectedRoute><Layout /></ProtectedRoute>
                 }>
