@@ -41,10 +41,11 @@ const StudentRating = () => {
         return { icon: null, color: 'text-gray-400', bg: 'bg-gray-100 dark:bg-dark-800', border: 'border-transparent' };
     };
 
-    const getScoreBadge = (score) => {
-        if (score >= 200) return { label: 'Ustoz', icon: HiOutlineFire, color: 'text-amber-500' };
-        if (score >= 100) return { label: 'Yulduz', icon: HiOutlineSparkles, color: 'text-emerald-500' };
-        if (score >= 50) return { label: 'Faol', icon: HiOutlineLightningBolt, color: 'text-blue-500' };
+    const getScoreBadge = (xp) => {
+        if (xp >= 50000) return { label: 'Afsona', icon: HiOutlineSparkles, color: 'text-purple-500' };
+        if (xp >= 20000) return { label: 'Ustoz', icon: HiOutlineFire, color: 'text-amber-500' };
+        if (xp >= 5000) return { label: 'Yulduz', icon: HiOutlineSparkles, color: 'text-emerald-500' };
+        if (xp >= 500) return { label: 'Faol', icon: HiOutlineLightningBolt, color: 'text-blue-500' };
         return { label: 'Boshlang\'ich', icon: HiOutlineStar, color: 'text-gray-400' };
     };
 
@@ -58,7 +59,7 @@ const StudentRating = () => {
                     <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">
                         Peshqadamlar <span className="text-primary-500">Reytingi</span>
                     </h1>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">O'quv markazi bo'yicha jami ballar</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">O'quv markazi bo'yicha jami XP ballar</p>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-primary-500/10 flex items-center justify-center text-primary-500 shadow-lg shadow-primary-500/10">
                     <HiOutlineAcademicCap className="w-6 h-6" />
@@ -94,8 +95,8 @@ const StudentRating = () => {
                                     <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{r.guruh?.nomi}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-xl font-black text-gray-900 dark:text-white leading-none">{r.totalScore}</p>
-                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-[0.1em] mt-1">Ball</p>
+                                    <p className="text-xl font-black text-gray-900 dark:text-white leading-none">{r.xp}</p>
+                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-[0.1em] mt-1">XP</p>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +108,7 @@ const StudentRating = () => {
             <div className="space-y-2.5">
                 {ratings.slice(3).map((r) => {
                     const isMe = r._id === (user?.id || user?._id);
-                    const badge = getScoreBadge(r.totalScore);
+                    const badge = getScoreBadge(r.xp);
                     const BadgeIcon = badge.icon;
                     return (
                         <div
@@ -137,7 +138,7 @@ const StudentRating = () => {
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-base font-black text-gray-900 dark:text-white leading-none">{r.totalScore}</p>
+                                    <p className="text-base font-black text-gray-900 dark:text-white leading-none uppercase tracking-tighter">{r.xp} XP</p>
                                 </div>
                             </div>
                         </div>

@@ -336,63 +336,42 @@ exports.getRating = async (req, res) => {
         const students = await Student.find(studentQuery)
             .populate('kurs', 'nomi')
             .populate('guruh', 'nomi')
-            .select('ism guruh kurs ball');
+            .select('ism guruh kurs xp coins');
 
-        // Har bir o'quvchi uchun ballni hisoblash
+        // Har bir o'quvchi uchun reyting ma'lumotlarini tayyorlash
         const ratingsPromises = students.map(async (student) => {
-            // 1. Vazifa ballari — graded submissions'dan
-            const submissions = await Submission.find({
-                student: student._id,
-                status: 'graded'
-            });
-            const taskScore = submissions.reduce((sum, s) => sum + (s.score || 0), 0);
-            const taskCount = submissions.length;
+            // Davomat va vazifalar sonini shunchaki ko'rsatkich uchun hisoblaymiz (ballga ta'sir qilmaydi, ball allaqachon modelda)
+            const taskCount = await Submission.countDocuments({ student: student._id, status: 'graded' });
 
-            // 2. Davomat statistikasi (faqat ko'rsatish uchun, ball berilmaydi)
-            const attendanceRecords = await Attendance.find({
-                'oquvchilar.oquvchi': student._id
-            });
-
+            const attendanceRecords = await Attendance.find({ 'oquvchilar.oquvchi': student._id });
             let attendancePresent = 0;
             let attendanceTotal = 0;
             attendanceRecords.forEach(record => {
-                const studentRecord = record.oquvchilar.find(
-                    o => o.oquvchi.toString() === student._id.toString()
-                );
+                const studentRecord = record.oquvchilar.find(o => o.oquvchi.toString() === student._id.toString());
                 if (studentRecord) {
                     attendanceTotal++;
-                    if (studentRecord.keldi) {
-                        attendancePresent++;
-                    }
+                    if (studentRecord.keldi) attendancePresent++;
                 }
             });
-
-            // Umumiy ball (faqat vazifalardan)
-            const totalScore = taskScore;
-
-            // O'quvchining ball sifatini yangilash
-            if (student.ball !== totalScore) {
-                await Student.findByIdAndUpdate(student._id, { ball: totalScore });
-            }
 
             return {
                 _id: student._id,
                 ism: student.ism,
                 guruh: student.guruh,
                 kurs: student.kurs,
-                taskScore,
+                xp: student.xp || 0,
+                coins: student.coins || 0,
                 taskCount,
                 attendancePresent,
                 attendanceTotal,
                 attendancePercent: attendanceTotal > 0 ? Math.round((attendancePresent / attendanceTotal) * 100) : 0,
-                totalScore
             };
         });
 
         const ratings = await Promise.all(ratingsPromises);
 
-        // Ballga qarab tartiblash
-        ratings.sort((a, b) => b.totalScore - a.totalScore);
+        // XP bo'yicha tartiblash
+        ratings.sort((a, b) => b.xp - a.xp);
 
         // Rank (o'rin) berish
         ratings.forEach((r, i) => {

@@ -64,7 +64,7 @@ const studentSchema = new mongoose.Schema({
         enum: ['faol', 'nofaol'],
         default: 'faol'
     },
-    ball: {
+    xp: {
         type: Number,
         default: 0
     },
