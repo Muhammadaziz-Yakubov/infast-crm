@@ -72,6 +72,7 @@ export const studentAPI = {
     getRating: (params) => api.get('/students/rating', { params }),
     getMyDashboard: () => api.get('/students/me/dashboard'),
     updateMe: (data) => api.put('/students/me/update', data),
+    syncXP: () => api.post('/students/sync-xp'),
 };
 
 // To'lovlar

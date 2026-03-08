@@ -387,3 +387,47 @@ exports.getRating = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
     }
 };
+
+// @desc    Sync all students XP based on history
+// @route   POST /api/students/sync-xp
+exports.syncAllStudentsXP = async (req, res) => {
+    try {
+        const CoinLog = require('../models/CoinLog');
+        const Submission = require('../models/Submission');
+
+        // 1. Coin logs'lardan jami XP ni hisoblash (Faqat PLUS)
+        const coinXPResults = await CoinLog.aggregate([
+            { $match: { type: 'plus' } },
+            { $group: { _id: '$student', totalCoinXP: { $sum: { $multiply: ['$amount', 5] } } } }
+        ]);
+
+        // 2. Graded Submissions'dan jami XP ni hisoblash (Score * 10)
+        const submissionXPResults = await Submission.aggregate([
+            { $match: { status: 'graded' } },
+            { $group: { _id: '$student', totalScoreXP: { $sum: { $multiply: ['$score', 10] } } } }
+        ]);
+
+        // O'quvchilar ro'yxatini olish
+        const students = await Student.find({ role: 'student' });
+
+        for (const student of students) {
+            const coinXP = coinXPResults.find(r => r._id.toString() === student._id.toString())?.totalCoinXP || 0;
+            const submissionXP = submissionXPResults.find(r => r._id.toString() === student._id.toString())?.totalScoreXP || 0;
+
+            let totalXP = coinXP + submissionXP;
+            if (totalXP > 100000) totalXP = 100000;
+
+            if (student.xp !== totalXP) {
+                await Student.findByIdAndUpdate(student._id, { xp: totalXP });
+            }
+        }
+
+        res.json({
+            success: true,
+            message: "Barcha o'quvchilarning XP ballari tarixiy ma'lumotlar asosida qayta hisoblandi va yangilandi! 📀🚀"
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
