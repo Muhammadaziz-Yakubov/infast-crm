@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { wheelAPI } from '../../services/api';
 import toast from 'react-hot-toast';
-import { HiOutlineArrowLeft, HiOutlineGift, HiOutlineClock, HiOutlineSparkles, HiOutlineLightningBolt } from 'react-icons/hi';
+import { HiOutlineArrowLeft, HiOutlineGift, HiOutlineClock, HiOutlineSparkles, HiOutlineLightningBolt, HiOutlineStar } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
