@@ -7,32 +7,46 @@ const { updateCoins } = require('../services/coinService');
 exports.spinWheel = async (req, res) => {
     try {
         const studentId = req.user._id;
+        const spinCost = 150;
 
-        // Bugun o'ynaganmi yo'qmi tekshirish
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const alreadySpun = await SpinLog.findOne({
-            student: studentId,
-            sana: { $gte: today }
-        });
-
-        if (alreadySpun) {
+        // 1. O'quvchini hamda balansini tekshirish
+        const student = await Student.findById(studentId);
+        if (!student || (student.coins || 0) < spinCost) {
             return res.status(400).json({
                 success: false,
-                message: "Siz bugun o'z omadingizni sinab ko'rgansiz. Ertaga yana urinib ko'ring! 🍀"
+                message: `Sizda yetarli coinlar yo'q! Bir marta aylantirish ${spinCost} coin turadi. 🪙`
             });
         }
 
-        // Mukofotlar ehtimolligi (probabilistlik)
+        // 2. Bugun necha marta o'ynaganini tekshirish (limit 3)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const spinsToday = await SpinLog.countDocuments({
+            student: studentId,
+            createdAt: { $gte: today }
+        });
+
+        if (spinsToday >= 3) {
+            return res.status(400).json({
+                success: false,
+                message: "Siz bugungi 3 ta imkoniyatdan foydalanib bo'ldingiz. Ertaga yana urinib ko'ring! 🍀"
+            });
+        }
+
+        // 3. Coinlarni yechish (xarajat)
+        await updateCoins(studentId, -spinCost, "Omad G'ildiragi: O'yin uchun to'lov");
+
+        // 4. Mukofotlar ehtimolligi (probabilistlik)
         const prizes = [
-            { amount: 0, label: "Omadingiz kelmadi", weight: 35 },
-            { amount: 19, label: "19 Coin", weight: 20 },
-            { amount: 25, label: "25 Coin", weight: 15 },
-            { amount: 100, label: "100 Coin", weight: 12 },
-            { amount: 200, label: "200 Coin", weight: 8 },
-            { amount: 300, label: "300 Coin", weight: 7 },
-            { amount: 500, label: "500 Coin (JACKPOT!)", weight: 3 },
+            { amount: 0, label: "Omadingiz kelmadi", weight: 25 },
+            { amount: 10, label: "10 Coin", weight: 20 },
+            { amount: 50, label: "50 Coin", weight: 15 },
+            { amount: 100, label: "100 Coin", weight: 10 },
+            { amount: 150, label: "150 Coin (Tekin aylanish!)", weight: 10 },
+            { amount: 300, label: "300 Coin", weight: 8 },
+            { amount: 500, label: "500 Coin (MEGA!)", weight: 7 },
+            { amount: 1000, label: "1000 Coin (JACKPOT! 🔥)", weight: 5 },
         ];
 
         // Tasodifiy mukofot tanlash
@@ -48,10 +62,12 @@ exports.spinWheel = async (req, res) => {
             random -= prize.weight;
         }
 
-        // Coinlarni qo'shish
-        await updateCoins(studentId, selectedPrize.amount, `Omad G'ildiragi: ${selectedPrize.label}`);
+        // 5. Coinlarni qo'shish (agar bo'lsa)
+        if (selectedPrize.amount > 0) {
+            await updateCoins(studentId, selectedPrize.amount, `Omad G'ildiragi: ${selectedPrize.label}`);
+        }
 
-        // Logga yozish
+        // 6. Logga yozish
         await SpinLog.create({
             student: studentId,
             prize: selectedPrize.amount,
@@ -62,7 +78,8 @@ exports.spinWheel = async (req, res) => {
         res.json({
             success: true,
             message: `Tabriklaymiz! Siz ${selectedPrize.label} yutib oldingiz! 🎁`,
-            prize: selectedPrize
+            prize: selectedPrize,
+            remainingSpins: 3 - (spinsToday + 1)
         });
 
     } catch (error) {
@@ -87,3 +104,4 @@ exports.getSpinLogs = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
