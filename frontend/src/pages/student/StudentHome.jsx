@@ -5,7 +5,7 @@ import {
     HiOutlineAcademicCap, HiOutlineCalendar, HiOutlineCreditCard,
     HiOutlinePhone, HiOutlineUserCircle, HiOutlineInformationCircle,
     HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineArrowRight,
-    HiOutlineClock, HiOutlineGift, HiOutlineShoppingBag
+    HiOutlineClock, HiOutlineGift, HiOutlineShoppingBag, HiOutlineLightningBolt
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
@@ -70,9 +70,31 @@ const StudentHome = () => {
                                     <p className="text-[8px] lg:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Guruhdoshlar</p>
                                     <p className="text-base lg:text-xl font-black">12+</p>
                                 </div>
-                                <div className="flex-1 p-3 lg:p-4 rounded-3xl bg-amber-500/10 backdrop-blur-md border border-amber-500/20">
-                                    <p className="text-[8px] lg:text-[10px] font-black text-amber-500/80 uppercase tracking-widest mb-1 italic">Tajribam</p>
-                                    <p className="text-base lg:text-xl font-black text-amber-500">{student.xp || 0} XP</p>
+                                <div className="flex-[2] p-3 lg:p-4 rounded-3xl bg-amber-500/10 backdrop-blur-md border border-amber-500/20 relative overflow-hidden group/ball">
+                                    <div className="absolute top-0 right-0 p-2 opacity-5 -rotate-12 group-hover/ball:rotate-12 transition-transform">
+                                        <HiOutlineLightningBolt className="w-16 h-16" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <p className="text-[8px] lg:text-[10px] font-black text-amber-500/80 uppercase tracking-widest italic">Tajribam</p>
+                                            <span className="bg-amber-500 text-white text-[7px] font-black px-2 py-0.5 rounded-full uppercase">Lvl {student.level}</span>
+                                        </div>
+                                        <p className="text-base lg:text-xl font-black text-amber-500 mb-2">{student.xp || 0} XP</p>
+
+                                        {/* Mini Progress Bar */}
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[6px] font-black text-amber-500/60 uppercase">
+                                                <span>Progress</span>
+                                                <span>{student.progress}%</span>
+                                            </div>
+                                            <div className="h-1 w-full bg-amber-500/10 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-amber-500 rounded-full transition-all duration-1000"
+                                                    style={{ width: `${student.progress}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="flex-1 p-3 lg:p-4 rounded-3xl bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20">
                                     <p className="text-[8px] lg:text-[10px] font-black text-emerald-500/80 uppercase tracking-widest mb-1 italic">Coinlarim</p>

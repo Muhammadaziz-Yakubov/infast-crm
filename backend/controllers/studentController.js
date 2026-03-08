@@ -259,6 +259,19 @@ exports.getMyData = async (req, res) => {
             return res.status(404).json({ success: false, message: "Student topilmadi" });
         }
 
+        // Add level and progress data
+        const xp = student.xp || 0;
+        const level = Math.floor(xp / 1000) + 1;
+        const progress = Math.round(((xp % 1000) / 1000) * 100);
+        const nextXP = (Math.floor(xp / 1000) + 1) * 1000;
+
+        const studentData = {
+            ...student.toObject(),
+            level,
+            progress,
+            nextXP
+        };
+
         const payments = await Payment.find({ oquvchi: student._id }).sort({ sana: -1 });
         const attendance = await Attendance.find({
             guruh: student.guruh?._id,
@@ -275,7 +288,7 @@ exports.getMyData = async (req, res) => {
         res.json({
             success: true,
             data: {
-                student,
+                student: studentData,
                 payments,
                 attendance: processedAttendance
             }
@@ -319,61 +332,79 @@ exports.updateMe = async (req, res) => {
     }
 };
 
-// @desc    Reyting olish (umumiy va guruh bo'yicha)
+// @desc    Reyting olish (umumiy va guruh bo'yicha) - Optimized with Aggregation
 // @route   GET /api/students/rating
 exports.getRating = async (req, res) => {
     try {
         const { guruhId } = req.query;
-        const Submission = require('../models/Submission');
-        const Attendance = require('../models/Attendance');
+        const mongoose = require('mongoose');
 
-        // Barcha faol o'quvchilarni olish
-        let studentQuery = { holati: 'faol' };
+        let matchQuery = { holati: 'faol' };
         if (guruhId) {
-            studentQuery.guruh = guruhId;
+            matchQuery.guruh = new mongoose.Types.ObjectId(guruhId);
         }
 
-        const students = await Student.find(studentQuery)
-            .populate('kurs', 'nomi')
-            .populate('guruh', 'nomi')
-            .select('ism guruh kurs xp coins');
-
-        // Har bir o'quvchi uchun reyting ma'lumotlarini tayyorlash
-        const ratingsPromises = students.map(async (student) => {
-            // Davomat va vazifalar sonini shunchaki ko'rsatkich uchun hisoblaymiz (ballga ta'sir qilmaydi, ball allaqachon modelda)
-            const taskCount = await Submission.countDocuments({ student: student._id, status: 'graded' });
-
-            const attendanceRecords = await Attendance.find({ 'oquvchilar.oquvchi': student._id });
-            let attendancePresent = 0;
-            let attendanceTotal = 0;
-            attendanceRecords.forEach(record => {
-                const studentRecord = record.oquvchilar.find(o => o.oquvchi.toString() === student._id.toString());
-                if (studentRecord) {
-                    attendanceTotal++;
-                    if (studentRecord.keldi) attendancePresent++;
+        const ratings = await Student.aggregate([
+            { $match: matchQuery },
+            {
+                $lookup: {
+                    from: 'groups',
+                    localField: 'guruh',
+                    foreignField: '_id',
+                    as: 'guruhInfo'
                 }
-            });
+            },
+            {
+                $lookup: {
+                    from: 'courses',
+                    localField: 'kurs',
+                    foreignField: '_id',
+                    as: 'kursInfo'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'submissions',
+                    let: { studentId: '$_id' },
+                    pipeline: [
+                        { $match: { $expr: { $and: [{ $eq: ['$student', '$$studentId'] }, { $eq: ['$status', 'graded'] }] } } },
+                        { $count: 'count' }
+                    ],
+                    as: 'taskStats'
+                }
+            },
+            { $unwind: { path: '$guruhInfo', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$kursInfo', preserveNullAndEmptyArrays: true } },
+            {
+                $addFields: {
+                    currentXP: { $ifNull: ['$xp', 0] },
+                    taskCount: { $ifNull: [{ $arrayElemAt: ['$taskStats.count', 0] }, 0] },
+                    // Level calculation: 1000 XP per level
+                    level: { $add: [{ $floor: { $divide: [{ $ifNull: ['$xp', 0] }, 1000] } }, 1] },
+                    // Progress to next level (0-100)
+                    progress: { $multiply: [{ $divide: [{ $mod: [{ $ifNull: ['$xp', 0] }, 1000] }, 10] }, 1] },
+                    // Next Level XP
+                    nextXP: { $multiply: [{ $add: [{ $floor: { $divide: [{ $ifNull: ['$xp', 0] }, 1000] } }, 1] }, 1000] }
+                }
+            },
+            { $sort: { currentXP: -1, ism: 1 } },
+            {
+                $project: {
+                    _id: 1,
+                    ism: 1,
+                    xp: '$currentXP',
+                    coins: { $ifNull: ['$coins', 0] },
+                    guruh: { nomi: '$guruhInfo.nomi' },
+                    kurs: { nomi: '$kursInfo.nomi' },
+                    taskCount: 1,
+                    level: 1,
+                    progress: { $round: ['$progress', 0] },
+                    nextXP: 1
+                }
+            }
+        ]);
 
-            return {
-                _id: student._id,
-                ism: student.ism,
-                guruh: student.guruh,
-                kurs: student.kurs,
-                xp: student.xp || 0,
-                coins: student.coins || 0,
-                taskCount,
-                attendancePresent,
-                attendanceTotal,
-                attendancePercent: attendanceTotal > 0 ? Math.round((attendancePresent / attendanceTotal) * 100) : 0,
-            };
-        });
-
-        const ratings = await Promise.all(ratingsPromises);
-
-        // XP bo'yicha tartiblash
-        ratings.sort((a, b) => b.xp - a.xp);
-
-        // Rank (o'rin) berish
+        // Add rank (o'rin)
         ratings.forEach((r, i) => {
             r.rank = i + 1;
         });
