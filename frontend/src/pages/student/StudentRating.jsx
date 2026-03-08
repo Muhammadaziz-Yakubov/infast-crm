@@ -45,7 +45,7 @@ const StudentRating = () => {
         if (xp >= 50000) return { label: 'Afsona', icon: HiOutlineSparkles, color: 'text-purple-500' };
         if (xp >= 20000) return { label: 'Ustoz', icon: HiOutlineFire, color: 'text-amber-500' };
         if (xp >= 5000) return { label: 'Yulduz', icon: HiOutlineSparkles, color: 'text-emerald-500' };
-        if (xp >= 500) return { label: 'Faol', icon: HiOutlineLightningBolt, color: 'text-blue-500' };
+        if (xp >= 500) return { label: 'Faol', icon: HiOutlineLightningBolt, color: 'text-primary-500' };
         return { label: 'Boshlang\'ich', icon: HiOutlineStar, color: 'text-gray-400' };
     };
 

@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import MobileBottomBar from './MobileBottomBar';
 import { useAuth } from '../context/AuthContext';
 import { HiOutlineMenuAlt2, HiOutlineQrcode, HiOutlineGift } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
+import Logo from '../infastacademy.jpg';
 
 const Layout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -13,24 +13,21 @@ const Layout = () => {
 
     return (
         <div className="flex min-h-screen bg-gray-50 dark:bg-dark-950 transition-colors duration-500">
-            {/* Sidebar - Hidden for students on mobile, always accessible via toggle on desktop if needed, 
-                but we usually want it hidden on mobile for students */}
+            {/* Sidebar */}
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
             {isStudent && <MobileBottomBar />}
 
-
             {/* Main Content Area */}
-            <main className={`flex-1 flex flex-col min-h-screen relative overflow-hidden ${!isStudent ? 'lg:ml-72' : 'lg:ml-72'}`}>
-                {/* Background Blobs for Premium Feel */}
-                <div className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
+            <main className="flex-1 flex flex-col min-h-screen relative overflow-hidden lg:ml-72">
+                {/* Background Blobs */}
+                <div className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
 
-
-                {/* Mobile Header - Glassmorphism - For Admin show Sidebar toggle, for Student show QR scan */}
-                <header className="lg:hidden sticky top-0 z-40 bg-white/60 dark:bg-dark-950/60 backdrop-blur-xl border-b border-gray-200/50 dark:border-white/5 px-6 py-4">
+                {/* Mobile Header */}
+                <header className="lg:hidden sticky top-0 z-40 bg-white/70 dark:bg-dark-950/70 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 px-6 py-4">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                             {!isStudent ? (
                                 <>
                                     <button
@@ -40,15 +37,18 @@ const Layout = () => {
                                         <HiOutlineMenuAlt2 className="w-6 h-6" />
                                     </button>
                                     <div className="flex flex-col">
-                                        <span className="text-sm font-black tracking-tight gradient-text leading-none">InFast CRM</span>
-                                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Premium Dashboard</span>
+                                        <span className="text-sm font-black tracking-tight text-gray-900 dark:text-white leading-none">InFast CRM</span>
+                                        <span className="text-[10px] uppercase font-bold text-primary-500 tracking-wider">Admin Panel</span>
                                     </div>
                                 </>
                             ) : (
                                 <>
+                                    <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-500/20 shadow-lg">
+                                        <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
+                                    </div>
                                     <div className="flex flex-col min-w-0">
-                                        <span className="text-sm font-black tracking-tight gradient-text leading-tight capitalize truncate">{user?.ism || 'O\'quvchi'}</span>
-                                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Mening Kabinetim</span>
+                                        <span className="text-sm font-black tracking-tight text-gray-900 dark:text-white leading-tight capitalize truncate">{user?.ism || 'Lumo Academy'}</span>
+                                        <span className="text-[10px] uppercase font-bold text-primary-500 tracking-wider">Student Hub</span>
                                     </div>
                                 </>
                             )}

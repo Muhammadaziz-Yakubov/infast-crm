@@ -181,7 +181,7 @@ const StudentTasks = () => {
                             {selectedTask.image ? (
                                 <img src={selectedTask.image} alt={selectedTask.title} className="w-full h-full object-cover opacity-60" />
                             ) : (
-                                <div className="w-full h-full bg-gradient-to-br from-primary-600 to-indigo-900" />
+                                <div className="w-full h-full bg-gradient-to-br from-primary-600 to-orange-900" />
                             )}
                             <button onClick={() => setIsDetailOpen(false)} className="absolute top-8 right-8 w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all">
                                 <HiOutlinePlusSm className="w-6 h-6 rotate-45" />
@@ -210,7 +210,7 @@ const StudentTasks = () => {
                                 </div>
                                 <div className="p-4 rounded-3xl bg-gray-50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5">
                                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 italic">Ball</p>
-                                    <p className="text-xl font-black text-indigo-500">
+                                    <p className="text-xl font-black text-primary-500">
                                         {selectedTask.submission?.score || 0}
                                     </p>
                                 </div>

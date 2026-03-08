@@ -20,12 +20,12 @@ const WheelOfFortune = () => {
 
     const segments = [
         { amount: 0, label: "😢 0", color: "#4b5563" },
-        { amount: 10, label: "🪙 10", color: "#6366f1" },
-        { amount: 50, label: "🪙 50", color: "#8b5cf6" },
-        { amount: 100, label: "🪙 100", color: "#a855f7" },
-        { amount: 150, label: "🔄 150", color: "#d946ef" },
-        { amount: 300, label: "🪙 300", color: "#ec4899" },
-        { amount: 500, label: "🔥 500", color: "#f43f5e" },
+        { amount: 10, label: "🪙 10", color: "#f97316" },
+        { amount: 50, label: "🪙 50", color: "#ea580c" },
+        { amount: 100, label: "🪙 100", color: "#c2410c" },
+        { amount: 150, label: "🔄 150", color: "#9a3412" },
+        { amount: 300, label: "🪙 300", color: "#7c2d12" },
+        { amount: 500, label: "🔥 500", color: "#431407" },
         { amount: 1000, label: "💎 1000", color: "#fbbf24" },
     ];
 
@@ -102,7 +102,7 @@ const WheelOfFortune = () => {
             <div className="flex items-center justify-between mb-8 py-6">
                 <button
                     onClick={() => navigate(-1)}
-                    className="p-3 rounded-2xl bg-white dark:bg-dark-800 text-gray-500 shadow-sm border border-gray-100 dark:border-white/5 active:scale-95 transition-all"
+                    className="p-3 rounded-2xl bg-white dark:bg-dark-800 text-gray-500 shadow-sm border border-gray-100 dark:border-white/5 active:scale-95 transition-all outline-none"
                 >
                     <HiOutlineArrowLeft className="w-6 h-6" />
                 </button>
@@ -114,8 +114,8 @@ const WheelOfFortune = () => {
                         <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">
                             <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest italic">{user?.coins || 0} 🪙</p>
                         </div>
-                        <div className="flex items-center gap-1.5 px-3 py-1 bg-indigo-500/10 rounded-full border border-indigo-500/20">
-                            <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic">1 Spin = 150 🪙</p>
+                        <div className="flex items-center gap-1.5 px-3 py-1 bg-primary-500/10 rounded-full border border-primary-500/20">
+                            <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest italic">1 Spin = 150 🪙</p>
                         </div>
                     </div>
                 </div>
@@ -143,7 +143,7 @@ const WheelOfFortune = () => {
                                 transform: `rotate(${rotation}deg)`,
                                 transition: spinning ? 'transform 5s cubic-bezier(0.15, 0, 0.15, 1)' : 'none'
                             }}
-                            className="w-[320px] h-[320px] md:w-[420px] md:h-[420px] rounded-full border-[14px] border-gray-900 dark:border-white/5 shadow-[0_0_50px_rgba(99,102,241,0.3)] relative bg-gray-900 overflow-hidden z-10"
+                            className="w-[320px] h-[320px] md:w-[420px] md:h-[420px] rounded-full border-[14px] border-gray-900 dark:border-white/5 shadow-[0_0_50px_rgba(249,115,22,0.3)] relative bg-gray-900 overflow-hidden z-10"
                         >
                             <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
                                 {segments.map((s, i) => {
@@ -238,7 +238,7 @@ const WheelOfFortune = () => {
                 <div className="space-y-6">
                     <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-8 border border-gray-100 dark:border-white/5 shadow-2xl">
                         <div className="flex items-center gap-3 mb-8">
-                            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                            <div className="w-12 h-12 rounded-2xl bg-primary-500/10 flex items-center justify-center text-primary-500">
                                 <HiOutlineSparkles className="w-7 h-7" />
                             </div>
                             <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Omadlilar ro'yxati</h3>
@@ -256,7 +256,7 @@ const WheelOfFortune = () => {
                                             <div className="w-12 h-12 rounded-2xl bg-white dark:bg-dark-800 flex items-center justify-center text-primary-500 font-black text-sm shadow-sm border border-gray-100 dark:border-white/5">
                                                 {log.student?.ism?.charAt(0)}
                                             </div>
-                                            <div>
+                                            <div className="flex-1">
                                                 <p className="text-xs font-black text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors uppercase">{log.student?.ism}</p>
                                                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-1 whitespace-nowrap">
                                                     {new Date(log.createdAt).toLocaleDateString()} &bull; {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -274,7 +274,7 @@ const WheelOfFortune = () => {
                         </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-indigo-900 via-gray-900 to-black rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl">
+                    <div className="bg-gradient-to-br from-primary-900 via-gray-900 to-black rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl">
                         <div className="absolute top-0 right-0 p-4 opacity-5 translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-1000">
                             <HiOutlineGift className="w-40 h-40" />
                         </div>

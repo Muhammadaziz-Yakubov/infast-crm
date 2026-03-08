@@ -76,7 +76,7 @@ const StudentProfile = () => {
             <div className="bg-white dark:bg-dark-800 rounded-[3rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-2xl group transition-all duration-500 hover:shadow-primary-500/10">
                 {/* Premium Profile Header */}
                 <div className="bg-gray-900 p-10 md:p-14 relative overflow-hidden flex flex-col items-center">
-                    <div className="relative z-10 w-28 h-28 md:w-36 md:h-36 rounded-[2.5rem] bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-5xl md:text-6xl font-black text-white shadow-3xl mb-6 transform group-hover:scale-110 transition-transform duration-500">
+                    <div className="relative z-10 w-28 h-28 md:w-36 md:h-36 rounded-[2.5rem] bg-gradient-to-br from-primary-500 to-orange-600 flex items-center justify-center text-5xl md:text-6xl font-black text-white shadow-3xl mb-6 transform group-hover:scale-110 transition-transform duration-500">
                         {student.ism?.charAt(0)}
                     </div>
                     <div className="relative z-10 text-center space-y-2">
@@ -88,7 +88,7 @@ const StudentProfile = () => {
 
                     {/* Decorative gradients */}
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary-600/20 rounded-full blur-[100px]" />
-                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-indigo-600/20 rounded-full blur-[100px]" />
+                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-primary-900/40 rounded-full blur-[100px]" />
                 </div>
 
                 <div className="p-8 md:p-12">

@@ -22,6 +22,8 @@ import {
     HiOutlinePresentationChartLine
 } from 'react-icons/hi';
 
+import Logo from '../infastacademy.jpg';
+
 const adminMenu = [
     { path: '/', label: 'Bosh sahifa', icon: HiOutlineHome },
     { path: '/marketing', label: 'Marketing', icon: HiOutlinePresentationChartLine },
@@ -71,14 +73,19 @@ const Sidebar = ({ isOpen, onClose }) => {
                     ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
             >
                 {/* Logo */}
-                <div className="p-8 flex items-center justify-between">
+                <div className="p-8 pb-10 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary-500/30">
-                            IF
+                        <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-2xl shadow-primary-500/20 rotate-3 hover:rotate-0 transition-transform duration-500 border-2 border-primary-500/20">
+                            <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
                         </div>
-                        <h1 className="text-xl font-black gradient-text">InFast CRM</h1>
+                        <div className="flex flex-col">
+                            <h1 className="text-xl font-black text-gray-900 dark:text-white leading-none tracking-tighter">
+                                In<span className="text-primary-500">Fast</span>
+                            </h1>
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Academy</span>
+                        </div>
                     </div>
-                    <button onClick={onClose} className="lg:hidden p-2 text-gray-400">
+                    <button onClick={onClose} className="lg:hidden p-2.5 rounded-xl bg-gray-50 dark:bg-dark-800 text-gray-400">
                         <HiOutlineX className="w-6 h-6" />
                     </button>
                 </div>
