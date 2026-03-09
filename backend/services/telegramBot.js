@@ -47,6 +47,15 @@ const initScheduler = () => {
 
 
 
+// HTML belgilarini escape qilish (xavfsiz xabarlar uchun)
+const escapeHTML = (text) => {
+    if (!text) return '';
+    return text.toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+};
+
 // Guruhga yangi vazifa haqida xabar yuborish
 const sendTaskNotification = async (groupId, taskData) => {
     try {
@@ -63,14 +72,14 @@ const sendTaskNotification = async (groupId, taskData) => {
             day: 'numeric'
         });
 
-        const message = `📋 *YANGI VAZIFA BERILDI!*\n\n` +
-            `📌 *Sarlavha:* ${taskData.title}\n` +
-            `📅 *Deadline:* ${formattedDeadline}\n` +
-            `🏆 *Maksimal ball:* ${taskData.maxScore}\n\n` +
-            `⚠️ *ESLATMA:* Agar 2 ta vazifani bajarmasangiz, guruhdan chiqarilasiz!\n\n` +
+        const message = `📋 <b>YANGI VAZIFA BERILDI!</b>\n\n` +
+            `📌 <b>Sarlavha:</b> ${escapeHTML(taskData.title)}\n` +
+            `📅 <b>Deadline:</b> ${formattedDeadline}\n` +
+            `🏆 <b>Maksimal ball:</b> ${taskData.maxScore}\n\n` +
+            `⚠️ <b>ESLATMA:</b> Agar 2 ta vazifani bajarmasangiz, guruhdan chiqarilasiz!\n\n` +
             `💪 Vazifani o'z vaqtida bajaring va yuqori ball to'plang!`;
 
-        await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'Markdown' });
+        await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'HTML' });
         console.log(`✅ Telegram xabar yuborildi: ${group.nomi} guruhiga`);
         return { success: true };
     } catch (error) {
@@ -94,27 +103,27 @@ const sendAttendanceNotification = async (groupId, date, attendanceData) => {
         const present = attendanceData.oquvchilar.filter(o => o.keldi);
         const absent = attendanceData.oquvchilar.filter(o => !o.keldi);
 
-        let message = `📝 *DAVOMAT HISOBOTI*\n` +
-            `📅 *Sana:* ${formattedDate}\n` +
-            `📚 *Guruh:* ${group.nomi}\n\n`;
+        let message = `📝 <b>DAVOMAT HISOBOTI</b>\n` +
+            `📅 <b>Sana:</b> ${formattedDate}\n` +
+            `📚 <b>Guruh:</b> ${escapeHTML(group.nomi)}\n\n`;
 
         if (present.length > 0) {
-            message += `✅ *Kelganlar (${present.length}):*\n`;
+            message += `✅ <b>Kelganlar (${present.length}):</b>\n`;
             present.forEach(p => {
-                message += `• ${p.oquvchi.ism}\n`;
+                message += `• ${escapeHTML(p.oquvchi.ism)}\n`;
             });
         }
 
         if (absent.length > 0) {
-            message += `\n❌ *Kelmaganlar (${absent.length}):*\n`;
+            message += `\n❌ <b>Kelmaganlar (${absent.length}):</b>\n`;
             absent.forEach(a => {
-                message += `• ${a.oquvchi.ism}\n`;
+                message += `• ${escapeHTML(a.oquvchi.ism)}\n`;
             });
         }
 
         message += `\n📊 O'z vaqtida darslarga qatnashganlarga rahmat!`;
 
-        await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'Markdown' });
+        await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'HTML' });
         return { success: true };
     } catch (error) {
         console.error('Send attendance report error:', error);
