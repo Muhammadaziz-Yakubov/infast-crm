@@ -56,6 +56,7 @@ const Dashboard = () => {
         {
             label: 'Bugun Tushum',
             value: formatMoney(data.bugunTushum || 0),
+            detail: `${data.bugunTolovlarSoni || 0} ta to'lov`,
             icon: HiOutlineLightningBolt,
             bg: 'bg-amber-500/10',
             textColor: 'text-amber-600 dark:text-amber-400'
@@ -114,6 +115,9 @@ const Dashboard = () => {
                         </div>
                         <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{stat.label}</p>
                         <h3 className="text-lg md:text-2xl font-black text-gray-900 dark:text-white tracking-tighter">{stat.value}</h3>
+                        {stat.detail && (
+                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">{stat.detail}</p>
+                        )}
                     </div>
                 ))}
             </div>

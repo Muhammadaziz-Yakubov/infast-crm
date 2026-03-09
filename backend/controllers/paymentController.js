@@ -115,7 +115,7 @@ exports.createPayment = async (req, res) => {
 // @route   POST /api/payments/bulk
 exports.bulkCreatePayment = async (req, res) => {
     try {
-        const { studentIds, tolovTuri, izoh } = req.body;
+        const { studentIds, summa, tolovTuri, izoh } = req.body;
         if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
             return res.status(400).json({ success: false, message: "O'quvchilar tanlanmagan" });
         }
@@ -146,7 +146,7 @@ exports.bulkCreatePayment = async (req, res) => {
 
                 await Payment.create({
                     oquvchi: studentId,
-                    summa,
+                    summa: summa || student.oylikTolov || student.kurs?.narx || 0,
                     oy: billingMonth,
                     yil: billingYear,
                     tolovTuri: tolovTuri || 'naqd',
@@ -246,26 +246,33 @@ exports.getDashboard = async (req, res) => {
             });
         }
 
-        // Bugungi tushum
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
+        // Bugungi tushum (Uzbekistan vaqti bilan)
+        const offset = 5 * 60 * 60 * 1000; // Tashkent is UTC+5
+        const tashkentTime = new Date(now.getTime() + offset);
+
+        const y = tashkentTime.getUTCFullYear();
+        const m = tashkentTime.getUTCMonth();
+        const d = tashkentTime.getUTCDate();
+
+        const startOfToday = new Date(Date.UTC(y, m, d, 0, 0, 0) - offset);
+        const endOfToday = new Date(startOfToday.getTime() + 24 * 60 * 60 * 1000);
 
         const todayPayments = await Payment.aggregate([
             {
                 $match: {
-                    sana: { $gte: today, $lt: tomorrow }
+                    sana: { $gte: startOfToday, $lt: endOfToday }
                 }
             },
             {
                 $group: {
                     _id: null,
-                    total: { $sum: '$summa' }
+                    total: { $sum: '$summa' },
+                    count: { $sum: 1 }
                 }
             }
         ]);
         const todayRevenue = todayPayments[0]?.total || 0;
+        const todayCount = todayPayments[0]?.count || 0;
 
         // Lead statistika
         const Lead = require('../models/Lead');
@@ -288,7 +295,7 @@ exports.getDashboard = async (req, res) => {
         ]);
 
         const newLeadsToday = await Lead.countDocuments({
-            createdAt: { $gte: today, $lt: tomorrow }
+            createdAt: { $gte: startOfToday, $lt: endOfToday }
         });
 
         // Guruhlar va Kurslar soni
@@ -336,6 +343,7 @@ exports.getDashboard = async (req, res) => {
                 qarzdorlar: totalDebtors,
                 oyliqTushum: monthlyRevenue,
                 bugunTushum: todayRevenue,
+                bugunTolovlarSoni: todayCount,
                 kutilayotganTushum: expectedRevenue,
                 guruhlar: totalGroups,
                 kurslar: totalCourses,
