@@ -145,4 +145,12 @@ export const leadAPI = {
     publicCreate: (data) => api.post('/leads/public', data),
 };
 
+// Community Notes
+export const noteAPI = {
+    getAll: () => api.get('/notes'),
+    create: (data) => api.post('/notes', data),
+    toggleLike: (id) => api.post(`/notes/${id}/like`),
+    delete: (id) => api.delete(`/notes/${id}`),
+};
+
 export default api;

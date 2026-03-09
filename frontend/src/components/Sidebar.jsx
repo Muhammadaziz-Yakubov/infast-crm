@@ -37,6 +37,7 @@ const adminMenu = [
     { path: '/rating', label: 'Reyting', icon: HiOutlineTrendingUp },
     { path: '/market-manager', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/coin-manager', label: 'Coin Boshqaruvi', icon: HiOutlineDatabase },
+    { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
 ];
 
 const studentMenu = [
@@ -47,6 +48,7 @@ const studentMenu = [
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
     { path: '/rating', label: 'Reyting', icon: HiOutlineTrendingUp },
     { path: '/market', label: 'Market', icon: HiOutlineShoppingBag },
+    { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
     { path: '/profile', label: 'Mening profilim', icon: HiOutlineUserCircle },
 ];
 

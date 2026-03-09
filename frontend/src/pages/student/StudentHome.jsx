@@ -6,7 +6,7 @@ import {
     HiOutlineInformationCircle, HiOutlineCheckCircle, HiOutlineXCircle,
     HiOutlineClock, HiOutlineGift, HiOutlineShoppingBag, HiOutlineLightningBolt,
     HiOutlineSparkles, HiOutlineStar, HiOutlineLibrary, HiOutlineUserGroup,
-    HiOutlineTrendingUp, HiOutlineArrowRight
+    HiOutlineTrendingUp, HiOutlineArrowRight, HiOutlineChatAlt2, HiOutlineClipboardList
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
@@ -178,10 +178,10 @@ const StudentHome = () => {
                     <div className="flex items-center justify-between px-2">
                         <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] italic mb-1 block">Asosiy Bo'limlar</h3>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
                         <NavCard
                             to="/tasks"
-                            icon={HiOutlineCalendar}
+                            icon={HiOutlineClipboardList}
                             title="Vazifalar"
                             color={{ bg: 'bg-primary-100 dark:bg-primary-500/20', text: 'text-primary-600' }}
                         />
@@ -200,8 +200,14 @@ const StudentHome = () => {
                         <NavCard
                             to="/wheel"
                             icon={HiOutlineGift}
-                            title="Sovg'a"
+                            title="Omad"
                             color={{ bg: 'bg-amber-100 dark:bg-amber-500/20', text: 'text-amber-600' }}
+                        />
+                        <NavCard
+                            to="/community"
+                            icon={HiOutlineChatAlt2}
+                            title="Jamiyat"
+                            color={{ bg: 'bg-indigo-100 dark:bg-indigo-500/20', text: 'text-indigo-600' }}
                         />
                         <NavCard
                             to="/classmates"
