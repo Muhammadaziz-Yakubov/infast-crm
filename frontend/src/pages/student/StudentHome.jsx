@@ -180,24 +180,6 @@ const StudentHome = () => {
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
                         <NavCard
-                            to="/tasks"
-                            icon={HiOutlineClipboardList}
-                            title="Vazifalar"
-                            color={{ bg: 'bg-primary-100 dark:bg-primary-500/20', text: 'text-primary-600' }}
-                        />
-                        <NavCard
-                            to="/attendance"
-                            icon={HiOutlineCheckCircle}
-                            title="Davomat"
-                            color={{ bg: 'bg-emerald-100 dark:bg-emerald-500/20', text: 'text-emerald-600' }}
-                        />
-                        <NavCard
-                            to="/market"
-                            icon={HiOutlineShoppingBag}
-                            title="Market"
-                            color={{ bg: 'bg-rose-100 dark:bg-rose-500/20', text: 'text-rose-600' }}
-                        />
-                        <NavCard
                             to="/wheel"
                             icon={HiOutlineGift}
                             title="Omad"
