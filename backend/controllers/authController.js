@@ -73,8 +73,7 @@ exports.login = async (req, res) => {
                     username: account.username,
                     fullName: account.fullName || account.ism,
                     role: account.role || role,
-                    coins: account.coins || 0,
-                    ball: account.ball || 0
+                    coins: account.coins || 0
                 }
             }
         });

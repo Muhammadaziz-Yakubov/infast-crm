@@ -261,17 +261,8 @@ exports.getMyData = async (req, res) => {
             return res.status(404).json({ success: false, message: "Student topilmadi" });
         }
 
-        // Add level and progress data
-        const xp = student.xp || 0;
-        const level = Math.floor(xp / 1000) + 1;
-        const progress = Math.round(((xp % 1000) / 1000) * 100);
-        const nextXP = (Math.floor(xp / 1000) + 1) * 1000;
-
         const studentData = {
-            ...student.toObject(),
-            level,
-            progress,
-            nextXP
+            ...student.toObject()
         };
 
         const payments = await Payment.find({ oquvchi: student._id }).sort({ sana: -1 });
@@ -369,16 +360,13 @@ exports.getClassmates = async (req, res) => {
             guruh: req.user.guruh,
             holati: 'faol'
         })
-            .select('ism xp coins profileImage level progress username')
+            .select('ism coins profileImage username')
             .sort({ ism: 1 });
 
         // Calculate levels manually or use aggregation. For simple list, map is fine.
         const processedClassmates = classmates.map(c => {
-            const xp = c.xp || 0;
             return {
-                ...c.toObject(),
-                level: Math.floor(xp / 1000) + 1,
-                progress: Math.round(((xp % 1000) / 1000) * 100)
+                ...c.toObject()
             };
         });
 
@@ -396,24 +384,17 @@ exports.getClassmates = async (req, res) => {
 exports.getPublicProfile = async (req, res) => {
     try {
         const student = await Student.findById(req.params.id)
-            .select('ism xp coins profileImage username guruh')
+            .select('ism coins profileImage username guruh')
             .populate('guruh', 'nomi');
 
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
 
-        // Add level and stats
-        const xp = student.xp || 0;
-        const level = Math.floor(xp / 1000) + 1;
-        const progress = Math.round(((xp % 1000) / 1000) * 100);
-
         res.json({
             success: true,
             data: {
                 ...student.toObject(),
-                level,
-                progress,
                 yutuqlar: "Tez Kunda",
                 sertifikatlar: "Tez Kunda"
             }
@@ -423,149 +404,3 @@ exports.getPublicProfile = async (req, res) => {
     }
 };
 
-// @desc    Reyting olish (umumiy va guruh bo'yicha) - Optimized with Aggregation
-// @route   GET /api/students/rating
-exports.getRating = async (req, res) => {
-    try {
-        const { guruhId } = req.query;
-        const mongoose = require('mongoose');
-
-        let matchQuery = { holati: 'faol' };
-        if (guruhId) {
-            matchQuery.guruh = new mongoose.Types.ObjectId(guruhId);
-        }
-
-        const ratings = await Student.aggregate([
-            { $match: matchQuery },
-            {
-                $lookup: {
-                    from: 'groups',
-                    localField: 'guruh',
-                    foreignField: '_id',
-                    as: 'guruhInfo'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'courses',
-                    localField: 'kurs',
-                    foreignField: '_id',
-                    as: 'kursInfo'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'submissions',
-                    let: { studentId: '$_id' },
-                    pipeline: [
-                        { $match: { $expr: { $and: [{ $eq: ['$student', '$$studentId'] }, { $eq: ['$status', 'graded'] }] } } },
-                        { $count: 'count' }
-                    ],
-                    as: 'taskStats'
-                }
-            },
-            { $unwind: { path: '$guruhInfo', preserveNullAndEmptyArrays: true } },
-            { $unwind: { path: '$kursInfo', preserveNullAndEmptyArrays: true } },
-            {
-                $addFields: {
-                    currentXP: { $ifNull: ['$xp', 0] },
-                    taskCount: { $ifNull: [{ $arrayElemAt: ['$taskStats.count', 0] }, 0] },
-                    // Level calculation: 1000 XP per level
-                    level: { $add: [{ $floor: { $divide: [{ $ifNull: ['$xp', 0] }, 1000] } }, 1] },
-                    // Progress to next level (0-100)
-                    progress: { $multiply: [{ $divide: [{ $mod: [{ $ifNull: ['$xp', 0] }, 1000] }, 10] }, 1] },
-                    // Next Level XP
-                    nextXP: { $multiply: [{ $add: [{ $floor: { $divide: [{ $ifNull: ['$xp', 0] }, 1000] } }, 1] }, 1000] }
-                }
-            },
-            { $sort: { currentXP: -1, ism: 1 } },
-            {
-                $project: {
-                    _id: 1,
-                    ism: 1,
-                    xp: '$currentXP',
-                    profileImage: { $ifNull: ['$profileImage', ''] },
-                    guruh: { nomi: '$guruhInfo.nomi' },
-                    kurs: { nomi: '$kursInfo.nomi' },
-                    taskCount: 1,
-                    level: 1,
-                    progress: { $round: ['$progress', 0] },
-                    nextXP: 1
-                }
-            }
-        ]);
-
-        // Add rank (o'rin)
-        ratings.forEach((r, i) => {
-            r.rank = i + 1;
-        });
-
-        res.json({
-            success: true,
-            count: ratings.length,
-            data: ratings
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
-    }
-};
-
-// @desc    Sync all students XP based on history
-// @route   POST /api/students/sync-xp
-exports.syncAllStudentsXP = async (req, res) => {
-    try {
-        const CoinLog = require('../models/CoinLog');
-        const Submission = require('../models/Submission');
-
-        // 1. Coin logs'lardan jami XP ni hisoblash (Faqat PLUS)
-        const coinXPResults = await CoinLog.aggregate([
-            { $match: { type: 'plus' } },
-            { $group: { _id: '$student', totalCoinXP: { $sum: { $multiply: ['$amount', 5] } } } }
-        ]);
-
-        // 2. Graded Submissions'dan jami XP ni hisoblash (Score * 10)
-        const submissionXPResults = await Submission.aggregate([
-            { $match: { status: 'graded' } },
-            { $group: { _id: '$student', totalScoreXP: { $sum: { $multiply: ['$score', 10] } } } }
-        ]);
-
-        // O'quvchilar ro'yxatini olish
-        const students = await Student.find({ role: 'student' });
-
-        for (const student of students) {
-            const coinXP = coinXPResults.find(r => r._id.toString() === student._id.toString())?.totalCoinXP || 0;
-            const submissionXP = submissionXPResults.find(r => r._id.toString() === student._id.toString())?.totalScoreXP || 0;
-
-            let totalXP = coinXP + submissionXP;
-            if (totalXP > 100000) totalXP = 100000;
-
-            if (student.xp !== totalXP) {
-                await Student.findByIdAndUpdate(student._id, { xp: totalXP });
-            }
-        }
-
-        res.json({
-            success: true,
-            message: "Barcha o'quvchilarning XP ballari tarixiy ma'lumotlar asosida qayta hisoblandi va yangilandi! 📀🚀"
-        });
-
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-};
-
-// @desc    Reset all students rating to 0
-// @route   POST /api/students/reset-rating
-// @access  Admin/Teacher
-exports.resetRating = async (req, res) => {
-    try {
-        await Student.updateMany({ role: 'student' }, { xp: 0 });
-
-        res.json({
-            success: true,
-            message: "Barcha o'quvchilarning reytingi (XP) 0 ga tushirildi! 🔄"
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-};

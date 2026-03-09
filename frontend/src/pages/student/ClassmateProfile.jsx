@@ -66,10 +66,7 @@ const ClassmateProfile = () => {
                                     </div>
                                 )}
                             </div>
-                            <div className="absolute -bottom-2 -right-2 bg-gradient-to-br from-primary-500 to-orange-600 text-white px-4 py-1.5 rounded-2xl shadow-lg border-2 border-white dark:border-dark-800 flex items-center gap-1.5 animate-bounce-subtle">
-                                <HiOutlineLightningBolt className="w-4 h-4" />
-                                <span className="text-xs font-black italic tracking-widest">{student.level || 1} LVL</span>
-                            </div>
+
                         </div>
 
                         <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter mb-1 select-none">
@@ -80,20 +77,12 @@ const ClassmateProfile = () => {
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">{student.guruh?.nomi || 'InFast Academy'}</p>
                         </div>
 
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-2 gap-4 w-full">
+                        <div className="max-w-xs mx-auto w-full">
                             <div className="bg-amber-500/5 rounded-3xl p-6 border border-amber-500/10 text-center group/card transition-all hover:bg-amber-500/10 hover:shadow-lg hover:shadow-amber-500/5">
                                 <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest italic mb-2">Jami Balance</p>
                                 <div className="flex items-center justify-center gap-2">
                                     <span className="text-2xl">🪙</span>
-                                    <h4 className="text-2xl font-black text-gray-900 dark:text-white group-hover/card:scale-110 transition-transform">{student.coins || 0}</h4>
-                                </div>
-                            </div>
-                            <div className="bg-primary-500/5 rounded-3xl p-6 border border-primary-500/10 text-center group/card transition-all hover:bg-primary-500/10 hover:shadow-lg hover:shadow-primary-500/5">
-                                <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest italic mb-2">Tajriba XP</p>
-                                <div className="flex items-center justify-center gap-2">
-                                    <HiOutlineSparkles className="w-6 h-6 text-primary-500 group-hover/card:rotate-12 transition-transform" />
-                                    <h4 className="text-2xl font-black text-gray-900 dark:text-white group-hover/card:scale-110 transition-transform">{student.xp || 0}</h4>
+                                    <h4 className="text-4xl font-black text-gray-900 dark:text-white group-hover/card:scale-110 transition-transform">{student.coins || 0}</h4>
                                 </div>
                             </div>
                         </div>

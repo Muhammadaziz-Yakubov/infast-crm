@@ -105,19 +105,4 @@ exports.deleteGroup = async (req, res) => {
     }
 };
 
-// @desc    Guruh ballari haqida Telegramga hisobot yuborish
-// @route   POST /api/groups/:id/telegram-report
-exports.sendTelegramReport = async (req, res) => {
-    try {
-        const { sendGroupBallReport } = require('../services/telegramBot');
-        const result = await sendGroupBallReport(req.params.id);
 
-        if (result.success) {
-            res.json({ success: true, message: 'Hisobot Telegramga yuborildi' });
-        } else {
-            res.status(400).json({ success: false, message: result.message });
-        }
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Server xatosi' });
-    }
-};

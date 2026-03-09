@@ -29,16 +29,7 @@ const Dashboard = () => {
         }
     };
 
-    const handleSyncXP = async () => {
-        const loadingToast = toast.loading("XP sinxronizatsiya qilinmoqda... 📀");
-        try {
-            await studentAPI.syncXP();
-            toast.success("Barcha XP ballari tarixiy ma'lumotlar asosida muvaffaqiyatli yangilandi! 🏆", { id: loadingToast });
-            fetchDashboard();
-        } catch (err) {
-            toast.error("Xatolik yuz berdi ❌", { id: loadingToast });
-        }
-    };
+
 
     const formatMoney = (amount) => {
         return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
@@ -235,13 +226,7 @@ const Dashboard = () => {
                                 >
                                     QR Kodni Yuklab Olish (PNG)
                                 </button>
-                                <button
-                                    onClick={handleSyncXP}
-                                    className="px-8 py-4 rounded-2xl bg-white/10 text-white font-black text-xs uppercase tracking-widest border border-white/20 shadow-xl hover:bg-white/20 transition-all active:scale-95 flex items-center gap-2"
-                                >
-                                    <HiOutlineTrendingUp className="w-4 h-4" />
-                                    XP Sinxronizatsiya
-                                </button>
+
                                 <div className="px-5 py-3 rounded-2xl bg-white/10 border border-white/10 flex items-center gap-3">
                                     <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                                     <span className="text-[10px] font-black uppercase tracking-widest">Tizim Faol</span>

@@ -22,11 +22,7 @@ const updateCoins = async (studentId, amount, reason) => {
         student.coins = newBalance;
         await student.save();
 
-        // O'quvchi coin olsa, uning XP ballari ham oshsin (1 coin = 5 XP)
-        if (amount > 0) {
-            const { updateXP } = require('./xpService');
-            await updateXP(studentId, amount * 5, `Coin orqali XP: ${reason}`);
-        }
+
 
         // Log yozish
         await CoinLog.create({

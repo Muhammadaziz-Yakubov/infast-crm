@@ -84,68 +84,42 @@ const StudentHome = () => {
                     </div>
                 </div>
 
-                {/* --- 2. STATS & PROGRESS DASHBOARD (Integrated Cards) --- */}
+                {/* --- 2. STATS & BALANCE --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* XP & Level Card */}
-                    <div className="bg-gradient-to-br from-gray-900 to-primary-950 rounded-[3rem] p-8 text-white shadow-2xl relative overflow-hidden group">
+                    {/* Coins Card */}
+                    <div className="bg-gradient-to-br from-gray-900 to-primary-950 rounded-[3rem] p-8 text-white shadow-2xl relative overflow-hidden group flex items-center justify-between">
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:rotate-12 transition-transform duration-1000">
-                            <HiOutlineTrendingUp className="w-40 h-40" />
+                            <HiOutlineSparkles className="w-40 h-40" />
                         </div>
-
                         <div className="relative z-10">
-                            <div className="flex items-center justify-between mb-8">
-                                <div className="px-5 py-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
-                                    <span className="text-xs font-black uppercase tracking-widest italic">{student.level || 1} Daraja</span>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-[10px] font-black text-primary-300 uppercase tracking-widest italic mb-0.5">Tajriba XP</p>
-                                    <p className="text-2xl font-black italic">{student.xp || 0}<span className="text-xs text-primary-400 ml-1">XP</span></p>
-                                </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-end">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-200">Daraja Rivoji</p>
-                                    <span className="text-xs font-black italic">{student.progress || 0}%</span>
-                                </div>
-                                <div className="h-4 w-full bg-white/10 rounded-full overflow-hidden p-1 border border-white/5">
-                                    <div
-                                        className="h-full bg-gradient-to-r from-primary-400 to-orange-400 rounded-full shadow-[0_0_15px_rgba(251,146,60,0.4)] transition-all duration-1000 ease-out relative"
-                                        style={{ width: `${student.progress || 0}%` }}
-                                    >
-                                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                                    </div>
-                                </div>
-                                <div className="flex justify-between text-[8px] font-black text-white/40 uppercase tracking-widest italic">
-                                    <span>LVL {student.level}</span>
-                                    <span>KEYINGI: {student.nextXP} XP</span>
-                                </div>
-                            </div>
+                            <p className="text-[10px] font-black text-primary-300 uppercase tracking-[0.4em] italic mb-2">Mening Balansim</p>
+                            <h3 className="text-5xl font-black italic">{student.coins || 0}<span className="text-2xl text-primary-400 ml-2">🪙</span></h3>
+                        </div>
+                        <div className="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center">
+                            <HiOutlineShoppingBag className="w-8 h-8 text-primary-400" />
                         </div>
                     </div>
 
-                    {/* Balance & Quick Info Group */}
+                    {/* Quick Stats Grid */}
                     <div className="grid grid-cols-2 gap-4">
-                        {/* Coins Card */}
                         <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-6 shadow-sm border border-gray-100 dark:border-white/5 flex flex-col justify-between group hover:shadow-xl hover:-translate-y-1 transition-all">
-                            <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-500/10 text-amber-600 flex items-center justify-center group-hover:rotate-12 transition-transform">
-                                <HiOutlineSparkles className="w-6 h-6" />
+                            <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center group-hover:rotate-12 transition-transform">
+                                <HiOutlineCheckCircle className="w-6 h-6" />
                             </div>
                             <div className="pt-4">
-                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">Mening Balansim</p>
-                                <p className="text-3xl font-black text-gray-900 dark:text-white leading-none">{student.coins || 0}<span className="text-lg ml-1">🪙</span></p>
-                            </div>
-                        </div>
-                        {/* Attendance Card */}
-                        <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-6 shadow-sm border border-gray-100 dark:border-white/5 flex flex-col justify-between group hover:shadow-xl hover:-translate-y-1 transition-all">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center group-hover:-rotate-12 transition-transform">
-                                <HiOutlineTrendingUp className="w-6 h-6" />
-                            </div>
-                            <div className="pt-4">
-                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">Davomat Reytingi</p>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">Davomat Foizi</p>
                                 <p className="text-3xl font-black text-emerald-500 leading-none">
                                     {Math.round((attendance.filter(a => a.keldi).length / (attendance.length || 1)) * 100)}%
                                 </p>
+                            </div>
+                        </div>
+                        <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-6 shadow-sm border border-gray-100 dark:border-white/5 flex flex-col justify-between group hover:shadow-xl hover:-translate-y-1 transition-all">
+                            <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-500/10 text-blue-600 flex items-center justify-center group-hover:-rotate-12 transition-transform">
+                                <HiOutlineClipboardList className="w-6 h-6" />
+                            </div>
+                            <div className="pt-4">
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">Vazifalar</p>
+                                <p className="text-3xl font-black text-blue-500 leading-none">{payments.length}</p>
                             </div>
                         </div>
                     </div>

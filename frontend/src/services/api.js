@@ -57,7 +57,6 @@ export const groupAPI = {
     create: (data) => api.post('/groups', data),
     update: (id, data) => api.put(`/groups/${id}`, data),
     delete: (id) => api.delete(`/groups/${id}`),
-    telegramReport: (id) => api.post(`/groups/${id}/telegram-report`),
 };
 
 // O'quvchilar
@@ -69,7 +68,6 @@ export const studentAPI = {
     delete: (id) => api.delete(`/students/${id}`),
     bulkDelete: (ids) => api.post('/students/bulk-delete', { ids }),
     getDebtors: () => api.get('/students/debtors/list'),
-    getRating: (params) => api.get('/students/rating', { params }),
     getMyDashboard: () => api.get('/students/me/dashboard'),
     updateMe: (data) => api.put('/students/me/update', data),
     updateProfileImage: (formData) => api.put('/students/me/profile-image', formData, {
@@ -77,8 +75,6 @@ export const studentAPI = {
     }),
     getClassmates: () => api.get('/students/classmates'),
     getPublicProfile: (id) => api.get(`/students/public-profile/${id}`),
-    syncXP: () => api.post('/students/sync-xp'),
-    resetRating: () => api.post('/students/rating/reset'),
 };
 
 // To'lovlar

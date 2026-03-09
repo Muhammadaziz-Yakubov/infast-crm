@@ -45,30 +45,7 @@ const initScheduler = () => {
     });
 };
 
-// Guruh ballari hisobotini yuborish
-const sendGroupBallReport = async (groupId) => {
-    try {
-        const group = await Group.findById(groupId);
-        if (!group || !group.telegramChatId) return { success: false, message: 'Guruh yoki Telegram Chat ID topilmadi' };
 
-        const students = await Student.find({ guruh: groupId, holati: 'faol' }).sort({ ball: -1 });
-
-        let message = `📊 *${group.nomi} guruhi bo'yicha davomat va reyting:* \n\n`;
-
-        students.forEach((s, index) => {
-            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '👤';
-            message += `${medal} ${s.ism}\n`;
-        });
-
-        message += `\n📊 Doimiy darslarda qatnashing va faol bo'ling!`;
-
-        await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'Markdown' });
-        return { success: true };
-    } catch (error) {
-        console.error('Send report error:', error);
-        return { success: false, message: error.message };
-    }
-};
 
 // Guruhga yangi vazifa haqida xabar yuborish
 const sendTaskNotification = async (groupId, taskData) => {
@@ -148,7 +125,6 @@ const sendAttendanceNotification = async (groupId, date, attendanceData) => {
 module.exports = {
     bot,
     initScheduler,
-    sendGroupBallReport,
     sendTaskNotification,
     sendAttendanceNotification
 };

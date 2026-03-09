@@ -35,7 +35,7 @@ const adminMenu = [
     { path: '/debtors', label: 'Qarzdorlar', icon: HiOutlineExclamationCircle },
     { path: '/attendance', label: 'Davomat', icon: HiOutlineCalendar },
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
-    { path: '/rating', label: 'Reyting', icon: HiOutlineTrendingUp },
+
     { path: '/market-manager', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/coin-manager', label: 'Coin Boshqaruvi', icon: HiOutlineDatabase },
     { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
@@ -47,7 +47,7 @@ const studentMenu = [
     { path: '/attendance', label: 'Davomat tarixi', icon: HiOutlineCalendar },
     { path: '/payments', label: "To'lovlar tarixi", icon: HiOutlineCreditCard },
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
-    { path: '/rating', label: 'Reyting', icon: HiOutlineTrendingUp },
+
     { path: '/market', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
     { path: '/profile', label: 'Mening profilim', icon: HiOutlineUserCircle },

@@ -99,12 +99,8 @@ exports.gradeSubmission = async (req, res) => {
         submission.status = 'graded';
         await submission.save();
 
-        // 1. Coin qo'shish (+100 -> avtomatik +500 XP ham beradi coinService orqali)
+        // 1. Coin qo'shish
         await updateCoins(submission.student, 100, `Vazifa baholandi: ${score} ball`);
-
-        // 2. Qo'shimcha XP (Vazifa balli * 10)
-        const { updateXP } = require('../services/xpService');
-        await updateXP(submission.student, score * 10, `Vazifa topshirig'i uchun ball: ${score}`);
 
         res.json({
             success: true,

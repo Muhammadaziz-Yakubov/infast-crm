@@ -14,7 +14,6 @@ const MobileBottomBar = () => {
     const navItems = [
         { path: '/', icon: HiOutlineHome, label: 'Asosiy' },
         { path: '/tasks', icon: HiOutlineClipboardList, label: 'Vazifalar' },
-        { path: '/rating', icon: HiOutlineTrendingUp, label: 'Reyting' },
         { path: '/market', icon: HiOutlineShoppingBag, label: 'Market' },
         { path: '/profile', icon: HiOutlineUserCircle, label: 'Profil' },
     ];

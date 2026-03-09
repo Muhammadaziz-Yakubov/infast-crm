@@ -70,10 +70,7 @@ const Classmates = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <div className="absolute -bottom-1 -right-1 bg-white dark:bg-dark-800 px-2 py-0.5 rounded-lg border border-gray-100 dark:border-white/5 shadow-sm flex items-center gap-1">
-                                        <HiOutlineLightningBolt className="w-3 h-3 text-primary-500" />
-                                        <span className="text-[8px] font-black text-gray-900 dark:text-white uppercase">{student.level || 1}</span>
-                                    </div>
+
                                 </div>
                                 <div className="min-w-0">
                                     <h3 className="text-sm font-black text-gray-900 dark:text-white truncate uppercase italic tracking-tight group-hover:text-primary-500 transition-colors">
@@ -83,10 +80,6 @@ const Classmates = () => {
                                         <div className="flex items-center gap-1">
                                             <span className="text-[10px] text-amber-500">🪙</span>
                                             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{student.coins || 0}</span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <HiOutlineSparkles className="w-2.5 h-2.5 text-primary-500" />
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{student.xp || 0} XP</span>
                                         </div>
                                     </div>
                                 </div>
