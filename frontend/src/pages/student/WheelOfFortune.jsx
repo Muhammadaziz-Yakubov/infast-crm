@@ -115,7 +115,7 @@ const WheelOfFortune = () => {
                             <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest italic">{user?.coins || 0} 🪙</p>
                         </div>
                         <div className="flex items-center gap-1.5 px-3 py-1 bg-primary-500/10 rounded-full border border-primary-500/20">
-                            <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest italic">1 Spin = 150 🪙</p>
+                            <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest italic">1 Spin = 300 🪙</p>
                         </div>
                     </div>
                 </div>
