@@ -2,6 +2,8 @@ const Student = require('../models/Student');
 const Payment = require('../models/Payment');
 const Course = require('../models/Course');
 const Attendance = require('../models/Attendance');
+const Submission = require('../models/Submission');
+const QuizResult = require('../models/QuizResult');
 const { uploadToR2 } = require('../services/uploadService');
 const mongoose = require('mongoose');
 
@@ -408,17 +410,107 @@ exports.getPublicProfile = async (req, res) => {
 // @route   GET /api/students/leaderboard
 exports.getLeaderboard = async (req, res) => {
     try {
-        const leaderboard = await Student.find({ holati: 'faol' })
-            .select('ism coins profileImage username guruh')
-            .populate('guruh', 'nomi')
-            .sort({ coins: -1 })
-            .limit(100);
+        const leaderboard = await Student.aggregate([
+            { $match: { holati: 'faol' } },
+
+            // Attendance points (5 points for each 'keldi: true')
+            {
+                $lookup: {
+                    from: 'attendances',
+                    localField: '_id',
+                    foreignField: 'oquvchilar.oquvchi',
+                    pipeline: [
+                        { $unwind: '$oquvchilar' },
+                        { $match: { 'oquvchilar.keldi': true } }
+                    ],
+                    as: 'att_records'
+                }
+            },
+
+            // Submission points (sum of graded scores)
+            {
+                $lookup: {
+                    from: 'submissions',
+                    localField: '_id',
+                    foreignField: 'student',
+                    pipeline: [
+                        { $match: { status: 'graded' } }
+                    ],
+                    as: 'sub_records'
+                }
+            },
+
+            // Quiz points (sum of quiz scores)
+            {
+                $lookup: {
+                    from: 'quizresults',
+                    localField: '_id',
+                    foreignField: 'student',
+                    as: 'quiz_records'
+                }
+            },
+
+            // Calculate totals
+            {
+                $addFields: {
+                    attendanceCount: { $size: '$att_records' },
+                    assignmentScore: { $sum: '$sub_records.score' },
+                    quizScore: { $sum: '$quiz_records.score' }
+                }
+            },
+
+            // Final total points calculation
+            {
+                $addFields: {
+                    totalScore: {
+                        $add: [
+                            { $multiply: ['$attendanceCount', 5] },
+                            '$assignmentScore',
+                            '$quizScore'
+                        ]
+                    }
+                }
+            },
+
+            // Cleanup fields we don't need in response
+            {
+                $project: {
+                    att_records: 0,
+                    sub_records: 0,
+                    quiz_records: 0,
+                    password: 0
+                }
+            },
+
+            // Sort by totalScore
+            { $sort: { totalScore: -1 } },
+            { $limit: 100 },
+
+            // Populate guruh separately if needed, or join it here
+            {
+                $lookup: {
+                    from: 'groups',
+                    localField: 'guruh',
+                    foreignField: '_id',
+                    as: 'guruhInfo'
+                }
+            },
+            { $unwind: { path: '$guruhInfo', preserveNullAndEmptyArrays: true } }
+        ]);
+
+        // Map back to a clean object if necessary to match populate structure
+        const cleanedLeaderboard = leaderboard.map(s => ({
+            ...s,
+            guruh: s.guruhInfo ? { _id: s.guruhInfo._id, nomi: s.guruhInfo.nomi } : null,
+            coins: s.totalScore // Override coins with totalScore for frontend compatibility or add new field
+        }));
 
         res.json({
             success: true,
-            data: leaderboard
+            data: cleanedLeaderboard
         });
     } catch (error) {
+        console.error('Leaderboard Error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };

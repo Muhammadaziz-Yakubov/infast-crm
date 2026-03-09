@@ -64,7 +64,7 @@ const Leaderboard = () => {
                         </div>
                         <div className="h-20 w-full bg-gray-300/20 dark:bg-gray-300/5 rounded-t-2xl flex flex-col items-center justify-center">
                             <p className="text-[10px] font-black uppercase italic truncate px-2 w-full text-center">{leaderboard[1].ism.split(' ')[0]}</p>
-                            <p className="text-xs font-black text-primary-500">{leaderboard[1].coins} 🪙</p>
+                            <p className="text-xs font-black text-primary-500">{leaderboard[1].totalScore || 0} ball</p>
                         </div>
                     </div>
 
@@ -85,7 +85,7 @@ const Leaderboard = () => {
                         </div>
                         <div className="h-28 w-full bg-amber-400/20 dark:bg-amber-400/5 rounded-t-3xl flex flex-col items-center justify-center border-t-2 border-amber-400/30">
                             <p className="text-xs font-black uppercase italic truncate px-2 w-full text-center">{leaderboard[0].ism.split(' ')[0]}</p>
-                            <p className="text-sm font-black text-primary-500">{leaderboard[0].coins} 🪙</p>
+                            <p className="text-sm font-black text-primary-500">{leaderboard[0].totalScore || 0} ball</p>
                         </div>
                     </div>
 
@@ -105,7 +105,7 @@ const Leaderboard = () => {
                         </div>
                         <div className="h-16 w-full bg-amber-700/10 dark:bg-amber-700/5 rounded-t-2xl flex flex-col items-center justify-center">
                             <p className="text-[10px] font-black uppercase italic truncate px-2 w-full text-center">{leaderboard[2].ism.split(' ')[0]}</p>
-                            <p className="text-xs font-black text-primary-500">{leaderboard[2].coins} 🪙</p>
+                            <p className="text-xs font-black text-primary-500">{leaderboard[2].totalScore || 0} ball</p>
                         </div>
                     </div>
                 </div>
@@ -151,8 +151,8 @@ const Leaderboard = () => {
                             <div className="flex items-center gap-3">
                                 <div className="flex flex-col items-end">
                                     <div className="flex items-center gap-1">
-                                        <span className="text-xs font-black text-gray-900 dark:text-white italic">{student.coins || 0}</span>
-                                        <span className="text-[10px]">🪙</span>
+                                        <span className="text-xs font-black text-gray-900 dark:text-white italic">{student.totalScore || 0}</span>
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase italic">ball</span>
                                     </div>
                                 </div>
                                 <HiOutlineChevronRight className="w-4 h-4 text-gray-300 group-hover:text-primary-500 transition-colors" />

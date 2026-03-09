@@ -15,6 +15,7 @@ const MobileBottomBar = () => {
         { path: '/', icon: HiOutlineHome, label: 'Asosiy' },
         { path: '/tasks', icon: HiOutlineClipboardList, label: 'Vazifalar' },
         { path: '/market', icon: HiOutlineShoppingBag, label: 'Market' },
+        { path: '/leaderboard', icon: HiOutlineTrendingUp, label: 'Reyting' },
         { path: '/profile', icon: HiOutlineUserCircle, label: 'Profil' },
     ];
 
