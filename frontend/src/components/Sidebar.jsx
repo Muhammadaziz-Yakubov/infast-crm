@@ -19,7 +19,8 @@ import {
     HiOutlineTrendingUp,
     HiOutlineShoppingBag,
     HiOutlineDatabase,
-    HiOutlinePresentationChartLine
+    HiOutlinePresentationChartLine,
+    HiOutlineChatAlt2
 } from 'react-icons/hi';
 
 import Logo from '../infastacademy.jpg';
