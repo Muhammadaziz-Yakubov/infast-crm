@@ -3,12 +3,14 @@ import { Outlet, Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MobileBottomBar from './MobileBottomBar';
 import { useAuth } from '../context/AuthContext';
-import { HiOutlineMenuAlt2, HiOutlineQrcode, HiOutlineGift } from 'react-icons/hi';
+import { useTheme } from '../context/ThemeContext';
+import { HiOutlineMenuAlt2, HiOutlineQrcode, HiOutlineGift, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
 import Logo from '../infastacademy.jpg';
 
 const Layout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { user } = useAuth();
+    const { darkMode, toggleDarkMode } = useTheme();
     const isStudent = user?.role === 'student';
 
     return (
@@ -60,6 +62,13 @@ const Layout = () => {
 
                         {isStudent && (
                             <div className="flex items-center gap-2 flex-shrink-0">
+                                <button
+                                    onClick={toggleDarkMode}
+                                    className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-dark-800 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-white/5 active:scale-90 transition-all flex items-center justify-center"
+                                    title="Mavzuni o'zgartirish"
+                                >
+                                    {darkMode ? <HiOutlineSun className="w-5 h-5" /> : <HiOutlineMoon className="w-5 h-5" />}
+                                </button>
                                 <Link
                                     to="/wheel"
                                     className="w-10 h-10 rounded-xl bg-amber-500 text-white shadow-lg shadow-amber-500/20 active:scale-90 transition-all flex items-center justify-center"

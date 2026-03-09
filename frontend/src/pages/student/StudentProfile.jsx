@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { studentAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useAuth } from '../../context/AuthContext';
 import {
-    HiOutlineUser, HiOutlinePhone, HiOutlineLockClosed, HiOutlinePencilAlt, HiOutlineShieldCheck, HiOutlineCamera
+    HiOutlineUser, HiOutlinePhone, HiOutlineLockClosed, HiOutlinePencilAlt, HiOutlineShieldCheck, HiOutlineCamera, HiOutlineLogout
 } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
 const StudentProfile = () => {
     const fileInputRef = useRef(null);
+    const { logout } = useAuth();
     const [student, setStudent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
@@ -148,6 +150,14 @@ const StudentProfile = () => {
                         </div>
                     </div>
 
+                    <button
+                        onClick={() => fileInputRef.current.click()}
+                        className="mt-6 px-6 py-2.5 rounded-xl bg-primary-500/20 text-primary-500 border border-primary-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-primary-500 hover:text-white transition-all active:scale-95 flex items-center gap-2"
+                    >
+                        <HiOutlineCamera className="w-4 h-4" />
+                        Rasm o'zgartirish
+                    </button>
+
                     {/* Decorative gradients */}
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary-600/20 rounded-full blur-[100px] pointer-events-none" />
                     <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-primary-900/40 rounded-full blur-[100px] pointer-events-none" />
@@ -265,6 +275,15 @@ const StudentProfile = () => {
                     )}
                 </div>
             </div>
+
+            {/* Logout Button specifically for mobile visibility */}
+            <button
+                onClick={logout}
+                className="w-full py-5 rounded-[2rem] bg-rose-500/10 text-rose-600 border border-rose-500/20 font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-4 active:scale-95 transition-all shadow-xl shadow-rose-500/5 italic"
+            >
+                <HiOutlineLogout className="w-5 h-5" />
+                Hisobdan chiqish
+            </button>
         </div>
 
     );
