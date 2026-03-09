@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { studentAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { Link, useNavigate } from 'react-router-dom';
-import { HiOutlineArrowLeft, HiOutlineChevronRight, HiOutlineTrendingUp, HiOutlineAward, HiOutlineFire } from 'react-icons/hi';
+import { HiOutlineArrowLeft, HiOutlineChevronRight, HiOutlineTrendingUp, HiOutlineStar, HiOutlineSparkles } from 'react-icons/hi';
 
 const Leaderboard = () => {
     const navigate = useNavigate();
@@ -71,7 +71,7 @@ const Leaderboard = () => {
                     {/* Rank 1 */}
                     <div className="flex flex-col items-center flex-1 z-10 animate-slide-up" style={{ animationDelay: '0ms' }}>
                         <div className="relative mb-2 scale-110">
-                            <HiOutlineAward className="absolute -top-7 left-1/2 -translate-x-1/2 w-8 h-8 text-amber-500 drop-shadow-lg animate-bounce" />
+                            <HiOutlineStar className="absolute -top-7 left-1/2 -translate-x-1/2 w-8 h-8 text-amber-500 drop-shadow-lg animate-bounce" />
                             <div className="w-20 h-20 rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl bg-white dark:bg-dark-800 ring-4 ring-amber-400/20">
                                 {leaderboard[0].profileImage ? (
                                     <img src={leaderboard[0].profileImage} alt={leaderboard[0].ism} className="w-full h-full object-cover" />
