@@ -7,7 +7,7 @@ const { updateCoins } = require('../services/coinService');
 exports.spinWheel = async (req, res) => {
     try {
         const studentId = req.user._id;
-        const spinCost = 150;
+        const spinCost = 300;
 
         // 1. O'quvchini hamda balansini tekshirish
         const student = await Student.findById(studentId);
