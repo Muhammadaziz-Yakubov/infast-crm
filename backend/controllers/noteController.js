@@ -136,3 +136,29 @@ exports.deleteNote = async (req, res, next) => {
         next(err);
     }
 };
+
+// @desc    Toggle pin for a note
+// @route   PATCH /api/notes/:id/pin
+// @access  Admin/Teacher
+exports.togglePin = async (req, res, next) => {
+    try {
+        if (req.user.role === 'student') {
+            return res.status(403).json({ success: false, message: 'Ruxsat etilmagan' });
+        }
+
+        const note = await Note.findById(req.params.id);
+        if (!note) {
+            return res.status(404).json({ success: false, message: 'Eslatma topilmadi' });
+        }
+
+        note.isPinned = !note.isPinned;
+        await note.save();
+
+        res.status(200).json({
+            success: true,
+            data: note
+        });
+    } catch (err) {
+        next(err);
+    }
+};

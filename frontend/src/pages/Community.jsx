@@ -80,6 +80,16 @@ const Community = () => {
         }
     };
 
+    const handleTogglePin = async (id) => {
+        try {
+            await noteAPI.togglePin(id);
+            fetchNotes(); // Reload to update sort order
+            toast.success("Eslatma holati o'zgardi");
+        } catch (err) {
+            toast.error("Xatolik");
+        }
+    };
+
     const handleDelete = async (id) => {
         if (!window.confirm("O'chirilsinmi?")) return;
         try {
@@ -245,6 +255,15 @@ const Community = () => {
                                 </button>
 
                                 <div className="flex items-center gap-2">
+                                    {isAdmin && (
+                                        <button
+                                            onClick={() => handleTogglePin(note._id)}
+                                            className={`p-1.5 transition-colors ${note.isPinned ? 'text-amber-500' : 'text-gray-300 hover:text-amber-500'}`}
+                                            title={note.isPinned ? "Unpin" : "Pin"}
+                                        >
+                                            <HiOutlineFire className="w-4 h-4" />
+                                        </button>
+                                    )}
                                     {(isAuthor || isAdmin) && (
                                         <button
                                             onClick={() => handleDelete(note._id)}

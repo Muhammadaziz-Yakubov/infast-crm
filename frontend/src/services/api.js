@@ -150,6 +150,7 @@ export const noteAPI = {
     getAll: () => api.get('/notes'),
     create: (data) => api.post('/notes', data),
     toggleLike: (id) => api.post(`/notes/${id}/like`),
+    togglePin: (id) => api.patch(`/notes/${id}/pin`),
     delete: (id) => api.delete(`/notes/${id}`),
 };
 
