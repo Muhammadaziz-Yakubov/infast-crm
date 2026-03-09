@@ -720,10 +720,6 @@ const Students = () => {
                                         <p className="text-sm font-black text-emerald-500 italic">{new Intl.NumberFormat('uz-UZ').format(viewingStudent.oylikTolov || viewingStudent.kurs?.narx)} so'm</p>
                                     </div>
                                     <div>
-                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">To'plangan ball</p>
-                                        <p className="text-sm font-black text-blue-500 italic">{viewingStudent.ball || 0} ball</p>
-                                    </div>
-                                    <div>
                                         <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Kurs</p>
                                         <p className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase truncate">{viewingStudent.kurs?.nomi}</p>
                                     </div>
