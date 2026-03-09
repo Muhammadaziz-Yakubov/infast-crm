@@ -222,7 +222,7 @@ exports.getDashboard = async (req, res) => {
             .sort({ sana: -1 })
             .limit(10);
 
-        // Oylik statistika (oxirgi 6 oy)
+        // Oyliq statistika (oxirgi 6 oy)
         const monthlyStats = [];
         for (let i = 5; i >= 0; i--) {
             let m = currentMonth - i;
@@ -246,13 +246,88 @@ exports.getDashboard = async (req, res) => {
             });
         }
 
-        // Guruhlar soni
-        const Group = require('../models/Group');
-        const totalGroups = await Group.countDocuments({ holati: 'faol' });
+        // Bugungi tushum
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
 
-        // Kurslar soni
+        const todayPayments = await Payment.aggregate([
+            {
+                $match: {
+                    sana: { $gte: today, $lt: tomorrow }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: '$summa' }
+                }
+            }
+        ]);
+        const todayRevenue = todayPayments[0]?.total || 0;
+
+        // Lead statistika
+        const Lead = require('../models/Lead');
+        const leadStats = await Lead.aggregate([
+            {
+                $group: {
+                    _id: '$status',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const leadSourceStats = await Lead.aggregate([
+            {
+                $group: {
+                    _id: '$source',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const newLeadsToday = await Lead.countDocuments({
+            createdAt: { $gte: today, $lt: tomorrow }
+        });
+
+        // Guruhlar va Kurslar soni
+        const Group = require('../models/Group');
         const Course = require('../models/Course');
+        const totalGroups = await Group.countDocuments({ holati: 'faol' });
         const totalCourses = await Course.countDocuments({ holati: 'faol' });
+
+        // Kurslar bo'yicha o'quvchilar soni
+        const courseStudentStats = await Student.aggregate([
+            { $match: { holati: 'faol' } },
+            {
+                $group: {
+                    _id: '$kurs',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'courses',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'kursData'
+                }
+            },
+            { $unwind: '$kursData' },
+            {
+                $project: {
+                    nomi: '$kursData.nomi',
+                    count: 1
+                }
+            }
+        ]);
+
+        // Top o'quvchilar (coinlar bo'yicha)
+        const topStudents = await Student.find({ holati: 'faol' })
+            .select('ism coins profileImage')
+            .sort({ coins: -1 })
+            .limit(5);
 
         res.json({
             success: true,
@@ -260,11 +335,17 @@ exports.getDashboard = async (req, res) => {
                 umumiyOquvchilar: totalStudents,
                 qarzdorlar: totalDebtors,
                 oyliqTushum: monthlyRevenue,
+                bugunTushum: todayRevenue,
                 kutilayotganTushum: expectedRevenue,
                 guruhlar: totalGroups,
                 kurslar: totalCourses,
                 songgiTolovlar: recentPayments,
-                oylikStatistika: monthlyStats
+                oylikStatistika: monthlyStats,
+                leadStats: leadStats,
+                leadSourceStats: leadSourceStats,
+                yangiLeadlar: newLeadsToday,
+                kursStatistika: courseStudentStats,
+                topTalabalar: topStudents
             }
         });
     } catch (error) {
