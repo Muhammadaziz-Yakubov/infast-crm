@@ -57,29 +57,32 @@ const StudentHome = () => {
     );
 
     return (
-        <div className="min-h-screen bg-transparent pb-32 lg:pb-10 max-w-4xl mx-auto px-1">
+        <div className="min-h-screen bg-transparent pb-32 lg:pb-10 max-w-4xl mx-auto px-4 md:px-0">
             <div className="space-y-8 animate-fade-in">
 
                 {/* --- 1. PREMIUM HEADER SECTION --- */}
-                <div className="relative pt-6 px-2">
+                <div className="relative pt-8 pb-2">
                     <div className="flex items-center justify-between gap-4">
-                        <div className="space-y-0.5">
-                            <span className="text-[10px] font-black text-primary-500 uppercase tracking-[0.4em] italic mb-1 block">Xush kelibsiz!</span>
-                            <h2 className="text-3xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter leading-none">
-                                Salom, {student.ism?.split(' ')[0]}!👋
+                        <div className="space-y-1">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/10 text-[9px] font-black text-primary-600 uppercase tracking-[0.3em] italic mb-1">
+                                <div className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                                Xush kelibsiz!
+                            </div>
+                            <h2 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter leading-none">
+                                Salom, <span className="gradient-text">{student.ism?.split(' ')[0]}</span>!👋
                             </h2>
                         </div>
                         <Link to="/profile" className="relative group">
-                            <div className="w-16 h-16 rounded-[1.8rem] bg-gradient-to-br from-primary-500 to-orange-600 p-1 shadow-2xl transition-transform duration-500 group-hover:scale-110 rotate-3 group-hover:rotate-0">
-                                <div className="w-full h-full rounded-[1.6rem] overflow-hidden bg-gray-900 flex items-center justify-center">
+                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-[2rem] bg-gradient-to-br from-primary-500 via-orange-500 to-rose-600 p-0.5 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:rotate-3">
+                                <div className="w-full h-full rounded-[1.9rem] overflow-hidden bg-gray-900 flex items-center justify-center p-1">
                                     {student.profileImage ? (
-                                        <img src={student.profileImage} alt={student.ism} className="w-full h-full object-cover" />
+                                        <img src={student.profileImage} alt={student.ism} className="w-full h-full object-cover rounded-[1.8rem]" />
                                     ) : (
                                         <span className="text-2xl font-black text-white italic">{student.ism?.charAt(0)}</span>
                                     )}
                                 </div>
                             </div>
-                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 border-4 border-gray-50 dark:border-dark-950 rounded-full shadow-lg"></div>
+                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 border-4 border-white dark:border-dark-950 rounded-full shadow-lg"></div>
                         </Link>
                     </div>
                 </div>
@@ -87,16 +90,21 @@ const StudentHome = () => {
                 {/* --- 2. STATS & BALANCE --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Coins Card */}
-                    <div className="bg-gradient-to-br from-gray-900 to-primary-950 rounded-[3rem] p-8 text-white shadow-2xl relative overflow-hidden group flex items-center justify-between">
-                        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:rotate-12 transition-transform duration-1000">
-                            <HiOutlineSparkles className="w-40 h-40" />
+                    <div className="premium-gradient rounded-[3rem] p-8 text-white shadow-[0_20px_60px_-15px_rgba(249,115,22,0.3)] relative overflow-hidden group flex items-center justify-between border border-white/10">
+                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform duration-1000">
+                            <HiOutlineSparkles className="w-48 h-48" />
                         </div>
-                        <div className="relative z-10">
-                            <p className="text-[10px] font-black text-primary-300 uppercase tracking-[0.4em] italic mb-2">Mening Balansim</p>
-                            <h3 className="text-5xl font-black italic">{student.coins || 0}<span className="text-2xl text-primary-400 ml-2">🪙</span></h3>
+                        <div className="relative z-10 space-y-1">
+                            <p className="text-[10px] font-black text-orange-200 uppercase tracking-[0.4em] italic mb-1">Mening Balansim</p>
+                            <div className="flex items-baseline gap-2">
+                                <h3 className="text-6xl font-black italic tracking-tighter tabular-nums drop-shadow-2xl">
+                                    {student.coins || 0}
+                                </h3>
+                                <span className="text-2xl animate-bounce">🪙</span>
+                            </div>
                         </div>
-                        <div className="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center">
-                            <HiOutlineShoppingBag className="w-8 h-8 text-primary-400" />
+                        <div className="relative z-10 w-20 h-20 rounded-[2rem] bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center shadow-inner group-hover:scale-110 transition-all duration-700">
+                            <HiOutlineShoppingBag className="w-10 h-10 text-white" />
                         </div>
                     </div>
 
@@ -126,23 +134,29 @@ const StudentHome = () => {
                 </div>
 
                 {/* --- 3. CLASS & GROUP INFO (Horizontal Scroll or Compact Grid) --- */}
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center gap-4 p-5 rounded-[2rem] bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm group hover:bg-gray-50 dark:hover:bg-dark-900 transition-colors">
-                        <div className="w-12 h-12 rounded-2xl bg-primary-100 dark:bg-primary-500/10 text-primary-500 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                            <HiOutlineLibrary className="w-6 h-6" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center gap-5 p-6 rounded-[2.5rem] bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm group hover:bg-gray-50 dark:hover:bg-dark-900 transition-all duration-300">
+                        <div className="w-14 h-14 rounded-2xl bg-primary-100 dark:bg-primary-500/10 text-primary-500 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-inner">
+                            <HiOutlineLibrary className="w-7 h-7" />
                         </div>
-                        <div className="min-w-0">
-                            <p className="text-[9px] font-black text-gray-400 uppercase leading-none mb-1 tracking-widest italic">Mening Guruhim</p>
-                            <p className="text-sm font-black text-gray-900 dark:text-white truncate uppercase italic">{student.guruh?.nomi || 'InFast'}</p>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[9px] font-black text-gray-400 uppercase leading-none mb-1.5 tracking-[0.2em] italic">Mening Guruhim</p>
+                            <p className="text-lg font-black text-gray-900 dark:text-white truncate uppercase italic leading-none">{student.guruh?.nomi || 'InFast Center'}</p>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-dark-900 flex items-center justify-center text-gray-300">
+                            <HiOutlineArrowRight className="w-4 h-4" />
                         </div>
                     </div>
-                    <div className="flex items-center gap-4 p-5 rounded-[2rem] bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm group hover:bg-gray-50 dark:hover:bg-dark-900 transition-colors">
-                        <div className="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-500/10 text-sky-500 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                            <HiOutlineClock className="w-6 h-6" />
+                    <div className="flex items-center gap-5 p-6 rounded-[2.5rem] bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm group hover:bg-gray-50 dark:hover:bg-dark-900 transition-all duration-300">
+                        <div className="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-500/10 text-sky-500 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shadow-inner">
+                            <HiOutlineClock className="w-7 h-7" />
                         </div>
-                        <div className="min-w-0">
-                            <p className="text-[9px] font-black text-gray-400 uppercase leading-none mb-1 tracking-widest italic">Dars Vaqti</p>
-                            <p className="text-sm font-black text-gray-900 dark:text-white truncate italic">{student.guruh?.jadval?.vaqt || '00:00'}</p>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[9px] font-black text-gray-400 uppercase leading-none mb-1.5 tracking-[0.2em] italic">Dars Vaqti</p>
+                            <p className="text-lg font-black text-gray-900 dark:text-white truncate italic leading-none">{student.guruh?.jadval?.vaqt || 'Jadval yo\'q'}</p>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-dark-900 flex items-center justify-center text-gray-300">
+                            <HiOutlineCalendar className="w-4 h-4" />
                         </div>
                     </div>
                 </div>
@@ -152,7 +166,7 @@ const StudentHome = () => {
                     <div className="flex items-center justify-between px-2">
                         <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] italic mb-1 block">Asosiy Bo'limlar</h3>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         <NavCard
                             to="/wheel"
                             icon={HiOutlineGift}
@@ -160,10 +174,10 @@ const StudentHome = () => {
                             color={{ bg: 'bg-amber-100 dark:bg-amber-500/20', text: 'text-amber-600' }}
                         />
                         <NavCard
-                            to="/community"
-                            icon={HiOutlineChatAlt2}
-                            title="Jamiyat"
-                            color={{ bg: 'bg-indigo-100 dark:bg-indigo-500/20', text: 'text-indigo-600' }}
+                            to="/market"
+                            icon={HiOutlineShoppingBag}
+                            title="Market"
+                            color={{ bg: 'bg-rose-100 dark:bg-rose-500/20', text: 'text-rose-600' }}
                         />
                         <NavCard
                             to="/classmates"
