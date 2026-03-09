@@ -26,6 +26,14 @@ const ScanAttendance = () => {
         scannerRef.current = html5QrCode;
 
         const qrCodeSuccessCallback = (decodedText) => {
+            // Check if it's the correct application QR code
+            const currentOrigin = window.location.origin;
+            if (!decodedText || (!decodedText.includes(currentOrigin) && !decodedText.includes('/scan'))) {
+                toast.error("Noto'g'ri QR Kod! Iltimos, faqat markazdagi QR kodni skanerlang.");
+                setTimeout(() => window.location.reload(), 2000);
+                return;
+            }
+
             // QR o'qildi.
             stopScanner().then(() => {
                 handleAttendance();
@@ -57,6 +65,37 @@ const ScanAttendance = () => {
             } catch (err) {
                 console.error("Scannerni to'xtatishda xatolik:", err);
             }
+        }
+    };
+
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            setLoading(true);
+            await stopScanner();
+
+            const html5QrCode = new Html5Qrcode("reader");
+            const decodedText = await html5QrCode.scanFile(file, true);
+
+            const currentOrigin = window.location.origin;
+            if (!decodedText || (!decodedText.includes(currentOrigin) && !decodedText.includes('/scan'))) {
+                toast.error("Noto'g'ri QR Kod! Iltimos, faqat markazdagi QR kodni skanerlang.");
+                setTimeout(() => window.location.reload(), 2000);
+                return;
+            }
+
+            handleAttendance();
+        } catch (err) {
+            console.error("Fayldan o'qishda xatolik:", err);
+            toast.error("QR kod topilmadi. Sifatliroq rasm yuklang!");
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -115,12 +154,15 @@ const ScanAttendance = () => {
                                     <div className="p-8 space-y-4">
                                         <HiOutlineCamera className="w-12 h-12 text-gray-300 mx-auto" />
                                         <p className="text-sm font-bold text-gray-500">{cameraError}</p>
-                                        <button
-                                            onClick={() => window.location.reload()}
-                                            className="px-6 py-2 bg-primary-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary-500/20 active:scale-95 transition-all"
-                                        >
-                                            Qayta urinish
-                                        </button>
+                                        <div className="flex flex-col gap-2">
+                                            <button
+                                                onClick={() => window.location.reload()}
+                                                className="px-6 py-2 bg-primary-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary-500/20 active:scale-95 transition-all"
+                                            >
+                                                Qayta urinish
+                                            </button>
+                                            <p className="text-xs text-gray-400 mt-2">Pastdagi yashil tugmadan rasmga oling</p>
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -137,13 +179,27 @@ const ScanAttendance = () => {
                         <div className="space-y-3 relative z-10">
                             <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">QR Kodni Ko'rsating</h2>
                             <p className="text-xs text-gray-400 font-bold uppercase tracking-widest leading-relaxed px-4">
-                                Markazdagi QR kodni kamera markaziga qarating
+                                Markazdagi QR kodni kamera markaziga qarating yoki rasmga olib yuklang
                             </p>
                         </div>
 
-                        <div className="flex items-center justify-center gap-3 py-4 bg-primary-500/5 rounded-[1.5rem] border border-primary-500/10 relative z-10">
-                            <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-                            <span className="text-[10px] font-black uppercase text-primary-500 tracking-[0.2em] italic">Kamera Faol</span>
+                        <div className="flex flex-col gap-3 relative z-10 w-full px-4">
+                            <label className="flex items-center justify-center gap-3 py-4 bg-emerald-500 text-white rounded-[1.5rem] shadow-lg shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer border border-emerald-400">
+                                <HiOutlineCamera className="w-5 h-5" />
+                                <span className="text-xs font-black uppercase tracking-widest">Rasmga olish (Muqobil)</span>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    capture="environment"
+                                    className="hidden"
+                                    onChange={handleFileUpload}
+                                />
+                            </label>
+
+                            <div className="flex items-center justify-center gap-3 py-3 bg-primary-500/5 rounded-[1.5rem] border border-primary-500/10">
+                                <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
+                                <span className="text-[10px] font-black uppercase text-primary-500 tracking-[0.2em] italic">Jonli Kamera {cameraError ? "Xatolik" : "Faol"}</span>
+                            </div>
                         </div>
                     </>
                 ) : (

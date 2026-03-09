@@ -53,8 +53,32 @@ exports.saveAttendance = async (req, res) => {
     try {
         const { guruh, sana, oquvchilar, izoh } = req.body;
 
+        const groupObj = await require('../models/Group').findById(guruh);
+        if (!groupObj) {
+            return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
+        }
+
         const startOfDay = new Date(sana);
         startOfDay.setHours(0, 0, 0, 0);
+
+        // --- 1. Dars Kunini Tekshirish ---
+        if (groupObj.jadval?.kunlar) {
+            const kunlar = groupObj.jadval.kunlar.toLowerCase();
+            const selectedDayIndex = startOfDay.getDay(); // 0 = Yakshanba, 1 = Dushanba ... 6 = Shanba
+
+            const reqToqKunlar = kunlar.includes("toq");
+            const reqJuftKunlar = kunlar.includes("juft");
+
+            const isToq = selectedDayIndex === 1 || selectedDayIndex === 3 || selectedDayIndex === 5;
+            const isJuft = selectedDayIndex === 2 || selectedDayIndex === 4 || selectedDayIndex === 6;
+
+            if (reqToqKunlar && !isToq) {
+                return res.status(400).json({ success: false, message: "Tanlangan sana ushbu guruh uchun dars kuni emas (Toq kunlari bo'lishi kerak)" });
+            }
+            if (reqJuftKunlar && !isJuft) {
+                return res.status(400).json({ success: false, message: "Tanlangan sana ushbu guruh uchun dars kuni emas (Juft kunlari bo'lishi kerak)" });
+            }
+        }
 
         const endOfDay = new Date(sana);
         endOfDay.setHours(23, 59, 59, 999);
@@ -131,14 +155,32 @@ exports.scanAttendance = async (req, res) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Guruh jadvalini tekshirish (Vaqt cheklovi - ixtiyoriy lekin xavfsiz)
-        // Hozircha sodda: faqat bugun dars bo'lsa va dars vaqtiga yaqin bo'lsa
-        // Agar guruh jadvalida vaqt bo'lsa, tekshiramiz (Masalan: 14:30-16:00)
+        // --- 1. Dars Kunini Tekshirish ---
+        if (student.guruh.jadval?.kunlar) {
+            const kunlar = student.guruh.jadval.kunlar.toLowerCase();
+            const currentDayIndex = new Date().getDay(); // 0 = Yakshanba, 1 = Dushanba ... 6 = Shanba
+
+            const reqToqKunlar = kunlar.includes("toq");
+            const reqJuftKunlar = kunlar.includes("juft");
+
+            // Toq kunlar: Dushanba (1), Chorshanba (3), Juma (5)
+            const isToq = currentDayIndex === 1 || currentDayIndex === 3 || currentDayIndex === 5;
+            // Juft kunlar: Seshanba (2), Payshanba (4), Shanba (6)
+            const isJuft = currentDayIndex === 2 || currentDayIndex === 4 || currentDayIndex === 6;
+
+            if (reqToqKunlar && !isToq) {
+                return res.status(400).json({ success: false, message: "Bugun sizning dars kuningiz emas (Toq kunlari keling)" });
+            }
+            if (reqJuftKunlar && !isJuft) {
+                return res.status(400).json({ success: false, message: "Bugun sizning dars kuningiz emas (Juft kunlari keling)" });
+            }
+        }
+
+        // --- 2. Dars Vaqtini Tekshirish ---
         if (student.guruh.jadval?.vaqt) {
             const [startTime] = student.guruh.jadval.vaqt.split('-');
             const [h, m] = startTime.split(':').map(Number);
 
-            // Hozirgi vaqtni Asia/Tashkent vaqtida olish
             const now = new Date();
             const tashkentTime = now.toLocaleTimeString('en-GB', {
                 timeZone: 'Asia/Tashkent',
@@ -148,12 +190,9 @@ exports.scanAttendance = async (req, res) => {
             });
             const [currentH, currentM] = tashkentTime.split(':').map(Number);
 
-            // Jami minutlarda hisoblash (kunning boshidan boshlab)
             const nowTotalMinutes = currentH * 60 + currentM;
-            const startTotalMinutes = h * 60 + m - 120; // Darsdan 2 soat oldin boshlanadi
-            const endTotalMinutes = h * 60 + m + 360; // Dars boshlanganidan keyin 6 soatgacha davom etadi
-
-            console.log(`Time Check: Now=${tashkentTime} (${nowTotalMinutes}), ClassStart=${startTime}, Range=[${startTotalMinutes}, ${endTotalMinutes}]`);
+            const startTotalMinutes = h * 60 + m - 120; // Darsdan 2 soat oldin
+            const endTotalMinutes = h * 60 + m + 360;   // Dars boshlaridan beri 6 soat
 
             if (nowTotalMinutes < startTotalMinutes || nowTotalMinutes > endTotalMinutes) {
                 return res.status(400).json({
