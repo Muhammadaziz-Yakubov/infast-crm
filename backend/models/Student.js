@@ -99,6 +99,7 @@ studentSchema.methods.comparePassword = async function (candidatePassword) {
 studentSchema.index({ tolovKuni: 1, tolovHolati: 1 });
 studentSchema.index({ guruh: 1 });
 studentSchema.index({ kurs: 1 });
+studentSchema.index({ coins: -1 });
 
 module.exports = mongoose.model('Student', studentSchema);
 

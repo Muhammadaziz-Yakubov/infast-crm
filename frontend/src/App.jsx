@@ -38,6 +38,7 @@ const LeadForm = React.lazy(() => import('./pages/public/LeadForm'));
 import { Analytics } from "@vercel/analytics/react";
 const Classmates = React.lazy(() => import('./pages/student/Classmates'));
 const ClassmateProfile = React.lazy(() => import('./pages/student/ClassmateProfile'));
+const Leaderboard = React.lazy(() => import('./pages/student/Leaderboard'));
 const Community = React.lazy(() => import('./pages/Community'));
 
 const ProtectedRoute = ({ children }) => {
@@ -118,6 +119,7 @@ const AppContent = () => {
                     <Route path="/market/logs" element={<CoinLogs />} />
                     <Route path="/classmates" element={<Classmates />} />
                     <Route path="/classmate-profile/:id" element={<ClassmateProfile />} />
+                    <Route path="/leaderboard" element={<Leaderboard />} />
                     <Route path="/community" element={<Community />} />
 
                     {/* Admin only routes */}

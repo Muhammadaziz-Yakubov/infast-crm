@@ -404,3 +404,21 @@ exports.getPublicProfile = async (req, res) => {
     }
 };
 
+// @desc    Get student leaderboard
+// @route   GET /api/students/leaderboard
+exports.getLeaderboard = async (req, res) => {
+    try {
+        const leaderboard = await Student.find({ holati: 'faol' })
+            .select('ism coins profileImage username guruh')
+            .populate('guruh', 'nomi')
+            .sort({ coins: -1 })
+            .limit(100);
+
+        res.json({
+            success: true,
+            data: leaderboard
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

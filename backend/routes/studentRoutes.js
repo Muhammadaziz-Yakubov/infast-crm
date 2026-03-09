@@ -3,7 +3,7 @@ const router = express.Router();
 const {
     getStudents, getStudent, createStudent, updateStudent, deleteStudent,
     getDebtors, getMyData, updateMe, updateProfileImage, getClassmates,
-    getPublicProfile, bulkDeleteStudents
+    getPublicProfile, bulkDeleteStudents, getLeaderboard
 } = require('../controllers/studentController');
 const { protect, authorize } = require('../middleware/auth');
 const multer = require('multer');
@@ -17,6 +17,7 @@ router.put('/me/profile-image', upload.single('image'), updateProfileImage);
 router.get('/classmates', getClassmates);
 router.get('/public-profile/:id', getPublicProfile);
 router.get('/debtors/list', getDebtors);
+router.get('/leaderboard', getLeaderboard);
 router.post('/bulk-delete', authorize('superadmin', 'admin'), bulkDeleteStudents);
 
 router.route('/').get(getStudents).post(createStudent);

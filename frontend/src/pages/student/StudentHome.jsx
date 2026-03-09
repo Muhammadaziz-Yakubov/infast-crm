@@ -171,6 +171,12 @@ const StudentHome = () => {
                             title="Do'stlar"
                             color={{ bg: 'bg-sky-100 dark:bg-sky-500/20', text: 'text-sky-600' }}
                         />
+                        <NavCard
+                            to="/leaderboard"
+                            icon={HiOutlineTrendingUp}
+                            title="Reyting"
+                            color={{ bg: 'bg-emerald-100 dark:bg-emerald-500/20', text: 'text-emerald-600' }}
+                        />
                     </div>
                 </div>
 
