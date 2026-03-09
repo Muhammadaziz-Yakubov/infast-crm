@@ -10,7 +10,8 @@ import {
     HiOutlineClock,
     HiOutlinePlusCircle,
     HiOutlineMinusCircle,
-    HiOutlineCheckCircle
+    HiOutlineCheckCircle,
+    HiOutlineX
 } from 'react-icons/hi';
 
 const CoinManager = () => {
