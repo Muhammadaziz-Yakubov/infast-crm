@@ -553,3 +553,19 @@ exports.syncAllStudentsXP = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// @desc    Reset all students rating to 0
+// @route   POST /api/students/reset-rating
+// @access  Admin/Teacher
+exports.resetRating = async (req, res) => {
+    try {
+        await Student.updateMany({ role: 'student' }, { xp: 0 });
+
+        res.json({
+            success: true,
+            message: "Barcha o'quvchilarning reytingi (XP) 0 ga tushirildi! 🔄"
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

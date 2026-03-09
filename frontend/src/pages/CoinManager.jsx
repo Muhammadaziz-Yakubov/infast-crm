@@ -89,6 +89,20 @@ const CoinManager = () => {
         }
     };
 
+    const handleResetRating = async () => {
+        if (!window.confirm("Barcha o'quvchilarning XP ballarini 0 ga tushirishni xohlaysizmi? Bu amalni qaytarib bo'lmaydi!")) return;
+        setLoading(true);
+        try {
+            const res = await studentAPI.resetRating();
+            toast.success(res.data.message);
+            fetchInitialData();
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Xatolik');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     if (loading) return <LoadingSpinner />;
 
     return (
@@ -104,54 +118,70 @@ const CoinManager = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="px-5 py-3 rounded-2xl bg-primary-500/10 border border-primary-500/20">
-                        <span className="text-[10px] font-black uppercase text-primary-500 tracking-widest block">Tizim holati</span>
-                        <span className="text-sm font-bold text-gray-900 dark:text-white">Faol & Avtomatik</span>
-                    </div>
+                    <button
+                        onClick={() => studentAPI.syncXP().then(() => { toast.success("XP ballar sinxronizatsiya qilindi!"); fetchInitialData(); })}
+                        className="px-5 py-3 rounded-2xl bg-primary-500/10 border border-primary-500/20 hover:bg-primary-500/20 transition-all text-[10px] font-black uppercase text-primary-500 tracking-widest"
+                    >
+                        🔄 Sinxronizatsiya (XP)
+                    </button>
                 </div>
             </div>
 
             {/* Action Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <button
                     onClick={() => handleOpenModal('all')}
-                    className="group relative p-8 rounded-[2.5rem] bg-gradient-to-br from-indigo-600 to-indigo-800 text-white shadow-xl shadow-indigo-500/20 hover:-translate-y-2 transition-all overflow-hidden"
+                    className="group relative p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-indigo-600 to-indigo-800 text-white shadow-xl shadow-indigo-500/20 hover:-translate-y-2 transition-all overflow-hidden"
                 >
-                    <HiOutlineUsers className="w-16 h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
+                    <HiOutlineUsers className="w-12 h-12 md:w-16 md:h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
                     <div className="relative z-10 flex flex-col items-start text-left">
-                        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-6">
-                            <HiOutlineUsers className="w-6 h-6" />
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 md:mb-6">
+                            <HiOutlineUsers className="w-5 h-5 md:w-6 md:h-6" />
                         </div>
-                        <h3 className="text-xl font-black uppercase tracking-tight italic">Barchaga</h3>
-                        <p className="text-indigo-100/70 text-sm font-medium mt-2">Barcha ro'yxatdan o'tgan o'quvchilarga coin berish</p>
+                        <h3 className="text-sm md:text-xl font-black uppercase tracking-tight italic">Barchaga</h3>
+                        <p className="text-indigo-100/70 text-[10px] md:text-sm font-medium mt-2">Barcha o'quvchilarga</p>
                     </div>
                 </button>
 
                 <button
                     onClick={() => handleOpenModal('group')}
-                    className="group relative p-8 rounded-[2.5rem] bg-gradient-to-br from-purple-600 to-purple-800 text-white shadow-xl shadow-purple-500/20 hover:-translate-y-2 transition-all overflow-hidden"
+                    className="group relative p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-purple-600 to-purple-800 text-white shadow-xl shadow-purple-500/20 hover:-translate-y-2 transition-all overflow-hidden"
                 >
-                    <HiOutlineUserGroup className="w-16 h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
+                    <HiOutlineUserGroup className="w-12 h-12 md:w-16 md:h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
                     <div className="relative z-10 flex flex-col items-start text-left">
-                        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-6">
-                            <HiOutlineUserGroup className="w-6 h-6" />
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 md:mb-6">
+                            <HiOutlineUserGroup className="w-5 h-5 md:w-6 md:h-6" />
                         </div>
-                        <h3 className="text-xl font-black uppercase tracking-tight italic">Guruhga</h3>
-                        <p className="text-purple-100/70 text-sm font-medium mt-2">Tanlangan guruh o'quvchilariga ommaviy coin berish</p>
+                        <h3 className="text-sm md:text-xl font-black uppercase tracking-tight italic">Guruhga</h3>
+                        <p className="text-purple-100/70 text-[10px] md:text-sm font-medium mt-2">Guruh o'quvchilariga</p>
                     </div>
                 </button>
 
                 <button
                     onClick={() => handleOpenModal('students')}
-                    className="group relative p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-xl shadow-emerald-500/20 hover:-translate-y-2 transition-all overflow-hidden"
+                    className="group relative p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-xl shadow-emerald-500/20 hover:-translate-y-2 transition-all overflow-hidden"
                 >
-                    <HiOutlineCash className="w-16 h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
+                    <HiOutlineCash className="w-12 h-12 md:w-16 md:h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
                     <div className="relative z-10 flex flex-col items-start text-left">
-                        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-6">
-                            <HiOutlinePlusCircle className="w-6 h-6" />
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 md:mb-6">
+                            <HiOutlinePlusCircle className="w-5 h-5 md:w-6 md:h-6" />
                         </div>
-                        <h3 className="text-xl font-black uppercase tracking-tight italic">Tanlanganlarga</h3>
-                        <p className="text-emerald-100/70 text-sm font-medium mt-2">Ma'lum o'quvchilarni tanlab coin berish</p>
+                        <h3 className="text-sm md:text-xl font-black uppercase tracking-tight italic">Tanlangan</h3>
+                        <p className="text-emerald-100/70 text-[10px] md:text-sm font-medium mt-2">Ma'lum o'quvchilarga</p>
+                    </div>
+                </button>
+
+                <button
+                    onClick={handleResetRating}
+                    className="group relative p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-red-600 to-red-800 text-white shadow-xl shadow-red-500/20 hover:-translate-y-2 transition-all overflow-hidden"
+                >
+                    <HiOutlineClock className="w-12 h-12 md:w-16 md:h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
+                    <div className="relative z-10 flex flex-col items-start text-left">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 md:mb-6">
+                            <HiOutlineX className="w-5 h-5 md:w-6 md:h-6" />
+                        </div>
+                        <h3 className="text-sm md:text-xl font-black uppercase tracking-tight italic text-red-100">Reset</h3>
+                        <p className="text-red-100/70 text-[10px] md:text-sm font-medium mt-2">Reytingni 0 qilish</p>
                     </div>
                 </button>
             </div>

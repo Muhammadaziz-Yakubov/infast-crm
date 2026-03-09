@@ -78,6 +78,7 @@ export const studentAPI = {
     getClassmates: () => api.get('/students/classmates'),
     getPublicProfile: (id) => api.get(`/students/public-profile/${id}`),
     syncXP: () => api.post('/students/sync-xp'),
+    resetRating: () => api.post('/students/rating/reset'),
 };
 
 // To'lovlar
