@@ -7,7 +7,7 @@ import {
     HiOutlineChatAlt2, HiOutlineHeart, HiOutlineTrash,
     HiOutlinePaperAirplane, HiOutlineBookmark, HiOutlineAcademicCap,
     HiOutlineFire, HiOutlineLightningBolt, HiOutlineSparkles,
-    HiHeart, HiOutlinePlus, HiOutlineX
+    HiHeart, HiOutlinePlus, HiOutlineX, HiOutlineShare
 } from 'react-icons/hi';
 import { formatDistanceToNow } from 'date-fns';
 import { uz } from 'date-fns/locale';
@@ -98,6 +98,23 @@ const Community = () => {
             toast.success("O'chirildi");
         } catch (err) {
             toast.error("Xatolik");
+        }
+    };
+
+    const handleShare = (note) => {
+        const shareText = `${note.authorInfo?.name}: "${note.content}"\n\nInFast CRM Community orqali ulashildi.`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'InFast Community',
+                text: shareText,
+                url: window.location.origin
+            }).catch(() => {
+                // Ignore share cancellation
+            });
+        } else {
+            navigator.clipboard.writeText(`${shareText}\n${window.location.origin}`);
+            toast.success("Xabar nusxalandi! 📋");
         }
     };
 
@@ -245,14 +262,24 @@ const Community = () => {
                             </p>
 
                             <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-white/5">
-                                <button
-                                    onClick={() => handleLike(note._id)}
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all active:scale-95
-                                        ${isLiked ? 'bg-rose-500/10 text-rose-500' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-800'}`}
-                                >
-                                    {isLiked ? <HiHeart className="w-4 h-4" /> : <HiOutlineHeart className="w-4 h-4" />}
-                                    <span className="text-[11px] font-black italic">{note.likes?.length || 0}</span>
-                                </button>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={() => handleLike(note._id)}
+                                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all active:scale-95
+                                            ${isLiked ? 'bg-rose-500/10 text-rose-500' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-800'}`}
+                                    >
+                                        {isLiked ? <HiHeart className="w-4 h-4" /> : <HiOutlineHeart className="w-4 h-4" />}
+                                        <span className="text-[11px] font-black italic">{note.likes?.length || 0}</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleShare(note)}
+                                        className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-800 transition-all active:scale-95"
+                                        title="Ulashish"
+                                    >
+                                        <HiOutlineShare className="w-4 h-4" />
+                                    </button>
+                                </div>
 
                                 <div className="flex items-center gap-2">
                                     {isAdmin && (
