@@ -32,6 +32,13 @@ exports.protect = asyncHandler(async (req, res, next) => {
         }
 
         req.user = user;
+
+        // Block debtor students from other routes, but allow getMe
+        const isAuthMe = req.originalUrl === '/api/auth/me' || req.originalUrl.includes('/auth/me');
+        if (user.role === 'student' && (user.tolovHolati === 'qarzdor' || user.tolovHolati === 'tolanmagan') && !isAuthMe) {
+            return next(new ErrorResponse("To'lovni amalga oshiring, hisobingiz blocklangan!", 403));
+        }
+
         next();
     } catch (err) {
         return next(new ErrorResponse('Ushbu marshrutga kirish ruxsat etilmagan', 401));

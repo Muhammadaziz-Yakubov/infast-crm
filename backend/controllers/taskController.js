@@ -130,6 +130,26 @@ exports.completeTask = async (req, res) => {
     }
 };
 
+// Reopen Task
+exports.reopenTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
+        }
+        task.status = 'active';
+        await task.save();
+
+        res.json({
+            success: true,
+            message: 'Vazifa muvaffaqiyatli qayta faollashtirildi',
+            data: task
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 // --- STUDENT CONTROLLERS ---
 
 // Get Tasks (Admin sees all, Student sees their group's)

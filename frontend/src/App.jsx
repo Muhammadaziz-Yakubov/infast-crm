@@ -33,6 +33,7 @@ const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 const CoinManager = React.lazy(() => import('./pages/CoinManager'));
 const Marketing = React.lazy(() => import('./pages/Marketing'));
 const LeadForm = React.lazy(() => import('./pages/public/LeadForm'));
+const PaymentRequired = React.lazy(() => import('./pages/PaymentRequired'));
 
 
 import { Analytics } from "@vercel/analytics/react";
@@ -41,10 +42,16 @@ const ClassmateProfile = React.lazy(() => import('./pages/student/ClassmateProfi
 const Leaderboard = React.lazy(() => import('./pages/student/Leaderboard'));
 const Community = React.lazy(() => import('./pages/Community'));
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowDebtor = false }) => {
     const { user, loading } = useAuth();
     if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
     if (!user) return <Navigate to="/login" replace />;
+
+    // Check for debtor status
+    if (!allowDebtor && user.role === 'student' && (user.tolovHolati === 'qarzdor' || user.tolovHolati === 'tolanmagan')) {
+        return <Navigate to="/payment-required" replace />;
+    }
+
     return children;
 };
 
@@ -101,6 +108,11 @@ const AppContent = () => {
                     <PublicRoute><Login /></PublicRoute>
                 } />
                 <Route path="/join/:source" element={<LeadForm />} />
+                <Route path="/payment-required" element={
+                    <ProtectedRoute allowDebtor={true}>
+                        <PaymentRequired />
+                    </ProtectedRoute>
+                } />
                 <Route element={
                     <ProtectedRoute><Layout /></ProtectedRoute>
                 }>

@@ -130,6 +130,17 @@ const Tasks = () => {
         }
     };
 
+    const handleReopenTask = async (taskId) => {
+        if (!window.confirm("Vazifani qayta faollashtirishni tasdiqlaysizmi?")) return;
+        try {
+            await taskAPI.reopen(taskId);
+            toast.success("Vazifa qayta faollashtirildi ✨");
+            fetchData();
+        } catch (err) {
+            toast.error("Xatolik yuz berdi");
+        }
+    };
+
     if (loading) return <LoadingSpinner />;
 
     return (
@@ -205,13 +216,21 @@ const Tasks = () => {
                                     <HiOutlineEye className="w-5 h-5" />
                                     Ko'rish
                                 </button>
-                                {task.status !== 'completed' && (
+                                {task.status !== 'completed' ? (
                                     <button
                                         onClick={() => handleCompleteTask(task._id)}
                                         className="py-4 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
                                     >
                                         <HiOutlineBadgeCheck className="w-5 h-5" />
                                         Tugatish
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() => handleReopenTask(task._id)}
+                                        className="py-4 rounded-2xl bg-amber-500/10 text-amber-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-amber-600 hover:text-white transition-all shadow-sm"
+                                    >
+                                        <HiOutlineX className="w-5 h-5" />
+                                        Qaytarish
                                     </button>
                                 )}
                             </div>

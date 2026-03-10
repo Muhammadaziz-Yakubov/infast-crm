@@ -7,6 +7,7 @@ const {
     getTaskSubmissions,
     gradeSubmission,
     completeTask,
+    reopenTask,
     getMyTasks,
     submitTask
 } = require('../controllers/taskController');
@@ -20,6 +21,7 @@ router.post('/', protect, upload.single('image'), createTask);
 router.get('/:taskId/submissions', protect, getTaskSubmissions);
 router.patch('/submissions/:id/grade', protect, gradeSubmission);
 router.patch('/:id/complete', protect, completeTask);
+router.patch('/:id/reopen', protect, reopenTask);
 
 // Student routes
 router.get('/my', protect, getMyTasks);
