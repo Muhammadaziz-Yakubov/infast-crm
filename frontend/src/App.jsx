@@ -40,7 +40,6 @@ const LandingHome = React.lazy(() => import('./pages/landing/Home'));
 const LandingPrograms = React.lazy(() => import('./pages/landing/Programs'));
 const LandingAbout = React.lazy(() => import('./pages/landing/About'));
 const LandingTeam = React.lazy(() => import('./pages/landing/Team'));
-const LandingCommunity = React.lazy(() => import('./pages/landing/CommunityLanding'));
 const LandingContact = React.lazy(() => import('./pages/landing/Contact'));
 
 import { Analytics } from "@vercel/analytics/react";
@@ -116,7 +115,6 @@ const AppContent = () => {
                 <Route path="/programs" element={<LandingPrograms />} />
                 <Route path="/about" element={<LandingAbout />} />
                 <Route path="/team" element={<LandingTeam />} />
-                <Route path="/community-landing" element={<LandingCommunity />} />
                 <Route path="/contact" element={<LandingContact />} />
 
                 <Route path="/login" element={
