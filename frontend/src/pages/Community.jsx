@@ -124,84 +124,101 @@ const Community = () => {
         }
     };
 
-    const NoteCard = ({ note, isReply = false, isMain = false }) => {
+    const NoteCard = ({ note, isReply = false, isMain = false, isLast = false }) => {
         const isLiked = user && note.likes?.some(l => l.userId === (user.id || user._id));
         const canDelete = user && (user.role !== 'student' || note.authorId === (user.id || user._id) || note.authorInfo?.id === (user.id || user._id));
 
         return (
             <div className={`
-                bg-white dark:bg-dark-900 
-                ${isMain ? 'rounded-b-none' : 'rounded-3xl shadow-sm border border-gray-100 dark:border-white/5'}
-                ${isReply ? 'ml-6 sm:ml-12 mt-2 bg-gray-50/50 dark:bg-dark-800/20' : ''}
-                p-4 sm:p-5 transition-all
+                relative flex gap-3 sm:gap-4
+                ${isMain ? 'bg-white dark:bg-dark-900 p-5 rounded-3xl border border-primary-500/10 shadow-xl shadow-primary-500/5' : ''}
+                ${isReply ? 'ml-6 sm:ml-12 mt-1 first:mt-6 group' : ''}
+                ${!isMain && !isReply ? 'bg-white dark:bg-dark-900 p-4 sm:p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-white/5' : ''}
             `}>
-                <div className="flex gap-3 sm:gap-4">
-                    {/* Avatar */}
-                    <div className="flex-shrink-0">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary-500/10 dark:bg-primary-500/20 overflow-hidden flex items-center justify-center border border-primary-500/10">
-                            {note.authorInfo?.profileImage ? (
-                                <img src={note.authorInfo.profileImage} alt="" className="w-full h-full object-cover" />
-                            ) : (
-                                <span className="text-lg font-black text-primary-500">{note.authorInfo?.name?.charAt(0)}</span>
-                            )}
-                        </div>
-                    </div>
+                {/* Visual Connector for Replies */}
+                {isReply && (
+                    <div className="absolute -left-6 sm:-left-9 top-[-1.5rem] bottom-1/2 w-6 sm:w-9 border-l-2 border-b-2 border-gray-200 dark:border-dark-800 rounded-bl-2xl opacity-60 group-first:top-[-4rem]" />
+                )}
 
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-1">
-                            <div className="flex items-center gap-2 min-w-0">
-                                <span className="font-bold text-gray-900 dark:text-white truncate text-sm sm:text-base italic">
-                                    {note.authorInfo?.name}
-                                </span>
-                                {note.authorInfo?.role !== 'student' && <HiOutlineSparkles className="w-4 h-4 text-amber-500 flex-shrink-0" title="Admin/Teacher" />}
-                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap opacity-60">
+                {/* Avatar Section */}
+                <div className="flex-shrink-0 relative z-10">
+                    <div className={`
+                        w-10 h-10 sm:w-12 sm:h-12 rounded-2xl overflow-hidden flex items-center justify-center border-2 shadow-inner transition-transform duration-300
+                        ${isMain ? 'border-primary-500/20 scale-110' : 'border-gray-50 dark:border-white/5 hover:scale-105'}
+                        ${note.authorInfo?.role === 'student' ? 'bg-primary-50' : 'bg-orange-50'}
+                    `}>
+                        {note.authorInfo?.profileImage ? (
+                            <img src={note.authorInfo.profileImage} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                            <span className={`text-lg font-black ${note.authorInfo?.role === 'student' ? 'text-primary-500' : 'text-orange-500'}`}>
+                                {note.authorInfo?.name?.charAt(0)}
+                            </span>
+                        )}
+                    </div>
+                </div>
+
+                {/* Content Section */}
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 min-w-0">
+                            <span className={`font-bold text-gray-900 dark:text-white truncate italic ${isMain ? 'text-base sm:text-lg' : 'text-sm sm:text-base'}`}>
+                                {note.authorInfo?.name}
+                            </span>
+                            <div className="flex items-center gap-2">
+                                {note.authorInfo?.role !== 'student' && <HiOutlineSparkles className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />}
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest opacity-60">
                                     {formatDistanceToNow(new Date(note.createdAt), { addSuffix: true, locale: uz })}
                                 </span>
                             </div>
                         </div>
+                    </div>
 
-                        <div
-                            onClick={() => !id && navigate(`/community/${note._id}`)}
-                            className={`text-sm sm:text-[15px] text-gray-700 dark:text-gray-200 leading-relaxed font-medium whitespace-pre-wrap mt-2 ${!id ? 'cursor-pointer hover:text-primary-600 dark:hover:text-primary-400' : ''}`}
+                    <div
+                        onClick={() => !id && navigate(`/community/${note._id}`)}
+                        className={`text-sm sm:text-[15px] text-gray-700 dark:text-gray-300 leading-relaxed font-medium whitespace-pre-wrap mt-2 ${!id ? 'cursor-pointer hover:text-primary-600 dark:hover:text-primary-400' : ''}`}
+                    >
+                        {note.content}
+                    </div>
+
+                    {/* Actions Bar */}
+                    <div className="flex items-center gap-5 mt-4 pt-4 border-t border-gray-50 dark:border-white/5">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); handleLike(note._id); }}
+                            className={`flex items-center gap-1.5 transition-all group active:scale-90 ${isLiked ? 'text-rose-500' : 'text-gray-400 hover:text-rose-500'}`}
                         >
-                            {note.content}
-                        </div>
+                            <div className={`p-1.5 rounded-xl transition-colors ${isLiked ? 'bg-rose-500/10' : 'group-hover:bg-rose-500/5'}`}>
+                                {isLiked ? <HiHeart className="w-4 h-4" /> : <HiOutlineHeart className="w-4 h-4" />}
+                            </div>
+                            <span className="text-xs font-black italic">{note.likes?.length || 0}</span>
+                        </button>
 
-                        {/* Footer Actions */}
-                        <div className="flex items-center gap-6 mt-5">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); navigate(`/community/${note._id}`); }}
+                            className="flex items-center gap-1.5 text-gray-400 hover:text-primary-500 transition-all group active:scale-90"
+                        >
+                            <div className="p-1.5 rounded-xl group-hover:bg-primary-500/5 transition-colors">
+                                <HiOutlineChatAlt2 className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs font-black italic">{note.repliesCount || 0}</span>
+                        </button>
+
+                        <button
+                            onClick={(e) => { e.stopPropagation(); handleShare(note); }}
+                            className="flex items-center gap-1.5 text-gray-400 hover:text-emerald-500 transition-all group active:scale-90"
+                        >
+                            <div className="p-1.5 rounded-xl group-hover:bg-emerald-500/5 transition-colors">
+                                <HiOutlineShare className="w-4 h-4" />
+                            </div>
+                        </button>
+
+                        {canDelete && (
                             <button
-                                onClick={(e) => { e.stopPropagation(); handleLike(note._id); }}
-                                className={`flex items-center gap-1.5 transition-colors ${isLiked ? 'text-rose-500' : 'text-gray-400 hover:text-rose-500'}`}
+                                onClick={(e) => { e.stopPropagation(); handleDelete(note._id); }}
+                                className="ml-auto p-1.5 rounded-xl text-gray-300 hover:text-rose-500 hover:bg-rose-500/5 transition-all"
                             >
-                                {isLiked ? <HiHeart className="w-4 h-4 sm:w-5 sm:h-5" /> : <HiOutlineHeart className="w-4 h-4 sm:w-5 sm:h-5" />}
-                                <span className="text-xs font-black italic">{note.likes?.length || 0}</span>
+                                <HiOutlineTrash className="w-4 h-4" />
                             </button>
-
-                            <button
-                                onClick={(e) => { e.stopPropagation(); navigate(`/community/${note._id}`); }}
-                                className="flex items-center gap-1.5 text-gray-400 hover:text-primary-500 transition-colors"
-                            >
-                                <HiOutlineChatAlt2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span className="text-xs font-black italic">{note.repliesCount || 0}</span>
-                            </button>
-
-                            <button
-                                onClick={(e) => { e.stopPropagation(); handleShare(note); }}
-                                className="text-gray-400 hover:text-emerald-500 transition-colors"
-                            >
-                                <HiOutlineShare className="w-4 h-4 sm:w-5 sm:h-5" />
-                            </button>
-
-                            {canDelete && (
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); handleDelete(note._id); }}
-                                    className="ml-auto text-gray-300 hover:text-rose-500 transition-colors"
-                                >
-                                    <HiOutlineTrash className="w-4 h-4" />
-                                </button>
-                            )}
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -211,93 +228,115 @@ const Community = () => {
     if (loading) return <div className="h-[60vh] flex items-center justify-center"><LoadingSpinner /></div>;
 
     return (
-        <div className="max-w-3xl mx-auto pb-32 animate-fade-in">
-            {/* Minimal Header */}
-            <div className="flex items-center justify-between mb-8 px-2">
-                <div className="flex items-center gap-4">
-                    {id && (
-                        <button onClick={() => navigate('/community')} className="p-2.5 rounded-2xl bg-white dark:bg-dark-900 border border-gray-100 dark:border-white/5 text-gray-500">
-                            <HiOutlineArrowLeft className="w-5 h-5" />
-                        </button>
+        <div className="max-w-3xl mx-auto pb-32 animate-fade-in px-4">
+            {/* Elegant Header with Back Arrow Integrated */}
+            <div className="py-6 mb-6">
+                <div className="flex items-center gap-6">
+                    {id ? (
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => navigate('/community')}
+                                className="w-12 h-12 rounded-2xl bg-white dark:bg-dark-900 border border-gray-100 dark:border-white/5 text-gray-500 shadow-sm hover:shadow-lg hover:-translate-x-1 transition-all flex items-center justify-center"
+                            >
+                                <HiOutlineArrowLeft className="w-6 h-6" />
+                            </button>
+                            <div>
+                                <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter">Muloqot</h1>
+                                <p className="text-[10px] font-black text-primary-500 uppercase tracking-[0.4em] mt-1 opacity-60">Javoblar tarmog'i</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <h1 className="text-3xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter">Community</h1>
+                            <p className="text-[11px] font-black text-primary-500 uppercase tracking-[0.4em] mt-1 opacity-60">InFast Talabalari</p>
+                        </div>
                     )}
-                    <div>
-                        <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter">
-                            {id ? 'Muloqot' : 'Community'}
-                        </h1>
-                        <p className="text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] leading-none mt-1">
-                            {id ? 'Javoblar tarmog\'i' : 'InFast Talabalari'}
-                        </p>
-                    </div>
                 </div>
             </div>
 
-            {/* Simple Floating Input */}
+            {/* Premium Input Section */}
             {user ? (
-                <div className={`mb-10 ${id ? 'px-0' : 'px-2'}`}>
-                    <form onSubmit={handleSubmit} className="bg-white dark:bg-dark-900 rounded-[2rem] border border-gray-100 dark:border-white/5 p-4 shadow-sm focus-within:shadow-xl focus-within:border-primary-500/30 transition-all">
-                        <textarea
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            placeholder={id ? "Javobingizni yozing..." : "Fikringizni qoldiring..."}
-                            className="w-full bg-transparent p-3 outline-none text-gray-800 dark:text-gray-200 font-bold text-sm sm:text-base resize-none min-h-[80px]"
-                        />
-                        <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-50 dark:border-white/5">
-                            {/* Categories for main feed */}
+                <div className={`mb-12 ${id ? 'mt-4' : ''}`}>
+                    <form onSubmit={handleSubmit} className="bg-white dark:bg-dark-900 rounded-3xl border border-primary-500/10 p-5 shadow-2xl shadow-primary-500/5 focus-within:shadow-primary-500/10 transition-all border-b-4">
+                        <div className="flex gap-4">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary-100 dark:bg-primary-900/40 hidden sm:flex items-center justify-center border border-primary-500/10 flex-shrink-0">
+                                {user.profileImage ? <img src={user.profileImage} className="w-full h-full object-cover rounded-2xl" /> : <span className="text-xl font-black text-primary-500">{user.ism?.charAt(0)}</span>}
+                            </div>
+                            <div className="flex-1">
+                                <textarea
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    placeholder={id ? "Fikringizni shu yerda qoldiring..." : "Nima yangiliklar bor?"}
+                                    className="w-full bg-transparent pt-3 outline-none text-gray-800 dark:text-gray-200 font-bold text-sm sm:text-lg resize-none min-h-[100px]"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50 dark:border-white/5">
                             {!id && (
-                                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 max-w-[60%] sm:max-w-none">
+                                <div className="flex gap-2 overflow-x-auto no-scrollbar max-w-[50%]">
                                     {categories.filter(c => c.id !== 'general').map(cat => (
                                         <button
                                             key={cat.id}
                                             type="button"
                                             onClick={() => setCategory(cat.id)}
-                                            className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex-shrink-0 border ${category === cat.id ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-50 dark:bg-dark-800 text-gray-400 border-transparent hover:border-gray-200'}`}
+                                            className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border ${category === cat.id ? 'bg-primary-500 text-white border-primary-500 shadow-lg shadow-primary-500/30' : 'bg-gray-50 dark:bg-dark-800 text-gray-400 border-transparent hover:border-gray-200'}`}
                                         >
                                             {cat.label}
                                         </button>
                                     ))}
                                 </div>
                             )}
-                            <div className={id ? 'w-full flex justify-between items-center' : 'ml-auto flex items-center gap-3'}>
-                                {id && <span className="text-[10px] font-bold text-gray-400 italic px-2">{content.length}/1000</span>}
+                            <div className={`${id ? 'w-full' : ''} flex items-center justify-between gap-4 ml-auto`}>
+                                <span className="text-[10px] font-bold text-gray-400 italic opacity-50">{content.length}/1000</span>
                                 <button
                                     type="submit"
                                     disabled={submitting || !content.trim()}
-                                    className="px-6 py-2.5 bg-primary-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest italic flex items-center gap-2 shadow-lg shadow-primary-500/20 active:scale-95 disabled:opacity-50 transition-all"
+                                    className="px-8 py-3 bg-primary-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest italic flex items-center gap-3 shadow-xl shadow-primary-500/30 active:scale-95 disabled:opacity-50 transition-all hover:bg-primary-700 hover:-translate-y-0.5"
                                 >
-                                    {submitting ? '...' : <><HiOutlinePaperAirplane className="w-3.5 h-3.5 rotate-45" /> {id ? 'Javob' : 'Yuborish'}</>}
+                                    {submitting ? '...' : <><HiOutlinePaperAirplane className="w-4 h-4 rotate-45" /> {id ? 'Javob' : 'Yuborish'}</>}
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
             ) : (
-                <div className="px-2 mb-8">
-                    <Link to="/login" className="flex items-center justify-center p-6 bg-primary-500/5 border-2 border-dashed border-primary-500/20 rounded-[2rem] text-primary-600 font-black uppercase tracking-widest text-[10px] italic hover:bg-primary-500/10 transition-colors">
-                        Xabarlarga qo'shilish uchun tizimga kiring
+                <div className="mb-12">
+                    <Link to="/login" className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-primary-500 to-indigo-600 rounded-3xl text-white font-black uppercase tracking-[0.2em] text-[11px] italic shadow-2xl shadow-primary-500/20 hover:scale-[1.01] transition-all">
+                        <HiOutlineChatAlt2 className="w-10 h-10 mb-2 opacity-50" />
+                        Tizimga kiring va muloqotga qo'shiling
                     </Link>
                 </div>
             )}
 
-            {/* Feed Section */}
-            <div className="space-y-4 px-2">
+            {/* Feed Section with Layout Logic */}
+            <div className="space-y-6">
                 {id && currentNote ? (
-                    <div className="space-y-4">
-                        <div className="border-t-4 border-primary-500/20 rounded-t-3xl">
-                            <NoteCard note={currentNote} isMain={true} />
-                        </div>
-                        <div className="space-y-4">
-                            {replies.map(reply => (
-                                <NoteCard key={reply._id} note={reply} isReply={true} />
+                    <div className="relative">
+                        {/* Main note with premium border */}
+                        <NoteCard note={currentNote} isMain={true} />
+
+                        {/* Replies Section with curved connectors */}
+                        <div className="relative pl-2">
+                            {replies.map((reply, idx) => (
+                                <NoteCard
+                                    key={reply._id}
+                                    note={reply}
+                                    isReply={true}
+                                    isLast={idx === replies.length - 1}
+                                />
                             ))}
+
                             {replies.length === 0 && (
-                                <div className="py-12 text-center opacity-30 italic font-bold uppercase text-[10px] tracking-widest">
-                                    Hali hech kim javob yozmadi
+                                <div className="mt-12 py-16 bg-gray-50/50 dark:bg-dark-900/30 rounded-3xl border-2 border-dashed border-gray-100 dark:border-white/5 text-center flex flex-col items-center justify-center opacity-40">
+                                    <HiOutlineChatAlt2 className="w-12 h-12 mb-3 text-gray-300" />
+                                    <p className="text-[10px] font-black uppercase tracking-widest italic">Hali hech kim javob bermadi. Birinchi bo'ling!</p>
                                 </div>
                             )}
                         </div>
                     </div>
                 ) : (
-                    <div className="grid gap-4">
+                    <div className="grid gap-6">
                         {notes.map(note => (
                             <NoteCard key={note._id} note={note} />
                         ))}
@@ -305,9 +344,10 @@ const Community = () => {
                 )}
 
                 {!loading && notes.length === 0 && !currentNote && (
-                    <div className="py-24 text-center bg-gray-50/50 dark:bg-dark-900/50 rounded-[2rem] border-2 border-dashed border-gray-100 dark:border-white/5">
-                        <HiOutlineChatAlt2 className="w-12 h-12 text-gray-200 mx-auto mb-4" />
-                        <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] italic">Hozircha xabarlar yo'q</p>
+                    <div className="py-32 text-center bg-gray-50/50 dark:bg-dark-900/50 rounded-3xl border-2 border-dashed border-gray-100 dark:border-white/5">
+                        <HiOutlineChatAlt2 className="w-16 h-16 text-gray-200 mx-auto mb-6 opacity-40 animate-bounce" />
+                        <h3 className="text-sm font-black text-gray-400 uppercase tracking-[0.3em] italic">Hech qanday xabarlar yo'q</h3>
+                        <p className="text-[10px] text-gray-300 font-bold mt-2">Jamiyatimizga birinchi xabarni siz qo'shing!</p>
                     </div>
                 )}
             </div>
