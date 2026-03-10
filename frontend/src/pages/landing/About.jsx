@@ -1,68 +1,115 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Target, Users, Zap, ShieldCheck, Globe, Cpu } from 'lucide-react';
+import { Target, Users, Zap, ShieldCheck, Globe, Cpu, Award, Rocket, CheckCircle2 } from 'lucide-react';
 import LandingLayout from './components/LandingLayout';
 
 const About = () => {
     return (
         <LandingLayout>
-            <section className="pt-32 pb-20 overflow-hidden">
+            <section className="pt-32 pb-20 overflow-hidden bg-black min-h-screen">
                 <div className="container mx-auto px-6">
-                    <div className="flex flex-col md:flex-row items-center gap-16 mb-32">
+                    {/* Hero Section of About */}
+                    <div className="flex flex-col lg:flex-row items-center gap-20 mb-40">
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
                             className="flex-1"
                         >
-                            <h2 className="text-blue-500 font-bold tracking-widest uppercase mb-4">Bizning Missiya</h2>
-                            <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight">
-                                IT Olamiga <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">TEZKOR</span> YO'L
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-black mb-10 tracking-widest uppercase">
+                                <Rocket size={14} /> Biz Haqimizda
+                            </div>
+                            <h1 className="text-6xl md:text-9xl font-black mb-10 leading-[0.9] tracking-tighter uppercase italic">
+                                Sifatga <span className="text-blue-500">asoslangan</span> ta'lim
                             </h1>
-                            <p className="text-gray-400 text-xl leading-relaxed mb-8">
-                                InFast Academy 2020-yilda IT sohasida sifatli ta'lim berish va yoshlarni dunyo bozoriga olib chiqish maqsadida tashkil etilgan. Bizning ismimiz — "In Fast" (Tez kirish) — shuni anglatadiki, biz sizni minimal vaqt ichida maksimal natijaga olib chiqamiz.
+                            <p className="text-gray-400 text-xl leading-relaxed mb-10 max-w-xl">
+                                InFast Academy — bu shunchaki o'quv markazi emas. Bu Muhammadaziz Yakubov tomonidan
+                                asos solingan innovatsion IT markaz bo'lib, o'quvchilarga professional faoliyatda
+                                kerak bo'ladigan barcha real ko'nikmalarni berishni maqsad qilgan.
                             </p>
-                            <div className="grid grid-cols-2 gap-8">
+
+                            <div className="grid grid-cols-2 gap-10">
                                 <div>
-                                    <h4 className="text-3xl font-black text-white mb-2">50+</h4>
-                                    <p className="text-gray-500 text-sm">Hamkor kompaniyalar</p>
+                                    <h4 className="text-5xl font-black text-white mb-2">5+</h4>
+                                    <p className="text-gray-500 font-bold uppercase tracking-tighter text-sm">Yillik Markaz Tajribasi</p>
                                 </div>
                                 <div>
-                                    <h4 className="text-3xl font-black text-white mb-2">10+</h4>
-                                    <p className="text-gray-500 text-sm">Xalqaro sertifikatlar</p>
+                                    <h4 className="text-5xl font-black text-white mb-2">1000+</h4>
+                                    <p className="text-gray-500 font-bold uppercase tracking-tighter text-sm">Muvaffaqiyatli Bitiruvchilar</p>
                                 </div>
                             </div>
                         </motion.div>
+
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
                             className="flex-1 relative"
                         >
-                            <div className="w-full aspect-square bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-[3rem] border border-white/10 flex items-center justify-center p-12">
-                                <Cpu className="w-full h-full text-blue-500/50 animate-pulse" />
-                            </div>
-                            <div className="absolute -bottom-10 -left-10 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl max-w-[200px]">
-                                <Users className="text-blue-500 mb-4" />
-                                <p className="text-sm font-bold text-white">Kuchli hamjamiyat va doimiy qo'llab-quvvatlash.</p>
+                            <div className="p-1 text-transparent bg-clip-border bg-gradient-to-br from-blue-500 to-purple-600 rounded-[4rem]">
+                                <div className="bg-[#080808] rounded-[3.9rem] p-16 border border-white/5 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
+                                        <Cpu size={300} strokeWidth={1} />
+                                    </div>
+                                    <h3 className="text-3xl font-black text-white mb-8 relative z-10">BIZNING PRINSIPLARIMIZ</h3>
+                                    <div className="space-y-6 relative z-10">
+                                        {[
+                                            "Faqat amaliyotga yo'naltirilgan ta'lim",
+                                            "Mentorlar bilan doimiy feedback",
+                                            "Real loyihalar ustida ishlash",
+                                            "Soft-skills va karyera maslahatlari",
+                                            "Dunyo bozoriga chiqish imkoniyati"
+                                        ].map((p, i) => (
+                                            <div key={i} className="flex items-center gap-4 text-gray-400 font-bold">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                                {p}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </motion.div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { title: "Sifatli Ta'lim", desc: "Eng so'nggi texnologiyalar asosida tuzilgan darsliklar va metodikalar.", icon: <ShieldCheck /> },
-                            { title: "Tezkor Natija", desc: "Vaqtingizni tejagan holda, eng kerakli bilimlarni amaliyotda o'rganing.", icon: <Zap /> },
-                            { title: "Global Imkoniyat", desc: "Bizning bitiruvchilar nafaqat O'zbekistonda, balki xalqaro bozorlarda ishlamoqda.", icon: <Globe /> }
-                        ].map((item, i) => (
-                            <motion.div
-                                key={i}
-                                whileHover={{ scale: 1.02 }}
-                                className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10"
-                            >
-                                <div className="text-blue-500 mb-6">{item.icon}</div>
-                                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                                <p className="text-gray-500 leading-relaxed">{item.desc}</p>
-                            </motion.div>
-                        ))}
+                    {/* Timeline / History */}
+                    <div className="mb-40">
+                        <h2 className="text-5xl md:text-7xl font-black text-center mb-24">BIZNING <span className="text-blue-500 italic">YO'LIMIZ</span></h2>
+                        <div className="space-y-12 max-w-4xl mx-auto">
+                            {[
+                                {
+                                    year: '2020', title: 'Tashkil topish', desc: 'InFast Academy kichik jamoa bilan IT sohasiga ilk qadamlarini qoydi' },
+                                {
+                                        year: '2021', title: 'Loyiha Kopayishi', desc: 'Muhammadaziz Yakubov boshchiligida 10 dan ortiq real loyihalar muvaffaqiyatli topshirildi.' },
+                                { year: '2023', title: 'AI Davri', desc: 'InFast AI va Lumo AI platformalari tashkil etildi, oquvchilarga AI texnologiyalari orgatila boshlandi.' },
+                                { year: '2024+', title: 'Global Kengayish', desc: 'Bitiruvchilarimiz xalqaro bozorlarga chiqishdi va dunyo kompaniyalarida ish boshladilar.' },
+                            ].map((step, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    className="flex gap-10 items-start"
+                                >
+                                    <div className="text-4xl font-black text-blue-500 whitespace-nowrap pt-1 italic">{step.year}</div>
+                                    <div className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 flex-grow hover:border-blue-500/30 transition-all">
+                                        <h4 className="text-2xl font-black text-white mb-4 uppercase tracking-tight">{step.title}</h4>
+                                        <p className="text-gray-500 text-lg">{step.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Certifications / Partners */}
+                    <div className="text-center py-20 border-t border-white/5">
+                        <h3 className="text-sm font-black text-gray-500 uppercase tracking-[0.3em] mb-12">Ishonchli Hamkorlarimiz</h3>
+                        <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-30 grayscale hover:grayscale-0 transition-all">
+                            <span className="text-4xl font-black text-white italic">CISCO</span>
+                            <span className="text-4xl font-black text-white italic">REDHAT</span>
+                            <span className="text-4xl font-black text-white italic">AZURE</span>
+                            <span className="text-4xl font-black text-white italic">AWS</span>
+                            <span className="text-4xl font-black text-white italic">JETBRAINS</span>
+                        </div>
                     </div>
                 </div>
             </section>
