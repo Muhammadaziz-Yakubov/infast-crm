@@ -17,8 +17,7 @@ const Footer = () => {
                             </span>
                         </Link>
                         <p className="text-gray-500 mb-8 leading-relaxed font-medium">
-                            O'zbekistondagi eng innovatsion IT-akademiya. Muhammadaziz Yakubov boshchiligidagi
-                            professional jamoa bilan kelajagingizni quring.
+                           InFast Academy — bu shunchaki kurs emas, balki kelajakdagi IT professionallarini yetishtiradigan to‘liq ekotizimdir.
                         </p>
                         <div className="flex space-x-4">
                             {[Instagram, Send, Linkedin, Github].map((Icon, i) => (
@@ -54,11 +53,11 @@ const Footer = () => {
                         <ul className="space-y-6 text-gray-500 font-bold">
                             <li className="flex items-start space-x-4">
                                 <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500"><MapPin size={18} /></div>
-                                <span>Toshkent shahri, Chilonzor tumani</span>
+                                <span>Andijon Viloyati Buloqboshi tumani, Yangi hokimiyat binosi</span>
                             </li>
                             <li className="flex items-center space-x-4">
                                 <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500"><Phone size={18} /></div>
-                                <span>+998 90 123 45 67</span>
+                                <span>+998 90 271 00 27</span>
                             </li>
                             <li className="flex items-center space-x-4">
                                 <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500"><Mail size={18} /></div>
