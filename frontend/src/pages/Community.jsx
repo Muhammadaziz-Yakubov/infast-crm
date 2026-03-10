@@ -26,15 +26,14 @@ const Community = () => {
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('general');
     const [submitting, setSubmitting] = useState(false);
-    const [isWriting, setIsWriting] = useState(false);
 
     const categories = [
-        { id: 'general', label: 'Barchasi', icon: HiOutlineChatAlt2, color: 'text-gray-500' },
-        { id: 'vazifa', label: 'Vazifalar', icon: HiOutlineBookmark, color: 'text-primary-500' },
-        { id: 'imtihon', label: 'Imtihon', icon: HiOutlineAcademicCap, color: 'text-amber-500' },
-        { id: 'imtihon_siri', label: 'Sirlar', icon: HiOutlineFire, color: 'text-rose-500' },
-        { id: 'dars_materiali', label: 'Material', icon: HiOutlineSparkles, color: 'text-emerald-500' },
-        { id: 'fikr', label: 'Fikr', icon: HiOutlineLightningBolt, color: 'text-sky-500' },
+        { id: 'general', label: 'Barchasi', icon: HiOutlineChatAlt2 },
+        { id: 'vazifa', label: 'Vazifalar', icon: HiOutlineBookmark },
+        { id: 'imtihon', label: 'Imtihon', icon: HiOutlineAcademicCap },
+        { id: 'imtihon_siri', label: 'Sirlar', icon: HiOutlineFire },
+        { id: 'dars_materiali', label: 'Material', icon: HiOutlineSparkles },
+        { id: 'fikr', label: 'Fikr', icon: HiOutlineLightningBolt },
     ];
 
     const fetchNotes = useCallback(async () => {
@@ -66,8 +65,8 @@ const Community = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!user) return toast.error("Oldin tizimga kiring");
-        if (!content.trim()) return toast.error("Kontent bo'sh");
+        if (!user) return toast.error("Tizimga kiring");
+        if (!content.trim()) return;
 
         setSubmitting(true);
         try {
@@ -77,205 +76,131 @@ const Community = () => {
                 parentId: id || null
             });
             setContent('');
-            setIsWriting(false);
-            toast.success(id ? "Javob yuborildi! 💬" : "Yuborildi! 🚀");
+            toast.success(id ? "Javobingiz qo'shildi" : "Xabar yuborildi");
             fetchNotes();
         } catch (err) {
-            toast.error("Xatolik");
+            toast.error("Xatolik yuz berdi");
         } finally {
             setSubmitting(false);
         }
     };
 
     const handleLike = async (noteId) => {
-        if (!user) return toast.error("Oldin tizimga kiring");
+        if (!user) return toast.error("Tizimga kiring");
         try {
             const res = await noteAPI.toggleLike(noteId);
-
-            const updateNote = (n) => n._id === noteId ? {
+            const update = (n) => n._id === noteId ? {
                 ...n,
+                likesCount: res.data.likesCount,
                 likes: res.data.liked
                     ? [...(n.likes || []), { userId: user.id || user._id }]
                     : (n.likes || []).filter(l => l.userId !== (user.id || user._id))
             } : n;
 
-            if (currentNote?._id === noteId) {
-                setCurrentNote(updateNote(currentNote));
-            } else if (id) {
-                setReplies(replies.map(updateNote));
-            } else {
-                setNotes(notes.map(updateNote));
-            }
-        } catch (err) {
-            console.error(err);
-        }
+            if (currentNote?._id === noteId) setCurrentNote(update(currentNote));
+            else if (id) setReplies(replies.map(update));
+            else setNotes(notes.map(update));
+        } catch (err) { console.error(err); }
     };
 
     const handleDelete = async (noteId) => {
         if (!window.confirm("O'chirilsinmi?")) return;
         try {
             await noteAPI.delete(noteId);
-            if (id && noteId === id) {
-                navigate('/community');
-            } else if (id) {
-                setReplies(replies.filter(n => n._id !== noteId));
-            } else {
-                setNotes(notes.filter(n => n._id !== noteId));
-            }
+            if (id && noteId === id) navigate('/community');
+            else if (id) setReplies(replies.filter(n => n._id !== noteId));
+            else setNotes(notes.filter(n => n._id !== noteId));
             toast.success("O'chirildi");
-        } catch (err) {
-            toast.error("Xatolik");
-        }
+        } catch (err) { toast.error("Xatolik"); }
     };
 
     const handleShare = (note) => {
-        const shareUrl = `${window.location.origin}/community/${note._id}`;
-        const shareText = `${note.authorInfo?.name}: "${note.content}"\n\nInFast Community orqali ulashildi.`;
-
+        const url = `${window.location.origin}/community/${note._id}`;
         if (navigator.share) {
-            navigator.share({
-                title: 'InFast Community',
-                text: shareText,
-                url: shareUrl
-            }).catch(() => { });
+            navigator.share({ title: 'InFast Community', url }).catch(() => { });
         } else {
-            navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
-            toast.success("Havola nusxalandi! 📋");
+            navigator.clipboard.writeText(url);
+            toast.success("Havola nusxalandi");
         }
     };
 
-    const getCategoryStyles = (cat) => {
-        switch (cat) {
-            case 'imtihon': return 'text-amber-500 bg-amber-500/10 border-amber-500/20';
-            case 'imtihon_siri': return 'text-rose-500 bg-rose-500/10 border-rose-500/20';
-            case 'vazifa': return 'text-primary-500 bg-primary-500/10 border-primary-500/20';
-            case 'dars_materiali': return 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20';
-            case 'fikr': return 'text-sky-500 bg-sky-500/10 border-sky-500/20';
-            default: return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
-        }
-    };
-
-    const NoteCard = ({ note, isReply = false, showThread = false, isLast = false, isMain = false }) => {
+    const NoteCard = ({ note, isReply = false, isMain = false }) => {
         const isLiked = user && note.likes?.some(l => l.userId === (user.id || user._id));
-        const isAuthor = user && ((note.authorId === (user.id || user._id)) || (note.authorInfo?.id === (user.id || user._id)));
-        const isAdmin = user && user.role !== 'student';
-        const categoryData = categories.find(c => c.id === note.category) || categories[0];
-        const CategoryIcon = categoryData.icon;
+        const canDelete = user && (user.role !== 'student' || note.authorId === (user.id || user._id) || note.authorInfo?.id === (user.id || user._id));
 
         return (
-            <div className={`relative group ${isMain ? 'mb-2' : ''}`}>
-                {/* Thread Line */}
-                {showThread && !isLast && (
-                    <div className="absolute left-[24px] top-14 bottom-0 w-[2px] bg-gray-100 dark:bg-dark-800 z-0 opacity-50" />
-                )}
+            <div className={`
+                bg-white dark:bg-dark-900 
+                ${isMain ? 'rounded-b-none' : 'rounded-3xl shadow-sm border border-gray-100 dark:border-white/5'}
+                ${isReply ? 'ml-6 sm:ml-12 mt-2 bg-gray-50/50 dark:bg-dark-800/20' : ''}
+                p-4 sm:p-5 transition-all
+            `}>
+                <div className="flex gap-3 sm:gap-4">
+                    {/* Avatar */}
+                    <div className="flex-shrink-0">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary-500/10 dark:bg-primary-500/20 overflow-hidden flex items-center justify-center border border-primary-500/10">
+                            {note.authorInfo?.profileImage ? (
+                                <img src={note.authorInfo.profileImage} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                                <span className="text-lg font-black text-primary-500">{note.authorInfo?.name?.charAt(0)}</span>
+                            )}
+                        </div>
+                    </div>
 
-                <div
-                    className={`
-                        p-5 transition-all duration-300 relative z-10
-                        ${isMain ? 'bg-white/40 dark:bg-dark-900/40' : 'hover:bg-gray-50/80 dark:hover:bg-dark-800/40'}
-                        ${!isReply && !id ? 'bg-white dark:bg-dark-900 border border-gray-100 dark:border-white/5 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1' : ''}
-                    `}
-                >
-                    <div className="flex items-start gap-4">
-                        {/* Avatar Wrapper with Gradient Ring */}
-                        <div className="flex-shrink-0 relative">
-                            <div className={`
-                                w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr 
-                                ${note.authorInfo?.role === 'student' ? 'from-primary-500 to-sky-500' : 'from-orange-500 to-amber-500'}
-                                shadow-lg shadow-primary-500/10
-                            `}>
-                                <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-dark-950 flex items-center justify-center">
-                                    {note.authorInfo?.profileImage ? (
-                                        <img src={note.authorInfo.profileImage} alt={note.authorInfo.name} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <span className={`text-base font-black italic ${note.authorInfo?.role === 'student' ? 'text-primary-500' : 'text-orange-500'}`}>
-                                            {note.authorInfo?.name?.charAt(0)}
-                                        </span>
-                                    )}
-                                </div>
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <span className="font-bold text-gray-900 dark:text-white truncate text-sm sm:text-base italic">
+                                    {note.authorInfo?.name}
+                                </span>
+                                {note.authorInfo?.role !== 'student' && <HiOutlineSparkles className="w-4 h-4 text-amber-500 flex-shrink-0" title="Admin/Teacher" />}
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap opacity-60">
+                                    {formatDistanceToNow(new Date(note.createdAt), { addSuffix: true, locale: uz })}
+                                </span>
                             </div>
                         </div>
 
-                        {/* Content Area */}
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-2">
-                                <div className="flex flex-col min-w-0">
-                                    <div className="flex items-center gap-1.5">
-                                        <h3 className="text-[15px] font-black text-gray-900 dark:text-white truncate uppercase italic tracking-tight">
-                                            {note.authorInfo?.name}
-                                        </h3>
-                                        {note.authorInfo?.role !== 'student' && (
-                                            <div className="w-3.5 h-3.5 bg-primary-500 rounded-full flex items-center justify-center">
-                                                <HiOutlineSparkles className="w-2.5 h-2.5 text-white" />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] leading-none mt-0.5">
-                                        {formatDistanceToNow(new Date(note.createdAt), { addSuffix: true, locale: uz })}
-                                    </span>
-                                </div>
-                                {!isReply && (
-                                    <div className={`px-2.5 py-1 rounded-full border ${getCategoryStyles(note.category)} flex items-center gap-2 backdrop-blur-md`}>
-                                        <CategoryIcon className="w-3.5 h-3.5" />
-                                        <span className="text-[9px] font-black uppercase tracking-widest hidden sm:block">{categoryData.label}</span>
-                                    </div>
-                                )}
-                            </div>
+                        <div
+                            onClick={() => !id && navigate(`/community/${note._id}`)}
+                            className={`text-sm sm:text-[15px] text-gray-700 dark:text-gray-200 leading-relaxed font-medium whitespace-pre-wrap mt-2 ${!id ? 'cursor-pointer hover:text-primary-600 dark:hover:text-primary-400' : ''}`}
+                        >
+                            {note.content}
+                        </div>
 
-                            <div
-                                onClick={() => !id && navigate(`/community/${note._id}`)}
-                                className={`
-                                    mt-4 text-[15px] font-semibold text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap
-                                    ${!id ? 'cursor-pointer' : ''}
-                                `}
+                        {/* Footer Actions */}
+                        <div className="flex items-center gap-6 mt-5">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); handleLike(note._id); }}
+                                className={`flex items-center gap-1.5 transition-colors ${isLiked ? 'text-rose-500' : 'text-gray-400 hover:text-rose-500'}`}
                             >
-                                {note.content}
-                            </div>
+                                {isLiked ? <HiHeart className="w-4 h-4 sm:w-5 sm:h-5" /> : <HiOutlineHeart className="w-4 h-4 sm:w-5 sm:h-5" />}
+                                <span className="text-xs font-black italic">{note.likes?.length || 0}</span>
+                            </button>
 
-                            {/* Interactions - Glass Styled */}
-                            <div className="flex items-center gap-5 mt-6">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); navigate(`/community/${note._id}`); }}
+                                className="flex items-center gap-1.5 text-gray-400 hover:text-primary-500 transition-colors"
+                            >
+                                <HiOutlineChatAlt2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <span className="text-xs font-black italic">{note.repliesCount || 0}</span>
+                            </button>
+
+                            <button
+                                onClick={(e) => { e.stopPropagation(); handleShare(note); }}
+                                className="text-gray-400 hover:text-emerald-500 transition-colors"
+                            >
+                                <HiOutlineShare className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+
+                            {canDelete && (
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); handleLike(note._id); }}
-                                    className={`
-                                        group flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-md transition-all active:scale-90
-                                        ${isLiked
-                                            ? 'bg-rose-500/10 text-rose-500 shadow-sm shadow-rose-500/10'
-                                            : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-800'}
-                                    `}
+                                    onClick={(e) => { e.stopPropagation(); handleDelete(note._id); }}
+                                    className="ml-auto text-gray-300 hover:text-rose-500 transition-colors"
                                 >
-                                    <div className={`transition-transform duration-300 ${isLiked ? 'scale-110' : 'group-hover:scale-110'}`}>
-                                        {isLiked ? <HiHeart className="w-5 h-5" /> : <HiOutlineHeart className="w-5 h-5" />}
-                                    </div>
-                                    <span className="text-[12px] font-black italic">{note.likes?.length || 0}</span>
+                                    <HiOutlineTrash className="w-4 h-4" />
                                 </button>
-
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); navigate(`/community/${note._id}`); }}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full text-gray-400 hover:bg-primary-500/10 hover:text-primary-500 transition-all active:scale-90"
-                                >
-                                    <HiOutlineChatAlt2 className="w-5 h-5" />
-                                    <span className="text-[12px] font-black italic">{note.repliesCount || 0}</span>
-                                </button>
-
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); handleShare(note); }}
-                                    className="p-2 rounded-full text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-500 transition-all active:scale-90"
-                                    title="Ulashish"
-                                >
-                                    <HiOutlineShare className="w-5 h-5" />
-                                </button>
-
-                                <div className="ml-auto flex items-center gap-2">
-                                    {(isAuthor || isAdmin) && (
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleDelete(note._id); }}
-                                            className="p-2 rounded-full text-gray-300 hover:bg-rose-500/10 hover:text-rose-500 transition-all active:scale-90"
-                                        >
-                                            <HiOutlineTrash className="w-5 h-5" />
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -283,177 +208,106 @@ const Community = () => {
         );
     };
 
-    if (loading) return <div className="min-h-[60vh] flex items-center justify-center"><LoadingSpinner /></div>;
+    if (loading) return <div className="h-[60vh] flex items-center justify-center"><LoadingSpinner /></div>;
 
     return (
-        <div className="max-w-2xl mx-auto pb-32">
-
-            {/* Header Area - Glass Background */}
-            <div className="sticky top-0 z-40 bg-gray-50/80 dark:bg-dark-950/80 backdrop-blur-2xl px-4 py-6 mb-8 border-b border-gray-100 dark:border-white/5 lg:-mx-4 lg:px-8">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        {id && (
-                            <button
-                                onClick={() => navigate('/community')}
-                                className="w-10 h-10 rounded-2xl bg-white dark:bg-dark-900 border border-gray-100 dark:border-white/5 flex items-center justify-center shadow-sm hover:shadow-md active:scale-90 transition-all"
-                            >
-                                <HiOutlineArrowLeft className="w-5 h-5 text-gray-900 dark:text-white" />
-                            </button>
-                        )}
-                        <div>
-                            <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter leading-none flex items-center gap-2">
-                                Community
-                                <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-                            </h1>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] italic leading-none mt-1.5 opacity-60">
-                                {id ? 'Thread View' : 'Social Space'}
-                            </p>
-                        </div>
-                    </div>
-
-                    {!id && (
-                        <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-dark-900 p-1.5 rounded-2xl border border-gray-100 dark:border-white/5">
-                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-1">Active</span>
-                        </div>
+        <div className="max-w-3xl mx-auto pb-32 animate-fade-in">
+            {/* Minimal Header */}
+            <div className="flex items-center justify-between mb-8 px-2">
+                <div className="flex items-center gap-4">
+                    {id && (
+                        <button onClick={() => navigate('/community')} className="p-2.5 rounded-2xl bg-white dark:bg-dark-900 border border-gray-100 dark:border-white/5 text-gray-500">
+                            <HiOutlineArrowLeft className="w-5 h-5" />
+                        </button>
                     )}
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter">
+                            {id ? 'Muloqot' : 'Community'}
+                        </h1>
+                        <p className="text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] leading-none mt-1">
+                            {id ? 'Javoblar tarmog\'i' : 'InFast Talabalari'}
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            {/* Premium Input Section */}
+            {/* Simple Floating Input */}
             {user ? (
-                <div className="px-4 mb-10">
-                    {!isWriting ? (
-                        <button
-                            onClick={() => setIsWriting(true)}
-                            className="w-full group bg-white dark:bg-dark-900 border border-gray-100 dark:border-white/5 rounded-[2rem] p-5 flex items-center gap-5 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all shadow-xl shadow-primary-500/5 hover:shadow-primary-500/10 active:scale-[0.98]"
-                        >
-                            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:rotate-12 transition-transform">
-                                <HiOutlinePlus className="w-6 h-6" />
-                            </div>
-                            <span className="text-sm font-bold opacity-60">{id ? 'Javob qoldirasizmi?' : 'Bugungi darslar qanday o\'tdi?'}</span>
-                        </button>
-                    ) : (
-                        <div className="bg-white dark:bg-dark-900 border-2 border-primary-500/30 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden animate-scale-in">
-                            {/* Decorative background circle */}
-                            <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary-500/10 rounded-full blur-3xl" />
-
-                            <div className="relative z-10">
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-primary-500" />
-                                        <span className="text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] italic">Yangi xabar</span>
-                                    </div>
-                                    <button onClick={() => setIsWriting(false)} className="p-2 rounded-xl bg-gray-50 dark:bg-dark-800 text-gray-400 hover:text-rose-500 transition-colors">
-                                        <HiOutlineX className="w-5 h-5" />
-                                    </button>
+                <div className={`mb-10 ${id ? 'px-0' : 'px-2'}`}>
+                    <form onSubmit={handleSubmit} className="bg-white dark:bg-dark-900 rounded-[2rem] border border-gray-100 dark:border-white/5 p-4 shadow-sm focus-within:shadow-xl focus-within:border-primary-500/30 transition-all">
+                        <textarea
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            placeholder={id ? "Javobingizni yozing..." : "Fikringizni qoldiring..."}
+                            className="w-full bg-transparent p-3 outline-none text-gray-800 dark:text-gray-200 font-bold text-sm sm:text-base resize-none min-h-[80px]"
+                        />
+                        <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-50 dark:border-white/5">
+                            {/* Categories for main feed */}
+                            {!id && (
+                                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 max-w-[60%] sm:max-w-none">
+                                    {categories.filter(c => c.id !== 'general').map(cat => (
+                                        <button
+                                            key={cat.id}
+                                            type="button"
+                                            onClick={() => setCategory(cat.id)}
+                                            className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex-shrink-0 border ${category === cat.id ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-50 dark:bg-dark-800 text-gray-400 border-transparent hover:border-gray-200'}`}
+                                        >
+                                            {cat.label}
+                                        </button>
+                                    ))}
                                 </div>
-                                <textarea
-                                    autoFocus
-                                    value={content}
-                                    onChange={(e) => setContent(e.target.value)}
-                                    placeholder={id ? "Javobingizni shu yerda qoldiring..." : "Foydali kontent yoki savol bormi?"}
-                                    className="w-full h-40 bg-transparent text-gray-900 dark:text-white font-bold text-lg outline-none resize-none placeholder:text-gray-400/50"
-                                />
-
-                                {!id && (
-                                    <div className="flex overflow-x-auto no-scrollbar gap-3 mb-6 pb-2">
-                                        {categories.map((cat) => {
-                                            const Icon = cat.icon;
-                                            const isActive = category === cat.id;
-                                            if (cat.id === 'general') return null;
-                                            return (
-                                                <button
-                                                    key={cat.id}
-                                                    type="button"
-                                                    onClick={() => setCategory(cat.id)}
-                                                    className={`
-                                                        px-4 py-2.5 rounded-2xl flex items-center gap-3 border-2 transition-all flex-shrink-0
-                                                        ${isActive
-                                                            ? 'bg-primary-500 text-white border-primary-400 shadow-xl shadow-primary-500/30 scale-105'
-                                                            : 'bg-gray-50 dark:bg-dark-800 text-gray-500 border-transparent hover:border-gray-200'}
-                                                    `}
-                                                >
-                                                    <Icon className="w-4 h-4" />
-                                                    <span className="text-[10px] font-black uppercase tracking-wider">{cat.label}</span>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                )}
-
-                                <div className="flex items-center justify-between pt-6 border-t border-gray-100 dark:border-white/5">
-                                    <div className="flex flex-col">
-                                        <span className="text-[10px] font-black text-gray-400 uppercase">{content.length} / 1000</span>
-                                        {content.length > 900 && <span className="text-[8px] text-rose-500 font-bold uppercase">Limit yaqin</span>}
-                                    </div>
-                                    <button
-                                        onClick={handleSubmit}
-                                        disabled={submitting || !content.trim()}
-                                        className="px-8 py-3.5 bg-gradient-to-r from-primary-600 to-indigo-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest italic flex items-center gap-3 shadow-[0_15px_30px_-5px_rgba(79,70,229,0.4)] hover:shadow-primary-500/50 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none"
-                                    >
-                                        {submitting ? '...' : <HiOutlinePaperAirplane className="w-4 h-4 rotate-45" />}
-                                        {id ? 'Javob berish' : "E'lon qilish"}
-                                    </button>
-                                </div>
+                            )}
+                            <div className={id ? 'w-full flex justify-between items-center' : 'ml-auto flex items-center gap-3'}>
+                                {id && <span className="text-[10px] font-bold text-gray-400 italic px-2">{content.length}/1000</span>}
+                                <button
+                                    type="submit"
+                                    disabled={submitting || !content.trim()}
+                                    className="px-6 py-2.5 bg-primary-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest italic flex items-center gap-2 shadow-lg shadow-primary-500/20 active:scale-95 disabled:opacity-50 transition-all"
+                                >
+                                    {submitting ? '...' : <><HiOutlinePaperAirplane className="w-3.5 h-3.5 rotate-45" /> {id ? 'Javob' : 'Yuborish'}</>}
+                                </button>
                             </div>
                         </div>
-                    )}
+                    </form>
                 </div>
             ) : (
-                <div className="px-4 mb-10">
-                    <Link to="/login" className="block p-6 bg-gradient-to-r from-primary-500/10 to-indigo-500/10 border-2 border-dashed border-primary-500/20 rounded-[2.5rem] text-center hover:scale-[1.02] transition-transform group">
-                        <p className="text-xs font-black text-primary-600 dark:text-primary-400 uppercase tracking-[0.2em] italic">
-                            💬 Xabar yozish uchun <span className="underline decoration-2 underline-offset-4 group-hover:text-primary-700">Profilingizga kiring</span>
-                        </p>
+                <div className="px-2 mb-8">
+                    <Link to="/login" className="flex items-center justify-center p-6 bg-primary-500/5 border-2 border-dashed border-primary-500/20 rounded-[2rem] text-primary-600 font-black uppercase tracking-widest text-[10px] italic hover:bg-primary-500/10 transition-colors">
+                        Xabarlarga qo'shilish uchun tizimga kiring
                     </Link>
                 </div>
             )}
 
             {/* Feed Section */}
-            <div className="px-4 space-y-6">
+            <div className="space-y-4 px-2">
                 {id && currentNote ? (
                     <div className="space-y-4">
-                        <NoteCard note={currentNote} isMain={true} showThread={replies.length > 0} />
-
-                        <div className="flex items-center gap-4 py-4">
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-gray-200 dark:via-dark-800 to-transparent" />
-                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Javoblar {replies.length > 0 ? `(${replies.length})` : ''}</span>
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-gray-200 dark:via-dark-800 to-transparent" />
+                        <div className="border-t-4 border-primary-500/20 rounded-t-3xl">
+                            <NoteCard note={currentNote} isMain={true} />
                         </div>
-
-                        <div className="space-y-1">
-                            {replies.map((reply, idx) => (
-                                <NoteCard
-                                    key={reply._id}
-                                    note={reply}
-                                    isReply={true}
-                                    showThread={idx !== replies.length - 1}
-                                    isLast={idx === replies.length - 1}
-                                />
+                        <div className="space-y-4">
+                            {replies.map(reply => (
+                                <NoteCard key={reply._id} note={reply} isReply={true} />
                             ))}
                             {replies.length === 0 && (
-                                <div className="text-center py-10 opacity-40">
-                                    <HiOutlineChatAlt2 className="w-8 h-8 mx-auto mb-2" />
-                                    <p className="text-[10px] font-black uppercase tracking-widest italic">Hali javoblar yo'q</p>
+                                <div className="py-12 text-center opacity-30 italic font-bold uppercase text-[10px] tracking-widest">
+                                    Hali hech kim javob yozmadi
                                 </div>
                             )}
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-6">
-                        {notes.map((note, index) => (
+                    <div className="grid gap-4">
+                        {notes.map(note => (
                             <NoteCard key={note._id} note={note} />
                         ))}
                     </div>
                 )}
 
-                {((!id && notes.length === 0) || (id && !currentNote)) && !loading && (
-                    <div className="py-24 text-center">
-                        <div className="w-20 h-20 bg-gray-100 dark:bg-dark-900 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-gray-100 dark:border-white/5 opacity-50">
-                            <HiOutlineChatAlt2 className="w-8 h-8 text-gray-300" />
-                        </div>
-                        <p className="text-sm font-black text-gray-400 uppercase tracking-widest italic">Hali hech narsa yo'q</p>
+                {!loading && notes.length === 0 && !currentNote && (
+                    <div className="py-24 text-center bg-gray-50/50 dark:bg-dark-900/50 rounded-[2rem] border-2 border-dashed border-gray-100 dark:border-white/5">
+                        <HiOutlineChatAlt2 className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] italic">Hozircha xabarlar yo'q</p>
                     </div>
                 )}
             </div>
