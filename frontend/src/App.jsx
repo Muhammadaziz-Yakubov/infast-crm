@@ -35,6 +35,12 @@ const Marketing = React.lazy(() => import('./pages/Marketing'));
 const LeadForm = React.lazy(() => import('./pages/public/LeadForm'));
 const PaymentRequired = React.lazy(() => import('./pages/PaymentRequired'));
 
+// Landing Pages
+const LandingHome = React.lazy(() => import('./pages/landing/Home'));
+const LandingPrograms = React.lazy(() => import('./pages/landing/Programs'));
+const LandingAbout = React.lazy(() => import('./pages/landing/About'));
+const LandingCommunity = React.lazy(() => import('./pages/landing/CommunityLanding'));
+const LandingContact = React.lazy(() => import('./pages/landing/Contact'));
 
 import { Analytics } from "@vercel/analytics/react";
 const Classmates = React.lazy(() => import('./pages/student/Classmates'));
@@ -92,7 +98,7 @@ const AdminRoutes = () => (
 const PublicRoute = ({ children }) => {
     const { user, loading } = useAuth();
     if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
-    if (user) return <Navigate to="/" replace />;
+    if (user) return <Navigate to="/dashboard" replace />;
     return children;
 };
 
@@ -104,6 +110,13 @@ const AppContent = () => {
     return (
         <Suspense fallback={<LoadingSpinner text="Sahifa yuklanmoqda..." />}>
             <Routes>
+                {/* Landing Routes */}
+                <Route path="/" element={<LandingHome />} />
+                <Route path="/programs" element={<LandingPrograms />} />
+                <Route path="/about" element={<LandingAbout />} />
+                <Route path="/community-landing" element={<LandingCommunity />} />
+                <Route path="/contact" element={<LandingContact />} />
+
                 <Route path="/login" element={
                     <PublicRoute><Login /></PublicRoute>
                 } />
@@ -116,7 +129,8 @@ const AppContent = () => {
                 <Route element={
                     <ProtectedRoute><Layout /></ProtectedRoute>
                 }>
-                    <Route path="/" element={<RoleBasedHome />} />
+                    <Route path="/dashboard" element={<RoleBasedHome />} />
+                    <Route path="/home" element={<Navigate to="/dashboard" replace />} />
 
                     {/* Student routes */}
                     <Route path="/courses" element={user?.role === 'student' ? <StudentCourses /> : <Courses />} />

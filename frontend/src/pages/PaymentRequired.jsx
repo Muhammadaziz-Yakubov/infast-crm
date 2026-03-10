@@ -22,7 +22,6 @@ const PaymentRequired = () => {
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-600/10 rounded-full blur-[120px] animate-pulse-soft" />
 
             <div className="relative w-full max-w-lg animate-fade-in">
-              
                 {/* Card */}
                 <div className="bg-white/5 backdrop-blur-3xl rounded-[3rem] p-10 md:p-14 border border-white/10 shadow-3xl text-center space-y-8">
                     <div className="flex flex-col items-center space-y-4">
