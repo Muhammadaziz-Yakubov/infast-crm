@@ -1,9 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, MessageCircle, Globe, Instagram, Linkedin, Github } from 'lucide-react';
 import LandingLayout from './components/LandingLayout';
+import { leadAPI } from '../../services/api';
+import toast from 'react-hot-toast';
 
 const Contact = () => {
+    const [loading, setLoading] = useState(false);
+    const [form, setForm] = useState({
+        name: '',
+        phone: '',
+        course: 'Frontend Engineering',
+        message: ''
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!form.name || !form.phone) {
+            return toast.error('Iltimos ism va telefon raqamingizni kiriting');
+        }
+
+        setLoading(true);
+        try {
+            await leadAPI.publicCreate({
+                name: form.name,
+                phone: form.phone,
+                course: form.course,
+                message: form.message,
+                source: 'Landing - Contact Page',
+                status: 'Yangi Lead'
+            });
+            toast.success('Murojaatingiz muvaffaqiyatli yuborildi! ✨');
+            setForm({
+                name: '',
+                phone: '',
+                course: 'Frontend Engineering',
+                message: ''
+            });
+        } catch (err) {
+            toast.error('Xatolik yuz berdi. Iltimos qayta urinib ko\'ring.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <LandingLayout>
             <section className="pt-32 pb-40 min-h-screen bg-black overflow-hidden relative">
@@ -80,20 +120,38 @@ const Contact = () => {
                             >
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
                                 <h3 className="text-4xl font-black mb-12 text-white uppercase italic tracking-tighter">Xabar <span className="text-blue-500">Yuborish</span></h3>
-                                <div className="space-y-8">
+                                <form onSubmit={handleSubmit} className="space-y-8">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div>
                                             <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Sizning Ismingiz</label>
-                                            <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700" placeholder="Ism-sharifingizni kiriting" />
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                                placeholder="Ism-sharifingizni kiriting"
+                                                value={form.name}
+                                                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                            />
                                         </div>
                                         <div>
                                             <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Telefon Raqamingiz</label>
-                                            <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700" placeholder="+998" />
+                                            <input
+                                                type="tel"
+                                                required
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                                placeholder="+998"
+                                                value={form.phone}
+                                                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                                            />
                                         </div>
                                     </div>
                                     <div>
                                         <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Qiziqqan Yo'nalishingiz</label>
-                                        <select className="w-full bg-[#111] border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                                        <select
+                                            className="w-full bg-[#111] border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer"
+                                            value={form.course}
+                                            onChange={(e) => setForm({ ...form, course: e.target.value })}
+                                        >
                                             <option>Frontend Engineering</option>
                                             <option>Backend Development</option>
                                             <option>UI/UX Product Design</option>
@@ -102,13 +160,29 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Xabar Yoki Savolingiz</label>
-                                        <textarea rows="4" className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700" placeholder="Savollaringizni shu yerda qoldiring..."></textarea>
+                                        <textarea
+                                            rows="4"
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                            placeholder="Savollaringizni shu yerda qoldiring..."
+                                            value={form.message}
+                                            onChange={(e) => setForm({ ...form, message: e.target.value })}
+                                        ></textarea>
                                     </div>
-                                    <button className="w-full py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-[2rem] transition-all shadow-[0_25px_60px_-15px_rgba(37,99,235,0.4)] flex items-center justify-center gap-4 group">
-                                        Ariza Yuborish
-                                        <MessageCircle className="group-hover:rotate-12 transition-transform" />
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="w-full py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-[2rem] transition-all shadow-[0_25px_60px_-15px_rgba(37,99,235,0.4)] flex items-center justify-center gap-4 group disabled:opacity-50"
+                                    >
+                                        {loading ? (
+                                            <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        ) : (
+                                            <>
+                                                Ariza Yuborish
+                                                <MessageCircle className="group-hover:rotate-12 transition-transform" />
+                                            </>
+                                        )}
                                     </button>
-                                </div>
+                                </form>
                             </motion.div>
                         </div>
                     </div>
