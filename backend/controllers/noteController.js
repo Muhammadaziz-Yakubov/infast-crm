@@ -5,34 +5,50 @@ const User = require('../models/User');
 // @desc    Get all community notes with author info
 // @route   GET /api/notes
 // @access  Authenticated
+// Helper to populate author info for notes
+const populateAuthorInfo = async (notes) => {
+    const isArray = Array.isArray(notes);
+    const notesToProcess = isArray ? notes : [notes];
+
+    const populated = await Promise.all(notesToProcess.map(async (note) => {
+        let author = null;
+        if (note.authorType === 'Student') {
+            author = await Student.findById(note.authorId).select('ism profileImage username');
+        } else if (note.authorType === 'User') {
+            author = await User.findById(note.authorId).select('fullName username role');
+        }
+
+        const authorInfo = author ? {
+            id: author._id,
+            name: author.ism || author.fullName,
+            username: author.username,
+            profileImage: author.profileImage || '',
+            role: author.role
+        } : { name: 'Noma\'lum', role: 'system' };
+
+        // Get replies count
+        const repliesCount = await Note.countDocuments({ parentId: note._id });
+
+        return {
+            ...note.toObject(),
+            authorInfo,
+            repliesCount
+        };
+    }));
+
+    return isArray ? populated : populated[0];
+};
+
+// @desc    Get all community notes with author info
+// @route   GET /api/notes
+// @access  Public
 exports.getNotes = async (req, res, next) => {
     try {
-        const notes = await Note.find()
+        const notes = await Note.find({ parentId: null })
             .sort({ isPinned: -1, createdAt: -1 })
             .limit(100);
 
-        // Populate authors manually based on type
-        const populatedNotes = await Promise.all(notes.map(async (note) => {
-            let author = null;
-            if (note.authorType === 'Student') {
-                author = await Student.findById(note.authorId).select('ism profileImage username');
-            } else if (note.authorType === 'User') {
-                author = await User.findById(note.authorId).select('fullName username role');
-            }
-
-            const authorInfo = author ? {
-                id: author._id,
-                name: author.ism || author.fullName,
-                username: author.username,
-                profileImage: author.profileImage || '',
-                role: author.role // 'student' or the user's role
-            } : { name: 'Noma\'lum', role: 'system' };
-
-            return {
-                ...note.toObject(),
-                authorInfo
-            };
-        }));
+        const populatedNotes = await populateAuthorInfo(notes);
 
         res.status(200).json({
             success: true,
@@ -44,12 +60,40 @@ exports.getNotes = async (req, res, next) => {
     }
 };
 
+// @desc    Get a single note with its replies
+// @route   GET /api/notes/:id
+// @access  Public
+exports.getNote = async (req, res, next) => {
+    try {
+        const note = await Note.findById(req.params.id);
+        if (!note) {
+            return res.status(404).json({ success: false, message: 'Eslatma topilmadi' });
+        }
+
+        const populatedNote = await populateAuthorInfo(note);
+
+        // Fetch replies
+        const replies = await Note.find({ parentId: req.params.id }).sort({ createdAt: 1 });
+        const populatedReplies = await populateAuthorInfo(replies);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                ...populatedNote,
+                replies: populatedReplies
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
 // @desc    Create a new note
 // @route   POST /api/notes
 // @access  Authenticated
 exports.createNote = async (req, res, next) => {
     try {
-        const { content, category } = req.body;
+        const { content, category, parentId } = req.body;
 
         // Determine user type and ID from req.user
         // Assuming req.user is populated by protect middleware
@@ -58,9 +102,10 @@ exports.createNote = async (req, res, next) => {
 
         const note = await Note.create({
             content,
-            category,
+            category: category || 'general',
             authorId,
             authorType,
+            parentId: parentId || null,
             isPinned: req.user.role !== 'student' && req.body.isPinned // Only admins can pin
         });
 

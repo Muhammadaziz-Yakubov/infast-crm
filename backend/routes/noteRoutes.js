@@ -1,6 +1,7 @@
 const express = require('express');
 const {
     getNotes,
+    getNote,
     createNote,
     toggleLike,
     deleteNote,
@@ -11,10 +12,12 @@ const router = express.Router();
 
 const { protect, authorize } = require('../middleware/auth');
 
-// Apply protection to all routes
+router.get('/', getNotes);
+router.get('/:id', getNote);
+
+// Apply protection to mutation routes
 router.use(protect);
 
-router.get('/', getNotes);
 router.post('/', createNote);
 router.post('/:id/like', toggleLike);
 router.patch('/:id/pin', authorize('superadmin', 'admin', 'teacher'), togglePin);

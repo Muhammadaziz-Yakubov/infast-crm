@@ -118,6 +118,8 @@ const AppContent = () => {
                 <Route path="/about" element={<LandingAbout />} />
                 <Route path="/team" element={<LandingTeam />} />
                 <Route path="/contact" element={<LandingContact />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/community/:id" element={<Community />} />
 
                 <Route path="/login" element={
                     <PublicRoute><Login /></PublicRoute>
@@ -148,7 +150,6 @@ const AppContent = () => {
                     <Route path="/classmates" element={<Classmates />} />
                     <Route path="/classmate-profile/:id" element={<ClassmateProfile />} />
                     <Route path="/leaderboard" element={<Leaderboard />} />
-                    <Route path="/community" element={<Community />} />
 
                     {/* Admin only routes */}
                     <Route path="/students" element={<Students />} />

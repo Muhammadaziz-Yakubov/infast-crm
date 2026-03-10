@@ -36,6 +36,11 @@ const noteSchema = new mongoose.Schema({
     isPinned: {
         type: Boolean,
         default: false
+    },
+    parentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Note',
+        default: null
     }
 }, {
     timestamps: true
