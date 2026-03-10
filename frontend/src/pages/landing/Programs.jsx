@@ -18,7 +18,7 @@ const programs = [
             "Real API lar bilan ishlash va Deployment"
         ],
         tools: ["HTML/CSS", "JS", "React", "Next.JS", "Git"],
-        price: "900,000 so'm/oy",
+        price: "300,000 so'm/oy",
         color: "from-blue-600/20 to-blue-400/5"
     },
     {
