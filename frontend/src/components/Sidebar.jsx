@@ -55,12 +55,21 @@ const studentMenu = [
     { path: '/profile', label: 'Mening profilim', icon: HiOutlineUserCircle },
 ];
 
+const publicMenu = [
+    { path: '/', label: 'Bosh sahifa', icon: HiOutlineHome },
+    { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
+    { path: '/login', label: 'Kirish', icon: HiOutlineLogout },
+];
+
 const Sidebar = ({ isOpen, onClose }) => {
     const { user, logout } = useAuth();
     const { darkMode, toggleDarkMode } = useTheme();
     const location = useLocation();
 
-    const menuItems = user?.role === 'student' ? studentMenu : adminMenu;
+    let menuItems = publicMenu;
+    if (user) {
+        menuItems = user.role === 'student' ? studentMenu : adminMenu;
+    }
 
     return (
         <>
@@ -125,18 +134,28 @@ const Sidebar = ({ isOpen, onClose }) => {
                         {darkMode ? <HiOutlineSun className="w-5 h-5 text-amber-500" /> : <HiOutlineMoon className="w-5 h-5 text-primary-500" />}
                     </button>
 
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-dark-700 flex items-center justify-center font-bold text-primary-500">
-                            {user?.fullName?.charAt(0) || 'A'}
+                    {user ? (
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-dark-700 flex items-center justify-center font-bold text-primary-500">
+                                {user?.fullName?.charAt(0) || user?.ism?.charAt(0) || 'A'}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold truncate dark:text-white">{user?.fullName || user?.ism || 'Admin'}</p>
+                                <p className="text-[10px] text-gray-400 uppercase">{user?.role || 'Moderator'}</p>
+                            </div>
+                            <button onClick={logout} className="text-gray-400 hover:text-red-500 transition-colors">
+                                <HiOutlineLogout className="w-5 h-5" />
+                            </button>
                         </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold truncate dark:text-white">{user?.fullName || 'Admin'}</p>
-                            <p className="text-[10px] text-gray-400 uppercase">{user?.role || 'Moderator'}</p>
-                        </div>
-                        <button onClick={logout} className="text-gray-400 hover:text-red-500 transition-colors">
-                            <HiOutlineLogout className="w-5 h-5" />
-                        </button>
-                    </div>
+                    ) : (
+                        <NavLink
+                            to="/login"
+                            className="flex items-center justify-center gap-3 w-full py-3.5 rounded-2xl bg-primary-500 text-white font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary-500/20 active:scale-95 transition-all"
+                        >
+                            <HiOutlineLogout className="w-4 h-4" />
+                            Kirish
+                        </NavLink>
+                    )}
                 </div>
             </aside>
         </>

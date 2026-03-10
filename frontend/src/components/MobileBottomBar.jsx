@@ -1,22 +1,22 @@
 import { NavLink } from 'react-router-dom';
 import {
     HiOutlineHome, HiOutlineUserCircle, HiOutlineClipboardList,
-    HiOutlineTrendingUp, HiOutlineShoppingBag
+    HiOutlineTrendingUp, HiOutlineShoppingBag, HiOutlineChatAlt2
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 
 const MobileBottomBar = () => {
     const { user } = useAuth();
 
-    // Bottom bar is primarily for students
-    if (!user || user.role !== 'student') return null;
+    // Bottom bar is for students and public visitors
+    if (user && user.role !== 'student') return null;
 
     const navItems = [
         { path: '/', icon: HiOutlineHome, label: 'Asosiy' },
-        { path: '/tasks', icon: HiOutlineClipboardList, label: 'Vazifalar' },
-        { path: '/market', icon: HiOutlineShoppingBag, label: 'Market' },
-        { path: '/leaderboard', icon: HiOutlineTrendingUp, label: 'Reyting' },
-        { path: '/profile', icon: HiOutlineUserCircle, label: 'Profil' },
+        { path: '/community', icon: HiOutlineChatAlt2, label: 'Jamoa' },
+        { path: user ? '/tasks' : '/login', icon: HiOutlineClipboardList, label: 'Vazifa' },
+        { path: user ? '/market' : '/login', icon: HiOutlineShoppingBag, label: 'Market' },
+        { path: user ? '/profile' : '/login', icon: HiOutlineUserCircle, label: user ? 'Profil' : 'Kirish' },
     ];
 
     return (

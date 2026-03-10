@@ -11,7 +11,8 @@ const Layout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { user } = useAuth();
     const { darkMode, toggleDarkMode } = useTheme();
-    const isStudent = user?.role === 'student';
+    const isStudent = !user || user.role === 'student';
+    const isGuest = !user;
 
     return (
         <div className="flex min-h-screen bg-gray-50 dark:bg-dark-950 transition-colors duration-500">

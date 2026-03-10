@@ -48,6 +48,8 @@ const ClassmateProfile = React.lazy(() => import('./pages/student/ClassmateProfi
 const Leaderboard = React.lazy(() => import('./pages/student/Leaderboard'));
 const Community = React.lazy(() => import('./pages/Community'));
 
+import { Outlet } from 'react-router-dom';
+
 const ProtectedRoute = ({ children, allowDebtor = false }) => {
     const { user, loading } = useAuth();
     if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
@@ -58,7 +60,7 @@ const ProtectedRoute = ({ children, allowDebtor = false }) => {
         return <Navigate to="/payment-required" replace />;
     }
 
-    return children;
+    return children || <Outlet />;
 };
 
 const RoleBasedHome = () => {
@@ -118,8 +120,6 @@ const AppContent = () => {
                 <Route path="/about" element={<LandingAbout />} />
                 <Route path="/team" element={<LandingTeam />} />
                 <Route path="/contact" element={<LandingContact />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/community/:id" element={<Community />} />
 
                 <Route path="/login" element={
                     <PublicRoute><Login /></PublicRoute>
@@ -130,34 +130,37 @@ const AppContent = () => {
                         <PaymentRequired />
                     </ProtectedRoute>
                 } />
-                <Route element={
-                    <ProtectedRoute><Layout /></ProtectedRoute>
-                }>
-                    <Route path="/dashboard" element={<RoleBasedHome />} />
-                    <Route path="/home" element={<Navigate to="/dashboard" replace />} />
+                <Route element={<Layout />}>
+                    <Route path="/community" element={<Community />} />
+                    <Route path="/community/:id" element={<Community />} />
 
-                    {/* Student routes */}
-                    <Route path="/courses" element={user?.role === 'student' ? <StudentCourses /> : <Courses />} />
-                    <Route path="/attendance" element={user?.role === 'student' ? <StudentAttendance /> : <Attendance />} />
-                    <Route path="/scan" element={<ScanAttendance />} />
-                    <Route path="/wheel" element={<WheelOfFortune />} />
-                    <Route path="/payments" element={user?.role === 'student' ? <StudentPayments /> : <Payments />} />
-                    <Route path="/profile" element={<StudentProfile />} />
-                    <Route path="/tasks" element={user?.role === 'student' ? <StudentTasks /> : <Tasks />} />
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/dashboard" element={<RoleBasedHome />} />
+                        <Route path="/home" element={<Navigate to="/dashboard" replace />} />
 
-                    <Route path="/market" element={user?.role === 'student' ? <StudentMarket /> : <MarketManager />} />
-                    <Route path="/market/logs" element={<CoinLogs />} />
-                    <Route path="/classmates" element={<Classmates />} />
-                    <Route path="/classmate-profile/:id" element={<ClassmateProfile />} />
-                    <Route path="/leaderboard" element={<Leaderboard />} />
+                        {/* Student routes */}
+                        <Route path="/courses" element={user?.role === 'student' ? <StudentCourses /> : <Courses />} />
+                        <Route path="/attendance" element={user?.role === 'student' ? <StudentAttendance /> : <Attendance />} />
+                        <Route path="/scan" element={<ScanAttendance />} />
+                        <Route path="/wheel" element={<WheelOfFortune />} />
+                        <Route path="/payments" element={user?.role === 'student' ? <StudentPayments /> : <Payments />} />
+                        <Route path="/profile" element={<StudentProfile />} />
+                        <Route path="/tasks" element={user?.role === 'student' ? <StudentTasks /> : <Tasks />} />
 
-                    {/* Admin only routes */}
-                    <Route path="/students" element={<Students />} />
-                    <Route path="/groups" element={<Groups />} />
-                    <Route path="/debtors" element={<Debtors />} />
-                    <Route path="/market-manager" element={<MarketManager />} />
-                    <Route path="/coin-manager" element={<CoinManager />} />
-                    <Route path="/marketing" element={<Marketing />} />
+                        <Route path="/market" element={user?.role === 'student' ? <StudentMarket /> : <MarketManager />} />
+                        <Route path="/market/logs" element={<CoinLogs />} />
+                        <Route path="/classmates" element={<Classmates />} />
+                        <Route path="/classmate-profile/:id" element={<ClassmateProfile />} />
+                        <Route path="/leaderboard" element={<Leaderboard />} />
+
+                        {/* Admin only routes */}
+                        <Route path="/students" element={<Students />} />
+                        <Route path="/groups" element={<Groups />} />
+                        <Route path="/debtors" element={<Debtors />} />
+                        <Route path="/market-manager" element={<MarketManager />} />
+                        <Route path="/coin-manager" element={<CoinManager />} />
+                        <Route path="/marketing" element={<Marketing />} />
+                    </Route>
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
