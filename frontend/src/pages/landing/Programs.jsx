@@ -8,7 +8,7 @@ const programs = [
     {
         title: "Frontend Development",
         icon: <Layout className="text-blue-500" />,
-        duration: "6 oy",
+        duration: "9 oy",
         desc: "Zamonaviy web-interfeyslarni dunyo standartlari darajasida yarating. Foydalanuvchi tajribasini (UX) kodingiz orqali boshqaring.",
         details: [
             "HTML5, CSS3 va Zamonaviy SASS/SCSS",
@@ -18,13 +18,13 @@ const programs = [
             "Real API lar bilan ishlash va Deployment"
         ],
         tools: ["HTML/CSS", "JS", "React", "Next.JS", "Git"],
-        price: "1,200,000 so'm/oy",
+        price: "900,000 so'm/oy",
         color: "from-blue-600/20 to-blue-400/5"
     },
     {
         title: "Backend (Node.js)",
         icon: <Server className="text-green-500" />,
-        duration: "8 oy",
+        duration: "5 oy",
         desc: "Murakkab tizimlar arxitekturasi, ma'lumotlar xavfsizligi va yuqori tezlikdagi server qismini mukammal o'rganing.",
         details: [
             "Node.js va Express.js frameworklari",
@@ -34,7 +34,7 @@ const programs = [
             "REST API va GraphQL arxitekturasi"
         ],
         tools: ["Node.js", "Express", "SQL", "Docker", "AWS"],
-        price: "1,300,000 so'm/oy",
+        price: "600,000 so'm/oy",
         color: "from-green-600/20 to-green-400/5"
     },
     {
@@ -50,7 +50,7 @@ const programs = [
             "Dizayn tizimlari (Design Systems) yaratish"
         ],
         tools: ["Figma", "Photoshop", "Principle", "Mirror"],
-        price: "1,100,000 so'm/oy",
+        price: "500,000 so'm/oy",
         color: "from-purple-600/20 to-purple-400/5"
     },
     {

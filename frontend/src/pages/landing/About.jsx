@@ -30,11 +30,11 @@ const About = () => {
 
                             <div className="grid grid-cols-2 gap-10">
                                 <div>
-                                    <h4 className="text-5xl font-black text-white mb-2">5+</h4>
+                                    <h4 className="text-5xl font-black text-white mb-2">1+</h4>
                                     <p className="text-gray-500 font-bold uppercase tracking-tighter text-sm">Yillik Markaz Tajribasi</p>
                                 </div>
                                 <div>
-                                    <h4 className="text-5xl font-black text-white mb-2">1000+</h4>
+                                    <h4 className="text-5xl font-black text-white mb-2">100+</h4>
                                     <p className="text-gray-500 font-bold uppercase tracking-tighter text-sm">Muvaffaqiyatli Bitiruvchilar</p>
                                 </div>
                             </div>
@@ -77,11 +77,8 @@ const About = () => {
                         <div className="space-y-12 max-w-4xl mx-auto">
                             {[
                                 {
-                                    year: '2020', title: 'Tashkil topish', desc: 'InFast Academy kichik jamoa bilan IT sohasiga ilk qadamlarini qoydi' },
-                                {
-                                        year: '2021', title: 'Loyiha Kopayishi', desc: 'Muhammadaziz Yakubov boshchiligida 10 dan ortiq real loyihalar muvaffaqiyatli topshirildi.' },
-                                { year: '2023', title: 'AI Davri', desc: 'InFast AI va Lumo AI platformalari tashkil etildi, oquvchilarga AI texnologiyalari orgatila boshlandi.' },
-                                { year: '2024+', title: 'Global Kengayish', desc: 'Bitiruvchilarimiz xalqaro bozorlarga chiqishdi va dunyo kompaniyalarida ish boshladilar.' },
+                                    year: '2025', title: 'Tashkil topish', desc: 'InFast Academy kichik jamoa bilan IT sohasiga ilk qadamlarini qoydi' },
+                                { year: '2026+', title: 'Global Kengayish', desc: 'Bitiruvchilarimiz xalqaro bozorlarga chiqishdi va dunyo kompaniyalarida ish boshladilar.' },
                             ].map((step, i) => (
                                 <motion.div
                                     key={i}

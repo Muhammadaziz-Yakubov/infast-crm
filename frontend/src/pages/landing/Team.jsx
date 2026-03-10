@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Code, Globe, Linkedin, MessageCircle, Github, Award, Rocket, Database, Cpu } from 'lucide-react';
 import LandingLayout from './components/LandingLayout';
+import founderImg from '../../muhammadaziz.jpg';
 
 const Team = () => {
     return (
@@ -29,12 +30,14 @@ const Team = () => {
                             className="flex-1 relative group"
                         >
                             <div className="absolute inset-0 bg-blue-600 blur-[100px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                            <div className="relative aspect-square rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent border border-white/20 overflow-hidden flex items-center justify-center p-10">
-                                <div className="text-center">
-                                    <h4 className="text-white text-8xl font-black italic opacity-20 -rotate-12 mb-4">FOUNDER</h4>
-                                    <div className="w-48 h-48 bg-blue-600 rounded-full flex items-center justify-center mx-auto shadow-[0_0_50px_rgba(37,99,235,0.5)]">
-                                        <span className="text-white text-6xl font-black">MY</span>
-                                    </div>
+                            <div className="relative aspect-square rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent border border-white/20 overflow-hidden flex items-center justify-center">
+                                <img
+                                    src={founderImg}
+                                    alt="Muhammadaziz Yakubov"
+                                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-bottom p-10 justify-end flex-col">
+                                    <h4 className="text-white text-4xl font-black italic tracking-tighter">FOUNDER</h4>
                                 </div>
                             </div>
                         </motion.div>

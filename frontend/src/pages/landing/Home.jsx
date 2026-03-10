@@ -46,8 +46,7 @@ const Hero = () => {
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="text-gray-400 text-lg md:text-2xl max-w-3xl mx-auto mb-12 leading-relaxed"
                 >
-                    InFast Academy — bu shunchaki kurs emas. Bu Muhammadaziz Yakubov boshchiligidagi
-                    tajribali jamoa tomonidan qurilgan professional IT ekotizimdir.
+                    InFast Academy — bu shunchaki kurs emas, balki kelajakdagi IT professionallarini yetishtiradigan to‘liq ekotizimdir.
                 </motion.p>
 
                 <motion.div
@@ -80,8 +79,8 @@ const Hero = () => {
                 >
                     <span className="text-white font-black text-2xl italic tracking-tighter">InFast AI</span>
                     <span className="text-white font-black text-2xl italic tracking-tighter">Lumo AI</span>
-                    <span className="text-white font-black text-2xl italic tracking-tighter">Google Dev</span>
-                    <span className="text-white font-black text-2xl italic tracking-tighter">Meta Tech</span>
+                    <span className="text-white font-black text-2xl italic tracking-tighter">Buloqboshi Tumani Hokimiligi</span>
+                    <span className="text-white font-black text-2xl italic tracking-tighter">Yoshlar Ishlar Agentligi</span>
                 </motion.div>
             </div>
         </section>
@@ -152,10 +151,10 @@ const Results = () => {
                         <h2 className="text-5xl md:text-7xl font-black mb-8">RAQAMLARDA <br /><span className="text-blue-500">NATIJALAR</span></h2>
                         <div className="grid grid-cols-2 gap-8">
                             {[
-                                { val: '20+', label: 'Real Loyihalar' },
-                                { val: '5+', label: 'Yillik Tajriba' },
-                                { val: '500+', label: 'Talabalar' },
-                                { val: '95%', label: 'Ishga Joylashish' },
+                                { val: '10+', label: 'Real Loyihalar' },
+                                { val: '1+', label: 'Yillik Tajriba' },
+                                { val: '100+', label: 'Talabalar' },
+                                { val: '85%', label: 'Ishga Joylashish' },
                             ].map((s, i) => (
                                 <div key={i} className="p-8 rounded-3xl bg-white/5 border border-white/10">
                                     <h4 className="text-4xl font-black text-white mb-2">{s.val}</h4>
