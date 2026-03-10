@@ -22,14 +22,7 @@ const PaymentRequired = () => {
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-600/10 rounded-full blur-[120px] animate-pulse-soft" />
 
             <div className="relative w-full max-w-lg animate-fade-in">
-                {/* Branding */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-[2rem] bg-gradient-to-br from-red-500 to-amber-600 
-            shadow-2xl shadow-red-500/20 mb-6 transform hover:rotate-6 transition-transform">
-                        <span className="text-white font-black text-3xl tracking-tighter">IF</span>
-                    </div>
-                </div>
-
+              
                 {/* Card */}
                 <div className="bg-white/5 backdrop-blur-3xl rounded-[3rem] p-10 md:p-14 border border-white/10 shadow-3xl text-center space-y-8">
                     <div className="flex flex-col items-center space-y-4">
