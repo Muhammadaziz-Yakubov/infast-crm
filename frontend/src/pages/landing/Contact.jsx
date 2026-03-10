@@ -37,10 +37,10 @@ const Contact = () => {
                         <div className="w-full lg:w-[40%] space-y-12">
                             <div className="space-y-10">
                                 {[
-                                    { title: "Shtab-kvartira", val: "Toshkent shahri, Chilonzor tumani, Bunyodkor ko'chasi, 23A", icon: <MapPin /> },
-                                    { title: "Aloqa liniyasi", val: "+998 90 123 45 67", icon: <Phone /> },
+                                    { title: "Shtab-kvartira", val: "Andijon Viloyati Buloqboshi tumani, Yangi hokimiyat binosi", icon: <MapPin /> },
+                                    { title: "Aloqa liniyasi", val: "+998 90 271 00 27", icon: <Phone /> },
                                     { title: "Elektron pochta", val: "info@infast.uz", icon: <Mail /> },
-                                    { title: "Telegram", val: "@infast_academy", icon: <Send /> },
+                                    { title: "Telegram", val: "@InFast_Admin", icon: <Send /> },
                                 ].map((item, i) => (
                                     <motion.div
                                         key={i}
