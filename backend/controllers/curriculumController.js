@@ -73,28 +73,32 @@ const getCurriculumData = (kalit, daraja) => {
     return darajaData;
 };
 
-// Joriy dars ma'lumotlarini olish
-const getJoriyDars = (kalit, daraja, darsRaqam) => {
-    const darajaData = getCurriculumData(kalit, daraja);
-    if (!darajaData) return null;
+// Joriy dars ma'lumotlarini olish - ENDI BARCHA DARAJALARDAN QIDIRADI
+const getJoriyDars = (kalit, darsRaqam) => {
+    const kursData = curriculum[kalit];
+    if (!kursData) return null;
 
-    for (const hafta of darajaData.haftalar) {
-        const dars = hafta.darslar.find(d => d.dars_raqam === darsRaqam);
-        if (dars) {
-            return { ...dars, hafta: hafta.hafta };
+    for (const d of kursData.darajalar) {
+        for (const hafta of d.haftalar) {
+            const dars = hafta.darslar.find(d => d.dars_raqam === darsRaqam);
+            if (dars) {
+                return { ...dars, hafta: hafta.hafta, darajaNomi: d.nomi };
+            }
         }
     }
     return null;
 };
 
-// Jami darslar sonini olish
-const getJamiDarslar = (kalit, daraja) => {
-    const darajaData = getCurriculumData(kalit, daraja);
-    if (!darajaData) return 0;
+// Jami darslar sonini olish - ENDI KURS BO'YICHA JAMI DARSLARNI QAYTARADI
+const getJamiDarslar = (kalit) => {
+    const kursData = curriculum[kalit];
+    if (!kursData) return 0;
 
     let jami = 0;
-    for (const hafta of darajaData.haftalar) {
-        jami += hafta.darslar.length;
+    for (const d of kursData.darajalar) {
+        for (const hafta of d.haftalar) {
+            jami += hafta.darslar.length;
+        }
     }
     return jami;
 };
@@ -115,13 +119,13 @@ exports.getGroupCurriculum = async (req, res) => {
         const kalit = group.curriculumKalit || 'frontend';
         const daraja = group.daraja || 1;
         const joriyDarsRaqam = (group.darsProgress || 0) + 1;
-        const jamiDarslar = getJamiDarslar(kalit, daraja);
+        const jamiDarslar = getJamiDarslar(kalit);
 
         // Bugungi dars tekshiruvi
         const bugunDarsBor = bugunDarsBormi(group);
-        const joriyDars = getJoriyDars(kalit, daraja, joriyDarsRaqam);
-        const keyingiDars = getJoriyDars(kalit, daraja, joriyDarsRaqam + 1);
-        const unganDars = getJoriyDars(kalit, daraja, joriyDarsRaqam + 2);
+        const joriyDars = getJoriyDars(kalit, joriyDarsRaqam);
+        const keyingiDars = getJoriyDars(kalit, joriyDarsRaqam + 1);
+        const unganDars = getJoriyDars(kalit, joriyDarsRaqam + 2);
 
         // Dars kunlari nomlarini yaratish
         const darsKunlari = getGuruhDarsKunlari(group);
@@ -168,21 +172,33 @@ exports.getGroupAllLessons = async (req, res) => {
         }
 
         const kalit = group.curriculumKalit || 'frontend';
-        const daraja = group.daraja || 1;
-        const darajaData = getCurriculumData(kalit, daraja);
+        const kursData = curriculum[kalit];
 
-        if (!darajaData) {
+        if (!kursData) {
             return res.status(404).json({ success: false, message: 'Curriculum topilmadi' });
+        }
+
+        let allHaftalar = [];
+        let globalWeekCount = 1;
+        for (const d of kursData.darajalar) {
+            for (const h of d.haftalar) {
+                allHaftalar.push({
+                    hafta: globalWeekCount++, // Ketma-ket haftalar: 1 dan 39 gacha
+                    aslHafta: h.hafta,
+                    darajaNomi: d.nomi,
+                    darslar: h.darslar
+                });
+            }
         }
 
         res.json({
             success: true,
             data: {
                 guruhNomi: group.nomi,
-                daraja: darajaData.daraja,
-                darajaNomi: darajaData.nomi,
+                daraja: "Barchasi",
+                darajaNomi: kursData.nomi,
                 darsProgress: group.darsProgress || 0,
-                haftalar: darajaData.haftalar
+                haftalar: allHaftalar
             }
         });
     } catch (error) {
@@ -201,8 +217,7 @@ exports.markLessonCompleted = async (req, res) => {
         }
 
         const kalit = group.curriculumKalit || 'frontend';
-        const daraja = group.daraja || 1;
-        const jamiDarslar = getJamiDarslar(kalit, daraja);
+        const jamiDarslar = getJamiDarslar(kalit);
         const currentProgress = group.darsProgress || 0;
 
         if (currentProgress >= jamiDarslar) {
@@ -214,13 +229,13 @@ exports.markLessonCompleted = async (req, res) => {
 
         // O'tilgan dars haqida
         const otilganDarsRaqam = currentProgress + 1;
-        const otilganDars = getJoriyDars(kalit, daraja, otilganDarsRaqam);
+        const otilganDars = getJoriyDars(kalit, otilganDarsRaqam);
 
         group.darsProgress = currentProgress + 1;
         await group.save();
 
         const keyingiDarsRaqam = group.darsProgress + 1;
-        const keyingiDars = getJoriyDars(kalit, daraja, keyingiDarsRaqam);
+        const keyingiDars = getJoriyDars(kalit, keyingiDarsRaqam);
 
         res.json({
             success: true,
@@ -288,8 +303,7 @@ exports.setManualProgress = async (req, res) => {
         }
 
         const kalit = group.curriculumKalit || 'frontend';
-        const daraja = group.daraja || 1;
-        const jamiDarslar = getJamiDarslar(kalit, daraja);
+        const jamiDarslar = getJamiDarslar(kalit);
 
         if (darsProgress < 0 || darsProgress > jamiDarslar) {
             return res.status(400).json({
