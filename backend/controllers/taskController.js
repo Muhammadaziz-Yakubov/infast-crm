@@ -150,6 +150,29 @@ exports.reopenTask = async (req, res) => {
     }
 };
 
+// Delete Task
+exports.deleteTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
+        }
+        
+        // Remove submissions associated with the task
+        await Submission.deleteMany({ task: req.params.id });
+        
+        // Remove the task
+        await Task.deleteOne({ _id: req.params.id });
+
+        res.json({
+            success: true,
+            message: 'Vazifa o\'chirildi'
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 // --- STUDENT CONTROLLERS ---
 
 // Get Tasks (Admin sees all, Student sees their group's)

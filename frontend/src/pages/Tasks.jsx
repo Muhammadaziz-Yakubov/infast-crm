@@ -141,6 +141,17 @@ const Tasks = () => {
         }
     };
 
+    const handleDeleteTask = async (taskId) => {
+        if (!window.confirm("Vazifani o'chirishni tasdiqlaysizmi? Bu amalni ortga qaytarib bo'lmaydi.")) return;
+        try {
+            await taskAPI.delete(taskId);
+            toast.success("Vazifa o'chirildi 🗑️");
+            fetchData();
+        } catch (err) {
+            toast.error("Xatolik yuz berdi");
+        }
+    };
+
     if (loading) return <LoadingSpinner />;
 
     return (
@@ -208,31 +219,38 @@ const Tasks = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-3 gap-2">
                                 <button
                                     onClick={() => fetchSubmissions(task)}
-                                    className="py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
+                                    className="py-3 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
                                 >
-                                    <HiOutlineEye className="w-5 h-5" />
+                                    <HiOutlineEye className="w-4 h-4" />
                                     Ko'rish
                                 </button>
                                 {task.status !== 'completed' ? (
                                     <button
                                         onClick={() => handleCompleteTask(task._id)}
-                                        className="py-4 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                                        className="py-3 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
                                     >
-                                        <HiOutlineBadgeCheck className="w-5 h-5" />
+                                        <HiOutlineBadgeCheck className="w-4 h-4" />
                                         Tugatish
                                     </button>
                                 ) : (
                                     <button
                                         onClick={() => handleReopenTask(task._id)}
-                                        className="py-4 rounded-2xl bg-amber-500/10 text-amber-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-amber-600 hover:text-white transition-all shadow-sm"
+                                        className="py-3 rounded-2xl bg-amber-500/10 text-amber-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-amber-600 hover:text-white transition-all shadow-sm"
                                     >
-                                        <HiOutlineX className="w-5 h-5" />
+                                        <HiOutlineX className="w-4 h-4" />
                                         Qaytarish
                                     </button>
                                 )}
+                                <button
+                                    onClick={() => handleDeleteTask(task._id)}
+                                    className="py-3 rounded-2xl bg-red-500/10 text-red-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                                >
+                                    <HiOutlineTrash className="w-4 h-4" />
+                                    O'chish
+                                </button>
                             </div>
                         </div>
                     </div>

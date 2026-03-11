@@ -9,7 +9,8 @@ const {
     completeTask,
     reopenTask,
     getMyTasks,
-    submitTask
+    submitTask,
+    deleteTask
 } = require('../controllers/taskController');
 
 // Multer memory storage
@@ -22,6 +23,7 @@ router.get('/:taskId/submissions', protect, getTaskSubmissions);
 router.patch('/submissions/:id/grade', protect, gradeSubmission);
 router.patch('/:id/complete', protect, completeTask);
 router.patch('/:id/reopen', protect, reopenTask);
+router.delete('/:id', protect, deleteTask);
 
 // Student routes
 router.get('/my', protect, getMyTasks);

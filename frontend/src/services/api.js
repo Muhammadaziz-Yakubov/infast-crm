@@ -106,6 +106,7 @@ export const taskAPI = {
     gradeSubmission: (id, score) => api.patch(`/tasks/submissions/${id}/grade`, { score }),
     complete: (id) => api.patch(`/tasks/${id}/complete`),
     reopen: (id) => api.patch(`/tasks/${id}/reopen`),
+    delete: (id) => api.delete(`/tasks/${id}`),
 
     // Student
     getMyTasks: () => api.get('/tasks/my'),
