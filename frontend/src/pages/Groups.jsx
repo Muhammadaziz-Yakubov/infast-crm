@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { groupAPI, courseAPI } from '../services/api';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -7,11 +8,12 @@ import toast from 'react-hot-toast';
 import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
     HiOutlineAcademicCap, HiOutlineClock, HiOutlineUserGroup,
-    HiOutlineCalendar, HiOutlineIdentification, HiOutlineChat
+    HiOutlineCalendar, HiOutlineIdentification, HiOutlineChat, HiOutlineEye
 } from 'react-icons/hi';
 import { FaTelegramPlane } from 'react-icons/fa';
 
 const Groups = () => {
+    const navigate = useNavigate();
     const [groups, setGroups] = useState([]);
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -221,6 +223,11 @@ const Groups = () => {
                                         </span>
                                     </div>
                                     <div className="flex gap-2">
+                                        <button onClick={() => navigate(`/groups/${g._id}`)}
+                                            className="p-2.5 rounded-xl bg-gray-50 dark:bg-dark-900 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
+                                            title="Guruhni ko'rish">
+                                            <HiOutlineEye className="w-4.5 h-4.5" />
+                                        </button>
                                         {g.telegramChatId && (
                                             <button onClick={() => handleTelegramReport(g._id)}
                                                 className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm"

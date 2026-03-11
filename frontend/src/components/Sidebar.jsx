@@ -20,7 +20,8 @@ import {
     HiOutlineShoppingBag,
     HiOutlineDatabase,
     HiOutlinePresentationChartLine,
-    HiOutlineChatAlt2
+    HiOutlineChatAlt2,
+    HiOutlineSparkles
 } from 'react-icons/hi';
 
 import Logo from '../infastacademy.jpg';
@@ -35,11 +36,12 @@ const adminMenu = [
     { path: '/debtors', label: 'Qarzdorlar', icon: HiOutlineExclamationCircle },
     { path: '/attendance', label: 'Davomat', icon: HiOutlineCalendar },
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
+    { path: '/homework', label: 'AI Homework', icon: HiOutlineSparkles },
 
     { path: '/market-manager', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/coin-manager', label: 'Coin Boshqaruvi', icon: HiOutlineDatabase },
-    { path: '/leaderboard', label: 'Reyting 🔥', icon: HiOutlineTrendingUp },
-    { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
+    { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
+    { path: '/community', label: 'Community', icon: HiOutlineChatAlt2 },
 ];
 
 const studentMenu = [
@@ -50,14 +52,14 @@ const studentMenu = [
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
 
     { path: '/market', label: 'Market', icon: HiOutlineShoppingBag },
-    { path: '/leaderboard', label: 'Reyting 🔥', icon: HiOutlineTrendingUp },
-    { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
+    { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
+    { path: '/community', label: 'Community', icon: HiOutlineChatAlt2 },
     { path: '/profile', label: 'Mening profilim', icon: HiOutlineUserCircle },
 ];
 
 const publicMenu = [
     { path: '/', label: 'Bosh sahifa', icon: HiOutlineHome },
-    { path: '/community', label: 'Community ✨', icon: HiOutlineChatAlt2 },
+    { path: '/community', label: 'Community', icon: HiOutlineChatAlt2 },
     { path: '/login', label: 'Kirish', icon: HiOutlineLogout },
 ];
 

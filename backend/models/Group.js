@@ -39,6 +39,31 @@ const groupSchema = new mongoose.Schema({
         type: String,
         trim: true,
         default: ''
+    },
+    // Curriculum tizimi uchun yangi maydonlar
+    curriculumKalit: {
+        type: String,
+        trim: true,
+        default: 'frontend'
+    },
+    daraja: {
+        type: Number,
+        default: 1,
+        min: 1,
+        max: 10
+    },
+    darsProgress: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    boshlanganSana: {
+        type: Date,
+        default: null
+    },
+    darsKunlari: {
+        type: [Number],
+        default: [1, 3, 5] // 0=Yakshanba, 1=Dushanba, 2=Seshanba, 3=Chorshanba, 4=Payshanba, 5=Juma, 6=Shanba
     }
 }, {
     timestamps: true,

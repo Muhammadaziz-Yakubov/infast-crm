@@ -47,6 +47,8 @@ const Classmates = React.lazy(() => import('./pages/student/Classmates'));
 const ClassmateProfile = React.lazy(() => import('./pages/student/ClassmateProfile'));
 const Leaderboard = React.lazy(() => import('./pages/student/Leaderboard'));
 const Community = React.lazy(() => import('./pages/Community'));
+const GroupView = React.lazy(() => import('./pages/GroupView'));
+const Homework = React.lazy(() => import('./pages/Homework'));
 
 import { Outlet } from 'react-router-dom';
 
@@ -156,6 +158,8 @@ const AppContent = () => {
                         {/* Admin only routes */}
                         <Route path="/students" element={<Students />} />
                         <Route path="/groups" element={<Groups />} />
+                        <Route path="/groups/:id" element={<GroupView />} />
+                        <Route path="/homework" element={<Homework />} />
                         <Route path="/debtors" element={<Debtors />} />
                         <Route path="/market-manager" element={<MarketManager />} />
                         <Route path="/coin-manager" element={<CoinManager />} />

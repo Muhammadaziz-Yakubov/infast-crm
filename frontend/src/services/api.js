@@ -154,4 +154,21 @@ export const noteAPI = {
     delete: (id) => api.delete(`/notes/${id}`),
 };
 
+// Curriculum
+export const curriculumAPI = {
+    getCourses: () => api.get('/curriculum/courses'),
+    getGroupCurriculum: (groupId) => api.get(`/curriculum/group/${groupId}`),
+    getGroupAllLessons: (groupId) => api.get(`/curriculum/group/${groupId}/all`),
+    markCompleted: (groupId) => api.post(`/curriculum/group/${groupId}/complete`),
+    undoCompleted: (groupId) => api.post(`/curriculum/group/${groupId}/undo`),
+    setProgress: (groupId, darsProgress) => api.put(`/curriculum/group/${groupId}/set-progress`, { darsProgress }),
+};
+
+// AI Homework
+export const homeworkAPI = {
+    generate: (groupId) => api.post('/homework/generate', { groupId }),
+    assign: (data) => api.post('/homework/assign', data),
+    generateForLesson: (groupId, darsRaqam) => api.post('/homework/generate-for-lesson', { groupId, darsRaqam }),
+};
+
 export default api;
