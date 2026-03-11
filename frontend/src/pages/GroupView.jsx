@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { groupAPI, curriculumAPI, studentAPI } from '../services/api';
+import { groupAPI, curriculumAPI, homeworkAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 import {
     HiOutlineArrowLeft, HiOutlineAcademicCap, HiOutlineCheckCircle,
     HiOutlineBookOpen, HiOutlineClock, HiOutlineChevronDown,
     HiOutlineChevronUp, HiOutlineLightningBolt, HiOutlineCalendar,
-    HiOutlineRewind, HiOutlineUserGroup, HiOutlineArrowRight
+    HiOutlineRewind, HiOutlineUserGroup, HiOutlineArrowRight,
+    HiOutlineSparkles, HiOutlinePaperAirplane
 } from 'react-icons/hi';
 
 const GroupView = () => {
@@ -21,6 +22,11 @@ const GroupView = () => {
     const [progressSetting, setProgressSetting] = useState(false);
     const [manualProgress, setManualProgress] = useState(0);
     const [students, setStudents] = useState([]);
+
+    // Homework states
+    const [generatingAI, setGeneratingAI] = useState(false);
+    const [aiHomework, setAiHomework] = useState(null);
+    const [assigningAI, setAssigningAI] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -49,6 +55,7 @@ const GroupView = () => {
         try {
             const res = await curriculumAPI.markCompleted(id);
             toast.success(res.data.message);
+            setAiHomework(null); // Clear AI homework when moving to next lesson
             fetchData();
         } catch (err) {
             toast.error(err.response?.data?.message || 'Xatolik yuz berdi');
@@ -59,6 +66,7 @@ const GroupView = () => {
         try {
             const res = await curriculumAPI.undoCompleted(id);
             toast.success(res.data.message);
+            setAiHomework(null);
             fetchData();
         } catch (err) {
             toast.error(err.response?.data?.message || 'Xatolik');
@@ -87,6 +95,39 @@ const GroupView = () => {
             setShowAllLessons(true);
         } catch (err) {
             toast.error('Darslarni yuklashda xatolik');
+        }
+    };
+
+    const handleGenerateHomework = async () => {
+        try {
+            setGeneratingAI(true);
+            const res = await homeworkAPI.generate(id);
+            setAiHomework(res.data.data);
+            toast.success("Sun'iy intellekt vazifani yaratdi! ✨");
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Vazifa yaratishda xatolik");
+        } finally {
+            setGeneratingAI(false);
+        }
+    };
+
+    const handleAssignHomework = async () => {
+        if (!aiHomework) return;
+        try {
+            setAssigningAI(true);
+            await homeworkAPI.assign({
+                groupId: id,
+                title: aiHomework.title,
+                description: aiHomework.fullText,
+                maxScore: 100,
+                deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 kun
+            });
+            toast.success("Vazifa guruhga yuborildi! 🚀");
+            setAiHomework({ ...aiHomework, assigned: true });
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Vazifa yuborishda xatolik");
+        } finally {
+            setAssigningAI(false);
         }
     };
 
@@ -218,6 +259,11 @@ const GroupView = () => {
                             onComplete={handleMarkCompleted}
                             onUndo={handleUndo}
                             progress={guruh.darsProgress}
+                            onGenerateHomework={handleGenerateHomework}
+                            generatingAI={generatingAI}
+                            aiHomework={aiHomework}
+                            onAssignHomework={handleAssignHomework}
+                            assigningAI={assigningAI}
                         />
                     )}
 
@@ -332,7 +378,7 @@ const GroupView = () => {
 };
 
 // Lesson Card komponenti
-const LessonCard = ({ title, dars, type, onComplete, onUndo, progress }) => {
+const LessonCard = ({ title, dars, type, onComplete, onUndo, progress, onGenerateHomework, generatingAI, aiHomework, onAssignHomework, assigningAI }) => {
     const gradients = {
         today: 'from-indigo-500 to-purple-600',
         next: 'from-amber-400 to-orange-500',
@@ -380,31 +426,103 @@ const LessonCard = ({ title, dars, type, onComplete, onUndo, progress }) => {
                 ))}
             </div>
 
-            {dars.uy_vazifa && (
-                <div className="p-3 rounded-xl bg-white/50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5 mb-4">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Uy vazifa</p>
+            {dars.uy_vazifa && !aiHomework && (
+                <div className="p-4 rounded-2xl bg-white/50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5 mb-4">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Standart Uy Vazifa</p>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{dars.uy_vazifa}</p>
                 </div>
             )}
 
-            {type === 'today' && onComplete && (
-                <div className="flex gap-3">
-                    <button
-                        onClick={onComplete}
-                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-emerald-500 text-white font-black text-sm 
-                            shadow-xl shadow-emerald-500/20 hover:-translate-y-0.5 active:scale-95 transition-all"
-                    >
-                        <HiOutlineCheckCircle className="w-5 h-5" />
-                        O'tildi ✅
-                    </button>
-                    {progress > 0 && (
+            {/* AI Homework Section */}
+            {aiHomework && (
+                <div className="p-5 rounded-3xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/10 dark:to-purple-900/10 border-2 border-indigo-100 dark:border-indigo-500/20 mb-6 shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <HiOutlineSparkles className="w-5 h-5 text-indigo-500" />
+                            <h4 className="font-black text-indigo-900 dark:text-indigo-400 uppercase tracking-tight">AI Yaratgan Vazifa</h4>
+                        </div>
+                        {aiHomework.assigned && (
+                            <span className="px-3 py-1 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full flex items-center gap-1 shadow-lg shadow-emerald-500/20">
+                                <HiOutlineCheckCircle className="w-3 h-3" /> Yuborilgan
+                            </span>
+                        )}
+                    </div>
+                    
+                    <div className="space-y-4">
+                        <h5 className="font-bold border-b border-indigo-200/50 pb-2 text-indigo-900 dark:text-indigo-300">
+                            {aiHomework.title}
+                        </h5>
+                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                            {aiHomework.description}
+                        </p>
+                        
+                        <div>
+                            <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2">Qat'iy Talablar:</p>
+                            <ul className="space-y-1">
+                                {aiHomework.requirements.map((req, i) => (
+                                    <li key={i} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                                        <span className="text-indigo-500 mt-0.5">•</span>
+                                        {req}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        
+                        <div className="p-3 bg-white/60 dark:bg-dark-800/60 rounded-xl border border-indigo-100 dark:border-indigo-500/10">
+                            <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-1">⭐️ Bonus (ixtiyoriy)</p>
+                            <p className="text-xs text-gray-700 dark:text-gray-300">{aiHomework.bonus}</p>
+                        </div>
+                    </div>
+
+                    {!aiHomework.assigned && (
                         <button
-                            onClick={onUndo}
-                            className="p-3.5 rounded-2xl bg-gray-100 dark:bg-dark-900 text-gray-500 hover:text-red-500 transition-colors active:scale-95"
-                            title="Orqaga qaytarish"
+                            onClick={onAssignHomework}
+                            disabled={assigningAI}
+                            className="mt-5 w-full py-4 rounded-xl bg-indigo-600 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-indigo-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 hover:bg-indigo-700 disabled:opacity-50"
                         >
-                            <HiOutlineRewind className="w-5 h-5" />
+                            {assigningAI ? <LoadingSpinner size="sm" /> : <HiOutlinePaperAirplane className="w-4 h-4" />}
+                            {assigningAI ? "Yuborilmoqda..." : "Guruhga Vazifa Qilib Yuborish"}
                         </button>
+                    )}
+                </div>
+            )}
+
+            {type === 'today' && (
+                <div className="flex flex-col gap-3 pt-2">
+                    {onGenerateHomework && !aiHomework && (
+                        <button
+                            onClick={onGenerateHomework}
+                            disabled={generatingAI}
+                            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-black text-xs border border-indigo-200 dark:border-indigo-500/30 hover:bg-indigo-100 hover:border-indigo-300 dark:hover:bg-indigo-500/10 transition-all shadow-sm active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
+                            {generatingAI ? (
+                                <><LoadingSpinner size="sm" /> <span>AI o'ylamoqda...</span></>
+                            ) : (
+                                <><HiOutlineSparkles className="w-5 h-5" /> AI orqali maxsus vazifa yaratish ✨</>
+                            )}
+                        </button>
+                    )}
+
+                    {onComplete && (
+                        <div className="flex gap-3 mt-2">
+                            <button
+                                onClick={onComplete}
+                                className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-emerald-500 text-white font-black text-sm 
+                                    shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 active:scale-95 transition-all"
+                            >
+                                <HiOutlineCheckCircle className="w-5 h-5" />
+                                Dars O'tildi ✅
+                            </button>
+                            {progress > 0 && (
+                                <button
+                                    onClick={onUndo}
+                                    className="px-5 rounded-2xl bg-gray-100 dark:bg-dark-900 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-200 transition-all active:scale-95 border border-transparent shadow-sm"
+                                    title="Orqaga qaytarish"
+                                >
+                                    <HiOutlineRewind className="w-6 h-6" />
+                                </button>
+                            )}
+                        </div>
                     )}
                 </div>
             )}

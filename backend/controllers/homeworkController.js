@@ -4,36 +4,34 @@ const curriculum = require('../data/curriculum.json');
 const { sendTaskNotification } = require('../services/telegramBot');
 
 // Curriculum dan dars olish
-const getDars = (kalit, daraja, darsRaqam) => {
+const getDars = (kalit, darsRaqam) => {
     const kursData = curriculum[kalit];
     if (!kursData) return null;
 
-    const darajaData = kursData.darajalar.find(d => d.daraja === daraja);
-    if (!darajaData) return null;
-
-    for (const hafta of darajaData.haftalar) {
-        const dars = hafta.darslar.find(d => d.dars_raqam === darsRaqam);
-        if (dars) return { ...dars, hafta: hafta.hafta };
+    for (const d of kursData.darajalar) {
+        for (const hafta of d.haftalar) {
+            const dars = hafta.darslar.find(d => d.dars_raqam === darsRaqam);
+            if (dars) return { ...dars, hafta: hafta.hafta, darajaNomi: d.nomi };
+        }
     }
     return null;
 };
 
 // AI orqali homework generatsiya qilish (lokal, API kerak emas)
-const generateHomework = (kursNomi, daraja, dars) => {
+const generateHomework = (kursNomi, darajaText, dars) => {
     const mavzular = dars.mavzular;
-    const darajaText = daraja === 1 ? "Boshlang'ich" : daraja === 2 ? "O'rta" : "Yuqori";
 
     // Mavzularga asoslangan professional vazifa generatsiyasi
     const mavzuStr = mavzular.join(', ');
 
-    // Daraja bo'yicha murakkablik
+    // Daraja bo'yicha murakkablik - ism bo'yicha izlaymiz
     let qiyinlik = '';
     let bonusText = '';
 
-    if (daraja === 1) {
+    if (darajaText && darajaText.toLowerCase().includes('boshlang\'ich')) {
         qiyinlik = 'Oddiy va tushunarli tarzda bajaring. Har bir elementni alohida sinab ko\'ring.';
         bonusText = generateBonusForLevel1(mavzular);
-    } else if (daraja === 2) {
+    } else if (darajaText && darajaText.toLowerCase().includes('o\'rta')) {
         qiyinlik = 'Interaktiv elementlar va JavaScript funksiyalar qo\'shing. Kodni toza va tartibli yozing.';
         bonusText = generateBonusForLevel2(mavzular);
     } else {
@@ -43,7 +41,7 @@ const generateHomework = (kursNomi, daraja, dars) => {
 
     const title = generateTitle(mavzular, kursNomi);
     const description = generateDescription(mavzular, darajaText, kursNomi);
-    const requirements = generateRequirements(mavzular, daraja);
+    const requirements = generateRequirements(mavzular, darajaText);
 
     return {
         title,
@@ -88,7 +86,7 @@ const generateDescription = (mavzular, darajaText, kursNomi) => {
 };
 
 // Talablar generatsiya
-const generateRequirements = (mavzular, daraja) => {
+const generateRequirements = (mavzular, darajaText) => {
     const reqs = [];
 
     mavzular.forEach(mavzu => {
@@ -121,11 +119,11 @@ const generateRequirements = (mavzular, daraja) => {
     });
 
     // Daraja bo'yicha qo'shimcha talablar
-    if (daraja >= 2) {
+    if (darajaText && (darajaText.toLowerCase().includes("o'rta") || darajaText.toLowerCase().includes("yuqori"))) {
         reqs.push('Kodni toza va o\'qilishi oson qilib yozing');
         reqs.push('README.md fayl yarating va loyihani GitHub ga push qiling');
     }
-    if (daraja >= 3) {
+    if (darajaText && darajaText.toLowerCase().includes("yuqori")) {
         reqs.push('Mobile-responsive dizayn bo\'lishi shart');
         reqs.push('Error handling va edge case larni inobatga oling');
     }
@@ -196,15 +194,14 @@ exports.generateAIHomework = async (req, res) => {
         }
 
         const kalit = group.curriculumKalit || 'frontend';
-        const daraja = group.daraja || 1;
-        const joriyDarsRaqam = (group.darsProgress || 0) + 1;
+        const joriyDarsRaqam = (group.darsProgress || 0) + 1; // bu endi global dars raqami (1..117)
 
         const kursData = curriculum[kalit];
         if (!kursData) {
             return res.status(404).json({ success: false, message: 'Curriculum topilmadi' });
         }
 
-        const dars = getDars(kalit, daraja, joriyDarsRaqam);
+        const dars = getDars(kalit, joriyDarsRaqam);
         if (!dars) {
             return res.status(400).json({
                 success: false,
@@ -212,7 +209,10 @@ exports.generateAIHomework = async (req, res) => {
             });
         }
 
-        const homework = generateHomework(kursData.nomi, daraja, dars);
+        // Qaysi darajaga tushishini string orqali olamiz (Frontend Boshlang'ich, Frontend O'rta, vs)
+        const darajaText = dars.darajaNomi || "Asosiy daraja";
+        
+        const homework = generateHomework(kursData.nomi, darajaText, dars);
 
         res.json({
             success: true,
@@ -287,7 +287,7 @@ exports.generateForLesson = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Curriculum topilmadi' });
         }
 
-        const dars = getDars(kalit, daraja, darsRaqam);
+        const dars = getDars(kalit, darsRaqam);
         if (!dars) {
             return res.status(400).json({
                 success: false,
@@ -295,7 +295,9 @@ exports.generateForLesson = async (req, res) => {
             });
         }
 
-        const homework = generateHomework(kursData.nomi, daraja, dars);
+        const darajaText = dars.darajaNomi || "Asosiy daraja";
+        
+        const homework = generateHomework(kursData.nomi, darajaText, dars);
 
         res.json({
             success: true,
