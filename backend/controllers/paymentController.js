@@ -59,28 +59,18 @@ exports.createPayment = async (req, res) => {
         }
 
         const now = new Date();
-        const currentMonth = now.getMonth() + 1;
-        const currentYear = now.getFullYear();
-        const currentDay = now.getDate();
+        let billingMonth = req.body.oy || now.getMonth() + 1;
+        let billingYear = req.body.yil || now.getFullYear();
 
-        // Billing oyini aniqlash: Agar bugun to'lov kunidan oldin bo'lsa,
-        // demak bu o'quvchi hali o'tgan oydagi sikl uchun to'layapti
-        let billingMonth = currentMonth;
-        let billingYear = currentYear;
-
-        if (currentDay < student.tolovKuni) {
-            billingMonth--;
-            if (billingMonth < 1) {
-                billingMonth = 12;
-                billingYear--;
-            }
-        }
+        // Agar oy/yil berilmagan bo'lsa va bugun to'lov kunidan ancha oldin bo'lsa, 
+        // bu o'tgan oyning qarzi bo'lishi mumkin deb hisoblash mantiqsiz bo'lishi mumkin.
+        // Shuning uchun default holatda joriy oyni olish ma'qul.
 
         const payment = await Payment.create({
             oquvchi,
-            summa: summa || student.kurs?.narx || 0,
-            oy: req.body.oy || billingMonth,
-            yil: req.body.yil || billingYear,
+            summa: summa || student.oylikTolov || student.kurs?.narx || 0,
+            oy: billingMonth,
+            yil: billingYear,
             tolovTuri: tolovTuri || 'naqd',
             izoh: izoh || '',
             kurs: student.kurs?._id || student.kurs,
@@ -129,26 +119,14 @@ exports.bulkCreatePayment = async (req, res) => {
                 const student = await Student.findById(studentId).populate('kurs', 'narx');
                 if (!student) { failCount++; continue; }
 
-                const currentMonth = now.getMonth() + 1;
-                const currentYear = now.getFullYear();
-                const currentDay = now.getDate();
-
-                let billingMonth = currentMonth;
-                let billingYear = currentYear;
-
-                if (currentDay < student.tolovKuni) {
-                    billingMonth--;
-                    if (billingMonth < 1) {
-                        billingMonth = 12;
-                        billingYear--;
-                    }
-                }
+                // Oylik to'lovni o'quvchining o'zidan yoki kursidan olish
+                const studentSumma = summa || student.oylikTolov || student.kurs?.narx || 0;
 
                 await Payment.create({
                     oquvchi: studentId,
-                    summa: summa || student.oylikTolov || student.kurs?.narx || 0,
-                    oy: billingMonth,
-                    yil: billingYear,
+                    summa: studentSumma,
+                    oy: now.getMonth() + 1,
+                    yil: now.getFullYear(),
                     tolovTuri: tolovTuri || 'naqd',
                     izoh: izoh || 'Ommaviy to\'lov',
                     kurs: student.kurs?._id || student.kurs,

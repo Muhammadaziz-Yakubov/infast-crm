@@ -4,7 +4,6 @@ const Payment = require('../models/Payment');
 
 // Har kuni soat 00:01 da avtomatik tekshirish
 const startPaymentChecker = () => {
-    // Har kuni tekshirish: '1 0 * * *' = har kuni 00:01
     cron.schedule('1 0 * * *', async () => {
         try {
             const today = new Date();
@@ -12,123 +11,73 @@ const startPaymentChecker = () => {
             const currentMonth = today.getMonth() + 1;
             const currentYear = today.getFullYear();
 
-            console.log(`🔄 [${today.toISOString()}] To'lov tekshiruvi boshlandi...`);
+            console.log(`🔄 [${today.toISOString()}] Mukammal to'lov tekshiruvi boshlandi...`);
 
-            let qarzdorCount = 0;
-            let resetCount = 0;
+            const activeStudents = await Student.find({ holati: 'faol' });
+            
+            let updatedCount = 0;
+            let debtorCount = 0;
 
-            // 1. To'lov kuni bugun bo'lgan o'quvchilar - yangi to'lov davri boshlandi
-            // Agar shu oy uchun to'lov qilgan bo'lsa - "tolangan" holatda qoladi
-            // Agar shu oy uchun to'lov qilmagan bo'lsa - "qarzdor" bo'ladi
-            const todayStudents = await Student.find({
-                tolovKuni: currentDay,
-                holati: 'faol'
-            });
+            for (const student of activeStudents) {
+                let targetMonth = currentMonth;
+                let targetYear = currentYear;
 
-            for (const student of todayStudents) {
+                if (currentDay < student.tolovKuni) {
+                    targetMonth--;
+                    if (targetMonth < 1) {
+                        targetMonth = 12;
+                        targetYear--;
+                    }
+                }
+
+                // O'quvchi qo'shilgan sanani tekshirish
+                const joinDate = new Date(student.qoshilganSana || student.createdAt);
+                const joinMonth = joinDate.getMonth() + 1;
+                const joinYear = joinDate.getFullYear();
+
+                // Agar tekshirilayotgan oy o'quvchi kelishidan oldin bo'lsa, uni qarzdor qilmaslik
+                const isBeforeJoin = targetYear < joinYear || (targetYear === joinYear && targetMonth < joinMonth);
+
                 const existingPayment = await Payment.findOne({
                     oquvchi: student._id,
-                    oy: currentMonth,
-                    yil: currentYear
+                    oy: targetMonth,
+                    yil: targetYear
                 });
+
+                let newStatus = student.tolovHolati;
 
                 if (existingPayment) {
-                    // Shu oy to'lov qilingan
-                    if (student.tolovHolati !== 'tolangan') {
-                        student.tolovHolati = 'tolangan';
-                        await student.save();
-                        resetCount++;
-                    }
+                    newStatus = 'tolangan';
+                } else if (isBeforeJoin) {
+                    // O'qishni boshlashidan oldingi oylar uchun qarzdor bo'lmaydi
+                    newStatus = 'tolanmagan';
                 } else {
-                    // To'lov kuni keldi lekin to'lov qilinmagan - qarzdor
-                    if (student.tolovHolati !== 'qarzdor') {
-                        student.tolovHolati = 'qarzdor';
-                        await student.save();
-                        qarzdorCount++;
+                    // To'lov yo'q va o'qishni boshlagan - demak qarzdor
+                    // Lekin agar hali birinchi to'lov kuni kelmagan bo'lsa 'tolanmagan' bo'lishi kerak
+                    if (currentDay < student.tolovKuni && targetMonth === joinMonth && targetYear === joinYear) {
+                         newStatus = 'tolanmagan';
+                    } else {
+                         newStatus = 'qarzdor'; 
                     }
+                }
+
+                if (student.tolovHolati !== newStatus) {
+                    student.tolovHolati = newStatus;
+                    await student.save();
+                    updatedCount++;
+                    if (newStatus === 'qarzdor') debtorCount++;
                 }
             }
 
-            // 2. To'lov kuni allaqachon o'tgan lekin hali "tolanmagan" holatda
-            // turgan o'quvchilarni qarzdorga o'tkazish
-            const overdueStudents = await Student.find({
-                tolovKuni: { $lt: currentDay },
-                tolovHolati: 'tolanmagan',
-                holati: 'faol'
-            });
-
-            for (const student of overdueStudents) {
-                const existingPayment = await Payment.findOne({
-                    oquvchi: student._id,
-                    oy: currentMonth,
-                    yil: currentYear
-                });
-
-                if (!existingPayment) {
-                    student.tolovHolati = 'qarzdor';
-                    await student.save();
-                    qarzdorCount++;
-                } else {
-                    // To'lov bor lekin holat yangilanmagan
-                    student.tolovHolati = 'tolangan';
-                    await student.save();
-                }
-            }
-
-            // 3. To'lov kuni hali kelmagan o'quvchilar uchun:
-            // Oldingi oyda "tolangan" bo'lsa - "tolanmagan" ga o'tkazish
-            // chunki yangi oy davri uchun hali to'lov qilinmagan
-            // Bu faqat oyning boshida to'lov kuni hali kelmagan o'quvchilar uchun
-            const futurePaymentStudents = await Student.find({
-                tolovKuni: { $gt: currentDay },
-                tolovHolati: 'tolangan',
-                holati: 'faol'
-            });
-
-            for (const student of futurePaymentStudents) {
-                // Bugun < to'lov kuni (masalan: 8-mart < 25-mart)
-                // O'quvchi hozirda o'tgan oydan boshlangan siklda (25-fevral -> 25-mart)
-
-                let prevMonth = currentMonth - 1;
-                let prevYear = currentYear;
-                if (prevMonth < 1) {
-                    prevMonth = 12;
-                    prevYear--;
-                }
-
-                // Tekshirish: O'quvchida yoki o'tgan oy (oy: 2) uchun, 
-                // yoki joriy oy (oy: 3) uchun to'lov bormi?
-                // Chunki 1-martda qilingan to'lov ba'zan '3' deb yozilgan bo'lishi mumkin
-                const existingPayment = await Payment.findOne({
-                    oquvchi: student._id,
-                    $or: [
-                        { oy: prevMonth, yil: prevYear },
-                        { oy: currentMonth, yil: currentYear }
-                    ]
-                });
-
-                if (!existingPayment) {
-                    student.tolovHolati = 'tolanmagan';
-                    await student.save();
-                    resetCount++;
-                } else {
-                    // Agar to'lov bo'lsa, holatni 'tolangan' qilib mustahkamlaymiz
-                    if (student.tolovHolati !== 'tolangan') {
-                        student.tolovHolati = 'tolangan';
-                        await student.save();
-                    }
-                }
-            }
-
-            console.log(`✅ ${qarzdorCount} ta o'quvchi qarzdorlar ro'yxatiga qo'shildi`);
-            console.log(`🔄 ${resetCount} ta o'quvchi holati yangilandi`);
+            console.log(`✅ Tekshiruv yakunlandi: ${updatedCount} ta o'quvchi yangilandi, ${debtorCount} ta yangi qarzdor.`);
 
         } catch (error) {
             console.error('❌ Cron job xatosi:', error.message);
         }
     });
 
-    console.log('⏰ To\'lov tekshirish cron job ishga tushirildi (har kuni 00:01)');
+    console.log('⏰ Mukammal to\'lov tekshirish cron job ishga tushirildi (har kuni 00:01)');
 };
 
 module.exports = startPaymentChecker;
+ 
