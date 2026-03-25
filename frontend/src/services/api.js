@@ -76,6 +76,7 @@ export const studentAPI = {
     getClassmates: () => api.get('/students/classmates'),
     getPublicProfile: (id) => api.get(`/students/public-profile/${id}`),
     getLeaderboard: () => api.get('/students/leaderboard'),
+    resetPaymentsStatus: () => api.put('/students/reset-payments-status'),
 };
 
 // To'lovlar

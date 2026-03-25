@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { paymentAPI } from '../services/api';
+import { paymentAPI, studentAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 import {
@@ -75,6 +75,16 @@ const Payments = () => {
         }
     };
 
+    const handleResetStudents = async () => {
+        if (!window.confirm("Barcha faol o'quvchilar holatini 'To'lanmagan' ga o'zgartirishni xohlaysizmi? Bu to'lovlar o'chirib tashlangan holatda ma'lumotlarni sinxronlash uchun kerak.")) return;
+        try {
+            const res = await studentAPI.resetPaymentsStatus();
+            toast.success(res.data.message);
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Holatlarni yangilashda xatolik");
+        }
+    };
+
     const formatDate = (date) => {
         return new Date(date).toLocaleDateString('uz-UZ', {
             month: 'short',
@@ -107,6 +117,14 @@ const Payments = () => {
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 font-medium">Barcha qabul qilingan to'lovlar va daromadlar nazorati</p>
                 </div>
+                <button
+                    onClick={handleResetStudents}
+                    className="px-6 py-3 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 
+                        border-2 border-amber-500/20 hover:bg-amber-500 hover:text-white 
+                        transition-all font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 active:scale-95"
+                >
+                    Holatlarni Yangilash (0 ga tushirish)
+                </button>
             </div>
 
             {/* High-Level Stats Cards */}

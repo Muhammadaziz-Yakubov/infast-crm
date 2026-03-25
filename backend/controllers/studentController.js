@@ -514,3 +514,20 @@ exports.getLeaderboard = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+// @desc    Barcha o'quvchilar to'lov holatini 'tolanmagan' ga o'tkazish
+// @route   PUT /api/students/reset-payments-status
+exports.resetPaymentsStatus = async (req, res) => {
+    try {
+        await Student.updateMany(
+            { holati: 'faol' },
+            { $set: { tolovHolati: 'tolanmagan' } }
+        );
+
+        res.json({
+            success: true,
+            message: "Barcha faol o'quvchilar to'lov holati 'To'lanmagan' ga o'zgartirildi"
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
+    }
+};

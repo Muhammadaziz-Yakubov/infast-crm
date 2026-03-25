@@ -29,7 +29,7 @@ const Students = () => {
     const [viewModalOpen, setViewModalOpen] = useState(false);
     const [viewingStudent, setViewingStudent] = useState(null);
     const [bulkPayModalOpen, setBulkPayModalOpen] = useState(false);
-    const [bulkPayForm, setBulkPayForm] = useState({ tolovTuri: 'naqd', izoh: '' });
+    const [bulkPayForm, setBulkPayForm] = useState({ tolovTuri: 'naqd', izoh: '', sana: new Date().toISOString().split('T')[0] });
     const [bulkLoading, setBulkLoading] = useState(false);
     const [filterGuruh, setFilterGuruh] = useState('');
 
@@ -37,7 +37,7 @@ const Students = () => {
         ism: '', telefon: '', kurs: '', guruh: '', tolovKuni: 1, eslatmalar: '', shuOyTolagan: '', username: '', password: ''
     });
 
-    const [payForm, setPayForm] = useState({ summa: '', tolovTuri: 'naqd', izoh: '' });
+    const [payForm, setPayForm] = useState({ summa: '', tolovTuri: 'naqd', izoh: '', sana: new Date().toISOString().split('T')[0] });
 
     useEffect(() => {
         fetchAll();
@@ -112,7 +112,12 @@ const Students = () => {
 
     const openPayModal = (student) => {
         setSelectedStudent(student);
-        setPayForm({ summa: student.oylikTolov || student.kurs?.narx || '', tolovTuri: 'naqd', izoh: '' });
+        setPayForm({
+            summa: student.oylikTolov || student.kurs?.narx || '',
+            tolovTuri: 'naqd',
+            izoh: '',
+            sana: new Date().toISOString().split('T')[0]
+        });
         setPayModalOpen(true);
     };
 
@@ -155,7 +160,8 @@ const Students = () => {
                 oquvchi: selectedStudent._id,
                 summa: Number(payForm.summa),
                 tolovTuri: payForm.tolovTuri,
-                izoh: payForm.izoh
+                izoh: payForm.izoh,
+                sana: payForm.sana
             });
             toast.success("To'lov muvaffaqiyatli amalga oshirildi! 💵");
             setPayModalOpen(false);
@@ -202,12 +208,13 @@ const Students = () => {
             const res = await paymentAPI.bulkCreate({
                 studentIds: selectedIds,
                 tolovTuri: bulkPayForm.tolovTuri,
-                izoh: bulkPayForm.izoh
+                izoh: bulkPayForm.izoh,
+                sana: bulkPayForm.sana
             });
             toast.success(res.data.message);
             setBulkPayModalOpen(false);
             setSelectedIds([]);
-            setBulkPayForm({ tolovTuri: 'naqd', izoh: '' });
+            setBulkPayForm({ tolovTuri: 'naqd', izoh: '', sana: new Date().toISOString().split('T')[0] });
             fetchStudents();
         } catch (err) {
             toast.error(err.response?.data?.message || 'Xatolik');
@@ -632,6 +639,11 @@ const Students = () => {
                                 <option value="online">📱 Online o'tkazma</option>
                             </select>
                         </div>
+                        <div>
+                            <label className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">To'lov sanasi</label>
+                            <input type="date" value={payForm.sana} onChange={e => setPayForm({ ...payForm, sana: e.target.value })}
+                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none font-bold" />
+                        </div>
                     </div>
                     <button type="submit" className="w-full py-5 rounded-2xl font-black text-white bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-95 transition-all">
                         To'lovni tasdiqlash
@@ -778,6 +790,11 @@ const Students = () => {
                             <input type="text" value={bulkPayForm.izoh} onChange={e => setBulkPayForm({ ...bulkPayForm, izoh: e.target.value })}
                                 className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-bold"
                                 placeholder="Masalan: Mart oyi to'lovi" />
+                        </div>
+                        <div>
+                            <label className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">To'lov sanasi</label>
+                            <input type="date" value={bulkPayForm.sana} onChange={e => setBulkPayForm({ ...bulkPayForm, sana: e.target.value })}
+                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none font-bold" />
                         </div>
                     </div>
                     <button type="submit" disabled={bulkLoading}
