@@ -89,7 +89,13 @@ exports.createStudent = async (req, res) => {
         if (studentData.kurs) {
             const course = await Course.findById(studentData.kurs);
             if (course) {
-                studentData.oylikTolov = course.narx;
+                // Agar oylikTolov tashqaridan berilmagan bo'lsa - kurs narxini qo'yamiz
+                if (!studentData.oylikTolov) {
+                    studentData.oylikTolov = course.narx;
+                } else if (Number(studentData.oylikTolov) !== course.narx) {
+                    // Agar berilgan bo'lsa va kurs narxidan farqli bo'lsa - maxsusNarx flagini yoqamiz
+                    studentData.maxsusNarx = true;
+                }
             }
         }
 
@@ -170,7 +176,16 @@ exports.updateStudent = async (req, res) => {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
 
-        // Update fields manually to trigger pre('save') if password is changed
+        // Kurs va narxni tekshirish (agar oylikTolov o'zgargan bo'lsa)
+        if (req.body.oylikTolov && student.kurs) {
+            const course = await Course.findById(student.kurs);
+            if (course && Number(req.body.oylikTolov) !== course.narx) {
+                student.maxsusNarx = true;
+            } else if (course && Number(req.body.oylikTolov) === course.narx) {
+                student.maxsusNarx = false;
+            }
+        }
+
         Object.keys(req.body).forEach(key => {
             student[key] = req.body[key];
         });

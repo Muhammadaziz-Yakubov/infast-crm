@@ -54,6 +54,10 @@ const studentSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    maxsusNarx: {
+        type: Boolean,
+        default: false
+    },
     eslatmalar: {
         type: String,
         trim: true,

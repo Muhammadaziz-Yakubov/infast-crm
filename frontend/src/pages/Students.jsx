@@ -34,7 +34,7 @@ const Students = () => {
     const [filterGuruh, setFilterGuruh] = useState('');
 
     const [form, setForm] = useState({
-        ism: '', telefon: '', kurs: '', guruh: '', tolovKuni: 1, eslatmalar: '', shuOyTolagan: '', username: '', password: ''
+        ism: '', telefon: '', kurs: '', guruh: '', tolovKuni: 1, oylikTolov: '', eslatmalar: '', shuOyTolagan: '', username: '', password: ''
     });
 
     const [payForm, setPayForm] = useState({ summa: '', tolovTuri: 'naqd', izoh: '', sana: new Date().toISOString().split('T')[0] });
@@ -90,7 +90,7 @@ const Students = () => {
 
     const openAddModal = () => {
         setSelectedStudent(null);
-        setForm({ ism: '', telefon: '', kurs: '', guruh: '', tolovKuni: 1, eslatmalar: '', shuOyTolagan: '', username: '', password: '' });
+        setForm({ ism: '', telefon: '', kurs: '', guruh: '', tolovKuni: 1, oylikTolov: '', eslatmalar: '', shuOyTolagan: '', username: '', password: '' });
         setModalOpen(true);
     };
 
@@ -102,6 +102,7 @@ const Students = () => {
             kurs: student.kurs?._id || student.kurs,
             guruh: student.guruh?._id || student.guruh,
             tolovKuni: student.tolovKuni,
+            oylikTolov: student.oylikTolov || '',
             eslatmalar: student.eslatmalar || '',
             shuOyTolagan: '',
             username: student.username || '',
@@ -460,7 +461,12 @@ const Students = () => {
                                                         ${s.tolovHolati === 'tolangan' ? 'bg-emerald-500' : 'bg-red-500'}`} />
                                                 </div>
                                                 <div className="space-y-0.5 cursor-pointer" onClick={() => openViewModal(s)}>
-                                                    <p className="font-black text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors uppercase tracking-tight">{s.ism || "Noma'lum"}</p>
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="font-black text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors uppercase tracking-tight">{s.ism || "Noma'lum"}</p>
+                                                        {s.maxsusNarx && (
+                                                            <span className="px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-600 text-[8px] font-black uppercase tracking-tighter border border-amber-500/20">Maxsus</span>
+                                                        )}
+                                                    </div>
                                                     <p className="text-xs font-bold text-gray-400 dark:text-gray-500 underline decoration-primary-500/30">Profilni ko'rish</p>
                                                 </div>
                                             </div>
@@ -554,6 +560,13 @@ const Students = () => {
                                 <input type="number" min="1" max="31" value={form.tolovKuni}
                                     onChange={e => setForm({ ...form, tolovKuni: parseInt(e.target.value) })}
                                     className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none transition-all font-bold" required />
+                            </div>
+                            <div>
+                                <label className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Maxsus oylik to'lov (ixtiyoriy)</label>
+                                <input type="number" value={form.oylikTolov}
+                                    onChange={e => setForm({ ...form, oylikTolov: e.target.value })}
+                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none transition-all font-black text-emerald-500" 
+                                    placeholder="Bo'sh qolsa kurs narxi olinadi" />
                             </div>
                             <div>
                                 <label className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Login (Foydalanuvchi nomi) *</label>

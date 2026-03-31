@@ -96,13 +96,19 @@ exports.updateGroup = async (req, res) => {
             if (kursOzgardi) {
                 const newCourse = await Course.findById(req.body.kurs);
                 if (newCourse) {
+                    // 2a. Barcha o'quvchilarning kursini yangilash
                     await Student.updateMany(
                         { guruh: group._id },
                         {
                             kurs: newCourse._id,
-                            oylikTolov: newCourse.narx,
-                            tolovHolati: 'tolanmagan' // Yangi kurs uchun to'lov holatini reset qilish
+                            tolovHolati: 'tolanmagan'
                         }
+                    );
+                    
+                    // 2b. FAQAT maxsus narxi yo'q o'quvchilar narxini yangilash
+                    await Student.updateMany(
+                        { guruh: group._id, maxsusNarx: { $ne: true } },
+                        { oylikTolov: newCourse.narx }
                     );
                 }
             }
