@@ -15,10 +15,12 @@ router.route('/')
     .post(eventController.createEvent);
 
 router.route('/:id')
+    .get(eventController.getEvent)
     .put(eventController.updateEvent)
     .delete(eventController.deleteEvent);
 
 router.post('/:id/attendance/save', eventController.saveAttendance);
 router.get('/:id/analytics', eventController.getEventAnalytics);
+router.get('/:id/registrations', eventController.getEventRegistrations);
 
 module.exports = router;

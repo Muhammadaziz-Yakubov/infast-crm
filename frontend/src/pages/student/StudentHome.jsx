@@ -140,7 +140,57 @@ const StudentHome = () => {
                     </div>
                 </div>
 
-                {/* --- 3. CLASS & GROUP INFO (Horizontal Scroll or Compact Grid) --- */}
+                {/* --- 3. UPCOMING EVENTS SECTION --- */}
+                {upcomingEvents.length > 0 && (
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between px-2">
+                            <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] italic block">Kutilayotgan Tadbirlar</h3>
+                            <Link to="/events" className="text-[9px] font-black text-primary-500 uppercase tracking-widest border-b border-primary-500/20 pb-0.5">Hammasi</Link>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {upcomingEvents.map((event) => (
+                                <Link 
+                                    to="/events" 
+                                    key={event._id} 
+                                    className="group relative h-48 rounded-[2.5rem] overflow-hidden bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
+                                >
+                                    {event.bannerUrl ? (
+                                        <img src={event.bannerUrl} alt={event.title} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 opacity-80" />
+                                    )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                                    
+                                    <div className="absolute inset-0 p-6 flex flex-col justify-end space-y-2">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[8px] font-black text-white uppercase tracking-widest border border-white/20">
+                                                {new Date(event.startDate).toLocaleDateString()}
+                                            </span>
+                                            {event.isRegistered && (
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                                            )}
+                                        </div>
+                                        <h4 className="font-black text-lg text-white uppercase italic tracking-tighter truncate leading-none">
+                                            {event.title}
+                                        </h4>
+                                        <div className="flex items-center gap-3 text-xs font-bold text-gray-300 italic">
+                                            <div className="flex items-center gap-1.5">
+                                                <HiOutlineLocationMarker className="w-3 h-3 text-primary-500" />
+                                                <span className="truncate max-w-[120px]">{event.location}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 ml-auto">
+                                                <HiOutlineLightningBolt className="w-3 h-3 text-amber-500" />
+                                                <span>+{event.coinReward}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* --- 4. CLASS & GROUP INFO (Horizontal Scroll or Compact Grid) --- */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex items-center gap-5 p-6 rounded-[2.5rem] bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm group hover:bg-gray-50 dark:hover:bg-dark-900 transition-all duration-300">
                         <div className="w-14 h-14 rounded-2xl bg-primary-100 dark:bg-primary-500/10 text-primary-500 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-inner">
@@ -265,56 +315,6 @@ const StudentHome = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* --- 6. UPCOMING EVENTS SECTION --- */}
-                {upcomingEvents.length > 0 && (
-                    <div className="space-y-6">
-                        <div className="flex items-center justify-between px-2">
-                            <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] italic block">Kutilayotgan Tadbirlar</h3>
-                            <Link to="/events" className="text-[9px] font-black text-primary-500 uppercase tracking-widest border-b border-primary-500/20 pb-0.5">Hammasi</Link>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            {upcomingEvents.map((event) => (
-                                <Link 
-                                    to="/events" 
-                                    key={event._id} 
-                                    className="group relative h-48 rounded-[2.5rem] overflow-hidden bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
-                                >
-                                    {event.bannerUrl ? (
-                                        <img src={event.bannerUrl} alt={event.title} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" />
-                                    ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 opacity-80" />
-                                    )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                                    
-                                    <div className="absolute inset-0 p-6 flex flex-col justify-end space-y-2">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[8px] font-black text-white uppercase tracking-widest border border-white/20">
-                                                {new Date(event.startDate).toLocaleDateString()}
-                                            </span>
-                                            {event.isRegistered && (
-                                                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
-                                            )}
-                                        </div>
-                                        <h4 className="font-black text-lg text-white uppercase italic tracking-tighter truncate leading-none">
-                                            {event.title}
-                                        </h4>
-                                        <div className="flex items-center gap-3 text-xs font-bold text-gray-300 italic">
-                                            <div className="flex items-center gap-1.5">
-                                                <HiOutlineLocationMarker className="w-3 h-3 text-primary-500" />
-                                                <span className="truncate max-w-[120px]">{event.location}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 ml-auto">
-                                                <HiOutlineLightningBolt className="w-3 h-3 text-amber-500" />
-                                                <span>+{event.coinReward}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 {/* --- 7. BANNER / AD SECTION (Optional) --- */}
                 <div className="bg-gradient-to-r from-emerald-600 to-teal-800 rounded-[2.5rem] p-8 relative overflow-hidden group shadow-2xl shadow-emerald-500/20">

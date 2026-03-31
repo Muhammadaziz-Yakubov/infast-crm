@@ -75,6 +75,18 @@ exports.deleteEvent = async (req, res) => {
     }
 };
 
+// @desc    Get single event
+// @route   GET /api/events/:id
+exports.getEvent = async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id).populate('registrationsCount');
+        if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
+        res.json({ success: true, data: event });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi' });
+    }
+};
+
 // @desc    Register student for event
 // @route   POST /api/events/:id/register
 exports.registerForEvent = async (req, res) => {
@@ -93,7 +105,7 @@ exports.registerForEvent = async (req, res) => {
 
         const registration = await EventRegistration.create({
             event: event._id,
-            student: req.user.id
+            student: req.user._id
         });
 
         res.status(201).json({ success: true, message: "Siz tadbirga muvaffaqiyatli yozildingiz", data: registration });
@@ -185,7 +197,7 @@ exports.getStudentUpcomingEvents = async (req, res) => {
         }).sort({ startDate: 1 });
 
         // Check which ones student is registered for
-        const registrations = await EventRegistration.find({ student: req.user.id });
+        const registrations = await EventRegistration.find({ student: req.user._id });
         const registeredEventIds = registrations.map(r => r.event.toString());
 
         const data = events.map(event => {
