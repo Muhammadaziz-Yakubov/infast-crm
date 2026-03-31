@@ -7,7 +7,8 @@ import {
     HiOutlineInformationCircle, HiOutlineCheckCircle, HiOutlineXCircle,
     HiOutlineClock, HiOutlineGift, HiOutlineShoppingBag, HiOutlineLightningBolt,
     HiOutlineSparkles, HiOutlineStar, HiOutlineLibrary, HiOutlineUserGroup,
-    HiOutlineTrendingUp, HiOutlineArrowRight, HiOutlineChatAlt2, HiOutlineClipboardList
+    HiOutlineTrendingUp, HiOutlineArrowRight, HiOutlineChatAlt2, HiOutlineClipboardList,
+    HiOutlineLocationMarker
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
