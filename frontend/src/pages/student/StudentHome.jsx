@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { studentAPI } from '../../services/api';
+import { studentAPI, eventAPI } from '../../services/api';
+import Modal from '../../components/Modal';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import {
     HiOutlineAcademicCap, HiOutlineCalendar, HiOutlineCreditCard,
@@ -12,6 +13,7 @@ import { Link } from 'react-router-dom';
 
 const StudentHome = () => {
     const [data, setData] = useState(null);
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,8 +22,12 @@ const StudentHome = () => {
 
     const fetchDashboard = async () => {
         try {
-            const res = await studentAPI.getMyDashboard();
-            setData(res.data.data);
+            const [dashRes, eventRes] = await Promise.all([
+                studentAPI.getMyDashboard(),
+                eventAPI.getUpcoming()
+            ]);
+            setData(dashRes.data.data);
+            setUpcomingEvents(eventRes.data.data.slice(0, 3));
         } catch (err) {
             console.error(err);
         } finally {
@@ -259,7 +265,57 @@ const StudentHome = () => {
                     </div>
                 </div>
 
-                {/* --- 6. BANNER / AD SECTION (Optional) --- */}
+                {/* --- 6. UPCOMING EVENTS SECTION --- */}
+                {upcomingEvents.length > 0 && (
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between px-2">
+                            <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] italic block">Kutilayotgan Tadbirlar</h3>
+                            <Link to="/events" className="text-[9px] font-black text-primary-500 uppercase tracking-widest border-b border-primary-500/20 pb-0.5">Hammasi</Link>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {upcomingEvents.map((event) => (
+                                <Link 
+                                    to="/events" 
+                                    key={event._id} 
+                                    className="group relative h-48 rounded-[2.5rem] overflow-hidden bg-white dark:bg-dark-800 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
+                                >
+                                    {event.bannerUrl ? (
+                                        <img src={event.bannerUrl} alt={event.title} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 opacity-80" />
+                                    )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                                    
+                                    <div className="absolute inset-0 p-6 flex flex-col justify-end space-y-2">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[8px] font-black text-white uppercase tracking-widest border border-white/20">
+                                                {new Date(event.startDate).toLocaleDateString()}
+                                            </span>
+                                            {event.isRegistered && (
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                                            )}
+                                        </div>
+                                        <h4 className="font-black text-lg text-white uppercase italic tracking-tighter truncate leading-none">
+                                            {event.title}
+                                        </h4>
+                                        <div className="flex items-center gap-3 text-xs font-bold text-gray-300 italic">
+                                            <div className="flex items-center gap-1.5">
+                                                <HiOutlineLocationMarker className="w-3 h-3 text-primary-500" />
+                                                <span className="truncate max-w-[120px]">{event.location}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 ml-auto">
+                                                <HiOutlineLightningBolt className="w-3 h-3 text-amber-500" />
+                                                <span>+{event.coinReward}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* --- 7. BANNER / AD SECTION (Optional) --- */}
                 <div className="bg-gradient-to-r from-emerald-600 to-teal-800 rounded-[2.5rem] p-8 relative overflow-hidden group shadow-2xl shadow-emerald-500/20">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">

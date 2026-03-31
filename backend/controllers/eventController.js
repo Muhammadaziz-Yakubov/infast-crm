@@ -215,3 +215,37 @@ exports.getEventRegistrations = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server xatosi' });
     }
 };
+
+// @desc    Auto mark absent for all non-marked registrations
+// @route   POST /api/events/:id/attendance/auto-absent
+exports.autoMarkAbsents = async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
+
+        const registrations = await EventRegistration.find({ 
+            event: event._id, 
+            status: 'REGISTERED' 
+        });
+
+        for (const reg of registrations) {
+            await processEventCoin(reg.student, event, 'ABSENT', 'REGISTERED');
+            reg.status = 'ABSENT';
+            reg.attendanceMarkedAt = new Date();
+            reg.coinProcessed = true;
+            await reg.save();
+
+            await EventAttendanceLog.create({
+                event: event._id,
+                student: reg.student,
+                action: 'ABSENT',
+                coinChange: -event.coinPenalty,
+                note: "Avtomatik 'Kelmagan' deb belgilandi"
+            });
+        }
+
+        res.json({ success: true, message: `${registrations.length} ta o'quvchi 'Kelmagan' deb belgilandi` });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi' });
+    }
+};
