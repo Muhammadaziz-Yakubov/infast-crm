@@ -173,4 +173,17 @@ export const homeworkAPI = {
     generateForLesson: (groupId, darsRaqam) => api.post('/homework/generate-for-lesson', { groupId, darsRaqam }),
 };
 
+// Events
+export const eventAPI = {
+    getAll: (params) => api.get('/events', { params }),
+    getOne: (id) => api.get(`/events/${id}`),
+    create: (data) => api.post('/events', data),
+    update: (id, data) => api.put(`/events/${id}`, data),
+    delete: (id) => api.delete(`/events/${id}`),
+    register: (id) => api.post(`/events/${id}/register`),
+    getUpcoming: () => api.get('/events/upcoming'),
+    saveAttendance: (id, attendanceData) => api.post(`/events/${id}/attendance/save`, { attendanceData }),
+    getAnalytics: (id) => api.get(`/events/${id}/analytics`),
+};
+
 export default api;

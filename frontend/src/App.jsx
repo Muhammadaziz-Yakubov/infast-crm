@@ -49,6 +49,9 @@ const Leaderboard = React.lazy(() => import('./pages/student/Leaderboard'));
 const Community = React.lazy(() => import('./pages/Community'));
 const GroupView = React.lazy(() => import('./pages/GroupView'));
 const Homework = React.lazy(() => import('./pages/Homework'));
+const Events = React.lazy(() => import('./pages/Events'));
+const EventAttendance = React.lazy(() => import('./pages/EventAttendance'));
+const StudentEvents = React.lazy(() => import('./pages/student/StudentEvents'));
 
 import { Outlet } from 'react-router-dom';
 
@@ -164,6 +167,8 @@ const AppContent = () => {
                         <Route path="/market-manager" element={<MarketManager />} />
                         <Route path="/coin-manager" element={<CoinManager />} />
                         <Route path="/marketing" element={<Marketing />} />
+                        <Route path="/events" element={user?.role === 'student' ? <StudentEvents /> : <Events />} />
+                        <Route path="/events/:id/attendance" element={<EventAttendance />} />
                     </Route>
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
