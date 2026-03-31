@@ -1379,6 +1379,52 @@
           }
         ]
       }
+    ] } ,
+  "backend": {
+    "nomi": "Backend Development (Node.js)",
+    "darajalar": [
+      {
+        "daraja": 1,
+        "nomi": "Backend Boshlang'ich",
+        "davomiyligi": "3 oy",
+        "haftalar": [
+          {
+            "hafta": 1,
+            "darslar": [
+              {
+                "dars_raqam": 1,
+                "mavzular": [
+                  "Backend nima?",
+                  "Node.js o'rnatish va sozlash",
+                  "Terminal bilan ishlash"
+                ],
+                "uy_vazifa": "Node.js o'rnating va versiyasini tekshiring",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 2,
+                "mavzular": [
+                  "V8 Engine va Node.js Event Loop",
+                  "NPM va Package.json",
+                  "Modullar bilan ishlash (require vs import)"
+                ],
+                "uy_vazifa": "Oddiy NPM paket yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 3,
+                "mavzular": [
+                  "File System (fs) moduli",
+                  "Fayllarni o'qish va yozish",
+                  "Path moduli"
+                ],
+                "uy_vazifa": "Fayl boshqaruvchi mini CLI yaratish",
+                "davomiyligi": "1.5 soat"
+              }
+            ]
+          }
+        ]
+      }
     ]
   }
 }

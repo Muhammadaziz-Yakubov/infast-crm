@@ -24,7 +24,7 @@ const Groups = () => {
     const [search, setSearch] = useState('');
 
     const [form, setForm] = useState({
-        nomi: '', kurs: '', oqituvchi: '', jadval: { kunlar: '', vaqt: '' }, holati: 'faol', maxOquvchilar: 20, telegramChatId: ''
+        nomi: '', kurs: '', oqituvchi: '', jadval: { kunlar: '', vaqt: '' }, holati: 'faol', maxOquvchilar: 20, telegramChatId: '', curriculumKalit: 'frontend'
     });
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const Groups = () => {
 
     const openAddModal = () => {
         setSelectedGroup(null);
-        setForm({ nomi: '', kurs: '', oqituvchi: '', jadval: { kunlar: '', vaqt: '' }, holati: 'faol', maxOquvchilar: 20, telegramChatId: '' });
+        setForm({ nomi: '', kurs: '', oqituvchi: '', jadval: { kunlar: '', vaqt: '' }, holati: 'faol', maxOquvchilar: 20, telegramChatId: '', curriculumKalit: 'frontend' });
         setModalOpen(true);
     };
 
@@ -73,7 +73,8 @@ const Groups = () => {
             },
             holati: group.holati || 'faol',
             maxOquvchilar: group.maxOquvchilar || 20,
-            telegramChatId: group.telegramChatId || ''
+            telegramChatId: group.telegramChatId || '',
+            curriculumKalit: group.curriculumKalit || 'frontend'
         });
         setModalOpen(true);
     };
@@ -268,6 +269,14 @@ const Groups = () => {
                                     className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-amber-500 outline-none transition-all font-bold cursor-pointer" required>
                                     <option value="">Kursni tanlang</option>
                                     {courses.map(c => <option key={c._id} value={c._id}>{c.nomi}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Fan yo'nalishi (Curriculum) *</label>
+                                <select value={form.curriculumKalit} onChange={e => setForm({ ...form, curriculumKalit: e.target.value })}
+                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-amber-500 outline-none transition-all font-bold cursor-pointer" required>
+                                    <option value="frontend">Frontend Development</option>
+                                    <option value="backend">Backend Development (Node.js)</option>
                                 </select>
                             </div>
                             <div>

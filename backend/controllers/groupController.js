@@ -1,5 +1,6 @@
 const Group = require('../models/Group');
 const Student = require('../models/Student');
+const Course = require('../models/Course');
 
 // @desc    Barcha guruhlarni olish
 // @route   GET /api/groups
@@ -70,14 +71,43 @@ exports.createGroup = async (req, res) => {
 // @route   PUT /api/groups/:id
 exports.updateGroup = async (req, res) => {
     try {
+        const oldGroup = await Group.findById(req.params.id);
+        if (!oldGroup) {
+            return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
+        }
+
         const group = await Group.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         }).populate('kurs', 'nomi narx');
 
-        if (!group) {
-            return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
+        // Kurs yoki curriculumKalit o'zgarganda o'quvchilarni va progressni yangilash
+        const kursOzgardi = req.body.kurs && req.body.kurs.toString() !== oldGroup.kurs?.toString();
+        const curriculumOzgardi = req.body.curriculumKalit && req.body.curriculumKalit !== oldGroup.curriculumKalit;
+
+        if (kursOzgardi || curriculumOzgardi) {
+            // 1. Progressni nolga tushirish (agar progress kiritilmagan bo'lsa)
+            if (req.body.darsProgress === undefined) {
+                group.darsProgress = 0;
+                await group.save();
+            }
+
+            // 2. Agar Kurs o'zgargan bo'lsa, o'quvchilarni ham yangilash
+            if (kursOzgardi) {
+                const newCourse = await Course.findById(req.body.kurs);
+                if (newCourse) {
+                    await Student.updateMany(
+                        { guruh: group._id },
+                        {
+                            kurs: newCourse._id,
+                            oylikTolov: newCourse.narx,
+                            tolovHolati: 'tolanmagan' // Yangi kurs uchun to'lov holatini reset qilish
+                        }
+                    );
+                }
+            }
         }
+
         res.json({
             success: true,
             message: 'Guruh muvaffaqiyatli yangilandi',
