@@ -82,46 +82,75 @@ exports.getStudent = async (req, res) => {
 // @desc    Yangi o'quvchi qo'shish
 // @route   POST /api/students
 exports.createStudent = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
         const { shuOyTolagan, ...studentData } = req.body;
 
-        // Kurs narxini olish
-        if (studentData.kurs) {
-            const course = await Course.findById(studentData.kurs);
-            if (course) {
-                // Agar oylikTolov tashqaridan berilmagan bo'lsa - kurs narxini qo'yamiz
-                if (!studentData.oylikTolov) {
-                    studentData.oylikTolov = course.narx;
-                } else if (Number(studentData.oylikTolov) !== course.narx) {
-                    // Agar berilgan bo'lsa va kurs narxidan farqli bo'lsa - maxsusNarx flagini yoqamiz
-                    studentData.maxsusNarx = true;
-                }
+        // Kursni tekshirish
+        if (!studentData.kurs) {
+            throw new Error("Kurs tanlanishi shart");
+        }
+
+        const course = await Course.findById(studentData.kurs);
+        if (!course) {
+            throw new Error("Tanlangan kurs topilmadi");
+        }
+
+        // Guruhni tekshirish
+        if (!studentData.guruh) {
+            throw new Error("Guruh tanlanishi shart");
+        }
+
+        // Oylik to'lovni sozlash
+        if (!studentData.oylikTolov || studentData.oylikTolov === '') {
+            studentData.oylikTolov = course.narx;
+            studentData.maxsusNarx = false;
+        } else {
+            studentData.oylikTolov = Number(studentData.oylikTolov);
+            if (studentData.oylikTolov !== course.narx) {
+                studentData.maxsusNarx = true;
+            } else {
+                studentData.maxsusNarx = false;
             }
         }
 
-        // Agar shu oy to'lamagan bo'lsa - qarzdor
+        // To'lov holatini belgilash
         if (shuOyTolagan === false || shuOyTolagan === 'yoq') {
             studentData.tolovHolati = 'qarzdor';
         } else if (shuOyTolagan === true || shuOyTolagan === 'ha') {
             studentData.tolovHolati = 'tolangan';
+        } else {
+            studentData.tolovHolati = 'tolanmagan';
         }
 
         // Username uniqueligini tekshirish
         if (studentData.username) {
             const exists = await Student.findOne({ username: studentData.username });
             if (exists) {
-                return res.status(400).json({ success: false, message: "Ushbu login band, boshqasini tanlang" });
+                return res.status(400).json({ success: false, message: "Ushbu foydalanuvchi nomi (login) band, boshqasini tanlang" });
             }
         } else {
-            // Agar login berilmagan bo'lsa raqamidan yasash (yoki majburiy qilish)
-            studentData.username = studentData.telefon.replace(/\D/g, '').slice(-9);
+            if (!studentData.telefon) {
+                throw new Error("Telefon raqam kiritilishi shart");
+            }
+            const generatedUsername = studentData.telefon.replace(/\D/g, '').slice(-9);
+            const exists = await Student.findOne({ username: generatedUsername });
+            if (exists) {
+                studentData.username = generatedUsername + Math.floor(Math.random() * 100);
+            } else {
+                studentData.username = generatedUsername;
+            }
         }
 
         if (!studentData.password) {
-            studentData.password = 'std123'; // Default password if not provided
+            studentData.password = 'std123';
+        } else if (studentData.password.length < 6) {
+            throw new Error("Parol kamida 6 ta belgidan iborat bo'lishi kerak");
         }
 
-        const student = await Student.create(studentData);
+        const [student] = await Student.create([studentData], { session });
 
         // Agar to'lov qilgan bo'lsa - payment yaratish
         if (shuOyTolagan === true || shuOyTolagan === 'ha') {
@@ -141,7 +170,7 @@ exports.createStudent = async (req, res) => {
                 }
             }
 
-            await Payment.create({
+            await Payment.create([{
                 oquvchi: student._id,
                 summa: student.oylikTolov,
                 oy: billingMonth,
@@ -150,8 +179,11 @@ exports.createStudent = async (req, res) => {
                 izoh: "Ro'yxatga olishda to'langan",
                 kurs: student.kurs,
                 guruh: student.guruh
-            });
+            }], { session });
         }
+
+        await session.commitTransaction();
+        session.endSession();
 
         const populated = await Student.findById(student._id)
             .populate('kurs', 'nomi narx')
@@ -163,7 +195,15 @@ exports.createStudent = async (req, res) => {
             data: populated
         });
     } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
+        await session.abortTransaction();
+        session.endSession();
+        console.error('Create Student Error:', error);
+        res.status(400).json({ 
+            success: false, 
+            message: error.name === 'ValidationError' 
+                ? Object.values(error.errors).map(val => val.message).join(', ') 
+                : error.message 
+        });
     }
 };
 

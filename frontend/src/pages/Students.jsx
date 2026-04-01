@@ -124,10 +124,20 @@ const Students = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const submitData = { ...form };
+            
+            // Basic validation
+            if (!submitData.ism || !submitData.telefon || !submitData.kurs || !submitData.guruh) {
+                toast.error("Iltimos, barcha majburiy maydonlarni to'ldiring");
+                setLoading(false);
+                return;
+            }
+
             if (!selectedStudent && submitData.shuOyTolagan === '') {
                 toast.error("Bu o'quvchi shu oy to'lovni amalga oshirdimi?");
+                setLoading(false);
                 return;
             }
             if (submitData.shuOyTolagan === 'ha') submitData.shuOyTolagan = true;
@@ -144,13 +154,16 @@ const Students = () => {
                 toast.success("O'quvchi yangilandi ✨");
             } else {
                 await studentAPI.create(submitData);
-                toast.success("O'quvchi qo'shildi 🚀");
+                toast.success("O'quvchi muvaffaqiyatli qo'shildi 🚀");
             }
 
             setModalOpen(false);
             fetchStudents();
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Xatolik');
+            console.error('Submit Student Error:', err);
+            toast.error(err.response?.data?.message || 'Xatolik yuz berdi');
+        } finally {
+            setLoading(false);
         }
     };
 
