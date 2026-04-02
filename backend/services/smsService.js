@@ -16,8 +16,7 @@ exports.sendSMS = async (phone, message) => {
         
         const response = await axios.post(`${DEVSMS_BASE_URL}/send_sms.php`, {
             phone: cleanPhone,
-            message: message,
-            from: "4546"
+            message: message
         }, {
             headers: {
                 'Authorization': `Bearer ${DEVSMS_TOKEN}`,
