@@ -6,6 +6,8 @@ const Submission = require('../models/Submission');
 const QuizResult = require('../models/QuizResult');
 const { uploadToR2 } = require('../services/uploadService');
 const mongoose = require('mongoose');
+const smsService = require('../services/smsService');
+
 
 // @desc    Barcha o'quvchilarni olish
 // @route   GET /api/students
@@ -578,6 +580,7 @@ exports.resetPaymentsStatus = async (req, res) => {
             { $set: { tolovHolati: 'tolanmagan' } }
         );
 
+
         res.json({
             success: true,
             message: "Barcha faol o'quvchilar to'lov holati 'To'lanmagan' ga o'zgartirildi"
@@ -586,3 +589,32 @@ exports.resetPaymentsStatus = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
     }
 };
+
+// @desc    Qarzdorga SMS yuborish
+// @route   POST /api/students/:id/send-debt-sms
+exports.sendDebtSMS = async (req, res) => {
+    try {
+        const student = await Student.findById(req.params.id);
+        
+        if (!student) {
+            return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
+        }
+
+        if (!student.telefon) {
+            return res.status(400).json({ success: false, message: "O'quvchining telefon raqami yo'q" });
+        }
+
+        const message = `Hurmatli ${student.ism}! Sizning qarzingiz ${student.oylikTolov} so'm. To'lov qiling bo'lmasa darsga kiritilmaysiz. InFast IT-Academy`;
+        
+        await smsService.sendSMS(student.telefon, message);
+
+        res.json({
+            success: true,
+            message: "SMS muvaffaqiyatli yuborildi"
+        });
+    } catch (error) {
+        console.error('Send SMS Controller Error:', error);
+        res.status(500).json({ success: false, message: error.message || 'SMS yuborishda server xatosi' });
+    }
+};
+

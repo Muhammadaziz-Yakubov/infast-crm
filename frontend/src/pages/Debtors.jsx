@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import {
     HiOutlineExclamationCircle, HiOutlinePhone, HiOutlineCash,
     HiOutlineDownload, HiOutlineSearch, HiOutlineCollection,
-    HiOutlineEmojiHappy
+    HiOutlineEmojiHappy, HiOutlineChatAlt2
 } from 'react-icons/hi';
 
 const Debtors = () => {
@@ -18,6 +18,8 @@ const Debtors = () => {
     const [exporting, setExporting] = useState(false);
 
     const [payForm, setPayForm] = useState({ summa: '', tolovTuri: 'naqd', izoh: '' });
+    const [sendingSms, setSendingSms] = useState(null);
+
 
     useEffect(() => {
         fetchDebtors();
@@ -80,6 +82,19 @@ const Debtors = () => {
             setExporting(false);
         }
     };
+    
+    const handleSendSMS = async (debtor) => {
+        try {
+            setSendingSms(debtor._id);
+            await studentAPI.sendDebtSMS(debtor._id);
+            toast.success(`${debtor.ism}ga SMS muvaffaqiyatli yuborildi! 📩`);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'SMS yuborishda xatolik');
+        } finally {
+            setSendingSms(null);
+        }
+    };
+
 
     const formatMoney = (amount) => {
         return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
@@ -200,25 +215,36 @@ const Debtors = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3 mt-auto">
+                            <div className="grid grid-cols-3 gap-2 mt-auto">
                                 <a
                                     href={`tel:${d.telefon}`}
                                     className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-gray-50 dark:bg-dark-900 
-                                        text-gray-600 dark:text-gray-400 font-bold text-sm hover:bg-primary-50 dark:hover:bg-primary-900/10 
+                                        text-gray-600 dark:text-gray-400 font-bold text-xs hover:bg-primary-50 dark:hover:bg-primary-900/10 
                                         hover:text-primary-600 transition-all active:scale-95"
                                 >
                                     <HiOutlinePhone className="w-4 h-4" />
-                                    Qo'ng'iroq
+                                    Tel
                                 </a>
+                                <button
+                                    onClick={() => handleSendSMS(d)}
+                                    disabled={sendingSms === d._id}
+                                    className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-primary-50 dark:bg-primary-900/10 
+                                        text-primary-600 font-bold text-xs hover:bg-primary-100 dark:hover:bg-primary-900/20 
+                                        transition-all active:scale-95 disabled:opacity-50"
+                                >
+                                    <HiOutlineChatAlt2 className="w-4 h-4" />
+                                    {sendingSms === d._id ? '...' : 'SMS'}
+                                </button>
                                 <button
                                     onClick={() => openPayModal(d)}
                                     className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-emerald-500 
-                                        text-white font-black text-sm shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                        text-white font-black text-xs shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                                 >
                                     <HiOutlineCash className="w-4 h-4" />
-                                    Yopish
+                                    To'lov
                                 </button>
                             </div>
+
 
                             {d.eslatmalar && (
                                 <div className="mt-4 pt-4 border-t border-gray-50 dark:border-dark-700/50">
