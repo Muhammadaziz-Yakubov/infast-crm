@@ -594,7 +594,7 @@ exports.resetPaymentsStatus = async (req, res) => {
 // @route   POST /api/students/:id/send-debt-sms
 exports.sendDebtSMS = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id);
+        const student = await Student.findById(req.params.id).populate('kurs');
         
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
@@ -604,9 +604,13 @@ exports.sendDebtSMS = async (req, res) => {
             return res.status(400).json({ success: false, message: "O'quvchining telefon raqami yo'q" });
         }
 
-        const message = `Hurmatli ${student.ism}! Sizning qarzingiz ${student.oylikTolov} so'm. To'lov qiling bo'lmasa darsga kiritilmaysiz. InFast IT-Academy`;
+        // To'lov summasini aniqlash (oylikTolov bo'lmasa kurs narxi)
+        const qarzSummasi = student.oylikTolov || (student.kurs && student.kurs.narx) || 0;
+
+        const message = `Hurmatli ${student.ism}! Sizning qarzingiz ${qarzSummasi} so'm. To'lov qiling bo'lmasa darsga kiritilmaysiz. InFast IT-Academy`;
         
         await smsService.sendSMS(student.telefon, message);
+
 
         res.json({
             success: true,
