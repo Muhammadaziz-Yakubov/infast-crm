@@ -12,11 +12,17 @@ const DEVSMS_BASE_URL = "https://devsms.uz/api";
 exports.sendSMS = async (phone, message) => {
     try {
         // Remove any non-digit characters from phone number
-        const cleanPhone = phone.replace(/\D/g, '');
+        let cleanPhone = phone.replace(/\D/g, '');
+        
+        // Normalize Uzbek phone numbers
+        if (cleanPhone.length === 9) {
+            cleanPhone = '998' + cleanPhone;
+        }
         
         const response = await axios.post(`${DEVSMS_BASE_URL}/send_sms.php`, {
             phone: cleanPhone,
-            message: message
+            message: message,
+            from: "4546"
         }, {
             headers: {
                 'Authorization': `Bearer ${DEVSMS_TOKEN}`,
@@ -26,8 +32,12 @@ exports.sendSMS = async (phone, message) => {
 
         return response.data;
     } catch (error) {
-        console.error('DevSMS API Error:', error.response?.data || error.message);
-        throw new Error(error.response?.data?.message || 'SMS yuborishda xatolik yuz berdi');
+        console.error('DevSMS API Error details:', {
+            error: error.response?.data,
+            phone: phone,
+            message: message
+        });
+        throw new Error(error.response?.data?.error || error.response?.data?.message || 'SMS yuborishda xatolik yuz berdi');
     }
 };
 
