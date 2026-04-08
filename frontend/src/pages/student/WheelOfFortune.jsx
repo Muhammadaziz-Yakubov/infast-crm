@@ -108,14 +108,14 @@ const WheelOfFortune = () => {
                 </button>
                 <div className="text-center">
                     <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter">
-                        Omad <span className="text-primary-500">G'ildiragi 3.0</span>
+                        Omad <span className="text-primary-500">G'ildiragi</span>
                     </h1>
                     <div className="flex items-center justify-center gap-3 mt-1">
                         <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">
                             <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest italic">{user?.coins || 0} 🪙</p>
                         </div>
                         <div className="flex items-center gap-1.5 px-3 py-1 bg-primary-500/10 rounded-full border border-primary-500/20">
-                            <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest italic">1 Spin = 300 🪙</p>
+                            <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest italic">1 Spin = 100 🪙</p>
                         </div>
                     </div>
                 </div>
