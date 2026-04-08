@@ -7,7 +7,7 @@ const { updateCoins } = require('../services/coinService');
 exports.spinWheel = async (req, res) => {
     try {
         const studentId = req.user._id;
-        const spinCost = 0;
+        const spinCost = 100;
 
         // 1. O'quvchini hamda balansini tekshirish
         const student = await Student.findById(studentId);
@@ -27,7 +27,7 @@ exports.spinWheel = async (req, res) => {
             createdAt: { $gte: today }
         });
 
-        if (spinsToday >= 5) {
+        if (spinsToday >= 3) {
             return res.status(400).json({
                 success: false,
                 message: "Siz bugungi 3 ta imkoniyatdan foydalanib bo'ldingiz. Ertaga yana urinib ko'ring! 🍀"
