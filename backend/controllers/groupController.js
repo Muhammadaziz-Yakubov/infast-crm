@@ -154,7 +154,10 @@ exports.updateGroupProgress = async (req, res) => {
         }
 
         // Progress obyektini yangilash
-        if (completedLessons !== undefined) group.progress.completedLessons = completedLessons;
+        if (completedLessons !== undefined) {
+            group.progress.completedLessons = Number(completedLessons);
+            group.darsProgress = Number(completedLessons); // Sync with curriculum system
+        }
         if (currentTopic !== undefined) group.progress.currentTopic = currentTopic;
         if (nextLesson !== undefined) group.progress.nextLesson = nextLesson;
 

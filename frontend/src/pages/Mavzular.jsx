@@ -16,7 +16,7 @@ import {
     Server,
     CheckCircle2
 } from 'lucide-react';
-import { groupAPI } from '../services/api';
+import { groupAPI, curriculumAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const Mavzular = () => {
@@ -83,11 +83,22 @@ const Mavzular = () => {
     const handleSaveProgress = async (updatedData) => {
         try {
             const response = await groupAPI.updateProgress(selectedGroup._id, updatedData);
-            setGroups(prev => prev.map(g => g._id === selectedGroup._id ? response.data.data : g));
+            setGroups(prev => prev.map(g => g._id === selectedGroup._id ? { ...g, ...response.data.data } : g));
             toast.success('Progress yangilandi');
             setIsModalOpen(false);
         } catch (error) {
             toast.error('Yangilashda xatolik yuz berdi');
+        }
+    };
+
+    const handleMarkTaught = async (e, groupId) => {
+        e.stopPropagation(); // Prevents opening modal when clicking the button
+        try {
+            const response = await curriculumAPI.markCompleted(groupId);
+            fetchGroups(); // Refresh all to keep stats in sync
+            toast.success(response.data.message);
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Xatolik yuz berdi');
         }
     };
 
@@ -212,6 +223,7 @@ const Mavzular = () => {
                             isTop={group._id === topGroupId} 
                             index={index}
                             onClick={() => handleEditClick(group)}
+                            onMarkTaught={(e) => handleMarkTaught(e, group._id)}
                         />
                     ))}
                 </AnimatePresence>
@@ -228,9 +240,10 @@ const Mavzular = () => {
     );
 };
 
-const GroupCard = ({ group, isTop, index, onClick }) => {
-    const progress = group.progress || { completedLessons: 0, totalLessons: 114, currentTopic: '', nextLesson: '' };
-    const percentage = Math.min(Math.round((progress.completedLessons / (progress.totalLessons || 1)) * 100), 100);
+const GroupCard = ({ group, isTop, index, onClick, onMarkTaught }) => {
+    const totalLessons = group.courseType === 'backend' ? 72 : 114;
+    const progress = group.progress || { completedLessons: 0, totalLessons: totalLessons, currentTopic: '', nextLesson: '' };
+    const percentage = Math.min(Math.round((progress.completedLessons / (progress.totalLessons || totalLessons)) * 100), 100);
 
     const getProgressBarColor = (pct) => {
         if (pct <= 30) return 'bg-rose-500';
@@ -277,8 +290,18 @@ const GroupCard = ({ group, isTop, index, onClick }) => {
                             {group.nomi}
                         </h3>
                     </div>
-                    <div className="p-2 bg-gray-50 rounded-xl text-gray-400 group-hover/card:bg-indigo-50 group-hover/card:text-indigo-600 transition-all">
-                        <ChevronRight size={20} />
+                    <div className="flex items-center gap-2">
+                        <button 
+                            onClick={onMarkTaught}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs font-bold hover:bg-emerald-600 hover:text-white transition-all ring-1 ring-emerald-200"
+                            title="Bugungi darsni o'tildi deb belgilash"
+                        >
+                            <CheckCircle2 size={14} />
+                            Otildi
+                        </button>
+                        <div className="p-2 bg-gray-50 rounded-xl text-gray-400 group-hover/card:bg-indigo-50 group-hover/card:text-indigo-600 transition-all">
+                            <ChevronRight size={20} />
+                        </div>
                     </div>
                 </div>
 
@@ -315,20 +338,20 @@ const GroupCard = ({ group, isTop, index, onClick }) => {
                 <div className="grid grid-cols-2 gap-3 pt-4 border-t border-gray-50">
                     <div className="bg-gray-50/50 p-3 rounded-2xl">
                         <span className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase mb-1">
-                            <Clock size={12} />
-                            Hozirgi mavzu
+                            <CheckCircle2 size={12} className="text-emerald-500" />
+                            Oxirgi o'tilgan
                         </span>
                         <p className="text-xs font-bold text-gray-700 line-clamp-1 italic">
-                            {progress.currentTopic || 'Belgilanmagan'}
+                            {progress.currentTopic || 'Dars boshlanmagan'}
                         </p>
                     </div>
-                    <div className="bg-indigo-50/30 p-3 rounded-2xl">
+                    <div className="bg-indigo-50/30 p-3 rounded-2xl ring-1 ring-indigo-100">
                         <span className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-400 uppercase mb-1">
-                            <BookOpen size={12} />
-                            Keyingi dars
+                            <Clock size={12} className="animate-pulse" />
+                            Bugungi mavzu
                         </span>
-                        <p className="text-xs font-bold text-indigo-700 line-clamp-1 italic">
-                            {progress.nextLesson || 'Yaqinda...'}
+                        <p className="text-xs font-bold text-indigo-700 line-clamp-1">
+                            {progress.nextLesson || (progress.completedLessons >= (progress.totalLessons || totalLessons) ? 'Kurs tugadi 🎉' : 'Yaqinda...')}
                         </p>
                     </div>
                 </div>

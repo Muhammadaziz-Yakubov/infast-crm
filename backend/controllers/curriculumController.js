@@ -231,11 +231,20 @@ exports.markLessonCompleted = async (req, res) => {
         const otilganDarsRaqam = currentProgress + 1;
         const otilganDars = getJoriyDars(kalit, otilganDarsRaqam);
 
-        group.darsProgress = currentProgress + 1;
-        await group.save();
-
+        group.darsProgress = otilganDarsRaqam;
+        
+        // Sync user-friendly progress object
         const keyingiDarsRaqam = group.darsProgress + 1;
         const keyingiDars = getJoriyDars(kalit, keyingiDarsRaqam);
+
+        group.progress = {
+            completedLessons: group.darsProgress,
+            totalLessons: jamiDarslar,
+            currentTopic: otilganDars?.mavzular?.join(', ') || '',
+            nextLesson: keyingiDars?.mavzular?.[0] || 'Tugatildi'
+        };
+
+        await group.save();
 
         res.json({
             success: true,
@@ -313,6 +322,18 @@ exports.setManualProgress = async (req, res) => {
         }
 
         group.darsProgress = darsProgress;
+        
+        // Sync user-friendly progress object
+        const joriyDars = getJoriyDars(kalit, darsProgress);
+        const keyingiDars = getJoriyDars(kalit, darsProgress + 1);
+
+        group.progress = {
+            completedLessons: darsProgress,
+            totalLessons: jamiDarslar,
+            currentTopic: joriyDars?.mavzular?.join(', ') || '',
+            nextLesson: keyingiDars?.mavzular?.[0] || (darsProgress >= jamiDarslar ? 'Kurs yakunlandi' : '')
+        };
+
         await group.save();
 
         res.json({
