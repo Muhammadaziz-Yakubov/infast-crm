@@ -31,6 +31,7 @@ const adminMenu = [
     { path: '/marketing', label: 'Marketing', icon: HiOutlinePresentationChartLine },
     { path: '/students', label: "O'quvchilar", icon: HiOutlineUserGroup },
     { path: '/groups', label: 'Guruhlar', icon: HiOutlineAcademicCap },
+    { path: '/mavzular', label: 'Mavzular & Progress', icon: HiOutlineTrendingUp },
     { path: '/courses', label: 'Kurslar', icon: HiOutlineBookOpen },
     { path: '/payments', label: "To'lovlar", icon: HiOutlineCreditCard },
     { path: '/debtors', label: 'Qarzdorlar', icon: HiOutlineExclamationCircle },

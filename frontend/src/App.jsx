@@ -24,6 +24,7 @@ const Debtors = React.lazy(() => import('./pages/Debtors'));
 const Attendance = React.lazy(() => import('./pages/Attendance'));
 const Tasks = React.lazy(() => import('./pages/Tasks'));
 const StudentTasks = React.lazy(() => import('./pages/student/StudentTasks'));
+const Mavzular = React.lazy(() => import('./pages/Mavzular'));
 
 const StudentMarket = React.lazy(() => import('./pages/student/StudentMarket'));
 const CoinLogs = React.lazy(() => import('./pages/student/CoinLogs'));
@@ -169,6 +170,7 @@ const AppContent = () => {
                         <Route path="/marketing" element={<Marketing />} />
                         <Route path="/events" element={user?.role === 'student' ? <StudentEvents /> : <Events />} />
                         <Route path="/events/:id/attendance" element={<EventAttendance />} />
+                        <Route path="/mavzular" element={<Mavzular />} />
                     </Route>
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />

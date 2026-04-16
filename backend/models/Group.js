@@ -64,6 +64,29 @@ const groupSchema = new mongoose.Schema({
     darsKunlari: {
         type: [Number],
         default: [1, 3, 5] // 0=Yakshanba, 1=Dushanba, 2=Seshanba, 3=Chorshanba, 4=Payshanba, 5=Juma, 6=Shanba
+    },
+    courseType: {
+        type: String,
+        enum: ['frontend', 'backend'],
+        default: 'frontend'
+    },
+    progress: {
+        completedLessons: {
+            type: Number,
+            default: 0
+        },
+        totalLessons: {
+            type: Number,
+            default: 114
+        },
+        currentTopic: {
+            type: String,
+            default: ''
+        },
+        nextLesson: {
+            type: String,
+            default: ''
+        }
     }
 }, {
     timestamps: true,

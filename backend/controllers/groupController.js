@@ -141,4 +141,31 @@ exports.deleteGroup = async (req, res) => {
     }
 };
 
+// @desc    Guruh progressini yangilash
+// @route   PUT /api/groups/:id/progress
+exports.updateGroupProgress = async (req, res) => {
+    try {
+        const { completedLessons, currentTopic, nextLesson } = req.body;
 
+        const group = await Group.findById(req.params.id);
+
+        if (!group) {
+            return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
+        }
+
+        // Progress obyektini yangilash
+        if (completedLessons !== undefined) group.progress.completedLessons = completedLessons;
+        if (currentTopic !== undefined) group.progress.currentTopic = currentTopic;
+        if (nextLesson !== undefined) group.progress.nextLesson = nextLesson;
+
+        await group.save();
+
+        res.json({
+            success: true,
+            message: 'Progress muvaffaqiyatli yangilandi',
+            data: group
+        });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};

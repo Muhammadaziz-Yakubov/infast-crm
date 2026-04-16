@@ -56,6 +56,7 @@ export const groupAPI = {
     getOne: (id) => api.get(`/groups/${id}`),
     create: (data) => api.post('/groups', data),
     update: (id, data) => api.put(`/groups/${id}`, data),
+    updateProgress: (id, data) => api.put(`/groups/${id}/progress`, data),
     delete: (id) => api.delete(`/groups/${id}`),
 };
 
