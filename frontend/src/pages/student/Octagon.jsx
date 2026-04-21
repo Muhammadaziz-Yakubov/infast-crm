@@ -3,7 +3,7 @@ import { battleAPI, studentAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { 
     HiOutlineLightningBolt, HiOutlineUserGroup, HiOutlineShieldCheck, 
-    HiOutlineClock, HiOutlineTrophy, HiOutlineX, HiOutlineCheckCircle,
+    HiOutlineClock, HiOutlineStar, HiOutlineX, HiOutlineCheckCircle,
     HiOutlineArrowRight, HiOutlineTicket, HiOutlineSparkles
 } from 'react-icons/hi';
 import { toast } from 'react-hot-toast';
@@ -390,7 +390,7 @@ const Octagon = () => {
                         {battle.winner === studentAPI.me?._id || (battle.winner?._id === studentAPI.me?._id) ? (
                             <div className="space-y-4">
                                 <div className="w-32 h-32 mx-auto rounded-full bg-emerald-500/10 flex items-center justify-center">
-                                    <HiOutlineTrophy className="w-16 h-16 text-emerald-500 animate-bounce" />
+                                    <HiOutlineStar className="w-16 h-16 text-emerald-500 animate-bounce" />
                                 </div>
                                 <h1 className="text-6xl font-black text-emerald-500 uppercase italic tracking-tighter">G'alaba! 🏆</h1>
                                 <p className="text-xl font-bold text-gray-500 dark:text-gray-400 italic">Siz +{battle.betAmount} coin yutib oldingiz!</p>
