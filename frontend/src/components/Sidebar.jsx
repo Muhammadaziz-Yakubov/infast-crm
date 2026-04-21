@@ -6,7 +6,7 @@ import {
     HiOutlineCreditCard, HiOutlineExclamationCircle, HiOutlineLogout,
     HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineCalendar, HiOutlineUserCircle,
     HiOutlineClipboardList, HiOutlineTrendingUp, HiOutlineShoppingBag,
-    HiOutlineDatabase, HiOutlineCalendarAlt
+    HiOutlineDatabase, HiOutlineCalendar
 } from 'react-icons/hi';
 
 import Logo from '../infastacademy.jpg';
@@ -20,7 +20,7 @@ const adminMenu = [
     { path: '/debtors', label: 'Qarzdorlar', icon: HiOutlineExclamationCircle },
     { path: '/attendance', label: 'Davomat', icon: HiOutlineCalendar },
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
-    { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendarAlt },
+    { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendar },
     { path: '/market-manager', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/coin-manager', label: 'Coin Boshqaruvi', icon: HiOutlineDatabase },
     { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
@@ -32,7 +32,7 @@ const studentMenu = [
     { path: '/attendance', label: 'Davomat tarixi', icon: HiOutlineCalendar },
     { path: '/payments', label: "To'lovlar tarixi", icon: HiOutlineCreditCard },
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
-    { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendarAlt },
+    { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendar },
     { path: '/market', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
     { path: '/profile', label: 'Mening profilim', icon: HiOutlineUserCircle },
