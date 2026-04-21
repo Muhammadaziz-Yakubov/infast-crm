@@ -128,7 +128,6 @@ const Payments = () => {
 
     return (
         <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
-            <!-- Header Area -->
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div className="space-y-1">
                     <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white uppercase italic">
@@ -156,7 +155,6 @@ const Payments = () => {
                 </div>
             </div>
 
-            <!-- High-Level Stats Cards -->
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all">
                     <div className="flex items-center gap-4 mb-4">
@@ -187,7 +185,6 @@ const Payments = () => {
                 </div>
             </div>
 
-            <!-- Smart Filters -->
             <div className="bg-white dark:bg-dark-800 rounded-[2rem] p-6 border border-gray-100 dark:border-white/5 shadow-sm flex flex-col lg:flex-row gap-4 items-center">
                 <div className="relative flex-1 w-full group">
                     <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
@@ -228,7 +225,6 @@ const Payments = () => {
                 </div>
             </div>
 
-            <!-- Payments List Table -->
             <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto custom-scrollbar">
                     <table className="w-full">
@@ -311,7 +307,6 @@ const Payments = () => {
                     </table>
                 </div>
 
-                <!-- Pagination - Premium Design -->
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between px-8 py-6 bg-gray-50/50 dark:bg-dark-900/50 border-t border-gray-100 dark:border-dark-700">
                         <p className="text-xs font-black text-gray-400 uppercase tracking-widest">
@@ -356,8 +351,7 @@ const Payments = () => {
             </div>
         </div>
 
-        <!-- Delete All Confirmation Modal -->
-        {deleteAllOpen && (
+{deleteAllOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
                 <div className="bg-white dark:bg-dark-800 rounded-[2rem] p-8 max-w-md w-full shadow-2xl border border-red-500/20">
                     <div className="text-center">
