@@ -105,3 +105,56 @@ exports.getMe = async (req, res) => {
     }
 };
 
+// @desc    Update password
+// @route   PUT /api/auth/update-password
+exports.updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Joriy va yangi parollarni kiriting'
+            });
+        }
+
+        // Try finding in User first
+        let account = await User.findById(req.user.id);
+
+        // If not found, look in Student
+        if (!account) {
+            account = await Student.findById(req.user.id);
+        }
+
+        if (!account) {
+            return res.status(404).json({
+                success: false,
+                message: 'Foydalanuvchi topilmadi'
+            });
+        }
+
+        const isMatch = await account.comparePassword(currentPassword);
+
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Joriy parol noto'g'ri"
+            });
+        }
+
+        account.password = newPassword;
+        await account.save();
+
+        res.json({
+            success: true,
+            message: 'Parol muvaffaqiyatli yangilandi'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server xatosi',
+            error: error.message
+        });
+    }
+};
+

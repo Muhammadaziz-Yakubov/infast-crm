@@ -39,6 +39,7 @@ api.interceptors.response.use(
 export const authAPI = {
     login: (data) => api.post('/auth/login', data),
     getMe: () => api.get('/auth/me'),
+    updatePassword: (data) => api.put('/auth/update-password', data),
 };
 
 // Kurslar

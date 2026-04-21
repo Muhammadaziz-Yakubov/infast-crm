@@ -29,6 +29,7 @@ const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 const CoinManager = React.lazy(() => import('./pages/CoinManager'));
 const LeadForm = React.lazy(() => import('./pages/public/LeadForm'));
 const PaymentRequired = React.lazy(() => import('./pages/PaymentRequired'));
+const Settings = React.lazy(() => import('./pages/Settings'));
 const LandingHome = React.lazy(() => import('./pages/landing/Home'));
 const LandingPrograms = React.lazy(() => import('./pages/landing/Programs'));
 const LandingAbout = React.lazy(() => import('./pages/landing/About'));
@@ -104,6 +105,7 @@ const AppContent = () => {
                         <Route path="/debtors" element={<Debtors />} />
                         <Route path="/market-manager" element={<MarketManager />} />
                         <Route path="/coin-manager" element={<CoinManager />} />
+                        <Route path="/settings" element={<Settings />} />
                         <Route path="/events" element={user?.role === 'student' ? <StudentEvents /> : <Events />} />
                         <Route path="/events/:id/attendance" element={<EventAttendance />} />
                     </Route>
