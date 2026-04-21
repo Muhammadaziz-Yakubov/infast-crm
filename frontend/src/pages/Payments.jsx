@@ -353,6 +353,7 @@ const Payments = () => {
                         </div>
                     </div>
                 )}
+            </div>
         </div>
 
         {/* Delete All Confirmation Modal */}
