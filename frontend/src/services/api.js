@@ -149,7 +149,6 @@ export const leadAPI = {
     publicCreate: (data) => api.post('/leads/public', data),
 };
 
-// Community Notes
 export const noteAPI = {
     getAll: () => api.get('/notes'),
     getOne: (id) => api.get(`/notes/${id}`),
@@ -167,13 +166,6 @@ export const curriculumAPI = {
     markCompleted: (groupId) => api.post(`/curriculum/group/${groupId}/complete`),
     undoCompleted: (groupId) => api.post(`/curriculum/group/${groupId}/undo`),
     setProgress: (groupId, darsProgress) => api.put(`/curriculum/group/${groupId}/set-progress`, { darsProgress }),
-};
-
-// AI Homework
-export const homeworkAPI = {
-    generate: (groupId) => api.post('/homework/generate', { groupId }),
-    assign: (data) => api.post('/homework/assign', data),
-    generateForLesson: (groupId, darsRaqam) => api.post('/homework/generate-for-lesson', { groupId, darsRaqam }),
 };
 
 // Events

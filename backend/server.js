@@ -74,9 +74,7 @@ app.use('/api/market', require('./routes/marketRoutes'));
 app.use('/api/coins', require('./routes/coinRoutes'));
 app.use('/api/wheels', require('./routes/wheelRoutes'));
 app.use('/api/leads', require('./routes/leadRoutes'));
-app.use('/api/notes', require('./routes/noteRoutes'));
 app.use('/api/curriculum', require('./routes/curriculumRoutes'));
-app.use('/api/homework', require('./routes/homeworkRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
 
 // Health check endpoint

@@ -4,11 +4,9 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
 
-// Eagerly loaded components
 import Layout from './components/Layout';
 import LoadingSpinner from './components/LoadingSpinner';
 
-// Lazy loaded pages
 const Login = React.lazy(() => import('./pages/Login'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const StudentHome = React.lazy(() => import('./pages/student/StudentHome'));
@@ -23,154 +21,84 @@ const Payments = React.lazy(() => import('./pages/Payments'));
 const Debtors = React.lazy(() => import('./pages/Debtors'));
 const Attendance = React.lazy(() => import('./pages/Attendance'));
 const Tasks = React.lazy(() => import('./pages/Tasks'));
-const StudentTasks = React.lazy(() => import('./pages/student/StudentTasks'));
-const Mavzular = React.lazy(() => import('./pages/Mavzular'));
-
 const StudentMarket = React.lazy(() => import('./pages/student/StudentMarket'));
 const CoinLogs = React.lazy(() => import('./pages/student/CoinLogs'));
 const ScanAttendance = React.lazy(() => import('./pages/student/ScanAttendance'));
 const WheelOfFortune = React.lazy(() => import('./pages/student/WheelOfFortune'));
 const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 const CoinManager = React.lazy(() => import('./pages/CoinManager'));
-const Marketing = React.lazy(() => import('./pages/Marketing'));
 const LeadForm = React.lazy(() => import('./pages/public/LeadForm'));
 const PaymentRequired = React.lazy(() => import('./pages/PaymentRequired'));
-
-// Landing Pages
 const LandingHome = React.lazy(() => import('./pages/landing/Home'));
 const LandingPrograms = React.lazy(() => import('./pages/landing/Programs'));
 const LandingAbout = React.lazy(() => import('./pages/landing/About'));
 const LandingTeam = React.lazy(() => import('./pages/landing/Team'));
 const LandingContact = React.lazy(() => import('./pages/landing/Contact'));
-
-import { Analytics } from "@vercel/analytics/react";
 const Classmates = React.lazy(() => import('./pages/student/Classmates'));
 const ClassmateProfile = React.lazy(() => import('./pages/student/ClassmateProfile'));
 const Leaderboard = React.lazy(() => import('./pages/student/Leaderboard'));
-const Community = React.lazy(() => import('./pages/Community'));
 const GroupView = React.lazy(() => import('./pages/GroupView'));
-const Homework = React.lazy(() => import('./pages/Homework'));
 const Events = React.lazy(() => import('./pages/Events'));
 const EventAttendance = React.lazy(() => import('./pages/EventAttendance'));
 const StudentEvents = React.lazy(() => import('./pages/student/StudentEvents'));
 
-import { Outlet } from 'react-router-dom';
+import { Analytics } from "@vercel/analytics/react";
 
 const ProtectedRoute = ({ children, allowDebtor = false }) => {
     const { user, loading } = useAuth();
     if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
     if (!user) return <Navigate to="/login" replace />;
-
-    // Check for debtor status
     if (!allowDebtor && user.role === 'student' && (user.tolovHolati === 'qarzdor' || user.tolovHolati === 'tolanmagan')) {
         return <Navigate to="/payment-required" replace />;
     }
-
-    return children || <Outlet />;
+    return children;
 };
 
 const RoleBasedHome = () => {
     const { user } = useAuth();
-    if (user?.role === 'student') {
-        return <StudentHome />;
-    }
+    if (user?.role === 'student') return <StudentHome />;
     return <Dashboard />;
-};
-
-const RoleBasedGuard = ({ role, children }) => {
-    const { user } = useAuth();
-    if (user?.role !== role) return <Navigate to="/" replace />;
-    return children;
-};
-
-const StudentRoutes = () => (
-    <>
-        <Route path="/courses" element={<StudentCourses />} />
-        <Route path="/attendance" element={<StudentAttendance />} />
-        <Route path="/payments" element={<StudentPayments />} />
-        <Route path="/profile" element={<StudentProfile />} />
-    </>
-);
-
-const AdminRoutes = () => (
-    <>
-        <Route path="/students" element={<Students />} />
-        <Route path="/groups" element={<Groups />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/payments" element={<Payments />} />
-        <Route path="/debtors" element={<Debtors />} />
-        <Route path="/attendance" element={<Attendance />} />
-    </>
-);
-
-const PublicRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
-    if (user) return <Navigate to="/dashboard" replace />;
-    return children;
 };
 
 const AppContent = () => {
     const { user, loading } = useAuth();
-
     if (loading) return <LoadingSpinner text="Tizim yuklanmoqda..." />;
 
     return (
         <Suspense fallback={<LoadingSpinner text="Sahifa yuklanmoqda..." />}>
             <Routes>
-                {/* Landing Routes */}
-                <Route path="/" element={
-                    <PublicRoute><LandingHome /></PublicRoute>
-                } />
+                <Route path="/" element={<PublicRoute><LandingHome /></PublicRoute>} />
                 <Route path="/programs" element={<LandingPrograms />} />
                 <Route path="/about" element={<LandingAbout />} />
                 <Route path="/team" element={<LandingTeam />} />
                 <Route path="/contact" element={<LandingContact />} />
-
-                <Route path="/login" element={
-                    <PublicRoute><Login /></PublicRoute>
-                } />
+                <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                 <Route path="/join/:source" element={<LeadForm />} />
-                <Route path="/payment-required" element={
-                    <ProtectedRoute allowDebtor={true}>
-                        <PaymentRequired />
-                    </ProtectedRoute>
-                } />
+                <Route path="/payment-required" element={<ProtectedRoute allowDebtor={true}><PaymentRequired /></ProtectedRoute>} />
                 <Route element={<Layout />}>
-                    <Route path="/community" element={<Community />} />
-                    <Route path="/community/:id" element={<Community />} />
-
                     <Route element={<ProtectedRoute />}>
                         <Route path="/dashboard" element={<RoleBasedHome />} />
                         <Route path="/home" element={<Navigate to="/dashboard" replace />} />
-
-                        {/* Student routes */}
                         <Route path="/courses" element={user?.role === 'student' ? <StudentCourses /> : <Courses />} />
                         <Route path="/attendance" element={user?.role === 'student' ? <StudentAttendance /> : <Attendance />} />
                         <Route path="/scan" element={<ScanAttendance />} />
                         <Route path="/wheel" element={<WheelOfFortune />} />
                         <Route path="/payments" element={user?.role === 'student' ? <StudentPayments /> : <Payments />} />
                         <Route path="/profile" element={<StudentProfile />} />
-                        <Route path="/tasks" element={user?.role === 'student' ? <StudentTasks /> : <Tasks />} />
-
+                        <Route path="/tasks" element={user?.role === 'student' ? <Tasks /> : <Tasks />} />
                         <Route path="/market" element={user?.role === 'student' ? <StudentMarket /> : <MarketManager />} />
                         <Route path="/market/logs" element={<CoinLogs />} />
                         <Route path="/classmates" element={<Classmates />} />
                         <Route path="/classmate-profile/:id" element={<ClassmateProfile />} />
                         <Route path="/leaderboard" element={<Leaderboard />} />
-
-                        {/* Admin only routes */}
                         <Route path="/students" element={<Students />} />
                         <Route path="/groups" element={<Groups />} />
                         <Route path="/groups/:id" element={<GroupView />} />
-                        <Route path="/homework" element={<Homework />} />
                         <Route path="/debtors" element={<Debtors />} />
                         <Route path="/market-manager" element={<MarketManager />} />
                         <Route path="/coin-manager" element={<CoinManager />} />
-                        <Route path="/marketing" element={<Marketing />} />
                         <Route path="/events" element={user?.role === 'student' ? <StudentEvents /> : <Events />} />
                         <Route path="/events/:id/attendance" element={<EventAttendance />} />
-                        <Route path="/mavzular" element={<Mavzular />} />
                     </Route>
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
@@ -179,30 +107,23 @@ const AppContent = () => {
     );
 };
 
-const App = () => {
-    return (
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <ThemeProvider>
-                <AuthProvider>
-                    <Analytics />
-                    <Toaster
-                        position="top-right"
-                        toastOptions={{
-                            duration: 3000,
-                            style: {
-                                borderRadius: '12px',
-                                padding: '14px 20px',
-                                fontSize: '14px',
-                            },
-                        }}
-                    />
-                    <AppContent />
-                </AuthProvider>
-            </ThemeProvider>
-        </BrowserRouter>
-    );
+const PublicRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+    if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
+    if (user) return <Navigate to="/dashboard" replace />;
+    return children;
 };
 
-
+const App = () => (
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <ThemeProvider>
+            <AuthProvider>
+                <Analytics />
+                <Toaster position="top-right" toastOptions={{ duration: 3000, style: { borderRadius: '12px', padding: '14px 20px', fontSize: '14px' } }} />
+                <AppContent />
+            </AuthProvider>
+        </ThemeProvider>
+    </BrowserRouter>
+);
 
 export default App;
