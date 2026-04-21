@@ -352,7 +352,7 @@ const Payments = () => {
                             </button>
                         </div>
                     </div>
-)}
+                )}
             </div>
         </div>
 
