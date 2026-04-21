@@ -6,7 +6,7 @@ import {
     HiOutlineCreditCard, HiOutlineExclamationCircle, HiOutlineLogout,
     HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineCalendar, HiOutlineUserCircle,
     HiOutlineClipboardList, HiOutlineTrendingUp, HiOutlineShoppingBag,
-    HiOutlineDatabase, HiOutlineCalendar
+    HiOutlineDatabase
 } from 'react-icons/hi';
 
 import Logo from '../infastacademy.jpg';
