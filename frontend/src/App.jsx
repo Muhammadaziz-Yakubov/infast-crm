@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
@@ -51,14 +51,14 @@ const ProtectedRoute = ({ children, allowDebtor = false }) => {
     if (!allowDebtor && user.role === 'student' && (user.tolovHolati === 'qarzdor' || user.tolovHolati === 'tolanmagan')) {
         return <Navigate to="/payment-required" replace />;
     }
-    return children;
+    return children ? children : <Outlet />;
 };
 
 const PublicRoute = ({ children }) => {
     const { user, loading } = useAuth();
     if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
     if (user) return <Navigate to="/dashboard" replace />;
-    return children;
+    return children ? children : <Outlet />;
 };
 
 const RoleBasedHome = () => {
