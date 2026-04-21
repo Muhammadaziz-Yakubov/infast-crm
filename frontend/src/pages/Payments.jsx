@@ -17,6 +17,8 @@ const Payments = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [total, setTotal] = useState(0);
+    const [deleteAllOpen, setDeleteAllOpen] = useState(false);
+    const [deleteAllLoading, setDeleteAllLoading] = useState(false);
 
     const now = new Date();
     const [filterOy, setFilterOy] = useState(now.getMonth() + 1);
@@ -85,6 +87,23 @@ const Payments = () => {
         }
     };
 
+    const handleDeleteAll = async () => {
+        const oyNomi = oyNomlar[filterOy] || 'Barcha oylar';
+        const yilNomi = filterYil || 'Barcha yillar';
+        if (!window.confirm(`⚠️ ${oyNomi} ${filterYil} oyidagi BARCHA to'lovlarni o'chirishni xohlaysizmi?\n\nBu amalni qaytarib bo'lmaydi!`)) return;
+        setDeleteAllLoading(true);
+        try {
+            const res = await paymentAPI.deleteAll({ oy: filterOy, yil: filterYil });
+            toast.success(res.data.message);
+            setDeleteAllOpen(false);
+            fetchPayments();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "To'lovlarni o'chirishda xatolik");
+        } finally {
+            setDeleteAllLoading(false);
+        }
+    };
+
     const formatDate = (date) => {
         return new Date(date).toLocaleDateString('uz-UZ', {
             month: 'short',
@@ -117,14 +136,24 @@ const Payments = () => {
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 font-medium">Barcha qabul qilingan to'lovlar va daromadlar nazorati</p>
                 </div>
-                <button
-                    onClick={handleResetStudents}
-                    className="px-6 py-3 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 
-                        border-2 border-amber-500/20 hover:bg-amber-500 hover:text-white 
-                        transition-all font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 active:scale-95"
-                >
-                    Holatlarni Yangilash (0 ga tushirish)
-                </button>
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => setDeleteAllOpen(true)}
+                        className="px-6 py-3 rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400 
+                            border-2 border-red-500/20 hover:bg-red-500 hover:text-white 
+                            transition-all font-black text-xs uppercase tracking-wider shadow-lg shadow-red-500/10 active:scale-95"
+                    >
+                        Barchasini O'chirish
+                    </button>
+                    <button
+                        onClick={handleResetStudents}
+                        className="px-6 py-3 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 
+                            border-2 border-amber-500/20 hover:bg-amber-500 hover:text-white 
+                            transition-all font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 active:scale-95"
+                    >
+                        Holatlarni Yangilash
+                    </button>
+                </div>
             </div>
 
             {/* High-Level Stats Cards */}
@@ -326,6 +355,52 @@ const Payments = () => {
                 )}
             </div>
         </div>
+
+        {/* Delete All Confirmation Modal */}
+        {deleteAllOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                <div className="bg-white dark:bg-dark-800 rounded-[2rem] p-8 max-w-md w-full shadow-2xl border border-red-500/20">
+                    <div className="text-center">
+                        <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+                            <HiOutlineTrash className="w-8 h-8 text-red-500" />
+                        </div>
+                        <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">
+                            To'lovlarni O'chirish
+                        </h3>
+                        <p className="text-gray-500 dark:text-gray-400 font-medium mb-6">
+                            {oyNomlar[filterOy]} {filterYil} oyidagi <span className="font-black text-red-500">{total}</span> ta to'lovni 
+                            <span className="text-red-500 font-black">o'chirishni</span> xohlaysizmi?
+                        </p>
+                        <p className="text-xs text-red-500 font-medium mb-6">
+                            ⚠️ Bu amalni qaytarib bo'lmaydi!
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setDeleteAllOpen(false)}
+                                disabled={deleteAllLoading}
+                                className="flex-1 px-6 py-3 rounded-2xl bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-gray-300 
+                                    font-black uppercase text-xs tracking-wider active:scale-95 transition-all"
+                            >
+                                Bekor Qilish
+                            </button>
+                            <button
+                                onClick={handleDeleteAll}
+                                disabled={deleteAllLoading}
+                                className="flex-1 px-6 py-3 rounded-2xl bg-red-500 text-white font-black uppercase text-xs tracking-wider 
+                                    shadow-lg shadow-red-500/20 active:scale-95 transition-all disabled:opacity-50"
+                            >
+                                {deleteAllLoading ? (
+                                    <span className="flex items-center justify-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        O'chirilmoqda...
+                                    </span>
+                                ) : 'Ha, O\'chirish'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
     );
 };
 

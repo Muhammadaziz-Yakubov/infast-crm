@@ -58,13 +58,27 @@ exports.createPayment = async (req, res) => {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
 
-        const now = new Date();
-        let billingMonth = req.body.oy || now.getMonth() + 1;
-        let billingYear = req.body.yil || now.getFullYear();
+const now = new Date();
+        const currentDay = now.getDate();
+        const tolovKuni = student.tolovKuni || 15;
 
-        // Agar oy/yil berilmagan bo'lsa va bugun to'lov kunidan ancha oldin bo'lsa, 
-        // bu o'tgan oyning qarzi bo'lishi mumkin deb hisoblash mantiqsiz bo'lishi mumkin.
-        // Shuning uchun default holatda joriy oyni olish ma'qul.
+        let billingMonth = req.body.oy;
+        let billingYear = req.body.yil;
+
+        // Agar oy/yil berilmagan bo'lsa - avtomatik hisoblash
+        if (!billingMonth || !billingYear) {
+            billingMonth = now.getMonth() + 1;
+            billingYear = now.getFullYear();
+
+            // AGAR to'lov kuni o'tib ketgan bo'lsa => KEYINGI oyga to'lov
+            if (currentDay >= tolovKuni) {
+                billingMonth++;
+                if (billingMonth > 12) {
+                    billingMonth = 1;
+                    billingYear++;
+                }
+            }
+        }
 
         const payment = await Payment.create({
             oquvchi,
@@ -112,22 +126,34 @@ exports.bulkCreatePayment = async (req, res) => {
         }
 
         const now = new Date();
+        const currentDay = now.getDate();
         let successCount = 0;
         let failCount = 0;
 
         for (const studentId of studentIds) {
             try {
-                const student = await Student.findById(studentId).populate('kurs', 'narx');
+                const student = await Student.findById(studentId).populate('kurs', 'narx tolovKuni');
                 if (!student) { failCount++; continue; }
 
-                // Oylik to'lovni o'quvchining o'zidan yoki kursidan olish
+                const tolovKuni = student.tolovKuni || 15;
                 const studentSumma = summa || student.oylikTolov || student.kurs?.narx || 0;
+
+                // Billing oy ni hisoblash
+                let billingMonth = now.getMonth() + 1;
+                let billingYear = now.getFullYear();
+                if (currentDay >= tolovKuni) {
+                    billingMonth++;
+                    if (billingMonth > 12) {
+                        billingMonth = 1;
+                        billingYear++;
+                    }
+                }
 
                 await Payment.create({
                     oquvchi: studentId,
                     summa: studentSumma,
-                    oy: now.getMonth() + 1,
-                    yil: now.getFullYear(),
+                    oy: billingMonth,
+                    yil: billingYear,
                     sana: req.body.sana || now,
                     tolovTuri: tolovTuri || 'naqd',
                     izoh: izoh || 'Ommaviy to\'lov',
@@ -351,39 +377,51 @@ exports.deletePayment = async (req, res) => {
         }
 
         const studentId = payment.oquvchi;
-        const paymentOy = payment.oy;
-        const paymentYil = payment.yil;
+        const deletedOy = payment.oy;
+        const deletedYil = payment.yil;
 
         // To'lovni o'chirish
         await Payment.findByIdAndDelete(req.params.id);
 
-        // O'quvchining shu oy uchun boshqa to'lovi bormi tekshirish
-        const otherPayment = await Payment.findOne({
-            oquvchi: studentId,
-            oy: paymentOy,
-            yil: paymentYil
-        });
+        // O'quvchini topish
+        const student = await Student.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
+        }
 
-        // Agar boshqa to'lov yo'q bo'lsa, o'quvchi holatini yangilash
-        if (!otherPayment) {
-            const student = await Student.findById(studentId);
-            if (student) {
-                const now = new Date();
-                const currentMonth = now.getMonth() + 1;
-                const currentYear = now.getFullYear();
+        const now = new Date();
+        const currentDay = now.getDate();
+        const tolovKuni = student.tolovKuni || 15;
 
-                // Faqat joriy oy uchun to'lov o'chirilgan bo'lsa holatni o'zgartirish
-                if (paymentOy === currentMonth && paymentYil === currentYear) {
-                    const currentDay = now.getDate();
-                    if (currentDay >= student.tolovKuni) {
-                        student.tolovHolati = 'qarzdor';
-                    } else {
-                        student.tolovHolati = 'tolanmagan';
-                    }
-                    await student.save();
-                }
+        // Billing oy ni hisoblash (yangi mantiq): to'lov kuni o'tgan bo'lsa = keyingi oy
+        let billingMonth = now.getMonth() + 1;
+        let billingYear = now.getFullYear();
+        if (currentDay >= tolovKuni) {
+            billingMonth++;
+            if (billingMonth > 12) {
+                billingMonth = 1;
+                billingYear++;
             }
         }
+
+        // Agar o'chirilgan to'lov billing oy ga to'g'ri kelsa, holatni yangilash kerak
+        if (deletedOy === billingMonth && deletedYil === billingYear) {
+            // O'chirilgan to'lov joriy billing oy uchun edi
+            // Boshqa to'lov bormi tekshirish
+            const stillHasPayment = await Payment.findOne({
+                oquvchi: studentId,
+                oy: billingMonth,
+                yil: billingYear
+            });
+
+            if (!stillHasPayment) {
+                // Boshqa to'lov yo'q, qarzdor qilish kerak
+                student.tolovHolati = 'qarzdor';
+                await student.save();
+            }
+            // Agar stillHasPayment mavjud bo'lsa, to'lov holati o'zgarishsiz qoladi ('tolangan')
+        }
+        // Agar o'chirilgan to'lov billing oy ga tegishli bo'lmasa, holatni o'zgartirmaslik
 
         res.json({
             success: true,
@@ -429,5 +467,34 @@ exports.exportDebtors = async (req, res) => {
         res.send(buffer);
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server xatosi' });
+    }
+};
+
+// @desc    Barcha to'lovlarni o'chirish (filter bo'yicha)
+// @route   DELETE /payments/all?oy=&yil=
+exports.deleteAllPayments = async (req, res) => {
+    try {
+        const { oy, yil } = req.query;
+
+        let query = {};
+        if (oy) query.oy = parseInt(oy);
+        if (yil) query.yil = parseInt(yil);
+
+        if (!oy && !yil) {
+            return res.status(400).json({
+                success: false,
+                message: "Oy va/yil ko'rsatilishi shart. Barcha to'lovlarni o'chirish mumkin emas."
+            });
+        }
+
+        const result = await Payment.deleteMany(query);
+
+        res.json({
+            success: true,
+            message: `${result.deletedCount} ta to'lov o'chirildi`,
+            deletedCount: result.deletedCount
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
     }
 };

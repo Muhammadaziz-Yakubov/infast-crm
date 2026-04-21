@@ -87,6 +87,7 @@ export const paymentAPI = {
     create: (data) => api.post('/payments', data),
     bulkCreate: (data) => api.post('/payments/bulk', data),
     delete: (id) => api.delete(`/payments/${id}`),
+    deleteAll: (params) => api.delete('/payments/all', { params }),
     getDashboard: () => api.get('/payments/dashboard'),
     exportDebtors: () => api.get('/payments/export/debtors', { responseType: 'blob' }),
 };

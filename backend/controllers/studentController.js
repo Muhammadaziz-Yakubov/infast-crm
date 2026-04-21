@@ -155,22 +155,26 @@ exports.createStudent = async (req, res) => {
         const [student] = await Student.create([studentData], { session });
 
         // Agar to'lov qilgan bo'lsa - payment yaratish
+        // TO'G'RI LOGIKA: Hozir to'lov kuni o'tmagan bo'lsa = joriy oy, o'tgan bo'lsa = keyingi oy
         if (shuOyTolagan === true || shuOyTolagan === 'ha') {
             const now = new Date();
-            const currentMonth = now.getMonth() + 1;
-            const currentYear = now.getFullYear();
             const currentDay = now.getDate();
+            const tolovKuni = student.tolovKuni || 15;
 
-            let billingMonth = currentMonth;
-            let billingYear = currentYear;
+            let billingMonth = now.getMonth() + 1;
+            let billingYear = now.getFullYear();
 
-            if (currentDay < student.tolovKuni) {
-                billingMonth--;
-                if (billingMonth < 1) {
-                    billingMonth = 12;
-                    billingYear--;
+            // Agar to'lov kuni hali kelmagan bo'lsa - joriy oy uchun to'lov
+            // Agar to'lov kuni o'tib ketgan bo'lsa - keyingi oy uchun to'lov
+            if (currentDay >= tolovKuni) {
+                // To'lov kuni o'tgan, keyingi oyga to'lov
+                billingMonth++;
+                if (billingMonth > 12) {
+                    billingMonth = 1;
+                    billingYear++;
                 }
             }
+            // Agar currentDay < tolovKuni => billingMonth = joriy oy (o'zgartirishsiz)
 
             await Payment.create([{
                 oquvchi: student._id,
