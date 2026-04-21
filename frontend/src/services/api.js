@@ -182,4 +182,13 @@ export const eventAPI = {
     getAnalytics: (id) => api.get(`/events/${id}/analytics`),
 };
 
+export const battleAPI = {
+    create: (data) => api.post('/battles/create', data),
+    join: (data) => api.post('/battles/join', data),
+    getRandom: (betAmount) => api.get('/battles/random', { params: { betAmount } }),
+    submitScore: (data) => api.post('/battles/submit', data),
+    getMyBattles: () => api.get('/battles/my'),
+    getOne: (id) => api.get(`/battles/${id}`),
+};
+
 export default api;

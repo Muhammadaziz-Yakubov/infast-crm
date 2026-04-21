@@ -243,6 +243,12 @@ const StudentHome = () => {
                             color={{ bg: 'bg-sky-100 dark:bg-sky-500/20', text: 'text-sky-600' }}
                         />
                         <NavCard
+                            to="/octagon"
+                            icon={HiOutlineLightningBolt}
+                            title="Arena"
+                            color={{ bg: 'bg-orange-100 dark:bg-orange-500/20', text: 'text-orange-600' }}
+                        />
+                        <NavCard
                             to="/leaderboard"
                             icon={HiOutlineTrendingUp}
                             title="Reyting"

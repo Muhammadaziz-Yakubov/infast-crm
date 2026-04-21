@@ -76,6 +76,7 @@ app.use('/api/wheels', require('./routes/wheelRoutes'));
 app.use('/api/leads', require('./routes/leadRoutes'));
 app.use('/api/curriculum', require('./routes/curriculumRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
+app.use('/api/battles', require('./routes/battleRoutes'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
