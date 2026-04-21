@@ -127,7 +127,8 @@ const Payments = () => {
     if (loading && payments.length === 0) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+        <>
+            <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div className="space-y-1">
                     <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white uppercase italic">
@@ -395,6 +396,7 @@ const Payments = () => {
                 </div>
             </div>
         )}
+        </>
     );
 };
 
