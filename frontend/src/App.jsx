@@ -54,6 +54,13 @@ const ProtectedRoute = ({ children, allowDebtor = false }) => {
     return children;
 };
 
+const PublicRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+    if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
+    if (user) return <Navigate to="/dashboard" replace />;
+    return children;
+};
+
 const RoleBasedHome = () => {
     const { user } = useAuth();
     if (user?.role === 'student') return <StudentHome />;
@@ -105,13 +112,6 @@ const AppContent = () => {
             </Routes>
         </Suspense>
     );
-};
-
-const PublicRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    if (loading) return <LoadingSpinner text="Tekshirilmoqda..." />;
-    if (user) return <Navigate to="/dashboard" replace />;
-    return children;
 };
 
 const App = () => (
