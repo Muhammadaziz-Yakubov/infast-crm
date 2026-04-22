@@ -37,10 +37,7 @@ exports.createBattle = async (req, res) => {
             return res.status(400).json({ success: false, message: "Tizimda savollar yetarli emas (kamida 10 ta bo'lishi kerak). Iltimos, bazaga savollar qo'shing." });
         }
 
-        let inviteCode;
-        if (!isRandom) {
-            inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-        }
+        const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
         const battle = await Battle.create({
             player1: req.user._id,
@@ -51,9 +48,11 @@ exports.createBattle = async (req, res) => {
             status: 'waiting'
         });
 
+        const populatedBattle = await Battle.findById(battle._id).populate('questions');
+
         res.status(201).json({
             success: true,
-            data: battle
+            data: populatedBattle
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -92,9 +91,14 @@ exports.joinBattle = async (req, res) => {
         battle.status = 'ongoing';
         await battle.save();
 
+        const populatedBattle = await Battle.findById(battle._id)
+            .populate('player1', 'ism profileImage')
+            .populate('player2', 'ism profileImage')
+            .populate('questions');
+
         res.json({
             success: true,
-            data: battle
+            data: populatedBattle
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

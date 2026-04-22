@@ -290,11 +290,20 @@ const Octagon = () => {
                     <div className="space-y-4">
                         <h2 className="text-3xl font-black text-gray-900 dark:text-white uppercase italic tracking-tighter">Raqib kutilmoqda...</h2>
                         {battle?.inviteCode && (
-                            <div className="space-y-2">
+                            <div className="space-y-4">
                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Invite Code:</p>
                                 <div className="text-5xl font-black tracking-[0.5em] text-orange-500 italic bg-orange-500/5 px-8 py-4 rounded-3xl border-2 border-orange-500/20">
                                     {battle.inviteCode}
                                 </div>
+                                <button 
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(battle.inviteCode);
+                                        toast.success("Kod nusxalandi! ✅");
+                                    }}
+                                    className="px-6 py-2 rounded-full bg-gray-100 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all"
+                                >
+                                    Nusxa olish 📋
+                                </button>
                                 <p className="text-xs font-bold text-gray-500 italic mt-4">Do'stingizga ushbu kodni yuboring!</p>
                             </div>
                         )}
@@ -359,24 +368,32 @@ const Octagon = () => {
 
                     {/* Question Card */}
                     <div className="bg-white dark:bg-dark-800 rounded-[3rem] p-10 border border-gray-100 dark:border-white/5 shadow-2xl space-y-10">
-                        <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white text-center leading-tight italic">
-                            {battle.questions[currentQuestionIndex].question}
-                        </h2>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {battle.questions[currentQuestionIndex].options.map((option, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => handleAnswer(idx)}
-                                    className="p-6 rounded-[2rem] bg-gray-50 dark:bg-dark-900/50 border-2 border-transparent hover:border-orange-500 hover:bg-white dark:hover:bg-dark-800 text-gray-700 dark:text-gray-200 font-bold text-lg transition-all duration-300 text-left flex items-center justify-between group shadow-sm hover:shadow-xl"
-                                >
-                                    <span>{option}</span>
-                                    <div className="w-8 h-8 rounded-xl bg-white dark:bg-dark-800 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
-                                        <HiOutlineArrowRight className="w-4 h-4 text-orange-500" />
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
+                        {battle.questions && battle.questions[currentQuestionIndex] ? (
+                            <>
+                                <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white text-center leading-tight italic">
+                                    {battle.questions[currentQuestionIndex].question}
+                                </h2>
+        
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {battle.questions[currentQuestionIndex].options.map((option, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => handleAnswer(idx)}
+                                            className="p-6 rounded-[2rem] bg-gray-50 dark:bg-dark-900/50 border-2 border-transparent hover:border-orange-500 hover:bg-white dark:hover:bg-dark-800 text-gray-700 dark:text-gray-200 font-bold text-lg transition-all duration-300 text-left flex items-center justify-between group shadow-sm hover:shadow-xl"
+                                        >
+                                            <span>{option}</span>
+                                            <div className="w-8 h-8 rounded-xl bg-white dark:bg-dark-800 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                                                <HiOutlineArrowRight className="w-4 h-4 text-orange-500" />
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </>
+                        ) : (
+                            <div className="text-center py-10">
+                                <LoadingSpinner text="Savollar yuklanmoqda..." />
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
