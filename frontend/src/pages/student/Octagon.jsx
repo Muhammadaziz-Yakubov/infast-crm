@@ -13,6 +13,7 @@ import { useAuth } from '../../context/AuthContext';
 const Octagon = () => {
     const [step, setStep] = useState('select'); // select, waiting, battle, result
     const [betAmount, setBetAmount] = useState(200);
+    const [selectedCategory, setSelectedCategory] = useState('HTML');
     const [isRandom, setIsRandom] = useState(true);
     const [battle, setBattle] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -86,7 +87,7 @@ const Octagon = () => {
 
         setLoading(true);
         try {
-            const res = await battleAPI.create({ betAmount, isRandom });
+            const res = await battleAPI.create({ betAmount, isRandom, category: selectedCategory });
             setBattle(res.data.data);
             setStep('waiting');
             
@@ -213,19 +214,36 @@ const Octagon = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Bet Selection */}
                         <div className="bg-white dark:bg-dark-800 rounded-[3rem] p-8 border border-gray-100 dark:border-white/5 shadow-2xl space-y-8">
-                            <div>
-                                <h3 className="text-xs font-black text-gray-400 uppercase italic tracking-widest mb-6">Tikish miqdorini tanlang</h3>
-                                <div className="grid grid-cols-3 gap-4">
-                                    {[200, 400, 600].map(amount => (
-                                        <button
-                                            key={amount}
-                                            onClick={() => setBetAmount(amount)}
-                                            className={`p-6 rounded-[2rem] border-2 transition-all duration-300 flex flex-col items-center gap-2 group ${betAmount === amount ? 'border-orange-500 bg-orange-500/5 shadow-lg shadow-orange-500/10' : 'border-gray-100 dark:border-white/5 hover:border-orange-300'}`}
-                                        >
-                                            <span className={`text-2xl group-hover:scale-125 transition-transform ${betAmount === amount ? 'scale-110' : ''}`}>🪙</span>
-                                            <span className="font-black text-lg text-gray-900 dark:text-white">{amount}</span>
-                                        </button>
-                                    ))}
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-xs font-black text-gray-400 uppercase italic tracking-widest mb-4">Mavzuni tanlang</h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                        {['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'].map(cat => (
+                                            <button
+                                                key={cat}
+                                                onClick={() => setSelectedCategory(cat)}
+                                                className={`py-2 px-4 rounded-xl border-2 text-[10px] font-black transition-all ${selectedCategory === cat ? 'border-orange-500 bg-orange-500 text-white' : 'border-gray-100 dark:border-white/5 text-gray-500 hover:border-orange-300'}`}
+                                            >
+                                                {cat}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xs font-black text-gray-400 uppercase italic tracking-widest mb-4">Tikish miqdori</h3>
+                                    <div className="grid grid-cols-3 gap-3">
+                                        {[200, 400, 600].map(amount => (
+                                            <button
+                                                key={amount}
+                                                onClick={() => setBetAmount(amount)}
+                                                className={`p-4 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center gap-1 group ${betAmount === amount ? 'border-orange-500 bg-orange-500/5 shadow-lg shadow-orange-500/10' : 'border-gray-100 dark:border-white/5 hover:border-orange-300'}`}
+                                            >
+                                                <span className={`text-xl group-hover:scale-125 transition-transform ${betAmount === amount ? 'scale-110' : ''}`}>🪙</span>
+                                                <span className="font-black text-sm text-gray-900 dark:text-white">{amount}</span>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 

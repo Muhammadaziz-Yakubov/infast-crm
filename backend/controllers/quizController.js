@@ -9,18 +9,20 @@ const path = require('path');
 // Seed base questions if none exist or too few
 const seedQuestions = async (req, res) => {
     try {
+        const force = req.body && req.body.force;
         const count = await QuizQuestion.countDocuments();
-        if (count < 10) {
+        if (count < 10 || force) {
             const filePath = path.join(__dirname, '../data/questions_seed.json');
             if (fs.existsSync(filePath)) {
                 const questionsData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
                 
-                // Clear existing if any to avoid duplicates or just insert new ones
-                // await QuizQuestion.deleteMany({}); 
+                if (force) {
+                    await QuizQuestion.deleteMany({});
+                }
                 
                 await QuizQuestion.insertMany(questionsData);
-                console.log('100 questions seeded successfully');
-                if (res) return res.json({ success: true, message: '100 ta savol muvaffaqiyatli yuklandi' });
+                console.log('Questions seeded successfully');
+                if (res) return res.json({ success: true, message: 'Savollar muvaffaqiyatli yangilandi' });
             } else {
                 if (res) return res.status(404).json({ success: false, message: 'Seed fayli topilmadi' });
             }

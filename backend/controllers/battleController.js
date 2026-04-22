@@ -6,7 +6,7 @@ const { updateCoins } = require('../services/coinService');
 // Create a new battle
 exports.createBattle = async (req, res) => {
     try {
-        const { betAmount, isRandom } = req.body;
+        const { betAmount, isRandom, category } = req.body;
         const student = await Student.findById(req.user._id);
 
         if (!student) {
@@ -20,8 +20,12 @@ exports.createBattle = async (req, res) => {
         // Deduct coins immediately
         await updateCoins(req.user._id, -betAmount, `Octagon battle yaratish: ${betAmount}`);
 
-        // Get 10 random questions
-        let questions = await QuizQuestion.aggregate([{ $sample: { size: 10 } }]);
+        // Get 10 random questions by category
+        const matchStage = category ? { category } : {};
+        let questions = await QuizQuestion.aggregate([
+            { $match: matchStage },
+            { $sample: { size: 10 } }
+        ]);
         
         if (questions.length < 10) {
             // Try to seed questions if they are missing

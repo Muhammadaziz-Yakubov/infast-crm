@@ -16,7 +16,7 @@ const quizQuestionSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['HTML', 'CSS', 'JavaScript', 'React'],
+        enum: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'],
         required: [true, 'Kategoriya kiritilishi shart']
     }
 }, {
