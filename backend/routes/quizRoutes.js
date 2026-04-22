@@ -8,6 +8,9 @@ router.use(protect);
 // Student & Admin can get questions (though mostly for students)
 router.get('/questions/random', quizController.getRandomQuestions);
 
+// Seed questions manually
+router.post('/seed', restrictTo('admin'), quizController.seedQuestions);
+
 // Student submits quiz
 router.post('/submit', quizController.submitQuiz);
 

@@ -21,12 +21,20 @@ exports.createBattle = async (req, res) => {
         await updateCoins(req.user._id, -betAmount, `Octagon battle yaratish: ${betAmount}`);
 
         // Get 10 random questions
-        const questions = await QuizQuestion.aggregate([{ $sample: { size: 10 } }]);
+        let questions = await QuizQuestion.aggregate([{ $sample: { size: 10 } }]);
+        
+        if (questions.length < 10) {
+            // Try to seed questions if they are missing
+            const quizController = require('./quizController');
+            await quizController.seedQuestions();
+            // Try again
+            questions = await QuizQuestion.aggregate([{ $sample: { size: 10 } }]);
+        }
 
         if (questions.length < 10) {
-            // If not enough questions, return coins and error
+            // If still not enough questions, return coins and error
             await updateCoins(req.user._id, betAmount, `Savollar yetarli emasligi sababli qaytarildi`);
-            return res.status(400).json({ success: false, message: "Tizimda savollar yetarli emas (kamida 10 ta bo'lishi kerak)" });
+            return res.status(400).json({ success: false, message: "Tizimda savollar yetarli emas (kamida 10 ta bo'lishi kerak). Iltimos, bazaga savollar qo'shing." });
         }
 
         let inviteCode;
