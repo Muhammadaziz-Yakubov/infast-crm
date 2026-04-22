@@ -1,0 +1,590 @@
+[
+  {
+    "question": "HTML nima?",
+    "options": ["HyperText Markup Language", "HighText Machine Language", "Hyperlink and Text Markup Language", "None of these"],
+    "correctOption": 0,
+    "category": "HTML"
+  },
+  {
+    "question": "CSS da rang berish uchun qaysi xususiyat ishlatiladi?",
+    "options": ["text-color", "color", "font-color", "fill"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML da eng katta sarlavha qaysi?",
+    "options": ["<h6>", "<head>", "<h1>", "<header>"],
+    "correctOption": 2,
+    "category": "HTML"
+  },
+  {
+    "question": "CSS da elementni o'rtaga keltirish uchun qaysi biri ishlatiladi?",
+    "options": ["margin: 0 auto;", "padding: center;", "align: center;", "text-align: middle;"],
+    "correctOption": 0,
+    "category": "CSS"
+  },
+  {
+    "question": "JavaScript da o'zgaruvchi e'lon qilish uchun qaysi keyword ishlatiladi?",
+    "options": ["var", "let", "const", "Barchasi"],
+    "correctOption": 3,
+    "category": "JavaScript"
+  },
+  {
+    "question": "HTML da yangi qatorga o'tish tegini toping?",
+    "options": ["<lb>", "<br>", "<break>", "<newline>"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "CSS da 'font-weight' nima uchun ishlatiladi?",
+    "options": ["Matn rangini o'zgartirish", "Matn uslubini o'zgartirish", "Matn qalinligini o'zgartirish", "Matn hajmini o'zgartirish"],
+    "correctOption": 2,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML da havola (link) yaratish uchun qaysi teg ishlatiladi?",
+    "options": ["<link>", "<a>", "<href>", "<nav>"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "JavaScript '5' + 5 natijasi nima bo'ladi?",
+    "options": ["10", "55", "Error", "NaN"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS da 'display: flex' nima qiladi?",
+    "options": ["Elementni yashiradi", "Layoutni flexboxga o'tkazadi", "Elementni aylanib chiqadi", "Matnni kichiklashtiradi"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "React-da 'props' nima?",
+    "options": ["Komponent ichidagi holat", "Komponentga tashqaridan beriladigan ma'lumotlar", "HTML atributlari", "Funksiya parametrlari"],
+    "correctOption": 1,
+    "category": "React"
+  },
+  {
+    "question": "React-da qaysi hook holatni (state) boshqarish uchun ishlatiladi?",
+    "options": ["useEffect", "useContext", "useState", "useReducer"],
+    "correctOption": 2,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'typeof' operatori nima vazifani bajaradi?",
+    "options": ["O'zgaruvchi turini aniqlaydi", "O'zgaruvchini o'chiradi", "O'zgaruvchi qiymatini o'zgartiradi", "Yangi o'zgaruvchi yaratadi"],
+    "correctOption": 0,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'z-index' nima?",
+    "options": ["Elementning gorizontal joylashuvi", "Elementning vertikal joylashuvi", "Elementning qatlamlar tartibi", "Elementning shaffofligi"],
+    "correctOption": 2,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'id' va 'class' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "id faqat bir marta, class bir necha marta ishlatilishi mumkin", "class faqat bir marta, id bir necha marta ishlatilishi mumkin", "id CSS uchun, class JS uchun"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da Virtual DOM nima uchun kerak?",
+    "options": ["Sahifani tezroq yangilash uchun", "Xotirani tejash uchun", "Kod yozishni osonlashtirish uchun", "Server bilan bog'lanish uchun"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Array.map()' nima qaytaradi?",
+    "options": ["Yangi massiv", "Asl massivni o'zgartiradi", "Son", "Boolean qiymat"],
+    "correctOption": 0,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'position: absolute' elementni nimaga nisbatan joylashtiradi?",
+    "options": ["Brauzer oynasiga nisbatan", "Eng yaqin 'positioned' ota-onasiga nisbatan", "Keyingi elementga nisbatan", "Sahifa markaziga nisbatan"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'alt' atributi nima uchun ishlatiladi?",
+    "options": ["Rasm sarlavhasi uchun", "Rasm yuklanmaganda chiqadigan matn uchun", "Rasm o'lchami uchun", "Rasm havolasi uchun"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'useEffect' qachon ishga tushadi?",
+    "options": ["Faqat birinchi marta render bo'lganda", "Har safar komponent yangilanganda", "Komponent o'chirilganda", "Bog'liqliklar o'zgarganda yoki har renderda"],
+    "correctOption": 3,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'NaN' nima degani?",
+    "options": ["Not a Number", "Null and None", "New and Now", "Negative and Null"],
+    "correctOption": 0,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'box-sizing: border-box' nima qiladi?",
+    "options": ["Chegaralarni yashiradi", "Padding va border-ni umumiy kenglikka qo'shadi", "Elementni aylanib chiqadi", "Elementni markazga qo'yadi"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'target=\"_blank\"' nima vazifani bajaradi?",
+    "options": ["Havolani o'sha oynada ochadi", "Havolani yangi oynada ochadi", "Havolani yashiradi", "Havolani yuklab oladi"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'useMemo' nima uchun ishlatiladi?",
+    "options": ["Holatni saqlash uchun", "Hisoblashlarni keshlab qo'yish (memoizatsiya) uchun", "DOM elementiga kirish uchun", "API-dan ma'lumot olish uchun"],
+    "correctOption": 1,
+    "category": "React"
+  },
+  {
+    "question": "JS-da '===' va '==' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "=== qiymat va turni tekshiradi, == faqat qiymatni", "== qiymat va turni tekshiradi, === faqat qiymatni", "=== faqat sonlarni tekshiradi"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'opacity: 0' va 'visibility: hidden' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "opacity: 0 joyini saqlab qoladi, visibility: hidden ham", "opacity: 0 elementga bosish mumkin, visibility: hidden-ga yo'q", "visibility: hidden joyini saqlab qolmaydi"],
+    "correctOption": 2,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'placeholder' atributi qaysi tegda ishlatiladi?",
+    "options": ["<a>", "<div>", "<input>", "<span>"],
+    "correctOption": 2,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'key' prop-i nima uchun kerak?",
+    "options": ["Elementlarga stil berish uchun", "Ro'yxatdagi elementlarni identifikatsiya qilish uchun", "Click event-ni ushlash uchun", "API-ga yuborish uchun"],
+    "correctOption": 1,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'const' bilan e'lon qilingan massivni o'zgartirish mumkinmi?",
+    "options": ["Ha, elementlarini o'zgartirish mumkin", "Yo'q, hech narsani o'zgartirib bo'lmaydi", "Faqat yangi massiv biriktirish mumkin", "Faqat birinchi elementini o'zgartirish mumkin"],
+    "correctOption": 0,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'grid-template-columns' qaysi layoutda ishlatiladi?",
+    "options": ["Flexbox", "Float", "Grid", "Table"],
+    "correctOption": 2,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'form' ichidagi 'button' default turi qanday?",
+    "options": ["button", "reset", "submit", "none"],
+    "correctOption": 2,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'useRef' nima uchun ishlatiladi?",
+    "options": ["Renderlar orasida qiymatni saqlash va DOM-ga to'g'ridan-to'g'ri kirish uchun", "Holatni o'zgartirish uchun", "Komponentlar orasida ma'lumot almashish uchun", "Hech qaysi"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Arrow function' va oddiy funksiya orasidagi asosiy farq nima?",
+    "options": ["Yozilish uslubi", "this kalit so'zining ishlashi", "Tezligi", "Parametrlar soni"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'overflow: scroll' nima qiladi?",
+    "options": ["Matnni kesib tashlaydi", "Scroll paneli doim ko'rinib turadi", "Elementni yashiradi", "Matnni kichraytiradi"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'meta charset=\"UTF-8\"' nima uchun kerak?",
+    "options": ["Sahifa tilini belgilash uchun", "Belgilar kodirovkasini ko'rsatish uchun", "SEO uchun", "Sahifa o'lchami uchun"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Context API' nima uchun ishlatiladi?",
+    "options": ["Prop-larni ko'p qatlamli komponentlar orasida o'tkazishni (prop drilling) oldini olish uchun", "API-dan ma'lumot olish uchun", "Rasmlarni yuklash uchun", "Hech qaysi"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'async/await' nima uchun ishlatiladi?",
+    "options": ["Kodlarni sinxron qilish uchun", "Asinxron kodlarni o'qishga osonroq ko'rinishda yozish uchun", "Loop-larni to'xtatish uchun", "Xatolarni yashirish uchun"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'vh' birligi nimani anglatadi?",
+    "options": ["Viewport Height (ekran balandligining 1%i)", "Vertical Height", "Variable Height", "View Horizontal"],
+    "correctOption": 0,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<ul>' tegi qanday ro'yxat yaratadi?",
+    "options": ["Tartiblangan ro'yxat", "Tartiblanmagan ro'yxat", "Ta'rif ro'yxati", "Havolalar ro'yxati"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'children' prop-i nima?",
+    "options": ["Komponentning barcha bolalari", "Komponent ichiga ochuvchi va yopuvchi teglar orasiga qo'yilgan tarkib", "Faqat birinchi bola", "Massivning birinchi elementi"],
+    "correctOption": 1,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Promise.all()' nima qiladi?",
+    "options": ["Barcha promise-larni ketma-ket bajaradi", "Barcha promise-lar bajarilishini kutadi va natijalarni massivda qaytaradi", "Faqat birinchi bajarilgan promise-ni qaytaradi", "Xato bersa hammasini to'xtatadi"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'rem' va 'em' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "rem root element-ga nisbatan, em ota-ona element-ga nisbatan", "em root element-ga nisbatan, rem ota-ona element-ga nisbatan", "rem faqat padding-lar uchun"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<script>' tegi qayerda joylashishi mumkin?",
+    "options": ["Faqat <head> ichida", "Faqat <body> oxirida", "Ham <head>, ham <body> ichida", "Faqat <html>-dan tashqarida"],
+    "correctOption": 2,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'portal' (createPortal) nima uchun ishlatiladi?",
+    "options": ["Ma'lumotlarni boshqa sahifaga yuborish uchun", "Komponentni DOM-dagi boshqa joyga (masalan, body-ga) render qilish uchun", "Rasm galereyasi yaratish uchun", "Hech qaysi"],
+    "correctOption": 1,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'let' va 'var' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "let block scope-ga ega, var function scope-ga", "var block scope-ga ega, let function scope-ga", "let-ni o'zgartirib bo'lmaydi"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'transition' nima uchun ishlatiladi?",
+    "options": ["Layoutni o'zgartirish uchun", "Element xususiyatlarining o'zgarishini silliq (smooth) qilish uchun", "Ranglarni tanlash uchun", "Rasm o'lchamini o'zgartirish uchun"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<thead>' nima?",
+    "options": ["Jadvalning sarlavha qismi", "Sahifa sarlavhasi", "Maqola sarlavhasi", "Ro'yxat sarlavhasi"],
+    "correctOption": 0,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Fragment' ( <></> ) nima uchun kerak?",
+    "options": ["DOM-ga ortiqcha node qo'shmasdan bir nechta elementni guruhlash uchun", "Elementlarni yashirish uchun", "Loop-larni tezlashtirish uchun", "Hech qaysi"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Array.filter()' nima qaytaradi?",
+    "options": ["Boolean", "Faqat bitta element", "Shartga mos keladigan elementlardan iborat yangi massiv", "Asl massivni o'zgartiradi"],
+    "correctOption": 2,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'flex-direction: column' elementlarni qanday joylashtiradi?",
+    "options": ["Yotiq holatda (gorizontal)", "Tik holatda (vertikal)", "Diagonal bo'ylab", "Markazda"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'readonly' atributi nima qiladi?",
+    "options": ["Elementni yashiradi", "Elementni o'chiradi (disable)", "Elementni faqat o'qish uchun qiladi (o'zgartirib bo'lmaydi)", "Elementni faqat adminlar ko'radi"],
+    "correctOption": 2,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'useLayoutEffect' va 'useEffect' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "useLayoutEffect renderdan keyin, useEffect renderdan oldin ishlaydi", "useLayoutEffect brauzer ekranni chizishidan oldin sinxron ishlaydi", "useEffect faqat errorlar uchun"],
+    "correctOption": 2,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Object.keys()' nima qaytaradi?",
+    "options": ["Obyekt qiymatlarini", "Obyekt kalitlarining massivini", "Obyektning o'zini", "Obyekt uzunligini"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'box-shadow' nima uchun ishlatiladi?",
+    "options": ["Element orqasiga soya berish uchun", "Element rangini o'zgartirish uchun", "Element chegarasini qalinlashtirish uchun", "Elementni yumaloq qilish uchun"],
+    "correctOption": 0,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<label>' tegi 'for' atributi bilan nimaga ulanadi?",
+    "options": ["Input-ning class-iga", "Input-ning id-siga", "Input-ning name-iga", "Input-ning type-iga"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'memo' (HOC) nima uchun kerak?",
+    "options": ["Komponentni qayta render bo'lishini (agar props o'zgarmasa) oldini olish uchun", "Holatni saqlash uchun", "API-ga ulanish uchun", "Xatolarni ushlash uchun"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'JSON.stringify()' nima qiladi?",
+    "options": ["JSON-ni obyektga aylantiradi", "Obyektni JSON string-ga aylantiradi", "String-ni massivga aylantiradi", "Obyektni massivga aylantiradi"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da '@media' nima uchun ishlatiladi?",
+    "options": ["Video qo'shish uchun", "Responsive dizayn (turli ekran o'lchamlari) uchun", "Animatsiya yaratish uchun", "Font yuklash uchun"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<select>' ichidagi variantlar qaysi tegda bo'ladi?",
+    "options": ["<list>", "<item>", "<option>", "<choice>"],
+    "correctOption": 2,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'useCallback' nima qaytaradi?",
+    "options": ["Memoizatsiya qilingan qiymat", "Memoizatsiya qilingan funksiya", "Yangi komponent", "Hech narsa"],
+    "correctOption": 1,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Array.reduce()' asosan nima uchun ishlatiladi?",
+    "options": ["Massivni filtrlash uchun", "Massiv elementlarini bitta qiymatga yig'ish (masalan, yig'indi) uchun", "Massivni tartiblash uchun", "Massiv elementlarini ko'paytirish uchun"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'float' xususiyati nima vazifani bajaradi?",
+    "options": ["Elementni suzuvchi (chapga yoki o'ngga) qiladi", "Elementni markazga qo'yadi", "Elementni kattalashtiradi", "Elementni yashiradi"],
+    "correctOption": 0,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<iframe>' nima uchun ishlatiladi?",
+    "options": ["Rasm ko'rsatish uchun", "Boshqa HTML sahifani joriy sahifa ichida ko'rsatish uchun", "Audio qo'shish uchun", "Animatsiya uchun"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Error Boundary' nima?",
+    "options": ["Komponentlar daraxtidagi JS xatolarini ushlab qoladigan va fallback UI ko'rsatadigan komponent", "Try-catch bloki", "Debuger", "Xatolarni serverga yuboradigan funksiya"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'localStorage' va 'sessionStorage' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "localStorage oyna yopilganda o'chadi", "sessionStorage oyna yopilganda o'chadi, localStorage saqlanib qoladi", "localStorage faqat sonlarni saqlaydi"],
+    "correctOption": 2,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'border-radius: 50%' nima qiladi?",
+    "options": ["To'rtburchakni uchburchakka aylantiradi", "Elementni doira yoki oval shakliga keltiradi", "Chegarani qalinlashtiradi", "Soya beradi"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<canvas>' tegi nima uchun ishlatiladi?",
+    "options": ["Grafikalar chizish (JS yordamida) uchun", "Matn yozish uchun", "Video qo'shish uchun", "Jadval yaratish uchun"],
+    "correctOption": 0,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Controlled component' nima?",
+    "options": ["Qiymati React state tomonidan boshqariladigan form elementi", "Tugmachasi bor komponent", "Faqat bir marta render bo'ladigan komponent", "Hech qaysi"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Closure' (yopilish) nima?",
+    "options": ["Funksiyani yopish", "Funksiya o'zi e'lon qilingan muhitdagi o'zgaruvchilarni eslab qolishi", "Loopni to'xtatish", "Xatoni ushlash"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'cursor: pointer' nima qiladi?",
+    "options": ["Kursor shaklini o'zgartiradi (qo'lchaga o'xshatadi)", "Kursorni yashiradi", "Elementni bosiladigan qiladi", "Hech narsa"],
+    "correctOption": 0,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<section>' va '<div>' orasidagi farq nima?",
+    "options": ["Farqi yo'q", "section semantik teg (mavzu bo'yicha guruhlash), div esa shunchaki konteyner", "div semantik teg, section yo'q", "section faqat CSS uchun"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'custom hook' qanday nomlanishi shart?",
+    "options": ["Faqat 'hook' bilan tugashi kerak", "Uning nomi 'use' bilan boshlanishi kerak", "Katta harf bilan boshlanishi kerak", "Farqi yo'q"],
+    "correctOption": 1,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Event bubbling' nima?",
+    "options": ["Eventning eng pastki elementdan tepaga (ota-onalarga) qarab tarqalishi", "Eventning tepadan pastga tushishi", "Eventning to'xtashi", "Eventning qayta takrorlanishi"],
+    "correctOption": 0,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'calc()' funksiyasi nima uchun ishlatiladi?",
+    "options": ["Ranglarni hisoblash uchun", "Qiymatlarni (masalan, kenglikni) matematik hisoblash uchun", "Sonlarni tartiblash uchun", "Hech qaysi"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da 'favicon' nima?",
+    "options": ["Brauzer tabidagi kichik rasmcha", "Sahifa foni", "Eng katta rasm", "Havola ikonasi"],
+    "correctOption": 0,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'useContext' hook-i nima qaytaradi?",
+    "options": ["Context-ning joriy qiymatini", "Yangi context", "Provider komponentini", "Massiv"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'spread operator' ( ... ) nima qiladi?",
+    "options": ["Massiv yoki obyekt elementlarini 'yoyib' yuboradi", "Elementlarni birlashtiradi", "Elementlarni o'chiradi", "Massivni stringga aylantiradi"],
+    "correctOption": 0,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'letter-spacing' nima qiladi?",
+    "options": ["Harflar orasidagi masofani o'zgartiradi", "So'zlar orasidagi masofani o'zgartiradi", "Qatorlar orasidagi masofani o'zgartiradi", "Harf o'lchamini o'zgartiradi"],
+    "correctOption": 0,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<nav>' tegi nima uchun ishlatiladi?",
+    "options": ["Rasm uchun", "Navigatsiya havolalari bloki uchun", "Sarlavha uchun", "Footer uchun"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Strict Mode' nima uchun kerak?",
+    "options": ["Kod sifatini tekshirish va yashirin xatolarni aniqlash uchun", "Kodni tezlashtirish uchun", "Dizayn uchun", "Xavfsizlik uchun"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Set' obyektining asosiy xususiyati nima?",
+    "options": ["Faqat sonlarni saqlaydi", "Faqat takrorlanmas (unique) qiymatlarni saqlaydi", "Tartiblangan bo'ladi", "Faqat string saqlaydi"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'object-fit: cover' rasmga qanday ta'sir qiladi?",
+    "options": ["Rasmni cho'zib yuboradi", "Rasmni nisbatini saqlagan holda konteynerni to'ldiradi (qirqilishi mumkin)", "Rasmni kichraytiradi", "Rasmni oq-qora qiladi"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<blockquote>' nima uchun ishlatiladi?",
+    "options": ["Kichik matn uchun", "Boshqa manbadan olingan iqtibos (quote) uchun", "Havola uchun", "Jadval uchun"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'useReducer' qachon ishlatiladi?",
+    "options": ["Murakkab holat (state) logikasi bo'lganda", "Faqat bir marta render uchun", "API chaqiruvlari uchun", "DOM-ga kirish uchun"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Math.random()' qanday oraliqda son qaytaradi?",
+    "options": ["0 dan 100 gacha", "0 dan 1 gacha (0 kiradi, 1 kirmaydi)", "1 dan 10 gacha", "-1 dan 1 gacha"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'list-style: none' nima qiladi?",
+    "options": ["Ro'yxatni o'chiradi", "Ro'yxat oldidagi markerlarni (nuqta yoki sonlarni) olib tashlaydi", "Ro'yxatni yotiq qiladi", "Hech narsa"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<progress>' tegi nima qiladi?",
+    "options": ["Vazifa bajarilish darajasini ko'rsatadi", "Video pleyer", "Audio pleyer", "Hech narsa"],
+    "correctOption": 0,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Lazy loading' (React.lazy) nima uchun kerak?",
+    "options": ["Komponentlarni faqat kerak bo'lganda yuklab, boshlang'ich yuklanish vaqtini kamaytirish uchun", "Rasmlarni yashirish uchun", "Xatolarni ushlash uchun", "API tezligini oshirish uchun"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'null' nima?",
+    "options": ["Aniqlanmagan qiymat", "Obyektning mavjud emasligini anglatuvchi bo'sh qiymat", "Nol", "Xato"],
+    "correctOption": 1,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'filter: grayscale(100%)' nima qiladi?",
+    "options": ["Elementni shaffof qiladi", "Elementni to'liq oq-qora qiladi", "Elementni kattalashtiradi", "Elementni aylantiradi"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<footer>' nima?",
+    "options": ["Sahifaning eng yuqori qismi", "Sahifaning eng pastki (podval) qismi", "Sarlavha", "Menyu"],
+    "correctOption": 1,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Synthetic Event' nima?",
+    "options": ["Brauzer native eventlari ustidagi wrapper (har xil brauzerlarda bir xil ishlash uchun)", "Yolg'on event", "Faqat React-da bor event", "Hech qaysi"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'Array.sort()' default holatda qanday tartiblaydi?",
+    "options": ["Kamayish tartibida", "Sonlar bo'yicha", "Alifbo (string) tartibida", "Tasodifiy"],
+    "correctOption": 2,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'text-transform: uppercase' nima qiladi?",
+    "options": ["Barcha harflarni kichik qiladi", "Barcha harflarni katta (bosh harf) qiladi", "Faqat birinchi harfni katta qiladi", "Hech narsa"],
+    "correctOption": 1,
+    "category": "CSS"
+  },
+  {
+    "question": "HTML-da '<mark>' tegi nima qiladi?",
+    "options": ["Matnni belgilab (highlight) ko'rsatadi", "Matnni o'chiradi", "Matnni qalin qiladi", "Matnni kursiv qiladi"],
+    "correctOption": 0,
+    "category": "HTML"
+  },
+  {
+    "question": "React-da 'Forwarding Refs' nima?",
+    "options": ["Ref-ni ota komponentdan bola komponentga o'tkazish usuli", "Ref-ni yashirish", "Ref-ni massivga aylantirish", "Hech qaysi"],
+    "correctOption": 0,
+    "category": "React"
+  },
+  {
+    "question": "JS-da 'eval()' funksiyasi nima qiladi?",
+    "options": ["Xavfli: String ko'rinishidagi kodni bajaradi", "Sonni o'zgartiradi", "Massivni birlashtiradi", "Hech narsa"],
+    "correctOption": 0,
+    "category": "JavaScript"
+  },
+  {
+    "question": "CSS-da 'user-select: none' nima qiladi?",
+    "options": ["Elementni bosib bo'lmaydi", "Elementdagi matnni belgilab (select) bo'lmaydi", "Elementni ko'rib bo'lmaydi", "Hech narsa"],
+    "correctOption": 1,
+    "category": "CSS"
+  }
+]

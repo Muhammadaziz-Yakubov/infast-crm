@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Octagon = () => {
     const [step, setStep] = useState('select'); // select, waiting, battle, result
@@ -24,6 +25,7 @@ const Octagon = () => {
     const [pollingInterval, setPollingInterval] = useState(null);
 
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     useEffect(() => {
         fetchStudentData();
@@ -140,7 +142,9 @@ const Octagon = () => {
 
     const handleAnswer = (optionIndex) => {
         const isCorrect = optionIndex === battle.questions[currentQuestionIndex].correctOption;
-        if (isCorrect) setScore(prev => prev + 1);
+        const newScore = isCorrect ? score + 1 : score;
+        
+        if (isCorrect) setScore(newScore);
         
         setAnswers([...answers, { questionId: battle.questions[currentQuestionIndex]._id, isCorrect }]);
         
@@ -148,7 +152,7 @@ const Octagon = () => {
             setCurrentQuestionIndex(prev => prev + 1);
             setTimeLeft(15);
         } else {
-            finishBattle(score + (isCorrect ? 1 : 0));
+            finishBattle(newScore);
         }
     };
 
@@ -299,7 +303,14 @@ const Octagon = () => {
                         )}
                     </div>
                     <button 
-                        onClick={() => { clearInterval(pollingInterval); setStep('select'); }}
+                        onClick={() => { 
+                            clearInterval(pollingInterval); 
+                            setStep('select');
+                            setScore(0);
+                            setCurrentQuestionIndex(0);
+                            setAnswers([]);
+                            setBattle(null);
+                        }}
                         className="text-gray-400 hover:text-red-500 font-black uppercase text-[10px] tracking-widest italic flex items-center gap-2"
                     >
                         <HiOutlineX className="w-4 h-4" /> Bekor qilish
@@ -387,7 +398,7 @@ const Octagon = () => {
             {step === 'result' && battle && (
                 <div className="space-y-8 animate-fade-in">
                     <div className="text-center space-y-4">
-                        {battle.winner === studentAPI.me?._id || (battle.winner?._id === studentAPI.me?._id) ? (
+                        {battle.winner === user?._id || (battle.winner?._id === user?._id) ? (
                             <div className="space-y-4">
                                 <div className="w-32 h-32 mx-auto rounded-full bg-emerald-500/10 flex items-center justify-center">
                                     <HiOutlineStar className="w-16 h-16 text-emerald-500 animate-bounce" />
@@ -395,7 +406,7 @@ const Octagon = () => {
                                 <h1 className="text-6xl font-black text-emerald-500 uppercase italic tracking-tighter">G'alaba! 🏆</h1>
                                 <p className="text-xl font-bold text-gray-500 dark:text-gray-400 italic">Siz +{battle.betAmount} coin yutib oldingiz!</p>
                             </div>
-                        ) : battle.winner === null ? (
+                        ) : battle.winner === null || !battle.winner ? (
                             <div className="space-y-4">
                                 <div className="w-32 h-32 mx-auto rounded-full bg-gray-500/10 flex items-center justify-center">
                                     <HiOutlineSparkles className="w-16 h-16 text-gray-500" />
@@ -417,11 +428,11 @@ const Octagon = () => {
                     <div className="grid grid-cols-2 gap-8">
                         <div className="bg-white dark:bg-dark-800 rounded-[3rem] p-8 border-2 border-orange-500 shadow-2xl text-center space-y-2">
                             <p className="text-[10px] font-black text-gray-400 uppercase italic tracking-widest">Mening Ballarim</p>
-                            <p className="text-5xl font-black text-gray-900 dark:text-white italic">{battle.player1.toString() === studentAPI.me?._id ? battle.player1Score : battle.player2Score}</p>
+                            <p className="text-5xl font-black text-gray-900 dark:text-white italic">{battle.player1.toString() === user?._id || battle.player1?._id === user?._id ? battle.player1Score : battle.player2Score}</p>
                         </div>
                         <div className="bg-white dark:bg-dark-800 rounded-[3rem] p-8 border border-gray-100 dark:border-white/5 shadow-2xl text-center space-y-2">
                             <p className="text-[10px] font-black text-gray-400 uppercase italic tracking-widest">Raqib Ballari</p>
-                            <p className="text-5xl font-black text-gray-900 dark:text-white italic">{battle.player1.toString() === studentAPI.me?._id ? battle.player2Score : battle.player1Score}</p>
+                            <p className="text-5xl font-black text-gray-900 dark:text-white italic">{battle.player1.toString() === user?._id || battle.player1?._id === user?._id ? battle.player2Score : battle.player1Score}</p>
                         </div>
                     </div>
 

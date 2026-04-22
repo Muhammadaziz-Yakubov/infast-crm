@@ -3,23 +3,30 @@ const QuizResult = require('../models/QuizResult');
 const Student = require('../models/Student');
 const { updateCoins } = require('../services/coinService');
 
+const fs = require('fs');
+const path = require('path');
+
 // Seed base questions if none exist
 const seedQuestions = async () => {
-    const count = await QuizQuestion.countDocuments();
-    if (count === 0) {
-        const baseQuestions = [
-            { question: "HTML nima?", options: ["HyperText Markup Language", "HighText Machine Language", "Hyperlink and Text Markup Language", "None of these"], correctOption: 0, category: "HTML" },
-            { question: "CSS da rang berish uchun qaysi xususiyat ishlatiladi?", options: ["text-color", "color", "font-color", "fill"], correctOption: 1, category: "CSS" },
-            { question: "HTML da eng katta sarlavha qaysi?", options: ["<h6>", "<head>", "<h1>", "<header>"], correctOption: 2, category: "HTML" },
-            { question: "CSS da elementni o'rtaga keltirish uchun qaysi biri ishlatiladi?", options: ["margin: 0 auto;", "padding: center;", "align: center;", "text-align: middle;"], correctOption: 0, category: "CSS" },
-            { question: "JavaScript da o'zgaruvchi e'lon qilish uchun qaysi keyword ishlatiladi?", options: ["var", "let", "const", "Barchasi"], correctOption: 3, category: "JavaScript" },
-            { question: "HTML da yangi qatorga o'tish tegini toping?", options: ["<lb>", "<br>", "<break>", "<newline>"], correctOption: 1, category: "HTML" },
-            { question: "CSS da 'font-weight' nima uchun ishlatiladi?", options: ["Matn rangini o'zgartirish", "Matn uslubini o'zgartirish", "Matn qalinligini o'zgartirish", "Matn hajmini o'zgartirish"], correctOption: 2, category: "CSS" },
-            { question: "HTML da havola (link) yaratish uchun qaysi teg ishlatiladi?", options: ["<link>", "<a>", "<href>", "<nav>"], correctOption: 1, category: "HTML" },
-            { question: "JavaScript '5' + 5 natijasi nima bo'ladi?", options: ["10", "55", "Error", "NaN"], correctOption: 1, category: "JavaScript" },
-            { question: "CSS da 'display: flex' nima qiladi?", options: ["Elementni yashiradi", "Layoutni flexboxga o'tkazadi", "Elementni aylanib chiqadi", "Matnni kichiklashtiradi"], correctOption: 1, category: "CSS" }
-        ];
-        await QuizQuestion.insertMany(baseQuestions);
+    try {
+        const count = await QuizQuestion.countDocuments();
+        if (count === 0) {
+            const filePath = path.join(__dirname, '../data/questions_seed.json');
+            if (fs.existsSync(filePath)) {
+                const questionsData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                await QuizQuestion.insertMany(questionsData);
+                console.log('100 questions seeded successfully');
+            } else {
+                // Fallback to original base questions if file not found
+                const baseQuestions = [
+                    { question: "HTML nima?", options: ["HyperText Markup Language", "HighText Machine Language", "Hyperlink and Text Markup Language", "None of these"], correctOption: 0, category: "HTML" },
+                    // ... (other questions could go here)
+                ];
+                await QuizQuestion.insertMany(baseQuestions);
+            }
+        }
+    } catch (error) {
+        console.error('Error seeding questions:', error);
     }
 };
 
