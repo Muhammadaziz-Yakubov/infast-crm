@@ -4,7 +4,7 @@ const {
     getStudents, getStudent, createStudent, updateStudent, deleteStudent,
     getDebtors, getMyData, updateMe, updateProfileImage, getClassmates,
     getPublicProfile, bulkDeleteStudents, getLeaderboard, resetPaymentsStatus,
-    sendDebtSMS
+    sendDebtSMS, toggleBlock
 } = require('../controllers/studentController');
 const { protect, authorize } = require('../middleware/auth');
 const multer = require('multer');
@@ -25,6 +25,7 @@ router.put('/reset-payments-status', authorize('superadmin', 'admin'), resetPaym
 router.route('/').get(getStudents).post(createStudent);
 router.route('/:id').get(getStudent).put(updateStudent).delete(deleteStudent);
 router.post('/:id/send-debt-sms', authorize('superadmin', 'admin'), sendDebtSMS);
+router.put('/:id/toggle-block', authorize('superadmin', 'admin'), toggleBlock);
 
 
 module.exports = router;

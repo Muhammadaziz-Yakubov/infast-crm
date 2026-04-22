@@ -80,6 +80,7 @@ export const studentAPI = {
     getLeaderboard: () => api.get('/students/leaderboard'),
     resetPaymentsStatus: () => api.put('/students/reset-payments-status'),
     sendDebtSMS: (id) => api.post(`/students/${id}/send-debt-sms`),
+    toggleBlock: (id) => api.put(`/students/${id}/toggle-block`),
 };
 
 // To'lovlar

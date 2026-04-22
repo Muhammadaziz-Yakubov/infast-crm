@@ -39,6 +39,13 @@ exports.login = async (req, res) => {
             });
         }
 
+        if (role === 'student' && account.isBlocked) {
+            return res.status(403).json({
+                success: false,
+                message: "Sizning hisobingiz bloklangan. Iltimos, admin bilan bog'laning."
+            });
+        }
+
         const isMatch = await account.comparePassword(password);
 
         if (!isMatch) {

@@ -9,7 +9,7 @@ import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
     HiOutlineCash, HiOutlineFilter, HiOutlinePhone, HiOutlineCalendar,
     HiOutlineBadgeCheck, HiOutlineUserCircle, HiOutlineX, HiOutlineCheckCircle,
-    HiOutlineEye
+    HiOutlineEye, HiOutlineLockClosed, HiOutlineLockOpen
 } from 'react-icons/hi';
 
 const Students = () => {
@@ -185,6 +185,19 @@ const Students = () => {
         }
     };
 
+    const handleToggleBlock = async (id) => {
+        try {
+            const res = await studentAPI.toggleBlock(id);
+            toast.success(res.data.message);
+            fetchStudents();
+            if (viewingStudent && viewingStudent._id === id) {
+                setViewingStudent({ ...viewingStudent, isBlocked: !viewingStudent.isBlocked });
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Xatolik');
+        }
+    };
+
     const handleDelete = async () => {
         try {
             await studentAPI.delete(deleteId);
@@ -348,6 +361,7 @@ const Students = () => {
                             <option value="tolangan">To'langan</option>
                             <option value="qarzdor">Qarzdor</option>
                             <option value="tolanmagan">To'lanmagan</option>
+                            <option value="blocklangan">Bloklangan</option>
                         </select>
                         <HiOutlineFilter className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-500 w-4 h-4" />
                     </div>
@@ -504,8 +518,13 @@ const Students = () => {
                                                 <p className="text-xs font-bold text-gray-400 truncate max-w-[150px]">{s.kurs?.nomi || 'Kursiz'}</p>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-6 text-center">
+                                        <td className="px-6 py-6 text-center space-y-1">
                                             {getStatusBadge(s.tolovHolati)}
+                                            {s.isBlocked && (
+                                                <div className="flex justify-center">
+                                                    <span className="px-2 py-0.5 rounded-md bg-red-600 text-white text-[8px] font-black uppercase tracking-tighter shadow-sm">Blocklangan</span>
+                                                </div>
+                                            )}
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center justify-end gap-2 translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
@@ -531,6 +550,13 @@ const Students = () => {
                                                     title="Tahrirlash"
                                                 >
                                                     <HiOutlinePencil className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleToggleBlock(s._id)}
+                                                    className={`p-3 rounded-xl shadow-lg transition-all hover:scale-110 active:scale-90 ${s.isBlocked ? 'bg-amber-500 text-white shadow-amber-500/20' : 'bg-gray-700 text-white shadow-gray-700/20'}`}
+                                                    title={s.isBlocked ? "Blokdan chiqarish" : "Bloklash"}
+                                                >
+                                                    {s.isBlocked ? <HiOutlineLockOpen className="w-5 h-5" /> : <HiOutlineLockClosed className="w-5 h-5" />}
                                                 </button>
                                                 <button
                                                     onClick={() => { setDeleteId(s._id); setConfirmOpen(true); }}
@@ -698,7 +724,10 @@ const Students = () => {
                             </div>
 
                             <div className="text-center md:text-left space-y-2 relative z-10">
-                                <h3 className="text-3xl font-black uppercase tracking-tight italic">{viewingStudent.ism}</h3>
+                                <div className="flex items-center gap-3">
+                                    <h3 className="text-3xl font-black uppercase tracking-tight italic">{viewingStudent.ism}</h3>
+                                    {viewingStudent.isBlocked && <HiOutlineLockClosed className="w-6 h-6 text-red-500 animate-pulse" />}
+                                </div>
                                 <p className="text-primary-400 font-bold tracking-[0.2em] text-xs uppercase italic">{viewingStudent.guruh?.nomi} • {viewingStudent.kurs?.nomi}</p>
                                 <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
                                     <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
@@ -709,6 +738,12 @@ const Students = () => {
                                         <p className="text-[8px] font-black text-white/40 uppercase tracking-widest mb-0.5">Balans (Coins)</p>
                                         <p className="text-xs font-black text-amber-400">🪙 {viewingStudent.coins || 0}</p>
                                     </div>
+                                    {viewingStudent.isBlocked && (
+                                        <div className="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/30 backdrop-blur-md">
+                                            <p className="text-[8px] font-black text-red-400 uppercase tracking-widest mb-0.5">Holati</p>
+                                            <p className="text-xs font-black text-red-500">BLOKLANGAN 🔒</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

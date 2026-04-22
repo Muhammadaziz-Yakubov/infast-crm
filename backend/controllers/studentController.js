@@ -27,6 +27,8 @@ exports.getStudents = async (req, res) => {
         if (kurs) query.kurs = kurs;
         if (holat === 'qarzdor') {
             query.tolovHolati = { $in: ['tolanmagan', 'qarzdor'] };
+        } else if (holat === 'blocklangan') {
+            query.isBlocked = true;
         } else if (holat) {
             query.tolovHolati = holat;
         }
@@ -626,3 +628,24 @@ exports.sendDebtSMS = async (req, res) => {
     }
 };
 
+// @desc    O'quvchini blocklash/blokdan chiqarish
+// @route   PUT /api/students/:id/toggle-block
+exports.toggleBlock = async (req, res) => {
+    try {
+        const student = await Student.findById(req.params.id);
+        if (!student) {
+            return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
+        }
+
+        student.isBlocked = !student.isBlocked;
+        await student.save();
+
+        res.json({
+            success: true,
+            message: `O'quvchi muvaffaqiyatli ${student.isBlocked ? 'bloklandi' : 'blokdan chiqarildi'}`,
+            data: student
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi' });
+    }
+};

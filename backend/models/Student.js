@@ -68,6 +68,10 @@ const studentSchema = new mongoose.Schema({
         enum: ['faol', 'nofaol'],
         default: 'faol'
     },
+    isBlocked: {
+        type: Boolean,
+        default: false
+    },
 
     coins: {
         type: Number,
