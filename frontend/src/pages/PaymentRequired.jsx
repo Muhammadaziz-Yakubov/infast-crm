@@ -91,7 +91,7 @@ const PaymentRequired = () => {
                                     <p className="text-[10px] uppercase tracking-[0.2em] opacity-40">Click orqali to'lov</p>
                                     <div className="flex items-center gap-2">
                                         <p className="text-xl font-black italic tracking-tight">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
-                                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500 text-[8px] uppercase tracking-widest border border-amber-500/30">Soon</span>
+                                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500 text-[8px] uppercase tracking-widest border border-amber-500/30">Tez Kunda</span>
                                     </div>
                                 </div>
                             </div>
