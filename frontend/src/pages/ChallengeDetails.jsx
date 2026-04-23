@@ -27,8 +27,11 @@ const ChallengeDetails = () => {
     const [preview, setPreview] = useState(null);
 
     useEffect(() => {
-        fetchChallengeDetails();
-    }, [id]);
+        if (user) {
+            fetchChallengeDetails();
+        }
+    }, [id, user]);
+
 
     useEffect(() => {
         if (challenge) {
@@ -40,14 +43,18 @@ const ChallengeDetails = () => {
         try {
             const res = await challengeAPI.getOne(id);
             setChallenge(res.data.data);
-            setIsJoined(res.data.data.participants.some(p => p.participantId.toString() === user.id.toString()));
+            const currentUserId = user?._id || user?.id;
+            setIsJoined(res.data.data.participants.some(p => p.participantId.toString() === currentUserId?.toString()));
+
             
             // Calculate current day based on join date? 
             // Or just let user select day. For now, let user select.
         } catch (err) {
-            toast.error("Ma'lumotlarni yuklashda xatolik");
+            console.error('Challenge details fetch error:', err);
+            toast.error(err.response?.data?.message || "Ma'lumotlarni yuklashda xatolik");
             navigate('/challenges');
         } finally {
+
             setLoading(false);
         }
     };
