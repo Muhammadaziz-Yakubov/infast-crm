@@ -22,7 +22,12 @@ const userSchema = new mongoose.Schema({
     fullName: {
         type: String,
         default: 'Administrator'
+    },
+    profileImage: {
+        type: String,
+        default: ''
     }
+
 }, {
     timestamps: true
 });

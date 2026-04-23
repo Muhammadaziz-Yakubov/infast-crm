@@ -6,8 +6,9 @@ import {
     HiOutlineCreditCard, HiOutlineExclamationCircle, HiOutlineLogout,
     HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineCalendar, HiOutlineUserCircle,
     HiOutlineClipboardList, HiOutlineTrendingUp, HiOutlineShoppingBag,
-    HiOutlineDatabase, HiOutlineShieldCheck
+    HiOutlineDatabase, HiOutlineShieldCheck, HiOutlineFire
 } from 'react-icons/hi';
+
 
 import Logo from '../infastacademy.jpg';
 
@@ -24,7 +25,9 @@ const adminMenu = [
     { path: '/market-manager', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/coin-manager', label: 'Coin Boshqaruvi', icon: HiOutlineDatabase },
     { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
+    { path: '/challenges', label: 'Chellenjlar', icon: HiOutlineFire },
     { path: '/settings', label: 'Sozlamalar', icon: HiOutlineShieldCheck },
+
 ];
 
 const studentMenu = [
@@ -35,8 +38,10 @@ const studentMenu = [
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
     { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendar },
     { path: '/market', label: 'Market', icon: HiOutlineShoppingBag },
+    { path: '/challenges', label: 'Chellenjlar', icon: HiOutlineFire },
     { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
     { path: '/profile', label: 'Mening profilim', icon: HiOutlineUserCircle },
+
 ];
 
 const publicMenu = [

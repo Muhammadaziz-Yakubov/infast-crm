@@ -192,4 +192,17 @@ export const battleAPI = {
     getOne: (id) => api.get(`/battles/${id}`),
 };
 
+export const challengeAPI = {
+    getAll: () => api.get('/challenges'),
+    getOne: (id) => api.get(`/challenges/${id}`),
+    create: (data) => api.post('/challenges', data),
+    join: (id) => api.post(`/challenges/${id}/join`),
+    submit: (id, formData) => api.post(`/challenges/${id}/submit`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+    getSubmissions: (id, dayNumber) => api.get(`/challenges/${id}/submissions`, { params: { dayNumber } }),
+    delete: (id) => api.delete(`/challenges/${id}`),
+};
+
+
 export default api;
