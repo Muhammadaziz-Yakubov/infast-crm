@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { taskAPI, groupAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -9,15 +10,18 @@ import {
     HiOutlinePencil, HiOutlineTrash, HiOutlineCheckCircle,
     HiOutlineX, HiOutlinePhotograph, HiOutlineCalendar,
     HiOutlineBadgeCheck, HiOutlineEye, HiOutlineAnnotation,
-    HiOutlineUpload
+    HiOutlineUpload, HiOutlineInformationCircle, HiOutlinePaperAirplane
 } from 'react-icons/hi';
 
 const Tasks = () => {
+    const { user } = useAuth();
     const [tasks, setTasks] = useState([]);
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [isSubmissionsOpen, setIsSubmissionsOpen] = useState(false);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [isSubmitOpen, setIsSubmitOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [submissions, setSubmissions] = useState([]);
     const [loadingSubmissions, setLoadingSubmissions] = useState(false);
@@ -33,6 +37,13 @@ const Tasks = () => {
         image: null
     });
     const [creating, setCreating] = useState(false);
+
+    // Student Submit state
+    const [submitForm, setSubmitForm] = useState({
+        comment: '',
+        images: []
+    });
+    const [submitting, setSubmitting] = useState(false);
 
     // Grading state
     const [gradingSubmission, setGradingSubmission] = useState(null);
@@ -152,6 +163,31 @@ const Tasks = () => {
         }
     };
 
+    const handleSubmitTask = async (e) => {
+        e.preventDefault();
+        if (submitForm.images.length === 0) return toast.error("Kamida bitta rasm yuklang");
+        setSubmitting(true);
+
+        const formData = new FormData();
+        formData.append('taskId', selectedTask._id);
+        formData.append('comment', submitForm.comment);
+        for (let i = 0; i < submitForm.images.length; i++) {
+            formData.append('images', submitForm.images[i]);
+        }
+
+        try {
+            await taskAPI.submit(formData);
+            toast.success("Vazifa muvaffaqiyatli topshirildi ✨");
+            setIsSubmitOpen(false);
+            setSubmitForm({ comment: '', images: [] });
+            fetchData();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Topshirishda xatolik yuz berdi");
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     if (loading) return <LoadingSpinner />;
 
     return (
@@ -160,15 +196,17 @@ const Tasks = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-dark-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm">
                 <div className="space-y-2">
                     <h1 className="text-3xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">O'quv <span className="text-primary-500">Vazifalari</span></h1>
-                    <p className="text-sm font-medium text-gray-500">Guruhlar uchun topshiriqlarni boshqarish</p>
+                    <p className="text-sm font-medium text-gray-500">{user?.role === 'student' ? 'Guruh va kursingizga oid vazifalar' : 'Guruhlar uchun topshiriqlarni boshqarish'}</p>
                 </div>
-                <button
-                    onClick={() => setIsCreateOpen(true)}
-                    className="px-8 py-4 rounded-2xl bg-gray-900 dark:bg-primary-600 text-white font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 shadow-2xl active:scale-95 transition-all italic hover:shadow-primary-500/20"
-                >
-                    <HiOutlinePlus className="w-5 h-5" />
-                    Yangi Vazifa
-                </button>
+                {user?.role !== 'student' && (
+                    <button
+                        onClick={() => setIsCreateOpen(true)}
+                        className="px-8 py-4 rounded-2xl bg-gray-900 dark:bg-primary-600 text-white font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 shadow-2xl active:scale-95 transition-all italic hover:shadow-primary-500/20"
+                    >
+                        <HiOutlinePlus className="w-5 h-5" />
+                        Yangi Vazifa
+                    </button>
+                )}
             </div>
 
             {/* Filter Tabs */}
@@ -219,38 +257,60 @@ const Tasks = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-2">
-                                <button
-                                    onClick={() => fetchSubmissions(task)}
-                                    className="py-3 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
-                                >
-                                    <HiOutlineEye className="w-4 h-4" />
-                                    Ko'rish
-                                </button>
-                                {task.status !== 'completed' ? (
-                                    <button
-                                        onClick={() => handleCompleteTask(task._id)}
-                                        className="py-3 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
-                                    >
-                                        <HiOutlineBadgeCheck className="w-4 h-4" />
-                                        Tugatish
-                                    </button>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                {user?.role === 'student' ? (
+                                    <>
+                                        <button
+                                            onClick={() => { setSelectedTask(task); setIsDetailsOpen(true); }}
+                                            className="py-3 px-2 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
+                                        >
+                                            <HiOutlineInformationCircle className="w-4 h-4" />
+                                            Batafsil
+                                        </button>
+                                        <button
+                                            disabled={task.isSubmitted}
+                                            onClick={() => { setSelectedTask(task); setIsSubmitOpen(true); }}
+                                            className={`py-3 px-2 rounded-2xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 transition-all shadow-sm col-span-2 ${task.isSubmitted ? 'bg-emerald-500/10 text-emerald-500 cursor-not-allowed' : 'bg-primary-500/10 text-primary-500 hover:bg-primary-500 hover:text-white'}`}
+                                        >
+                                            <HiOutlinePaperAirplane className={`w-4 h-4 ${!task.isSubmitted && 'rotate-45'}`} />
+                                            {task.isSubmitted ? 'Topshirilgan' : 'Vazifa topshirish'}
+                                        </button>
+                                    </>
                                 ) : (
-                                    <button
-                                        onClick={() => handleReopenTask(task._id)}
-                                        className="py-3 rounded-2xl bg-amber-500/10 text-amber-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-amber-600 hover:text-white transition-all shadow-sm"
-                                    >
-                                        <HiOutlineX className="w-4 h-4" />
-                                        Qaytarish
-                                    </button>
+                                    <>
+                                        <button
+                                            onClick={() => fetchSubmissions(task)}
+                                            className="py-3 rounded-2xl bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-primary-600 hover:text-white transition-all shadow-sm"
+                                        >
+                                            <HiOutlineEye className="w-4 h-4" />
+                                            Ko'rish
+                                        </button>
+                                        {task.status !== 'completed' ? (
+                                            <button
+                                                onClick={() => handleCompleteTask(task._id)}
+                                                className="py-3 rounded-2xl bg-emerald-500/10 text-emerald-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                                            >
+                                                <HiOutlineBadgeCheck className="w-4 h-4" />
+                                                Tugatish
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => handleReopenTask(task._id)}
+                                                className="py-3 rounded-2xl bg-amber-500/10 text-amber-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-amber-600 hover:text-white transition-all shadow-sm"
+                                            >
+                                                <HiOutlineX className="w-4 h-4" />
+                                                Qaytarish
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => handleDeleteTask(task._id)}
+                                            className="py-3 rounded-2xl bg-red-500/10 text-red-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                                        >
+                                            <HiOutlineTrash className="w-4 h-4" />
+                                            O'chish
+                                        </button>
+                                    </>
                                 )}
-                                <button
-                                    onClick={() => handleDeleteTask(task._id)}
-                                    className="py-3 rounded-2xl bg-red-500/10 text-red-600 font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1 hover:bg-red-600 hover:text-white transition-all shadow-sm"
-                                >
-                                    <HiOutlineTrash className="w-4 h-4" />
-                                    O'chish
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -469,6 +529,141 @@ const Tasks = () => {
                     </div>
                 </div>
             </Modal>
+
+            {/* Task Details Modal (for Student) */}
+            {isDetailsOpen && selectedTask && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" onClick={() => setIsDetailsOpen(false)} />
+                    <div className="relative bg-white dark:bg-dark-800 w-full max-w-2xl rounded-[3rem] p-10 shadow-2xl animate-modal-in overflow-y-auto max-h-[90vh] scrollbar-hide">
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Vazifa Tafsilotlari</h2>
+                            <button onClick={() => setIsDetailsOpen(false)} className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-dark-900 flex items-center justify-center text-gray-400">
+                                <HiOutlineX className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="relative h-64 rounded-3xl overflow-hidden bg-gray-900">
+                                {selectedTask.image ? (
+                                    <img src={selectedTask.image} alt="" className="w-full h-full object-cover opacity-80" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-900 to-gray-900">
+                                        <HiOutlinePhotograph className="w-16 h-16 text-white/10" />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic">{selectedTask.title}</h3>
+                                    <div className="px-4 py-2 bg-primary-500/10 text-primary-500 rounded-2xl text-xs font-black uppercase tracking-widest">
+                                        {selectedTask.maxScore} Ball
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-6 py-4 border-y border-gray-100 dark:border-white/5">
+                                    <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        <HiOutlineUsers className="w-4 h-4 text-primary-500" />
+                                        {selectedTask.group?.nomi || 'Guruhsiz'}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        <HiOutlineCalendar className="w-4 h-4 text-amber-500" />
+                                        Muddati: {new Date(selectedTask.deadline).toLocaleDateString('uz')}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Vazifa sharti:</p>
+                                    <p className="text-gray-600 dark:text-gray-300 font-medium leading-relaxed whitespace-pre-wrap bg-gray-50 dark:bg-dark-900 p-6 rounded-3xl">
+                                        {selectedTask.description}
+                                    </p>
+                                </div>
+
+                                {selectedTask.submission && (
+                                    <div className="p-6 rounded-3xl bg-emerald-500/5 border border-emerald-500/10 space-y-4">
+                                        <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest italic">Sizning topshirig'ingiz:</p>
+                                        <div className="flex gap-2">
+                                            {selectedTask.submission.images?.map((img, i) => (
+                                                <a key={i} href={img} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-xl overflow-hidden shadow-sm">
+                                                    <img src={img} alt="" className="w-full h-full object-cover" />
+                                                </a>
+                                            ))}
+                                        </div>
+                                        {selectedTask.submission.score && (
+                                            <p className="text-sm font-black text-emerald-600 uppercase italic">Baholandi: {selectedTask.submission.score} ball ✨</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Task Submit Modal (for Student) */}
+            {isSubmitOpen && selectedTask && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" onClick={() => setIsSubmitOpen(false)} />
+                    <div className="relative bg-white dark:bg-dark-800 w-full max-w-2xl rounded-[3rem] p-10 shadow-2xl animate-modal-in overflow-y-auto max-h-[90vh] scrollbar-hide">
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Vazifa Topshirish</h2>
+                            <button onClick={() => setIsSubmitOpen(false)} className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-dark-900 flex items-center justify-center text-gray-400">
+                                <HiOutlineX className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmitTask} className="space-y-8">
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2 italic">Rasmlarni yuklang (Skrinshotlar)</label>
+                                <div className="relative group/upload">
+                                    <input
+                                        type="file"
+                                        multiple
+                                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                        onChange={e => setSubmitForm({ ...submitForm, images: Array.from(e.target.files) })}
+                                        accept="image/*"
+                                    />
+                                    <div className="w-full py-12 rounded-[2rem] border-2 border-dashed border-gray-100 dark:border-dark-700 flex flex-col items-center justify-center gap-3 group-hover/upload:border-primary-500 transition-all bg-gray-50 dark:bg-dark-900/50">
+                                        <HiOutlineUpload className="w-12 h-12 text-gray-300 group-hover/upload:text-primary-500 group-hover/upload:scale-110 transition-transform" />
+                                        <div className="text-center">
+                                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Rasmlarni tanlang</span>
+                                            <span className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-1 block">Bir nechta rasm tanlash mumkin</span>
+                                        </div>
+                                        {submitForm.images.length > 0 && (
+                                            <div className="mt-4 flex flex-wrap gap-2 px-6">
+                                                {submitForm.images.map((img, i) => (
+                                                    <span key={i} className="px-3 py-1 bg-emerald-500/10 text-emerald-600 rounded-full text-[8px] font-black uppercase tracking-widest border border-emerald-500/20">
+                                                        {img.name.length > 15 ? img.name.substring(0, 15) + '...' : img.name}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2 italic">Izoh (optional)</label>
+                                <textarea
+                                    className="w-full h-32 px-8 py-6 rounded-[2rem] bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none font-bold text-sm resize-none"
+                                    placeholder="Vazifa haqida qo'shimcha ma'lumot..."
+                                    value={submitForm.comment}
+                                    onChange={e => setSubmitForm({ ...submitForm, comment: e.target.value })}
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={submitting}
+                                className="w-full py-6 rounded-[2rem] bg-gray-900 dark:bg-primary-600 text-white font-black uppercase tracking-[0.3em] shadow-3xl shadow-primary-500/20 active:scale-95 transition-all text-xs italic flex items-center justify-center gap-4"
+                            >
+                                {submitting ? <LoadingSpinner size="sm" /> : <HiOutlinePaperAirplane className="w-6 h-6 text-emerald-400 rotate-45" />}
+                                {submitting ? "Yuborilmoqda..." : "Topshiriqni yuborish"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
