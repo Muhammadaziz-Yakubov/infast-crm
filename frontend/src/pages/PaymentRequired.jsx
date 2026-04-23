@@ -44,7 +44,7 @@ const PaymentRequired = () => {
                         <div className="relative z-10 space-y-6">
                             <div className="flex justify-between items-start">
                                 <HiOutlineCreditCard className="w-10 h-10 text-white/40" />
-                                <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Payme / Uzum</div>
+                                <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Kartaga tolov qilib chekni adminga tashlang</div>
                             </div>
 
                             <div className="space-y-1">
