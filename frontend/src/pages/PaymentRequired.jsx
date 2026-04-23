@@ -80,27 +80,26 @@ const PaymentRequired = () => {
                             <div className="flex-1 h-[1px] bg-white/10"></div>
                         </div>
 
-                        <a
-                            href={`https://my.click.uz/services/pay?service_id=101737&merchant_id=60286&amount=${user?.oylikTolov || user?.kurs?.narx || 0}&transaction_param=${user?.id || user?._id}`}
-                            className="group relative flex items-center justify-between p-5 rounded-[2rem] bg-white text-black font-black overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl border border-white/10"
+                        <div
+                            className="group relative flex items-center justify-between p-5 rounded-[2rem] bg-white/5 text-white/30 font-black overflow-hidden transition-all border border-white/5 cursor-not-allowed"
                         >
-                            <div className="absolute inset-0 bg-[#00A7E5] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-                            
-                            <div className="relative z-10 flex items-center gap-4 group-hover:text-white transition-colors duration-300">
-                                <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center p-2 shadow-inner group-hover:bg-white transition-colors duration-300">
+                            <div className="relative z-10 flex items-center gap-4">
+                                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center p-2 grayscale opacity-50">
                                     <img src={clickLogo} alt="Click" className="w-full h-full object-contain" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-[10px] uppercase tracking-[0.2em] opacity-50 group-hover:opacity-80 transition-opacity">Click orqali to'lov</p>
-                                    <p className="text-xl font-black italic tracking-tight">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
+                                    <p className="text-[10px] uppercase tracking-[0.2em] opacity-40">Click orqali to'lov</p>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-xl font-black italic tracking-tight">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
+                                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500 text-[8px] uppercase tracking-widest border border-amber-500/30">Soon</span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div className="relative z-10 flex flex-col items-end group-hover:text-white transition-colors">
-                                <HiOutlineCreditCard className="w-8 h-8 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" />
-                                <span className="text-[8px] uppercase tracking-widest mt-1 opacity-0 group-hover:opacity-100 transition-all duration-500">Pay Now</span>
+                            <div className="relative z-10 flex flex-col items-end">
+                                <HiOutlineLockClosed className="w-8 h-8 opacity-20" />
                             </div>
-                        </a>
+                        </div>
                         
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic px-4">
                             Click orqali to'lov qilinganda hisobingiz avtomatik tarzda faollashadi.
