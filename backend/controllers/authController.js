@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
 
         // 2. If not found, try to find as student
         if (!account) {
-            account = await Student.findOne({ username });
+            account = await Student.findOne({ username }).populate('kurs', 'narx nomi');
             role = 'student';
         }
 
@@ -68,7 +68,9 @@ exports.login = async (req, res) => {
                     fullName: account.fullName || account.ism,
                     role: account.role || role,
                     coins: account.coins || 0,
-                    tolovHolati: account.tolovHolati || 'tolangan'
+                    tolovHolati: account.tolovHolati || 'tolangan',
+                    oylikTolov: account.oylikTolov || 0,
+                    kursNarxi: account.kurs?.narx || 0
                 }
             }
         });
@@ -90,7 +92,7 @@ exports.getMe = async (req, res) => {
 
         // If not found, look in Student
         if (!account) {
-            account = await Student.findById(req.user.id).select('-password');
+            account = await Student.findById(req.user.id).select('-password').populate('kurs', 'narx nomi');
         }
 
         if (!account) {

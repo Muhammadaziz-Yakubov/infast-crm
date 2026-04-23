@@ -34,6 +34,11 @@ const config = {
     },
     telegram: {
         botToken: env.TELEGRAM_BOT_TOKEN
+    },
+    click: {
+        serviceId: env.CLICK_SERVICE_ID,
+        merchantId: env.CLICK_MERCHANT_ID,
+        secretKey: env.CLICK_SECRET_KEY
     }
 };
 

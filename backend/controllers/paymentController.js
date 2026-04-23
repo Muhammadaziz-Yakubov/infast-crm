@@ -92,8 +92,9 @@ const now = new Date();
             guruh: student.guruh
         });
 
-        // O'quvchi to'lov holatini yangilash
+        // O'quvchi to'lov holatini yangilash va blokdan chiqarish
         student.tolovHolati = 'tolangan';
+        student.isBlocked = false;
         await student.save();
 
         const populated = await Payment.findById(payment._id)
@@ -162,6 +163,7 @@ exports.bulkCreatePayment = async (req, res) => {
                 });
 
                 student.tolovHolati = 'tolangan';
+                student.isBlocked = false;
                 await student.save();
                 successCount++;
             } catch (err) {

@@ -33,10 +33,10 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
         req.user = user;
 
-        // Block debtor students or manually blocked students from other routes, but allow getMe
+        // Block students if they are manually blocked
         const isAuthMe = req.originalUrl === '/api/auth/me' || req.originalUrl.includes('/auth/me');
-        if (user.role === 'student' && (user.isBlocked || user.tolovHolati === 'qarzdor' || user.tolovHolati === 'tolanmagan') && !isAuthMe) {
-            return next(new ErrorResponse("Sizning hisobingiz bloklangan! Iltimos to'lovni amalga oshiring yoki admin bilan bog'laning.", 403));
+        if (user.role === 'student' && user.isBlocked && !isAuthMe) {
+            return next(new ErrorResponse("Sizning hisobingiz bloklangan! Iltimos admin bilan bog'laning.", 403));
         }
 
         next();

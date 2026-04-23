@@ -20,6 +20,11 @@ const envSchema = Joi.object({
     REDIS_PORT: Joi.number().default(6379),
     REDIS_PASSWORD: Joi.string().allow('').default(''),
 
+    // Click Payment
+    CLICK_SERVICE_ID: Joi.string().required(),
+    CLICK_MERCHANT_ID: Joi.string().required(),
+    CLICK_SECRET_KEY: Joi.string().required(),
+
     // Telegram
     TELEGRAM_BOT_TOKEN: Joi.string().required().description('Telegram bot API token')
 }).unknown().required();

@@ -71,8 +71,38 @@ const PaymentRequired = () => {
                         </div>
                     </div>
 
+                    {/* Click Payment Section */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1 h-[1px] bg-white/10"></div>
+                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Yoki Click orqali</span>
+                            <div className="flex-1 h-[1px] bg-white/10"></div>
+                        </div>
+
+                        <a
+                            href={`https://my.click.uz/services/pay?service_id=101737&merchant_id=60286&amount=${user?.oylikTolov || user?.kurs?.narx || 0}&transaction_param=${user?.id || user?._id}`}
+                            className="group relative flex items-center justify-between p-6 rounded-[2rem] bg-white text-black font-black overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl"
+                        >
+                            <div className="absolute inset-0 bg-blue-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                            <div className="relative z-10 flex items-center gap-4 group-hover:text-white transition-colors duration-300">
+                                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center group-hover:bg-white">
+                                    <span className="text-white font-black group-hover:text-blue-600">C</span>
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-xs uppercase tracking-widest opacity-60">Click orqali to'lov</p>
+                                    <p className="text-lg">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
+                                </div>
+                            </div>
+                            <HiOutlineCreditCard className="relative z-10 w-8 h-8 opacity-20 group-hover:text-white group-hover:opacity-100 transition-all duration-300" />
+                        </a>
+                        
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic px-4">
+                            Click orqali to'lov qilinganda hisobingiz avtomatik tarzda faollashadi.
+                        </p>
+                    </div>
+
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic px-4">
-                        To'lovni amalga oshirgach, chekni adminstratorga yuboring va 5 daqiqa ichida hisobingiz faollashadi.
+                        Boshqa to'lov turlari uchun chekni administratorga yuboring.
                     </p>
 
                     <div className="grid grid-cols-2 gap-4">

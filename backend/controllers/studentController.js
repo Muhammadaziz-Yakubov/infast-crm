@@ -637,15 +637,19 @@ exports.toggleBlock = async (req, res) => {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
 
-        student.isBlocked = !student.isBlocked;
-        await student.save();
+        const updatedStudent = await Student.findByIdAndUpdate(
+            req.params.id,
+            { isBlocked: !student.isBlocked },
+            { new: true, runValidators: true }
+        );
 
         res.json({
             success: true,
-            message: `O'quvchi muvaffaqiyatli ${student.isBlocked ? 'bloklandi' : 'blokdan chiqarildi'}`,
-            data: student
+            message: `O'quvchi muvaffaqiyatli ${updatedStudent.isBlocked ? 'bloklandi' : 'blokdan chiqarildi'}`,
+            data: updatedStudent
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server xatosi' });
+        console.error('Toggle Block Error:', error);
+        res.status(500).json({ success: false, message: 'Server xatosi: ' + error.message });
     }
 };
