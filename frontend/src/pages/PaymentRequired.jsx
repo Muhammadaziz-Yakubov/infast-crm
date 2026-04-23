@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { HiOutlineLockClosed, HiOutlineCreditCard, HiOutlineRefresh, HiOutlineLogout } from 'react-icons/hi';
 import toast from 'react-hot-toast';
+import clickLogo from '../clickup.png';
 
 const PaymentRequired = () => {
     const { user, logout } = useAuth();
@@ -81,19 +82,24 @@ const PaymentRequired = () => {
 
                         <a
                             href={`https://my.click.uz/services/pay?service_id=101737&merchant_id=60286&amount=${user?.oylikTolov || user?.kurs?.narx || 0}&transaction_param=${user?.id || user?._id}`}
-                            className="group relative flex items-center justify-between p-6 rounded-[2rem] bg-white text-black font-black overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl"
+                            className="group relative flex items-center justify-between p-5 rounded-[2rem] bg-white text-black font-black overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl border border-white/10"
                         >
-                            <div className="absolute inset-0 bg-blue-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                            <div className="absolute inset-0 bg-[#00A7E5] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                            
                             <div className="relative z-10 flex items-center gap-4 group-hover:text-white transition-colors duration-300">
-                                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center group-hover:bg-white">
-                                    <span className="text-white font-black group-hover:text-blue-600">C</span>
+                                <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center p-2 shadow-inner group-hover:bg-white transition-colors duration-300">
+                                    <img src={clickLogo} alt="Click" className="w-full h-full object-contain" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-xs uppercase tracking-widest opacity-60">Click orqali to'lov</p>
-                                    <p className="text-lg">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
+                                    <p className="text-[10px] uppercase tracking-[0.2em] opacity-50 group-hover:opacity-80 transition-opacity">Click orqali to'lov</p>
+                                    <p className="text-xl font-black italic tracking-tight">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
                                 </div>
                             </div>
-                            <HiOutlineCreditCard className="relative z-10 w-8 h-8 opacity-20 group-hover:text-white group-hover:opacity-100 transition-all duration-300" />
+                            
+                            <div className="relative z-10 flex flex-col items-end group-hover:text-white transition-colors">
+                                <HiOutlineCreditCard className="w-8 h-8 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" />
+                                <span className="text-[8px] uppercase tracking-widest mt-1 opacity-0 group-hover:opacity-100 transition-all duration-500">Pay Now</span>
+                            </div>
                         </a>
                         
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic px-4">
