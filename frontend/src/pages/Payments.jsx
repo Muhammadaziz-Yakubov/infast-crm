@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { paymentAPI, studentAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
@@ -10,10 +11,11 @@ import {
 } from 'react-icons/hi';
 
 const Payments = () => {
+    const location = useLocation();
     const [payments, setPayments] = useState([]);
     const [deletingId, setDeletingId] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(location.state?.search || '');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [total, setTotal] = useState(0);
@@ -21,8 +23,8 @@ const Payments = () => {
     const [deleteAllLoading, setDeleteAllLoading] = useState(false);
 
     const now = new Date();
-    const [filterOy, setFilterOy] = useState(now.getMonth() + 1);
-    const [filterYil, setFilterYil] = useState(now.getFullYear());
+    const [filterOy, setFilterOy] = useState(location.state?.search ? '' : now.getMonth() + 1);
+    const [filterYil, setFilterYil] = useState(location.state?.search ? '' : now.getFullYear());
 
     const oyNomlar = ['', 'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
         'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];

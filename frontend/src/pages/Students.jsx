@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { studentAPI, courseAPI, groupAPI, paymentAPI } from '../services/api';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -9,11 +9,12 @@ import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
     HiOutlineCash, HiOutlineFilter, HiOutlinePhone, HiOutlineCalendar,
     HiOutlineBadgeCheck, HiOutlineUserCircle, HiOutlineX, HiOutlineCheckCircle,
-    HiOutlineEye, HiOutlineLockClosed, HiOutlineLockOpen
+    HiOutlineEye, HiOutlineLockClosed, HiOutlineLockOpen, HiOutlineClock, HiOutlineExclamationCircle
 } from 'react-icons/hi';
 
 const Students = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [students, setStudents] = useState([]);
     const [courses, setCourses] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -196,6 +197,21 @@ const Students = () => {
         } catch (err) {
             toast.error(err.response?.data?.message || 'Xatolik');
         }
+    };
+
+    const handleMarkAsDebtor = async (student) => {
+        if (!window.confirm(`${student.ism}ni qarzdor deb belgilashni xohlaysizmi?`)) return;
+        try {
+            await studentAPI.update(student._id, { tolovHolati: 'qarzdor' });
+            toast.success(`${student.ism} qarzdor deb belgilandi ❗`);
+            fetchStudents();
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Xatolik yuz berdi');
+        }
+    };
+
+    const viewPaymentHistory = (student) => {
+        navigate('/payments', { state: { search: student.ism } });
     };
 
     const handleDelete = async () => {
@@ -537,6 +553,20 @@ const Students = () => {
                                                         <HiOutlineCash className="w-5 h-5" />
                                                     </button>
                                                 )}
+                                                <button
+                                                    onClick={() => viewPaymentHistory(s)}
+                                                    className="p-3 rounded-xl bg-amber-500 text-white shadow-lg shadow-amber-500/20 hover:scale-110 active:scale-90 transition-all"
+                                                    title="To'lovlar tarixi"
+                                                >
+                                                    <HiOutlineClock className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleMarkAsDebtor(s)}
+                                                    className="p-3 rounded-xl bg-red-600 text-white shadow-lg shadow-red-600/20 hover:scale-110 active:scale-90 transition-all"
+                                                    title="Qarzdor deb belgilash"
+                                                >
+                                                    <HiOutlineExclamationCircle className="w-5 h-5" />
+                                                </button>
                                                 <button
                                                     onClick={() => openViewModal(s)}
                                                     className="p-3 rounded-xl bg-purple-500 text-white shadow-lg shadow-purple-500/20 hover:scale-110 active:scale-90 transition-all"
