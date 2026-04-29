@@ -9,7 +9,7 @@ const MobileBottomBar = () => {
     const navItems = [
         { path: '/', icon: HiOutlineHome, label: 'Asosiy' },
         { path: user ? '/tasks' : '/login', icon: HiOutlineClipboardList, label: 'Vazifa' },
-        { path: user ? '/challenges' : '/login', icon: HiOutlineFire, label: 'Chellenj' },
+
         { path: user ? '/market' : '/login', icon: HiOutlineShoppingBag, label: 'Market' },
         { path: user ? '/profile' : '/login', icon: HiOutlineUserCircle, label: user ? 'Profil' : 'Kirish' },
     ];

@@ -183,26 +183,7 @@ export const eventAPI = {
     getAnalytics: (id) => api.get(`/events/${id}/analytics`),
 };
 
-export const battleAPI = {
-    create: (data) => api.post('/battles/create', data),
-    join: (data) => api.post('/battles/join', data),
-    getRandom: (betAmount) => api.get('/battles/random', { params: { betAmount } }),
-    submitScore: (data) => api.post('/battles/submit', data),
-    getMyBattles: () => api.get('/battles/my'),
-    getOne: (id) => api.get(`/battles/${id}`),
-};
 
-export const challengeAPI = {
-    getAll: () => api.get('/challenges'),
-    getOne: (id) => api.get(`/challenges/${id}`),
-    create: (data) => api.post('/challenges', data),
-    join: (id) => api.post(`/challenges/${id}/join`),
-    submit: (id, formData) => api.post(`/challenges/${id}/submit`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    }),
-    getSubmissions: (id, dayNumber) => api.get(`/challenges/${id}/submissions`, { params: { dayNumber } }),
-    delete: (id) => api.delete(`/challenges/${id}`),
-};
 
 
 export default api;

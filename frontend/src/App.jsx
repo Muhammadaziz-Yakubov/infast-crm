@@ -42,9 +42,7 @@ const GroupView = React.lazy(() => import('./pages/GroupView'));
 const Events = React.lazy(() => import('./pages/Events'));
 const EventAttendance = React.lazy(() => import('./pages/EventAttendance'));
 const StudentEvents = React.lazy(() => import('./pages/student/StudentEvents'));
-const Octagon = React.lazy(() => import('./pages/student/Octagon'));
-const Challenges = React.lazy(() => import('./pages/Challenges'));
-const ChallengeDetails = React.lazy(() => import('./pages/ChallengeDetails'));
+
 
 
 import { Analytics } from "@vercel/analytics/react";
@@ -112,9 +110,7 @@ const AppContent = () => {
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/events" element={user?.role === 'student' ? <StudentEvents /> : <Events />} />
                         <Route path="/events/:id/attendance" element={<EventAttendance />} />
-                        <Route path="/octagon" element={<Octagon />} />
-                        <Route path="/challenges" element={<Challenges />} />
-                        <Route path="/challenges/:id" element={<ChallengeDetails />} />
+
 
                     </Route>
                 </Route>
