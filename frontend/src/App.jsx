@@ -24,7 +24,7 @@ const Tasks = React.lazy(() => import('./pages/Tasks'));
 const StudentMarket = React.lazy(() => import('./pages/student/StudentMarket'));
 const CoinLogs = React.lazy(() => import('./pages/student/CoinLogs'));
 const ScanAttendance = React.lazy(() => import('./pages/student/ScanAttendance'));
-const WheelOfFortune = React.lazy(() => import('./pages/student/WheelOfFortune'));
+
 const MarketManager = React.lazy(() => import('./pages/MarketManager'));
 const CoinManager = React.lazy(() => import('./pages/CoinManager'));
 const LeadForm = React.lazy(() => import('./pages/public/LeadForm'));
@@ -92,10 +92,10 @@ const AppContent = () => {
                         <Route path="/courses" element={user?.role === 'student' ? <StudentCourses /> : <Courses />} />
                         <Route path="/attendance" element={user?.role === 'student' ? <StudentAttendance /> : <Attendance />} />
                         <Route path="/scan" element={<ScanAttendance />} />
-                        <Route path="/wheel" element={<WheelOfFortune />} />
+
                         <Route path="/payments" element={user?.role === 'student' ? <StudentPayments /> : <Payments />} />
                         <Route path="/profile" element={<StudentProfile />} />
-                        <Route path="/tasks" element={user?.role === 'student' ? <Tasks /> : <Tasks />} />
+                        <Route path="/tasks" element={<Tasks />} />
                         <Route path="/market" element={user?.role === 'student' ? <StudentMarket /> : <MarketManager />} />
                         <Route path="/market/logs" element={<CoinLogs />} />
                         <Route path="/classmates" element={<Classmates />} />

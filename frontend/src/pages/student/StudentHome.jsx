@@ -224,12 +224,7 @@ const StudentHome = () => {
                         <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] italic mb-1 block">Asosiy Bo'limlar</h3>
                     </div>
                     <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        <NavCard
-                            to="/wheel"
-                            icon={HiOutlineGift}
-                            title="Omad"
-                            color={{ bg: 'bg-amber-100 dark:bg-amber-500/20', text: 'text-amber-600' }}
-                        />
+
                         <NavCard
                             to="/market"
                             icon={HiOutlineShoppingBag}
@@ -318,22 +313,7 @@ const StudentHome = () => {
                 </div>
 
                 {/* --- 7. BANNER / AD SECTION (Optional) --- */}
-                <div className="bg-gradient-to-r from-emerald-600 to-teal-800 rounded-[2.5rem] p-8 relative overflow-hidden group shadow-2xl shadow-emerald-500/20">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-                        <div className="space-y-2">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-[8px] font-black uppercase tracking-widest backdrop-blur-sm">
-                                <HiOutlineStar className="w-3 h-3 text-amber-300" />
-                                Yangi Omad G'ildiragi
-                            </div>
-                            <h4 className="text-xl font-black text-white uppercase italic tracking-tighter">Omadingizni hoziroq sinab ko'ring!</h4>
-                            <p className="text-emerald-100 text-[10px] font-bold uppercase tracking-widest italic">Bugun 3 marotaba aylantirish huquqingiz bor</p>
-                        </div>
-                        <Link to="/wheel" className="px-8 py-4 bg-white text-emerald-700 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all italic">
-                            Aylantirish 🎡
-                        </Link>
-                    </div>
-                </div>
+
 
             </div>
         </div>

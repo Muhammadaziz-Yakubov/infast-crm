@@ -72,7 +72,7 @@ app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/market', require('./routes/marketRoutes'));
 app.use('/api/coins', require('./routes/coinRoutes'));
-app.use('/api/wheels', require('./routes/wheelRoutes'));
+
 app.use('/api/leads', require('./routes/leadRoutes'));
 app.use('/api/curriculum', require('./routes/curriculumRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
