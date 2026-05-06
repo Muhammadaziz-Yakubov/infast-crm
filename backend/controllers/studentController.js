@@ -476,15 +476,23 @@ exports.getLeaderboard = async (req, res) => {
         const leaderboard = await Student.aggregate([
             { $match: { holati: 'faol' } },
 
-            // Attendance points (5 points for each 'keldi: true')
+            // Attendance points (sum of balls for each 'keldi: true')
             {
                 $lookup: {
                     from: 'attendances',
-                    localField: '_id',
-                    foreignField: 'oquvchilar.oquvchi',
+                    let: { studentId: '$_id' },
                     pipeline: [
                         { $unwind: '$oquvchilar' },
-                        { $match: { 'oquvchilar.keldi': true } }
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$oquvchilar.oquvchi', '$$studentId'] },
+                                        { $eq: ['$oquvchilar.keldi', true] }
+                                    ]
+                                }
+                            }
+                        }
                     ],
                     as: 'att_records'
                 }
@@ -516,7 +524,7 @@ exports.getLeaderboard = async (req, res) => {
             // Calculate totals
             {
                 $addFields: {
-                    attendanceCount: { $size: '$att_records' },
+                    attendanceScore: { $sum: '$att_records.oquvchilar.ball' },
                     assignmentScore: { $sum: '$sub_records.score' },
                     quizScore: { $sum: '$quiz_records.score' }
                 }
@@ -527,7 +535,7 @@ exports.getLeaderboard = async (req, res) => {
                 $addFields: {
                     totalScore: {
                         $add: [
-                            { $multiply: ['$attendanceCount', 5] },
+                            '$attendanceScore',
                             '$assignmentScore',
                             '$quizScore'
                         ]

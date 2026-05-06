@@ -110,7 +110,9 @@ const sendAttendanceNotification = async (groupId, date, attendanceData) => {
         if (present.length > 0) {
             message += `✅ <b>Kelganlar (${present.length}):</b>\n`;
             present.forEach(p => {
-                message += `• ${escapeHTML(p.oquvchi.ism)}\n`;
+                const ball = p.ball || 0;
+                let statusIcon = ball >= 80 ? '🔥' : '⭐';
+                message += `• ${escapeHTML(p.oquvchi.ism)} — <b>${ball} ball</b> ${statusIcon}\n`;
             });
         }
 
