@@ -42,6 +42,7 @@ const GroupView = React.lazy(() => import('./pages/GroupView'));
 const Events = React.lazy(() => import('./pages/Events'));
 const EventAttendance = React.lazy(() => import('./pages/EventAttendance'));
 const StudentEvents = React.lazy(() => import('./pages/student/StudentEvents'));
+const CurriculumManager = React.lazy(() => import('./pages/CurriculumManager'));
 
 
 
@@ -104,6 +105,7 @@ const AppContent = () => {
                         <Route path="/students" element={<Students />} />
                         <Route path="/groups" element={<Groups />} />
                         <Route path="/groups/:id" element={<GroupView />} />
+                        <Route path="/curriculum" element={<CurriculumManager />} />
                         <Route path="/debtors" element={<Debtors />} />
                         <Route path="/market-manager" element={<MarketManager />} />
                         <Route path="/coin-manager" element={<CoinManager />} />
