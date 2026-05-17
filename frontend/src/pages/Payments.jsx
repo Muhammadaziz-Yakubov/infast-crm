@@ -7,8 +7,11 @@ import {
     HiOutlineSearch, HiOutlineCash, HiOutlineCalendar,
     HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineFilter,
     HiOutlineClock, HiOutlineCreditCard, HiOutlineDeviceMobile,
-    HiOutlineCurrencyDollar, HiOutlineCollection, HiOutlineTrash
+    HiOutlineCurrencyDollar, HiOutlineCollection, HiOutlineTrash,
+    HiOutlinePhone, HiOutlineChatAlt2, HiOutlineExclamationCircle,
+    HiOutlineEmojiHappy, HiOutlineCheckCircle, HiOutlineSparkles
 } from 'react-icons/hi';
+import Modal from '../components/Modal';
 
 const Payments = () => {
     const location = useLocation();
@@ -21,6 +24,18 @@ const Payments = () => {
     const [total, setTotal] = useState(0);
     const [deleteAllOpen, setDeleteAllOpen] = useState(false);
     const [deleteAllLoading, setDeleteAllLoading] = useState(false);
+
+    // Daily payments states
+    const [dateFilterOpen, setDateFilterOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [dailyStudents, setDailyStudents] = useState([]);
+    const [dailyLoading, setDailyLoading] = useState(false);
+
+    // Quick student payment modal states
+    const [selectedStudentForPay, setSelectedStudentForPay] = useState(null);
+    const [payModalOpen, setPayModalOpen] = useState(false);
+    const [payForm, setPayForm] = useState({ summa: '', tolovTuri: 'naqd', izoh: '' });
+    const [sendingSms, setSendingSms] = useState(null);
 
     const now = new Date();
     const [filterOy, setFilterOy] = useState(location.state?.search ? '' : now.getMonth() + 1);
@@ -40,6 +55,66 @@ const Payments = () => {
         }, 300);
         return () => clearTimeout(timer);
     }, [search]);
+
+    useEffect(() => {
+        if (dateFilterOpen && selectedDate) {
+            fetchDailyStudents();
+        }
+    }, [dateFilterOpen, selectedDate]);
+
+    const fetchDailyStudents = async () => {
+        setDailyLoading(true);
+        try {
+            const dateObj = new Date(selectedDate);
+            const day = dateObj.getDate();
+            const res = await studentAPI.getAll({ tolovKuni: day, limit: 100, holati: 'faol' });
+            setDailyStudents(res.data.data || []);
+        } catch (err) {
+            toast.error("O'quvchilarni yuklashda xatolik");
+        } finally {
+            setDailyLoading(false);
+        }
+    };
+
+    const openStudentPayModal = (student) => {
+        setSelectedStudentForPay(student);
+        setPayForm({
+            summa: student.oylikTolov || student.kurs?.narx || '',
+            tolovTuri: 'naqd',
+            izoh: ''
+        });
+        setPayModalOpen(true);
+    };
+
+    const handleStudentPay = async (e) => {
+        e.preventDefault();
+        try {
+            await paymentAPI.create({
+                oquvchi: selectedStudentForPay._id,
+                summa: Number(payForm.summa),
+                tolovTuri: payForm.tolovTuri,
+                izoh: payForm.izoh
+            });
+            toast.success("To'lov muvaffaqiyatli qabul qilindi! 💸");
+            setPayModalOpen(false);
+            fetchPayments();
+            fetchDailyStudents();
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Xatolik');
+        }
+    };
+
+    const handleSendDailySMS = async (student) => {
+        try {
+            setSendingSms(student._id);
+            await studentAPI.sendDebtSMS(student._id);
+            toast.success(`${student.ism}ga SMS muvaffaqiyatli yuborildi! 📩`);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'SMS yuborishda xatolik');
+        } finally {
+            setSendingSms(null);
+        }
+    };
 
     const fetchPayments = async () => {
         try {
@@ -138,7 +213,16 @@ const Payments = () => {
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 font-medium">Barcha qabul qilingan to'lovlar va daromadlar nazorati</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
+                    <button
+                        onClick={() => setDateFilterOpen(true)}
+                        className="px-6 py-3 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 
+                            border-2 border-emerald-500/20 hover:bg-emerald-500 hover:text-white 
+                            transition-all font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/10 active:scale-95 flex items-center gap-2"
+                    >
+                        <HiOutlineCalendar className="w-4 h-4" />
+                        Kunlik To'lovlar
+                    </button>
                     <button
                         onClick={() => setDeleteAllOpen(true)}
                         className="px-6 py-3 rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400 
@@ -398,6 +482,227 @@ const Payments = () => {
                 </div>
             </div>
         )}
+
+            {/* Daily Payments Modal */}
+            <Modal
+                isOpen={dateFilterOpen}
+                onClose={() => setDateFilterOpen(false)}
+                title="Kunlik To'lovlar Taqsimoti"
+                size="lg"
+            >
+                <div className="space-y-6">
+                    {/* Date Selector Header */}
+                    <div className="flex flex-col sm:flex-row gap-4 items-center justify-between p-6 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent rounded-3xl border border-emerald-500/10">
+                        <div className="flex items-center gap-3">
+                            <div className="p-3 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                                <HiOutlineSparkles className="w-5 h-5 animate-pulse" />
+                            </div>
+                            <div className="min-w-0">
+                                <h4 className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">To'lov kuni bo'yicha saralash</h4>
+                                <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Kunlik rejalashtirish paneli</p>
+                            </div>
+                        </div>
+                        <input
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            className="px-5 py-3.5 rounded-2xl bg-gray-50 dark:bg-dark-950 border-2 border-emerald-500/30 
+                                focus:border-emerald-500 outline-none transition-all font-black text-sm text-gray-800 dark:text-white cursor-pointer w-full sm:w-auto"
+                        />
+                    </div>
+
+                    {/* Statistics Panel */}
+                    {!dailyLoading && dailyStudents.length > 0 && (
+                        <div className="grid grid-cols-3 gap-3">
+                            <div className="bg-gray-50 dark:bg-dark-900/50 p-4 rounded-2xl text-center border border-gray-100 dark:border-white/5">
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Kutilmoqda</p>
+                                <h4 className="text-xl font-black text-gray-900 dark:text-white">{dailyStudents.length} ta</h4>
+                            </div>
+                            <div className="bg-emerald-500/5 p-4 rounded-2xl text-center border border-emerald-500/10">
+                                <p className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest leading-none mb-1">To'langan</p>
+                                <h4 className="text-xl font-black text-emerald-600 dark:text-emerald-400">
+                                    {dailyStudents.filter(s => s.tolovHolati === 'tolangan').length} ta
+                                </h4>
+                            </div>
+                            <div className="bg-rose-500/5 p-4 rounded-2xl text-center border border-rose-500/10">
+                                <p className="text-[9px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest leading-none mb-1">To'lamagan</p>
+                                <h4 className="text-xl font-black text-rose-600 dark:text-rose-400">
+                                    {dailyStudents.filter(s => s.tolovHolati !== 'tolangan').length} ta
+                                </h4>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Students List */}
+                    <div className="max-h-[50vh] overflow-y-auto custom-scrollbar pr-2 space-y-3">
+                        {dailyLoading ? (
+                            <div className="flex flex-col items-center justify-center py-12">
+                                <div className="w-10 h-10 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mb-3" />
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Ma'lumotlar yuklanmoqda...</p>
+                            </div>
+                        ) : dailyStudents.length === 0 ? (
+                            <div className="text-center py-16 opacity-40">
+                                <HiOutlineEmojiHappy className="w-16 h-16 mx-auto text-emerald-500 mb-4" />
+                                <h4 className="text-lg font-black text-gray-800 dark:text-white">Ushbu kunda to'lovlar mavjud emas</h4>
+                                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">
+                                    Bu kunda to'lov muddati belgilangan faol talaba topilmadi
+                                </p>
+                            </div>
+                        ) : (
+                            dailyStudents.map((student) => {
+                                const isPaid = student.tolovHolati === 'tolangan';
+                                const isDebt = student.tolovHolati === 'qarzdor';
+                                
+                                return (
+                                    <div
+                                        key={student._id}
+                                        className="group flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-3xl bg-white dark:bg-dark-900 border border-gray-100 dark:border-white/5 hover:border-emerald-500/20 hover:shadow-lg transition-all"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white text-lg font-black shadow-lg transform transition-transform group-hover:rotate-6
+                                                ${isPaid ? 'from-emerald-400 to-emerald-600 bg-gradient-to-br shadow-emerald-500/10' : 
+                                                  isDebt ? 'from-red-400 to-rose-600 bg-gradient-to-br shadow-red-500/10' : 
+                                                  'from-amber-400 to-amber-600 bg-gradient-to-br shadow-amber-500/10'}`}
+                                            >
+                                                {student.ism?.charAt(0) || '?'}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <h4 className="font-black text-gray-900 dark:text-white uppercase tracking-tight text-sm truncate">{student.ism}</h4>
+                                                <div className="flex flex-wrap items-center gap-2 mt-1">
+                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{student.guruh?.nomi || 'Guruhsiz'}</span>
+                                                    <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{student.telefon}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center justify-between md:justify-end gap-6 pt-3 md:pt-0 border-t md:border-t-0 border-gray-50 dark:border-dark-700/50">
+                                            <div className="text-right">
+                                                <p className="text-sm font-black text-gray-900 dark:text-white tracking-tighter">
+                                                    {new Intl.NumberFormat('uz-UZ').format(student.oylikTolov || student.kurs?.narx || 0)} so'm
+                                                </p>
+                                                <div className="mt-1 flex justify-end">
+                                                    {isPaid ? (
+                                                        <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase tracking-wider"><HiOutlineCheckCircle className="w-3 h-3" /> To'langan</span>
+                                                    ) : isDebt ? (
+                                                        <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 text-[9px] font-black uppercase tracking-wider"><HiOutlineExclamationCircle className="w-3 h-3" /> Qarzdor</span>
+                                                    ) : (
+                                                        <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] font-black uppercase tracking-wider"><HiOutlineExclamationCircle className="w-3 h-3" /> To'lanmagan</span>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                <a
+                                                    href={`tel:${student.telefon}`}
+                                                    className="p-2.5 rounded-xl bg-gray-50 dark:bg-dark-800 text-gray-600 dark:text-gray-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 hover:text-emerald-500 transition-all active:scale-95"
+                                                    title="Qo'ng'iroq"
+                                                >
+                                                    <HiOutlinePhone className="w-4 h-4" />
+                                                </a>
+                                                {!isPaid && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleSendDailySMS(student)}
+                                                            disabled={sendingSms === student._id}
+                                                            className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 transition-all active:scale-95 disabled:opacity-50"
+                                                            title="Eslatma SMS yuborish"
+                                                        >
+                                                            <HiOutlineChatAlt2 className="w-4 h-4" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => openStudentPayModal(student)}
+                                                            className="px-4 py-2.5 rounded-xl bg-emerald-500 text-white font-black text-[10px] uppercase tracking-wider shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5"
+                                                        >
+                                                            <HiOutlineCash className="w-3.5 h-3.5" />
+                                                            To'lov
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Quick Student Payment Modal */}
+            <Modal
+                isOpen={payModalOpen}
+                onClose={() => setPayModalOpen(false)}
+                title="To'lov Qabul Qilish"
+                size="sm"
+            >
+                <form onSubmit={handleStudentPay} className="space-y-6">
+                    <div className="p-8 rounded-[2rem] bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-2xl relative overflow-hidden">
+                        <div className="relative z-10">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-70">O'quvchi</p>
+                            <h4 className="text-2xl font-black tracking-tight">{selectedStudentForPay?.ism}</h4>
+                            <div className="mt-6 flex flex-col items-center">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">Belgilangan To'lov</p>
+                                <h2 className="text-4xl font-black mt-1 tracking-tighter">
+                                    {new Intl.NumberFormat('uz-UZ').format(selectedStudentForPay?.oylikTolov || selectedStudentForPay?.kurs?.narx || 0)} so'm
+                                </h2>
+                            </div>
+                        </div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16" />
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Summa (UZS)</label>
+                                <input
+                                    type="number"
+                                    value={payForm.summa}
+                                    onChange={e => setPayForm({ ...payForm, summa: e.target.value })}
+                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-black"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Turi</label>
+                                <select
+                                    value={payForm.tolovTuri}
+                                    onChange={e => setPayForm({ ...payForm, tolovTuri: e.target.value })}
+                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-bold cursor-pointer"
+                                >
+                                    <option value="naqd">💵 Naqd</option>
+                                    <option value="karta">💳 Karta</option>
+                                    <option value="online">📱 Online</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Izoh</label>
+                            <input
+                                type="text"
+                                value={payForm.izoh}
+                                onChange={e => setPayForm({ ...payForm, izoh: e.target.value })}
+                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-bold"
+                                placeholder="Ixtiyoriy izoh..."
+                            />
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full py-5 rounded-2xl font-black text-white bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-95 transition-all text-lg"
+                    >
+                        To'lovni Tasdiqlash
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setPayModalOpen(false)}
+                        className="w-full py-2 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                        Bekor qilish
+                    </button>
+                </form>
+            </Modal>
         </>
     );
 };

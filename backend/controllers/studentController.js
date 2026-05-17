@@ -13,7 +13,7 @@ const smsService = require('../services/smsService');
 // @route   GET /api/students
 exports.getStudents = async (req, res) => {
     try {
-        const { search, guruh, kurs, holat, page = 1, limit = 50 } = req.query;
+        const { search, guruh, kurs, holat, tolovKuni, page = 1, limit = 50 } = req.query;
 
         let query = {};
 
@@ -25,6 +25,9 @@ exports.getStudents = async (req, res) => {
         }
         if (guruh) query.guruh = guruh;
         if (kurs) query.kurs = kurs;
+        if (tolovKuni) {
+            query.tolovKuni = parseInt(tolovKuni);
+        }
         if (holat === 'qarzdor') {
             query.tolovHolati = { $in: ['tolanmagan', 'qarzdor'] };
         } else if (holat === 'blocklangan') {
