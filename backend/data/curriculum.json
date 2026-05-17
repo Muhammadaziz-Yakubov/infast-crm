@@ -1,11 +1,12 @@
 {
   "frontend": {
     "nomi": "Frontend Development",
+    "jami_davomiylik": "9 oy",
     "darajalar": [
       {
         "daraja": 1,
-        "nomi": "Frontend Boshlang'ich",
-        "davomiyligi": "3 oy",
+        "nomi": "Frontend Boshlang'ich — HTML & CSS",
+        "davomiyligi": "3 oy (13 hafta)",
         "haftalar": [
           {
             "hafta": 1,
@@ -13,19 +14,22 @@
               {
                 "dars_raqam": 1,
                 "mavzular": ["Dasturlashga kirish", "Web qanday ishlaydi", "Brauzerlar va serverlar"],
+                "amaliyot": "Brauzer DevTools ochib, 3 ta saytning HTML tuzilmasini ko'ring va screenshot oling",
                 "uy_vazifa": "Web saytlar tarixi haqida qisqacha yozing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 2,
                 "mavzular": ["HTML nima", "HTML tuzilishi", "head va body teglari"],
-                "uy_vazifa": "Oddiy HTML sahifa yarating",
+                "amaliyot": "VS Code o'rnating, birinchi HTML faylni yarating va brauzerda oching",
+                "uy_vazifa": "Oddiy HTML sahifa yarating (sarlavha, paragraf, mualliflik)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 3,
-                "mavzular": ["HTML teglar: p, h1-h6, br, hr", "Matn formatlash teglari", "HTML kommentariyalar"],
-                "uy_vazifa": "O'zingiz haqida HTML sahifa yarating",
+                "mavzular": ["HTML teglar: p, h1-h6, br, hr", "Matn formatlash: strong, em, mark, del", "HTML kommentariyalar"],
+                "amaliyot": "Barcha matn formatlash teglarini bitta sahifada sinab ko'ring",
+                "uy_vazifa": "O'zingiz haqida bio sahifa yarating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -35,20 +39,23 @@
             "darslar": [
               {
                 "dars_raqam": 4,
-                "mavzular": ["Ro'yxatlar: ul, ol, li", "Havolalar: a tegi", "Rasmlar: img tegi"],
-                "uy_vazifa": "Sevimli kitoblar ro'yxati sahifasi yarating",
+                "mavzular": ["Ro'yxatlar: ul, ol, li, dl", "Havolalar: a tegi, href, target", "Rasmlar: img, alt, width, height"],
+                "amaliyot": "5 ta ichma-ich ro'yxat tuzing, tashqi va ichki havolalar qo'shing",
+                "uy_vazifa": "Sevimli kitoblar ro'yxati sahifasi yarating (muqovalar bilan)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 5,
-                "mavzular": ["Jadvallar: table, tr, td, th", "Jadval atributlari", "colspan va rowspan"],
-                "uy_vazifa": "Maktab jadvalini HTML jadvalda yarating",
+                "mavzular": ["Jadvallar: table, tr, td, th, caption", "colspan va rowspan", "thead, tbody, tfoot"],
+                "amaliyot": "Haftalik dars jadvalingizni HTML table bilan tuzing",
+                "uy_vazifa": "O'quv yili uchun to'liq jadval yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 6,
-                "mavzular": ["HTML Formalar", "input turlari: text, email, password", "textarea, select, button"],
-                "uy_vazifa": "Ro'yxatdan o'tish formasi yarating",
+                "mavzular": ["HTML Formalar: form, fieldset, legend", "Input turlari: text, email, password, number, date, checkbox, radio", "textarea, select, button, datalist"],
+                "amaliyot": "Ro'yxatdan o'tish formasini to'liq yig'ing va submit orqali sinang",
+                "uy_vazifa": "Anketa formasi yarating (kamida 8 xil input turi bilan)",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -58,20 +65,23 @@
             "darslar": [
               {
                 "dars_raqam": 7,
-                "mavzular": ["Semantik HTML: header, nav, main, footer", "section va article", "aside va figure"],
-                "uy_vazifa": "Blog sahifasini semantik teglar bilan yarating",
+                "mavzular": ["Semantik HTML5: header, nav, main, footer, section, article", "aside, figure, figcaption, time, address", "Nima uchun semantik teglar muhim (SEO, accessibility)"],
+                "amaliyot": "Mavjud non-semantik sahifani semantik teglarga o'tkazing",
+                "uy_vazifa": "To'liq blog maqolasi sahifasini semantik teglar bilan yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 8,
-                "mavzular": ["HTML5 yangi elementlar", "audio va video teglari", "iframe tegi"],
-                "uy_vazifa": "Media sahifasi yarating",
+                "mavzular": ["HTML5: audio va video teglari, controls, autoplay", "iframe va embed", "progress, meter, details, summary"],
+                "amaliyot": "Media sahifa tuzing: video, audio va YouTube iframe",
+                "uy_vazifa": "O'z portfolio media sahifangizni yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 9,
-                "mavzular": ["CSS nima va nima uchun kerak", "CSS ulash usullari: inline, internal, external", "CSS selektorlar: element, class, id"],
-                "uy_vazifa": "HTML sahifangizga CSS ulang",
+                "mavzular": ["CSS nima va nima uchun kerak", "CSS ulash usullari: inline, internal, external", "CSS selektorlar: element, class, id, universal (*)"],
+                "amaliyot": "Uchala usulda CSS yozing va prioritetlarni o'rganib chiqing",
+                "uy_vazifa": "HTML sahifangizga external CSS fayl ulang va ranglar bering",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -81,20 +91,23 @@
             "darslar": [
               {
                 "dars_raqam": 10,
-                "mavzular": ["CSS ranglar: color, background-color", "RGB, HEX, HSL formatlar", "CSS shriftlar: font-family, font-size, font-weight"],
-                "uy_vazifa": "Turli ranglar va shriftlar bilan sahifa yarating",
+                "mavzular": ["CSS ranglar: color, background-color, opacity", "RGB, RGBA, HEX, HSL, HSLA formatlari", "CSS shriftlar: font-family, font-size, font-weight, font-style, line-height, letter-spacing"],
+                "amaliyot": "Color palette yarating va har bir rang kodini 3 formatda yozing",
+                "uy_vazifa": "Turli ranglar va shrift juftlashmalar bilan landing sahifa dizayn qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 11,
-                "mavzular": ["CSS Box Model", "margin, padding, border", "width va height"],
-                "uy_vazifa": "Karточka (card) dizayni yarating",
+                "mavzular": ["CSS Box Model: content, padding, border, margin", "box-sizing: content-box va border-box", "width, height, max-width, min-height, overflow"],
+                "amaliyot": "DevTools bilan Box Model vizualizatsiyasini har bir element uchun o'rganing",
+                "uy_vazifa": "Mahsulot kartochkasi (card) dizayni yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 12,
-                "mavzular": ["CSS display xususiyati", "block, inline, inline-block", "visibility va opacity"],
-                "uy_vazifa": "Navigatsiya menyusi yarating",
+                "mavzular": ["CSS display: block, inline, inline-block, none", "visibility va opacity farqi", "text-align, vertical-align, white-space"],
+                "amaliyot": "Har bir display turini vizual solishtiring",
+                "uy_vazifa": "Gorizontal navigatsiya menyusi yarating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -104,20 +117,23 @@
             "darslar": [
               {
                 "dars_raqam": 13,
-                "mavzular": ["CSS Flexbox asoslari", "display: flex, flex-direction", "justify-content, align-items"],
-                "uy_vazifa": "Flexbox bilan kartochkalar layouti",
+                "mavzular": ["CSS Flexbox asoslari: display flex, flex-direction", "justify-content (6 qiymat), align-items (5 qiymat)", "align-self, flex-wrap, gap"],
+                "amaliyot": "Flexbox Froggy o'yinini 24 darajasini bajaring",
+                "uy_vazifa": "Flexbox bilan 4 xil layout variantini yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 14,
-                "mavzular": ["Flexbox: flex-wrap, gap", "flex-grow, flex-shrink, flex-basis", "order xususiyati"],
-                "uy_vazifa": "Gallereya sahifasi Flexbox bilan",
+                "mavzular": ["flex-grow, flex-shrink, flex-basis, flex shorthand", "order xususiyati", "Flexbox bilan real layout: header, sidebar, content, footer"],
+                "amaliyot": "Holy Grail layout ni Flexbox bilan quring",
+                "uy_vazifa": "Rasm gallereyasi Flexbox bilan (responsive)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 15,
-                "mavzular": ["CSS Grid asoslari", "grid-template-columns, grid-template-rows", "grid-gap, grid-area"],
-                "uy_vazifa": "Dashboard layouti Grid bilan yarating",
+                "mavzular": ["CSS Grid asoslari: grid-template-columns, grid-template-rows", "fr birlik, repeat(), minmax()", "grid-gap, grid-column, grid-row, grid-area"],
+                "amaliyot": "Grid Garden o'yinini bajaring",
+                "uy_vazifa": "Dashboard layouti CSS Grid bilan yarating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -127,20 +143,23 @@
             "darslar": [
               {
                 "dars_raqam": 16,
-                "mavzular": ["CSS Position: static, relative, absolute", "fixed va sticky position", "z-index"],
-                "uy_vazifa": "Sticky header va fixed button yarating",
+                "mavzular": ["CSS Position: static, relative, absolute, fixed, sticky", "z-index va stacking context", "Tooltip va Dropdown pozitsiyalash"],
+                "amaliyot": "Sticky header, tooltip, modal overlay yarating",
+                "uy_vazifa": "Sticky header va fixed 'yuqoriga qaytish' tugmasi yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 17,
-                "mavzular": ["CSS Pseudo-classlar: hover, focus, active", "nth-child, first-child, last-child", "CSS Pseudo-elementlar: before, after"],
-                "uy_vazifa": "Hover effektli kartochkalar yarating",
+                "mavzular": ["CSS Pseudo-classlar: :hover, :focus, :active, :visited, :checked", ":nth-child(), :first-child, :last-child, :not()", "CSS Pseudo-elementlar: ::before, ::after, ::placeholder, ::selection"],
+                "amaliyot": "Custom checkbox, radio button va toggle switch yasang",
+                "uy_vazifa": "Hover effektli kartochkalar va custom form elementlari",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 18,
-                "mavzular": ["CSS Transitions", "CSS Animations va @keyframes", "Transform: rotate, scale, translate"],
-                "uy_vazifa": "Animatsiyali loading spinner yarating",
+                "mavzular": ["CSS Transitions: property, duration, timing-function, delay", "CSS Animations va @keyframes", "Transform: rotate, scale, translate, skew, matrix"],
+                "amaliyot": "5 xil animatsiya: spinner, pulse, bounce, fadeIn, slideIn",
+                "uy_vazifa": "Animatsiyali loading screen va button hover effektlari",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -150,20 +169,23 @@
             "darslar": [
               {
                 "dars_raqam": 19,
-                "mavzular": ["Responsive Design asoslari", "Media Queries", "Mobile-first yondashuv"],
-                "uy_vazifa": "Responsive portfolio sahifasi",
+                "mavzular": ["Responsive Design: viewport meta, Media Queries", "Breakpoints: xs, sm, md, lg, xl", "Mobile-first yondashuv va Desktop-first farqi"],
+                "amaliyot": "Saytni 5 xil ekranda sinang (DevTools device toolbar)",
+                "uy_vazifa": "Responsive portfolio sahifasi (mobile, tablet, desktop)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 20,
-                "mavzular": ["CSS Units: px, em, rem, %, vw, vh", "CSS Custom Properties (Variables)", "CSS calc() funksiyasi"],
-                "uy_vazifa": "CSS o'zgaruvchilar bilan tema yarating",
+                "mavzular": ["CSS Units: px, em, rem, %, vw, vh, vmin, vmax", "CSS Custom Properties (Variables): --var, var()", "CSS calc(), clamp(), min(), max()"],
+                "amaliyot": "Fluid typography clamp() bilan yarating",
+                "uy_vazifa": "CSS o'zgaruvchilar bilan to'liq color theme tizimi",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 21,
-                "mavzular": ["Google Fonts ulash", "Font Awesome ikonkalar", "CSS best practices"],
-                "uy_vazifa": "Professional ko'rinishli landing page",
+                "mavzular": ["Google Fonts ulash va font-display", "Font Awesome va SVG ikonkalar", "CSS best practices: BEM, naming conventions, code organization"],
+                "amaliyot": "BEM metodologiyasi bilan navigation komponenti yozing",
+                "uy_vazifa": "Professional landing page (1 sahifa, to'liq responsive)",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -173,20 +195,23 @@
             "darslar": [
               {
                 "dars_raqam": 22,
-                "mavzular": ["Amaliy loyiha: Portfolio sayt boshlanishi", "HTML tuzilmasi va sahifalar rejasi", "Navigatsiya va Hero section"],
-                "uy_vazifa": "Portfolio saytning HTML tuzilishini yozing",
+                "mavzular": ["Amaliy loyiha: Portfolio sayt — Rejalashtirish", "HTML tuzilmasi: sahifalar va bo'limlar", "Navigatsiya va Hero section"],
+                "amaliyot": "Wireframe chizing, HTML skeletini quring, nav yarating",
+                "uy_vazifa": "Portfolio HTML tuzilishini to'liq yozing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 23,
-                "mavzular": ["Portfolio: About va Skills bo'limi", "Portfolio: Projects bo'limi", "Portfolio: Contact formasi"],
-                "uy_vazifa": "Portfolio sahifasini to'ldiring",
+                "mavzular": ["Portfolio: About va Skills bo'limi", "Portfolio: Projects kartochkalari grid bilan", "Portfolio: Contact formasi va footer"],
+                "amaliyot": "Har bir bo'limni quring va content to'ldiring",
+                "uy_vazifa": "Barcha bo'limlarni to'ldiring va CSS ulang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 24,
-                "mavzular": ["Portfolio: CSS styling va responsive", "Portfolio: Animations va hover effektlar", "Loyihani deploy qilish (GitHub Pages)"],
-                "uy_vazifa": "Portfolioni deploy qiling va havolani yuboring",
+                "mavzular": ["Portfolio: To'liq CSS styling va responsive", "Portfolio: Animatsiyalar, transitions, hover effektlar", "GitHub Pages orqali deploy qilish"],
+                "amaliyot": "GitHub Pages ga deploy qiling, mobile da sinang",
+                "uy_vazifa": "Portfolio deploy qiling va havolani yuboring",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -196,20 +221,23 @@
             "darslar": [
               {
                 "dars_raqam": 25,
-                "mavzular": ["Git nima va nima uchun kerak", "Git install va sozlash", "git init, git add, git commit"],
-                "uy_vazifa": "Loyihangizni Git bilan boshqaring",
+                "mavzular": ["Git nima va nima uchun kerak", "git init, git status, git add, git commit, git log", "git diff, git restore, .gitignore"],
+                "amaliyot": "Loyiha papkasini git bilan boshqaring, 5 ta commit qiling",
+                "uy_vazifa": "Mavjud loyihangizni Git bilan boshqaring",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 26,
-                "mavzular": ["GitHub nima va qanday ishlaydi", "Repository yaratish va push qilish", "README.md yozish"],
-                "uy_vazifa": "GitHub profilingizni tartibga keltiring",
+                "mavzular": ["GitHub: repository yaratish, remote, push, pull, clone", "README.md markdown sintaksisi", "GitHub profilni bezash: pinned repos, bio"],
+                "amaliyot": "GitHub profilingiz README ni qiziqarli qiling",
+                "uy_vazifa": "Barcha loyihalaringizni GitHubga yuklang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 27,
-                "mavzular": ["Git branches", "Merge va conflict hal qilish", "Pull request asoslari"],
-                "uy_vazifa": "Yangi branch yaratib feature qo'shing",
+                "mavzular": ["Git branches: branch, checkout, switch", "Merge va rebase farqi", "Conflict hal qilish va Pull Request asoslari"],
+                "amaliyot": "feature branch yaratib, main bilan merge qiling",
+                "uy_vazifa": "Yangi branch yaratib portfolio ga feature qo'shing",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -219,20 +247,23 @@
             "darslar": [
               {
                 "dars_raqam": 28,
-                "mavzular": ["Tailwind CSS asoslari", "Tailwind o'rnatish va sozlash", "Utility-first CSS yondashuvi"],
-                "uy_vazifa": "Tailwind bilan kartochka yarating",
+                "mavzular": ["Tailwind CSS: o'rnatish (CDN va npm), config fayl", "Utility-first yondashuv: spacing, colors, typography", "Tailwind IntelliSense (VS Code extension)"],
+                "amaliyot": "Tailwind bilan birinchi sahifani qurib ko'ring",
+                "uy_vazifa": "Tailwind bilan mahsulot kartochkasi va alert komponentlari",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 29,
-                "mavzular": ["Tailwind: Responsive dizayn", "Tailwind: Dark mode", "Tailwind: Komponentlar yaratish"],
-                "uy_vazifa": "Tailwind bilan responsive navbar",
+                "mavzular": ["Tailwind: Responsive prefikslar (sm:, md:, lg:, xl:)", "Tailwind: Dark mode (class strategy)", "Tailwind: @apply direktiv va custom components"],
+                "amaliyot": "Responsive va dark mode qo'llab-quvvatlovchi navbar",
+                "uy_vazifa": "Tailwind bilan to'liq responsive landing page",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 30,
-                "mavzular": ["Bootstrap asoslari", "Bootstrap Grid system", "Bootstrap komponentlari"],
-                "uy_vazifa": "Bootstrap bilan sahifa yarating",
+                "mavzular": ["Bootstrap 5: Grid system (12 ustunli), breakpoints", "Bootstrap komponentlari: navbar, card, modal, accordion", "Bootstrap Icons va utility classlar"],
+                "amaliyot": "Bootstrap grid bilan 3 ustunli responsive layout",
+                "uy_vazifa": "Bootstrap bilan to'liq e-commerce sahifasi",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -242,20 +273,23 @@
             "darslar": [
               {
                 "dars_raqam": 31,
-                "mavzular": ["Figma asoslari", "Figma dan CSS olish", "Pixel perfect dizayn"],
-                "uy_vazifa": "Figma dizaynini CSS ga o'tkazing",
+                "mavzular": ["Figma asoslari: frames, layers, components", "Auto Layout va Constraints", "Figma dan CSS export qilish, Dev mode"],
+                "amaliyot": "Tayyor Figma dizaynidan CSS kodini olib saytga qo'llang",
+                "uy_vazifa": "Figma dizaynini pixel-perfect CSS ga o'tkazing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 32,
-                "mavzular": ["Amaliy loyiha: Landing Page boshlash", "Header, Hero, Features bo'limlari", "Responsive dizayn qo'shish"],
-                "uy_vazifa": "Landing page davom ettiring",
+                "mavzular": ["Amaliy loyiha: Landing Page — Header, Hero, Features", "CSS Grid va Flexbox bilan murakkab layout", "Responsive dizayn va breakpointlar"],
+                "amaliyot": "Landing page ni 3 breakpoint uchun responsive qiling",
+                "uy_vazifa": "Landing page Features va Testimonials bo'limlarini quring",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 33,
-                "mavzular": ["Landing Page: Pricing, Testimonials", "Landing Page: Footer va animatsiyalar", "Deploy va production tayyor qilish"],
-                "uy_vazifa": "Landing page ni deploy qiling",
+                "mavzular": ["Landing Page: Pricing table, Footer, Animatsiyalar", "CSS performance: will-change, hardware acceleration", "Deploy: GitHub Pages, Netlify, Vercel"],
+                "amaliyot": "Netlify orqali deploy qilib, custom domain bog'lang",
+                "uy_vazifa": "Landing page ni deploy qiling (Netlify yoki Vercel)",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -265,20 +299,23 @@
             "darslar": [
               {
                 "dars_raqam": 34,
-                "mavzular": ["1-Daraja yakuni: Barcha mavzular takrorlash", "Eng ko'p xatolar va yechimlar", "Portfolio ko'rib chiqish va takomillashtirish"],
-                "uy_vazifa": "Portfolioingizni yangilang va taqdimotga tayyorlaning",
+                "mavzular": ["SEO asoslari: meta teglari, Open Graph, Twitter Card", "Web Performance: Lighthouse, Core Web Vitals", "Image optimallashtirish: WebP, lazy loading, srcset"],
+                "amaliyot": "Lighthouse auditi o'tkazing va 90+ ball oling",
+                "uy_vazifa": "Portfolio saytingizni SEO va performance uchun optimallashtiring",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 35,
-                "mavzular": ["Yakuniy loyiha taqdimoti", "Har bir student portfolio tahlili", "Feedbacklar va tavsiyalar"],
-                "uy_vazifa": "2-daraja uchun JavaScript asoslariga tayyorlaning",
+                "mavzular": ["Accessibility (a11y): ARIA roles, semantic HTML", "Color contrast, keyboard navigation, focus styles", "Screen reader bilan saytni sinash"],
+                "amaliyot": "Saytingizni faqat keyboard bilan navigatsiya qiling",
+                "uy_vazifa": "Portfolio saytiga a11y yaxshilanishlarini qo'shing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 36,
-                "mavzular": ["Sertifikat taqdimoti", "2-Daraja haqida ma'lumot", "JavaScript dunyosiga kirishga tayyorlik"],
-                "uy_vazifa": "JavaScript haqida maqolalar o'qing",
+                "mavzular": ["1-Daraja takrorlash: HTML, CSS, Git, Tools", "Keng tarqalgan xatolar va yechimlar", "Portfolio tahlili va takomillash"],
+                "amaliyot": "Portfoliodagi barcha sahifalarni cross-browser tekshiring",
+                "uy_vazifa": "Portfolioingizni taqdimotga tayyorlang",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -288,20 +325,23 @@
             "darslar": [
               {
                 "dars_raqam": 37,
-                "mavzular": ["Figma bilan ishlash", "Advanced Design to Code"],
-                "uy_vazifa": "Figma dizayn asosida sayt yig'ish",
+                "mavzular": ["Yakuniy loyiha taqdimoti: Har bir student portfolio himoyasi", "Feedbacklar va tavsiyalar", "Sertifikat topshiriq"],
+                "amaliyot": "Portfolioni 5 daqiqa taqdim eting, savolga javob bering",
+                "uy_vazifa": "2-daraja uchun JavaScript asoslariga tayyorlaning",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 38,
-                "mavzular": ["SEO asoslari", "Web saytni optimallashtirish"],
-                "uy_vazifa": "Saytga SEO teglar qo'shish va tezligini oshirish",
+                "mavzular": ["Advanced Figma to Code: Auto Layout, Variables", "Design tokens va CSS variables mos kelishi", "Component-based dizayn tizimi"],
+                "amaliyot": "Design system (colors, typography, spacing) yarating",
+                "uy_vazifa": "Figma Component Library dan sayt elementlarini kod qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 39,
-                "mavzular": ["1-daraja imtihoni", "Loyihalar himoyasi"],
-                "uy_vazifa": "O'z loyihasini taqdimot qilish",
+                "mavzular": ["1-daraja yakuniy imtihon", "Loyiha himoyasi: Figma dizaynidan sayt qurish (2 soat)"],
+                "amaliyot": "Berilgan Figma dizaynini sinfda real vaqtda kod qiling",
+                "uy_vazifa": "O'z loyihasini portfolioga joylash",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -310,28 +350,31 @@
       },
       {
         "daraja": 2,
-        "nomi": "Frontend O'rta daraja",
-        "davomiyligi": "3 oy",
+        "nomi": "Frontend O'rta daraja — JavaScript",
+        "davomiyligi": "3 oy (13 hafta)",
         "haftalar": [
           {
             "hafta": 1,
             "darslar": [
               {
                 "dars_raqam": 40,
-                "mavzular": ["JavaScript nima va nima uchun kerak", "O'zgaruvchilar: var, let, const", "Ma'lumot turlari: string, number, boolean"],
-                "uy_vazifa": "O'zgaruvchilar bilan dastr yozing",
+                "mavzular": ["JavaScript qanday ishlaydi: Engine, Runtime, Call Stack", "O'zgaruvchilar: var, let, const — hoisting va scope", "Ma'lumot turlari: string, number, boolean, null, undefined, symbol, bigint"],
+                "amaliyot": "Browser consolida 20 ta turli expression yozing va natijani taxmin qiling",
+                "uy_vazifa": "O'zgaruvchilar va type coercion bo'yicha test yozing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 41,
-                "mavzular": ["Operatorlar: arifmetik, taqqoslash, mantiqiy", "Shartli operatorlar: if, else, else if", "Switch case"],
-                "uy_vazifa": "Kalkulyator dastr yarating",
+                "mavzular": ["Operatorlar: arifmetik, taqqoslash (== vs ===), mantiqiy (&& || !)", "Shartli operatorlar: if/else/else if, ternary operator", "Switch case va nullish coalescing (??)"],
+                "amaliyot": "FizzBuzz muammosini 3 xil usulda yozing",
+                "uy_vazifa": "Kalkulyator dasturi yarating (4 amal + ildiz, daraja)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 42,
-                "mavzular": ["Sikllar: for, while, do-while", "break va continue", "for...of va for...in"],
-                "uy_vazifa": "Ko'paytirish jadvali chiqaring",
+                "mavzular": ["Sikllar: for, while, do-while", "break, continue, labeled statements", "for...of (iterables) va for...in (object keys)"],
+                "amaliyot": "Ko'paytirish jadvali (1-10), yulduzli piramidalari chiqaring",
+                "uy_vazifa": "Fibonacci, Prime sonlar, Palindrome tekshirgich yozing",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -341,20 +384,23 @@
             "darslar": [
               {
                 "dars_raqam": 43,
-                "mavzular": ["Funksiyalar: declaration va expression", "Parametrlar va return", "Arrow functions"],
-                "uy_vazifa": "5 ta turli funksiya yozing",
+                "mavzular": ["Funksiyalar: declaration, expression, IIFE", "Parametrlar: default, rest (...args)", "Arrow functions va this konteksti farqi"],
+                "amaliyot": "Pure function vs impure function farqini ko'rsating",
+                "uy_vazifa": "10 ta utility funksiya yozing (capitalize, clamp, range, shuffle...)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 44,
-                "mavzular": ["Arrays: yaratish va metodlar", "push, pop, shift, unshift", "map, filter, reduce"],
-                "uy_vazifa": "Array bilan talabalar ro'yxati dastr",
+                "mavzular": ["Arrays: yaratish, indexlash, length", "Mutating metodlar: push, pop, shift, unshift, splice, sort, reverse", "Non-mutating: map, filter, reduce, find, findIndex, some, every, flat, flatMap"],
+                "amaliyot": "Talabalar massivini filter, map, reduce bilan qayta ishlang",
+                "uy_vazifa": "Array metodlari bilan 15 ta mashq (LeetCode easy level)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 45,
-                "mavzular": ["Objects: yaratish va ishlash", "Object metodlari", "Destructuring"],
-                "uy_vazifa": "Talaba ob'yektini yarating va qayta ishlang",
+                "mavzular": ["Objects: yaratish, xususiyatlar, metodlar", "Destructuring: object va array", "Spread (...), Rest, Object.keys/values/entries, Object.assign"],
+                "amaliyot": "Talaba ob'yektlar tizimini yarating va ustida amallar bajaring",
+                "uy_vazifa": "Mahsulot katalogi ob'yektlari bilan CRUD funksiyalar",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -364,20 +410,23 @@
             "darslar": [
               {
                 "dars_raqam": 46,
-                "mavzular": ["DOM nima va qanday ishlaydi", "querySelector, getElementById", "innerHTML, textContent, style"],
-                "uy_vazifa": "DOM orqali sahifa mazmunini o'zgartiring",
+                "mavzular": ["DOM: document tree, nodes, elements", "querySelector, querySelectorAll, getElementById, getElementsByClassName", "innerHTML, textContent, innerText, outerHTML farqlari"],
+                "amaliyot": "DOM orqali sahifa mazmunini dinamik o'zgartiring",
+                "uy_vazifa": "Color picker: DOM elementlari rangini o'zgartiring",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 47,
-                "mavzular": ["DOM Events: click, input, submit", "addEventListener", "Event object va preventDefault"],
-                "uy_vazifa": "Tugma bosishda rangni o'zgartiruvchi dastr",
+                "mavzular": ["DOM Events: click, input, change, submit, keydown, mouseover", "addEventListener, removeEventListener", "Event object: target, currentTarget, type; preventDefault(), stopPropagation()"],
+                "amaliyot": "Event delegation bilan dinamik list",
+                "uy_vazifa": "Klaviatura simulyatori (konsolda bosilgan tugmani ko'rsating)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 48,
-                "mavzular": ["DOM: createElement, appendChild", "Element qo'shish va o'chirish", "classList: add, remove, toggle"],
-                "uy_vazifa": "Dinamik ro'yxat (Todo) yarating",
+                "mavzular": ["DOM: createElement, appendChild, insertBefore, cloneNode", "Element o'chirish: remove(), removeChild()", "classList: add, remove, toggle, contains, replace"],
+                "amaliyot": "Todo App — qo'shish, o'chirish, bajarildi toggle",
+                "uy_vazifa": "Dinamik akkordion (FAQ) komponenti yarating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -387,20 +436,23 @@
             "darslar": [
               {
                 "dars_raqam": 49,
-                "mavzular": ["LocalStorage va SessionStorage", "JSON.stringify va JSON.parse", "Ma'lumotlarni saqlash va o'qish"],
-                "uy_vazifa": "Todo app ga localStorage qo'shing",
+                "mavzular": ["LocalStorage va SessionStorage: setItem, getItem, removeItem, clear", "JSON.stringify va JSON.parse", "IndexedDB haqida umumiy ma'lumot"],
+                "amaliyot": "LocalStorage bilan oddiy savatcha tizimi",
+                "uy_vazifa": "Todo App ga localStorage qo'shing (sahifa yangilansa ham saqlansin)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 50,
-                "mavzular": ["Amaliy loyiha: Todo App", "CRUD amallar: Create, Read, Update, Delete", "Filtrlash va qidirish"],
-                "uy_vazifa": "Todo appni to'liq yarating",
+                "mavzular": ["Amaliy loyiha: To'liq Todo App", "CRUD: qo'shish, o'chirish, tahrirlash (inline editing)", "Filtrlash (all/active/completed), qidirish, sort, drag-drop intro"],
+                "amaliyot": "Sinfdoshlar bilan live code review o'tkazing",
+                "uy_vazifa": "Todo App ni CSS bilan chiroyli qiling va deploy qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 51,
-                "mavzular": ["Template Literals", "Spread va Rest operatorlari", "Optional chaining va Nullish coalescing"],
-                "uy_vazifa": "ES6+ xususiyatlarini mashq qiling",
+                "mavzular": ["Template Literals va tagged templates", "Optional chaining (?.) va Nullish coalescing (??)", "Logical assignment (&&=, ||=, ??=), Array/Object shorthand tricks"],
+                "amaliyot": "Eski kodni ES6+ bilan refaktor qiling",
+                "uy_vazifa": "Modern JavaScript bilan utility library yarating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -410,20 +462,23 @@
             "darslar": [
               {
                 "dars_raqam": 52,
-                "mavzular": ["Asynchronous JavaScript: Callbacks", "Promises: then, catch, finally", "Async/Await"],
-                "uy_vazifa": "Asinxron funksiyalar bilan mashq",
+                "mavzular": ["Asynchronous JS: Call Stack, Web APIs, Callback Queue, Event Loop", "Callbacks va Callback Hell muammosi", "Promises: yaratish, then/catch/finally, Promise chaining"],
+                "amaliyot": "Promise.all, Promise.race, Promise.allSettled amaliyoti",
+                "uy_vazifa": "Callback to Promise refaktoring mashqi",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 53,
-                "mavzular": ["Fetch API", "GET va POST so'rovlar", "API dan ma'lumot olish"],
-                "uy_vazifa": "Havo ob-havo API dan ma'lumot oling",
+                "mavzular": ["Async/Await: sintaksis, afzalliklari", "Fetch API: GET, POST, PUT, DELETE so'rovlar", "Headers, body, status codes, CORS tushunchasi"],
+                "amaliyot": "JSONPlaceholder API dan post, user, comment ma'lumotlarini oling",
+                "uy_vazifa": "Havo ob-havo API (OpenWeatherMap) bilan ilovа yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 54,
-                "mavzular": ["REST API tushunchasi", "JSON Server bilan ishlash", "Error handling"],
-                "uy_vazifa": "JSON Server bilan CRUD app yarating",
+                "mavzular": ["REST API arxitekturasi: endpoints, resources, HTTP metodlar", "Error handling: try/catch, HTTP status kodlar", "JSON Server o'rnatish va CRUD API yaratish"],
+                "amaliyot": "JSON Server bilan to'liq CRUD API va Postman testi",
+                "uy_vazifa": "JSON Server bilan blog CRUD ilovasi",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -433,20 +488,23 @@
             "darslar": [
               {
                 "dars_raqam": 55,
-                "mavzular": ["Amaliy loyiha: Weather App", "API integration", "UI dizayn va responsive"],
-                "uy_vazifa": "Weather appni to'liq yarating",
+                "mavzular": ["Amaliy loyiha: Weather App to'liq", "Geolocation API bilan joriy joylashuv", "LocalStorage bilan qidirish tarixi"],
+                "amaliyot": "Weather App ni responsive qilib, 5 kunlik prognoz qo'shing",
+                "uy_vazifa": "Weather App ni deploy qilib GitHub Pages ga yuklang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 56,
-                "mavzular": ["OOP: Classes va Objects", "Constructor, methods, properties", "Inheritance va extends"],
-                "uy_vazifa": "OOP bilan mahsulotlar tizimi",
+                "mavzular": ["OOP: Classes, constructor, instance metodlari", "Inheritance: extends, super", "Encapsulation: private (#) fields, getters va setters"],
+                "amaliyot": "Animal -> Dog, Cat ierarxiyasini OOP bilan qurang",
+                "uy_vazifa": "Bank account tizimi: OOP bilan deposit, withdraw, transfer",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 57,
-                "mavzular": ["Error Handling: try/catch", "Custom errors", "Debugging techniques"],
-                "uy_vazifa": "Error handling bilan form validatsiya",
+                "mavzular": ["Closures va lexical scope", "Higher Order Functions: map, filter, reduce qayta ko'rish", "Currying va function composition"],
+                "amaliyot": "Closure bilan counter, memoize funksiyalari",
+                "uy_vazifa": "Functional programming uslubida data processing pipeline",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -456,20 +514,23 @@
             "darslar": [
               {
                 "dars_raqam": 58,
-                "mavzular": ["NPM va Node.js asoslari", "Package management", "Vite bilan loyiha yaratish"],
-                "uy_vazifa": "Vite loyiha yaratib, run qiling",
+                "mavzular": ["NPM: o'rnatish, package.json, devDependencies vs dependencies", "Node.js asoslari: modules, path, fs (fayllarni o'qish)", "Vite: loyiha yaratish, HMR, build"],
+                "amaliyot": "Vite loyiha yaratib, npm package o'rnating va ishlatib ko'ring",
+                "uy_vazifa": "Vite bilan vanilla JS loyihani qurib, build qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 59,
-                "mavzular": ["Modules: import va export", "ES Modules", "Kodni modul qilish"],
-                "uy_vazifa": "Loyihani modullarga bo'ling",
+                "mavzular": ["ES Modules: import (named, default, namespace), export", "Dynamic import() va lazy loading", "Barrel files va module organization"],
+                "amaliyot": "Todo App ni modullarga (utils, api, storage, ui) bo'ling",
+                "uy_vazifa": "Loyihani modul tuzilmasiga o'tkazing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 60,
-                "mavzular": ["Webpack yoki Vite config", "Build process", "Environment variables"],
-                "uy_vazifa": "Loyihani build qilib deploy qiling",
+                "mavzular": ["Vite config: aliases, env variables, plugins", "Build process: minification, tree-shaking, chunking", "Vercel/Netlify bilan CI/CD deploy"],
+                "amaliyot": "Loyihani build qilib, Vercel ga deploy qiling",
+                "uy_vazifa": "Environment variables bilan API key ni himoya qiling",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -479,20 +540,23 @@
             "darslar": [
               {
                 "dars_raqam": 61,
-                "mavzular": ["Amaliy loyiha: E-commerce sahifasi boshlash", "Mahsulotlar ro'yxati", "Filtrlash va saralash"],
-                "uy_vazifa": "Mahsulotlar sahifasini yarating",
+                "mavzular": ["Amaliy loyiha: E-commerce — Mahsulotlar sahifasi", "API dan mahsulotlarni yuklash (FakeStore API)", "Filtrlash (kategoriya), saralash (narx/ism), qidirish"],
+                "amaliyot": "Debounce bilan qidiruv optimizatsiyasi",
+                "uy_vazifa": "Mahsulot detail modali yoki sahifasini yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 62,
-                "mavzular": ["E-commerce: Savat (Cart) funksionali", "LocalStorage bilan savat", "Narx hisoblash"],
-                "uy_vazifa": "Savat funksionalini yarating",
+                "mavzular": ["E-commerce: Savat (Cart) tizimi", "LocalStorage bilan savat persistentligi", "Miqdor boshqaruvi va narx hisoblash, discount"],
+                "amaliyot": "Savat sidebar va mini-cart icon counter",
+                "uy_vazifa": "Savat funksionalini to'liq yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 63,
-                "mavzular": ["E-commerce: Checkout sahifasi", "Form validation", "Buyurtma berish jarayoni"],
-                "uy_vazifa": "Checkout sahifasini yarating",
+                "mavzular": ["E-commerce: Checkout formasi", "Form validation: required, email, card format", "Buyurtma berish va muvaffaqiyat sahifasi"],
+                "amaliyot": "Real vaqtda form validation (input event bilan)",
+                "uy_vazifa": "To'liq checkout flow (cart -> shipping -> payment -> success)",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -502,20 +566,23 @@
             "darslar": [
               {
                 "dars_raqam": 64,
-                "mavzular": ["Regular Expressions asoslari", "String metodlari: match, replace, search", "Form validation bilan RegExp"],
-                "uy_vazifa": "RegExp bilan form tekshirish",
+                "mavzular": ["Regular Expressions: literals va constructor, flags (g, i, m)", "Metacharacters, quantifiers, groups, lookahead", "String metodlari: match, matchAll, replace, replaceAll, search, split"],
+                "amaliyot": "Email, telefon, parol validatsiyasi RegExp bilan",
+                "uy_vazifa": "To'liq form validator kutubxonasi (RegExp asosida)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 65,
-                "mavzular": ["Date va Time", "Intl formatters", "Countdown timer yaratish"],
-                "uy_vazifa": "Ortga sanash (Countdown) timer yarating",
+                "mavzular": ["Date ob'yekti: yaratish, metodlar, timezone muammolari", "Intl.DateTimeFormat, Intl.RelativeTimeFormat", "setInterval, setTimeout, clearInterval, requestAnimationFrame"],
+                "amaliyot": "Analog va raqamli soat yarating",
+                "uy_vazifa": "Countdown timer (event sanasi kiritilsin, real vaqtda yangilansin)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 66,
-                "mavzular": ["Canvas API asoslari", "Oddiy grafika chizish", "Animation with requestAnimationFrame"],
-                "uy_vazifa": "Canvas bilan oddiy o'yin yarating",
+                "mavzular": ["Canvas API: getContext('2d'), asosiy metodlar", "Chizish: moveTo, lineTo, arc, bezierCurveTo, fillRect", "requestAnimationFrame bilan Canvas animatsiyasi"],
+                "amaliyot": "Bounce to'p animatsiyasi Canvas bilan",
+                "uy_vazifa": "Canvas bilan Snake yoki Flappy Bird o'yini",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -525,20 +592,23 @@
             "darslar": [
               {
                 "dars_raqam": 67,
-                "mavzular": ["Web APIs: Geolocation, Notification", "Intersection Observer", "Web Storage API ilg'or"],
-                "uy_vazifa": "Intersection Observer bilan animatsiya",
+                "mavzular": ["Intersection Observer API: scroll animatsiyalari", "MutationObserver va ResizeObserver", "Web Notifications API va Permission system"],
+                "amaliyot": "Scroll bilan fade-in animatsiya Intersection Observer bilan",
+                "uy_vazifa": "Infinite scroll lenta (scroll pastga tushganda yangi ma'lumot yuklash)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 68,
-                "mavzular": ["Performance optimization", "Lazy loading", "Code splitting asoslari"],
-                "uy_vazifa": "Loyihangizni optimizatsiya qiling",
+                "mavzular": ["Performance: debounce, throttle, memoize", "Lazy loading: images (loading=lazy, srcset), modules", "Web Vitals: LCP, FID, CLS tushunchalari va yaxshilash"],
+                "amaliyot": "Saytingizni Lighthouse bilan tekshiring, 90+ ball oling",
+                "uy_vazifa": "Image gallery bilan lazy loading va virtual scroll",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 69,
-                "mavzular": ["Testing asoslari", "Jest bilan unit testing", "Testing best practices"],
-                "uy_vazifa": "Funksiyalaringizga test yozing",
+                "mavzular": ["Testing asoslari: unit test nima, nima uchun kerak", "Jest: describe, it/test, expect, matchers", "Mock functions, spy, async test, coverage report"],
+                "amaliyot": "Yozgan utility funksiyalaringizga test yozing",
+                "uy_vazifa": "Todo App funksiyalariga kamida 10 ta test yozing",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -548,20 +618,23 @@
             "darslar": [
               {
                 "dars_raqam": 70,
-                "mavzular": ["Yakuniy loyiha: Full JavaScript app boshlash", "Loyiha rejalashtirish va tuzilma", "API integratsiya"],
-                "uy_vazifa": "Yakuniy loyiha tuzilmasini yarating",
+                "mavzular": ["Yakuniy loyiha rejalashtirish: g'oya, foydalanuvchi tarixi, wireframe", "Loyiha tuzilmasi: papkalar, modullar, API design", "GitHub Projects bilan vazifalar boshqaruvi"],
+                "amaliyot": "Loyiha g'oyasini taqdim eting, mentodan tasdiqlash oling",
+                "uy_vazifa": "Loyiha tuzilmasini yarating va birinchi commit qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 71,
-                "mavzular": ["Yakuniy loyiha: Funksionallikni yaratish", "UI/UX polish", "Error handling va edge cases"],
-                "uy_vazifa": "Loyihani davom ettiring",
+                "mavzular": ["Yakuniy loyiha: Core funksionallik — Auth, CRUD, API", "UI/UX polish: loading states, empty states, error states", "Edge cases va error handling"],
+                "amaliyot": "Sinfdosh bilan pair programming",
+                "uy_vazifa": "Loyihani 80% ga yetkazing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 72,
-                "mavzular": ["Yakuniy loyiha: Deploy va taqdimot", "Code review va refactoring", "Best practices muhokamasi"],
-                "uy_vazifa": "Loyihani deploy qiling",
+                "mavzular": ["Yakuniy loyiha: Deploy, documentation, README", "Code review: self-review checklist", "Refactoring va best practices tekshiruvi"],
+                "amaliyot": "Loyihani deploy qiling va README yozing",
+                "uy_vazifa": "Loyihani to'liq tayyor qiling va GitHub ga push qiling",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -571,20 +644,23 @@
             "darslar": [
               {
                 "dars_raqam": 73,
-                "mavzular": ["JavaScript takrorlash: Eng muhim mavzular", "Intervyu savollari va javoblar", "Muammolarni hal qilish strategiyalari"],
-                "uy_vazifa": "10 ta intervyu savoliga javob yozing",
+                "mavzular": ["JavaScript chuqurlashtirilgan: Prototype chain, this keyword", "Event Loop: microtask vs macrotask queue", "Intervyu savollari: closure, hoisting, async, scope"],
+                "amaliyot": "15 ta intervyu savoliga og'zaki javob bering",
+                "uy_vazifa": "30 ta JavaScript intervyu savoliga yozma javob",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 74,
-                "mavzular": ["Yakuniy loyihalar taqdimoti", "Portfolio yangilash", "Feedbacklar va tavsiyalar"],
-                "uy_vazifa": "Portfolioingizni yangilang",
+                "mavzular": ["Clean Code: naming, functions, DRY, SOLID tamoyillari", "Refactoring: code smells va yaxshilash yo'llari", "Documentation: JSDoc yozish"],
+                "amaliyot": "Sinfda birga eski kodni refaktor qiling",
+                "uy_vazifa": "Loyihangizdagi 3 ta kodni refaktor qilib, JSDoc qo'shing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 75,
-                "mavzular": ["Sertifikat topshiriq", "3-Daraja haqida ma'lumot: React", "React dunyosiga tayyorlik"],
-                "uy_vazifa": "React haqida video darsliklar ko'ring",
+                "mavzular": ["Portfolio yangilash: Yangi loyihalarni qo'shing", "Yakuniy loyihalar taqdimoti: demo, kod ko'rsatish", "Sertifikat topshiriq va 3-Daraja haqida ma'lumot: React"],
+                "amaliyot": "Portfolioda yakuniy loyiha sahifasini yarating",
+                "uy_vazifa": "React haqida rasmiy doc o'qing va amaliy tayyorlik",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -594,20 +670,23 @@
             "darslar": [
               {
                 "dars_raqam": 76,
-                "mavzular": ["Real loyihalarda intervyu savollari", "Muammolarni tahlil qilish"],
-                "uy_vazifa": "Keng tarqalgan 10 ta algoritm masalasini ishlash",
+                "mavzular": ["Algoritm asoslari: Big O notation, Time va Space complexity", "Sorting: bubble, selection, insertion, merge sort", "Searching: linear, binary search"],
+                "amaliyot": "Har bir algoritmni implement qilib, vaqtini o'lchang",
+                "uy_vazifa": "LeetCode: 10 ta easy masala (array va string kategoriya)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 77,
-                "mavzular": ["Clean Code tamoyillari", "Refactoring amaliyoti"],
-                "uy_vazifa": "O'zining eski kodini refaktor qilish",
+                "mavzular": ["Design Patterns: Singleton, Observer, Factory, Module", "Anti-patterns va ularga qarshi kurash", "Katta loyihalarda kod tashkil qilish strategiyalari"],
+                "amaliyot": "Observer pattern bilan custom event system yarating",
+                "uy_vazifa": "Mavjud loyiha kodini design pattern bilan refaktor qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 78,
-                "mavzular": ["2-daraja imtihoni", "JavaScript loyihalar himoyasi"],
-                "uy_vazifa": "JavaScript loyihani himoya qilish",
+                "mavzular": ["2-daraja yakuniy imtihon", "JavaScript loyiha himoyasi: 2 soatlik test loyiha"],
+                "amaliyot": "Berilgan vazifani 2 soatda to'liq bajaring",
+                "uy_vazifa": "JavaScript loyihani portfolioga joylash",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -616,28 +695,31 @@
       },
       {
         "daraja": 3,
-        "nomi": "Frontend Yuqori daraja",
-        "davomiyligi": "3 oy",
+        "nomi": "Frontend Yuqori daraja — React & Ecosystem",
+        "davomiyligi": "3 oy (13 hafta)",
         "haftalar": [
           {
             "hafta": 1,
             "darslar": [
               {
                 "dars_raqam": 79,
-                "mavzular": ["React nima va nima uchun kerak", "Create React App vs Vite", "JSX sintaksisi"],
-                "uy_vazifa": "Birinchi React loyihangizni yarating",
+                "mavzular": ["React nima: Virtual DOM, Reconciliation, Fiber", "Vite bilan React loyiha yaratish va tuzilma", "JSX: expressions, fragments, conditional rendering, lists"],
+                "amaliyot": "JSX qoidalarini mashq qiling: 10 ta sintaksis xato toping",
+                "uy_vazifa": "Birinchi React loyihangizni yarating va GitHub ga push qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 80,
-                "mavzular": ["React komponentlar", "Props va ma'lumot uzatish", "Komponent ierarxiyasi"],
-                "uy_vazifa": "3 ta komponent yarating va props uzating",
+                "mavzular": ["React komponentlar: Function components, Props", "Props: string, number, array, object, function, children", "Komponent ierarxiyasi va one-way data flow"],
+                "amaliyot": "Props bilan Card, Button, Avatar komponentlarini yarating",
+                "uy_vazifa": "Reusable komponentlar kutubxonasi (5 ta komponent)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 81,
-                "mavzular": ["State va useState hook", "Event handling React da", "Conditional rendering"],
-                "uy_vazifa": "Counter va Toggle komponentlari yarating",
+                "mavzular": ["useState: primitives, objects, arrays", "Event handling: synthetic events, form events", "Controlled vs uncontrolled components"],
+                "amaliyot": "Counter, toggle, input mirror, color picker yarating",
+                "uy_vazifa": "Multi-step form (useState bilan bosqichma-bosqich)",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -647,20 +729,23 @@
             "darslar": [
               {
                 "dars_raqam": 82,
-                "mavzular": ["Listlar va .map()", "Key prop ahamiyati", "Filtrlash va qidirish"],
-                "uy_vazifa": "Mahsulotlar ro'yxati komponenti",
+                "mavzular": ["Lists va .map() React da", "Key prop: nima uchun kerak, to'g'ri ishlatish", "Conditional rendering: &&, ternary, early return, switch"],
+                "amaliyot": "Dynamic table (sort, filter) yarating",
+                "uy_vazifa": "Mahsulotlar ro'yxati: filter, sort, search bilan",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 83,
-                "mavzular": ["Formlar React da", "Controlled components", "Form validation"],
-                "uy_vazifa": "Login formasi komponenti yarating",
+                "mavzular": ["Formlar React da: controlled components", "useRef hook: form access va DOM reference", "Form validation: manual va react-hook-form bilan"],
+                "amaliyot": "react-hook-form bilan kompleks forma validatsiyasi",
+                "uy_vazifa": "To'liq ro'yxatdan o'tish formasi (validation + error messages)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 84,
-                "mavzular": ["useEffect hook", "Side effects va lifecycle", "Data fetching"],
-                "uy_vazifa": "API dan ma'lumot olib ko'rsatish",
+                "mavzular": ["useEffect: dependency array, cleanup function", "Side effects: API call, subscription, timer, DOM manipulation", "useLayoutEffect farqi va qachon ishlatish"],
+                "amaliyot": "Custom useFetch hook yarating",
+                "uy_vazifa": "API dan ma'lumot olib, loading/error/success holatlari ko'rsating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -670,20 +755,23 @@
             "darslar": [
               {
                 "dars_raqam": 85,
-                "mavzular": ["React Router asoslari", "Route, Link, NavLink", "Dynamic routes va params"],
-                "uy_vazifa": "Multi-page React app yarating",
+                "mavzular": ["React Router v6: BrowserRouter, Routes, Route, Outlet", "Link, NavLink, useNavigate, useParams, useSearchParams", "Programmatic navigation va back/forward"],
+                "amaliyot": "5 sahifali React SPA yarating",
+                "uy_vazifa": "Multi-page portfolio React Router bilan",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 86,
-                "mavzular": ["Nested routes", "Layout komponentlar", "Protected routes"],
-                "uy_vazifa": "Dashboard layout yarating",
+                "mavzular": ["Nested routes va layout pattern", "Protected routes: auth tekshiruvi", "404 va error pages, loader data"],
+                "amaliyot": "Auth guard bilan dashboard layout",
+                "uy_vazifa": "Admin panel layout (sidebar navigation, nested routes)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 87,
-                "mavzular": ["Context API", "useContext hook", "Global state management"],
-                "uy_vazifa": "Dark mode Context bilan yarating",
+                "mavzular": ["Context API: createContext, Provider, useContext", "Global state pattern va qachon ishlatish", "Theme, Language, Auth contextlari yaratish"],
+                "amaliyot": "Dark/Light mode toggle butun ilovada ishlaydi",
+                "uy_vazifa": "Multi-language (i18n) Context bilan yarating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -693,20 +781,23 @@
             "darslar": [
               {
                 "dars_raqam": 88,
-                "mavzular": ["Custom Hooks yaratish", "useLocalStorage, useFetch", "Hook patterns va best practices"],
-                "uy_vazifa": "3 ta custom hook yarating",
+                "mavzular": ["Custom Hooks: qoidalari va best practices", "useLocalStorage, useFetch, useDebounce, useToggle yaratish", "useWindowSize, useClickOutside, usePrevious"],
+                "amaliyot": "Sinfdoshlar bilan custom hook kutubxonasi yarating",
+                "uy_vazifa": "5 ta custom hook yarating va hujjatlang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 89,
-                "mavzular": ["Amaliy loyiha: Todo App React bilan", "CRUD operatsiyalari", "Local state management"],
-                "uy_vazifa": "React Todo app yarating",
+                "mavzular": ["useReducer: reducer funksiya, action, dispatch", "useReducer vs useState qachon ishlatish", "Immer bilan immutable state yangilash"],
+                "amaliyot": "Savat tizimini useReducer bilan refaktor qiling",
+                "uy_vazifa": "Shopping cart to'liq useReducer bilan (add, remove, update, clear)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 90,
-                "mavzular": ["useReducer hook", "Complex state management", "useReducer vs useState"],
-                "uy_vazifa": "Shopping cart useReducer bilan",
+                "mavzular": ["Amaliy loyiha: React Todo App — full featured", "CRUD, filtrlash, drag-and-drop (dnd-kit)", "Categories, priority, due date"],
+                "amaliyot": "dnd-kit bilan drag-and-drop todo",
+                "uy_vazifa": "Todo App ni deploy qilib, portfolioga qo'shing",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -716,20 +807,23 @@
             "darslar": [
               {
                 "dars_raqam": 91,
-                "mavzular": ["Tailwind CSS React bilan", "Styled Components", "CSS Modules"],
-                "uy_vazifa": "Tailwind bilan React sahifa",
+                "mavzular": ["Tailwind CSS React bilan: clsx/classnames library", "Styled Components: tagged template literals, props bilan styling", "CSS Modules: lokal scope, composes"],
+                "amaliyot": "Bir komponentni 3 styling usulida yozing, solishtiring",
+                "uy_vazifa": "Design system: Button, Input, Card Tailwind bilan",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 92,
-                "mavzular": ["Framer Motion animatsiyalar", "Page transitions", "Gesture animations"],
-                "uy_vazifa": "Animatsiyali komponentlar yarating",
+                "mavzular": ["Framer Motion: motion components, animate, initial, exit", "Page transitions va AnimatePresence", "Gesture animations: drag, hover, tap"],
+                "amaliyot": "Staggered list animation va modal transition",
+                "uy_vazifa": "Animatsiyali onboarding flow (3 qadam)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 93,
-                "mavzular": ["React Icons va UI kutubxonalar", "React Hot Toast", "Recharts bilan grafikalar"],
-                "uy_vazifa": "Dashboard UI yarating",
+                "mavzular": ["shadcn/ui: o'rnatish, komponentlar, theming", "Recharts: LineChart, BarChart, PieChart bilan dashboard", "React Hot Toast va Sonner: notification tizimi"],
+                "amaliyot": "Admin dashboard: 4 ta chart, stats cards, toast",
+                "uy_vazifa": "Analytics dashboard UI yarating",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -739,20 +833,23 @@
             "darslar": [
               {
                 "dars_raqam": 94,
-                "mavzular": ["Amaliy loyiha: E-commerce React app boshlash", "Mahsulotlar sahifasi", "API integratsiya"],
-                "uy_vazifa": "E-commerce app boshlang",
+                "mavzular": ["Amaliy loyiha: E-commerce React — Mahsulotlar sahifasi", "Infinite scroll yoki pagination", "Skeleton loading va optimistic UI"],
+                "amaliyot": "Infinite scroll Intersection Observer bilan",
+                "uy_vazifa": "Mahsulot detail sahifasi bilan navigation",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 95,
-                "mavzular": ["E-commerce: Savat tizimi", "Context API bilan savat", "Miqdor boshqaruvi"],
-                "uy_vazifa": "Savat funksionalini yarating",
+                "mavzular": ["E-commerce: Savat — Context API yoki useReducer", "Wishlist funksionali", "Miqdor boshqaruvi, discount kodi, narx hisoblash"],
+                "amaliyot": "Mini-cart sidebar va checkout summary",
+                "uy_vazifa": "Savat va wishlist to'liq funksionalini yarating",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 96,
-                "mavzular": ["E-commerce: Foydalanuvchi autentifikatsiyasi", "Protected routes", "Token management"],
-                "uy_vazifa": "Auth tizimini qo'shing",
+                "mavzular": ["E-commerce: Foydalanuvchi autentifikatsiyasi", "JWT token: localStorage/cookie, refresh token", "Protected routes, user profile sahifasi"],
+                "amaliyot": "Mock auth API bilan login/logout tizimi",
+                "uy_vazifa": "Auth tizimini e-commerce loyihaga qo'shing",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -762,20 +859,23 @@
             "darslar": [
               {
                 "dars_raqam": 97,
-                "mavzular": ["Axios bilan ishlash", "API interceptors", "Loading va Error states"],
-                "uy_vazifa": "API service yarating",
+                "mavzular": ["Axios: o'rnatish, instance, baseURL, headers", "Interceptors: request (token qo'shish), response (error handling)", "Loading va Error states pattern"],
+                "amaliyot": "Axios instance va interceptor bilan API service yarating",
+                "uy_vazifa": "Barcha API chaqiruvlarni Axios service orqali o'tkazing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 98,
-                "mavzular": ["useMemo va useCallback", "React.memo", "Performance optimization"],
-                "uy_vazifa": "Katta ro'yxatni optimizatsiya qiling",
+                "mavzular": ["useMemo: qimmat hisoblashlarni keshlashtirish", "useCallback: funksiya referensini stabillashtirish", "React.memo: component memoization va qachon ishlatish"],
+                "amaliyot": "Performance profiler bilan renders sonini o'lchang",
+                "uy_vazifa": "Katta ro'yxatni (10,000 element) optimizatsiya qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 99,
-                "mavzular": ["React lazy va Suspense", "Code splitting", "Error boundaries"],
-                "uy_vazifa": "Loyihani lazy loading bilan yarating",
+                "mavzular": ["React.lazy va Suspense: code splitting", "Error Boundaries: componentDidCatch, static getDerivedStateFromError", "useTransition va useDeferredValue (concurrent features)"],
+                "amaliyot": "Route-based code splitting va Suspense fallback",
+                "uy_vazifa": "Loyihaga Error Boundary va lazy loading qo'shing",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -785,20 +885,23 @@
             "darslar": [
               {
                 "dars_raqam": 100,
-                "mavzular": ["Firebase asoslari", "Firestore database", "Real-time data"],
-                "uy_vazifa": "Firebase bilan chat app boshlang",
+                "mavzular": ["Firebase Firestore: collection, document, real-time listener", "onSnapshot bilan live data update", "Compound queries, ordering, pagination"],
+                "amaliyot": "Real-time chat komponenti yarating",
+                "uy_vazifa": "Firebase bilan group chat ilovasi boshlang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 101,
-                "mavzular": ["Firebase Authentication", "Google, Email/Password login", "User management"],
-                "uy_vazifa": "Firebase auth qo'shing",
+                "mavzular": ["Firebase Authentication: Email/Password, Google OAuth", "onAuthStateChanged, signOut, updateProfile", "User document Firestore da saqlash"],
+                "amaliyot": "Auth + Firestore bilan user profil yarating",
+                "uy_vazifa": "Firebase auth ni chat ilovaga qo'shing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 102,
-                "mavzular": ["Firebase Storage", "Fayl yuklash", "Rasm optimize qilish"],
-                "uy_vazifa": "Rasm yuklash funksionalini yarating",
+                "mavzular": ["Firebase Storage: fayl yuklash, getDownloadURL", "Rasm optimize qilish: compress before upload", "Firestore Security Rules asoslari"],
+                "amaliyot": "Avatar yuklash va chat da rasm jo'natish",
+                "uy_vazifa": "To'liq chat ilovani deploy qiling (Firebase Hosting)",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -808,20 +911,23 @@
             "darslar": [
               {
                 "dars_raqam": 103,
-                "mavzular": ["Next.js asoslari", "Pages va App Router", "Server-side Rendering (SSR)"],
-                "uy_vazifa": "Next.js loyiha yarating",
+                "mavzular": ["Next.js 14 App Router: project structure, layouts, pages", "Server Components vs Client Components", "Server-side Rendering (SSR) va Static Site Generation (SSG)"],
+                "amaliyot": "Next.js bilan birinchi loyihani yarating",
+                "uy_vazifa": "Blog sayti Next.js (SSG bilan markdown postlar)",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 104,
-                "mavzular": ["Next.js: API Routes", "Static Site Generation (SSG)", "Dynamic routing"],
-                "uy_vazifa": "Blog sayti Next.js bilan",
+                "mavzular": ["Next.js: API Routes va Route Handlers", "Dynamic routes: [id], [...slug]", "Metadata API: title, description, Open Graph"],
+                "amaliyot": "REST API endpoint yarating va fetch qiling",
+                "uy_vazifa": "Blog saytiga dinamik post sahifalari qo'shing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 105,
-                "mavzular": ["Next.js: Image optimization", "Middleware va Auth", "Vercel deployment"],
-                "uy_vazifa": "Next.js loyihani deploy qiling",
+                "mavzular": ["Next.js: Image component va optimization", "Middleware va Auth (NextAuth.js asoslari)", "Vercel deployment va environment variables"],
+                "amaliyot": "Vercel ga deploy qilib, environment variables sozlang",
+                "uy_vazifa": "Blog saytini Vercel ga deploy qiling",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -831,20 +937,23 @@
             "darslar": [
               {
                 "dars_raqam": 106,
-                "mavzular": ["TypeScript asoslari", "Types va Interfaces", "TypeScript React bilan"],
-                "uy_vazifa": "React komponentni TypeScript ga o'tkazing",
+                "mavzular": ["TypeScript asoslari: types, interfaces, type aliases", "Generic types, Union, Intersection, Utility types", "React bilan TypeScript: Props typing, hooks typing"],
+                "amaliyot": "5 ta React komponentni TypeScript ga o'tkazing",
+                "uy_vazifa": "Todo App ni to'liq TypeScript ga migrate qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 107,
-                "mavzular": ["Zustand yoki Redux Toolkit", "Global state management", "Store patterns"],
-                "uy_vazifa": "State management loyihaga qo'shing",
+                "mavzular": ["Zustand: store yaratish, actions, selectors", "Redux Toolkit: slice, createAsyncThunk, RTK Query", "Zustand vs Redux vs Context API qachon ishlatish"],
+                "amaliyot": "E-commerce savatni Zustand bilan refaktor qiling",
+                "uy_vazifa": "State management tanlang va loyihani refaktor qiling",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 108,
-                "mavzular": ["React Query / TanStack Query", "Server state vs Client state", "Caching va refetching"],
-                "uy_vazifa": "React Query bilan API ishlash",
+                "mavzular": ["TanStack Query (React Query): useQuery, useMutation", "Caching, staleTime, gcTime, refetching strategiyalari", "Optimistic updates va infinite queries"],
+                "amaliyot": "API so'rovlarni React Query bilan refaktor qiling",
+                "uy_vazifa": "E-commerce da React Query bilan server state boshqaring",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -854,20 +963,23 @@
             "darslar": [
               {
                 "dars_raqam": 109,
-                "mavzular": ["Yakuniy loyiha: Full-stack app boshlash", "Frontend + Backend integratsiya", "Loyiha tuzilmasi va rejalashtirish"],
-                "uy_vazifa": "Yakuniy loyiha tuzilmasini yarating",
+                "mavzular": ["Yakuniy loyiha rejalashtirish: Full-stack app g'oyasi", "Tech stack: Next.js + TypeScript + Prisma + PostgreSQL", "Loyiha tuzilmasi, schema, API endpoints rejasi"],
+                "amaliyot": "Texnik hujjat va GitHub repo yarating",
+                "uy_vazifa": "Loyiha tuzilmasini yarating, birinchi sprint boshlang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 110,
-                "mavzular": ["Yakuniy loyiha: Asosiy funksionallik", "Auth, CRUD, Real-time", "UI/UX polish"],
-                "uy_vazifa": "Loyihani davom ettiring",
+                "mavzular": ["Yakuniy loyiha: Auth, CRUD, Real-time yoki API integratsiya", "React Query + Zustand bilan state management", "UI/UX: responsive, animatsiyalar, dark mode"],
+                "amaliyot": "Pair programming va code review",
+                "uy_vazifa": "Loyihani 80% ga yetkazing",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 111,
-                "mavzular": ["Yakuniy loyiha: Testing va optimization", "Deploy va production", "Documentation yozish"],
-                "uy_vazifa": "Loyihani deploy qiling",
+                "mavzular": ["Yakuniy loyiha: Testing (Vitest + Testing Library)", "Deploy: Vercel + PlanetScale/Neon", "README va Documentation yozish"],
+                "amaliyot": "E2E test scenariy yozing (Playwright yoki Cypress)",
+                "uy_vazifa": "Loyihani to'liq deploy qiling va hujjatlang",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -877,20 +989,23 @@
             "darslar": [
               {
                 "dars_raqam": 112,
-                "mavzular": ["Professional portfolio yarataish", "Resume va LinkedIn optimization", "Freelance va ishga kirish strategiyalari"],
-                "uy_vazifa": "Portfolio va resume yangilang",
+                "mavzular": ["Professional portfolio: case study yozish", "Resume: ATS-friendly format, texnik ko'nikmalar", "LinkedIn: profil optimallashtirish, GitHub aktiv ko'rinish"],
+                "amaliyot": "Portfolio saytingizni yangilang: yangi loyihalar, texnologiyalar",
+                "uy_vazifa": "Resume va LinkedIn profilingizni yangilang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 113,
-                "mavzular": ["Yakuniy loyihalar taqdimoti", "Code review va feedbacklar", "Sertifikat topshiriq"],
-                "uy_vazifa": "Taqdimotga tayyorlaning",
+                "mavzular": ["Yakuniy loyihalar taqdimoti (Part 1)", "Har bir student 10 daqiqa: demo + kod + texnik qarorlar", "Kod review va feedbacklar"],
+                "amaliyot": "Taqdimot qiling, savolga javob bering",
+                "uy_vazifa": "Taqdimot slaydlarini tayyorlang",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 114,
-                "mavzular": ["Karyera maslahat", "Texnologiya trendlari", "O'rganishni davom ettirish resurslari"],
-                "uy_vazifa": "Kelajak rejangizni yozing",
+                "mavzular": ["Yakuniy loyihalar taqdimoti (Part 2)", "Karyera maslahat: Freelance, Startup, Korporatsiya", "Texnologiya trendlari 2025-2026: AI, Edge computing, WebAssembly"],
+                "amaliyot": "Mock intervyu: 15 daqiqa texnik savol-javob",
+                "uy_vazifa": "Kelajak o'qish rejangizni yozing",
                 "davomiyligi": "1.5 soat"
               }
             ]
@@ -900,19 +1015,22 @@
             "darslar": [
               {
                 "dars_raqam": 115,
-                "mavzular": ["Next.js App Router mukammal ishlash", "Server Actions"],
-                "uy_vazifa": "Next.js va Server actions ob'yektlarini bog'lash",
+                "mavzular": ["Next.js Server Actions: form action, revalidatePath", "Streaming va Suspense bilan Progressive rendering", "Parallel Routes va Intercepting Routes"],
+                "amaliyot": "Server Action bilan form submit, optimistic update",
+                "uy_vazifa": "Server Actions bilan CRUD loyiha ob'yektlarini bog'lash",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 116,
-                "mavzular": ["Loyihani monitoring qilish va xatolarni ushlash", "Sentry"],
-                "uy_vazifa": "Sentry o'rnatish va error xabarnomalarini ko'rish",
+                "mavzular": ["Sentry: o'rnatish, error tracking, performance monitoring", "LogRocket yoki Datadog bilan session replay", "Alerting va on-call tizimiga kirish"],
+                "amaliyot": "Sentry o'rnating, ataylab error chaqiring va ko'ring",
+                "uy_vazifa": "Sentry o'rnatish va xato xabarnomalarini sozlash",
                 "davomiyligi": "1.5 soat"
               },
               {
                 "dars_raqam": 117,
-                "mavzular": ["3-daraja yakuniy imtihoni", "Full-stack Frontend loyiha himoyasi"],
+                "mavzular": ["3-daraja yakuniy imtihon: Full-stack Frontend loyiha himoyasi", "2 soatlik test: Berilgan spec bo'yicha Next.js app qurish"],
+                "amaliyot": "Imtihon: spec o'qing, loyiha quring, deploy qiling",
                 "uy_vazifa": "Bitiruv loyihasini portfolioga joylash",
                 "davomiyligi": "1.5 soat"
               }
@@ -920,212 +1038,646 @@
           }
         ]
       }
-    ] } ,
+    ]
+  },
   "backend": {
     "nomi": "Backend Development (Node.js)",
+    "jami_davomiylik": "6 oy",
     "darajalar": [
       {
         "daraja": 1,
-        "nomi": "Backend Boshlang'ich (Node.js & Express)",
-        "davomiyligi": "3 oy",
+        "nomi": "Backend Boshlang'ich — Node.js & Express & MongoDB",
+        "davomiyligi": "3 oy (12 hafta)",
         "haftalar": [
           {
             "hafta": 1,
             "darslar": [
-              { "dars_raqam": 1, "mavzular": ["Backend nima?", "Node.js o'rnatish", "Terminal bilan ishlash"], "uy_vazifa": "Node.js o'rnating", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 2, "mavzular": ["V8 Engine & Event Loop", "NPM & Package.json", "Modules (CommonJS)"], "uy_vazifa": "NPM paket yarating", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 3, "mavzular": ["FS moduli", "Path moduli", "OS moduli"], "uy_vazifa": "Fayl tizimi bilan ishlash", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 1,
+                "mavzular": ["Backend nima, Frontend bilan farqi", "Node.js: V8 Engine, Event Loop, Non-blocking I/O", "NPM: package.json, devDependencies, scripts, semantic versioning"],
+                "amaliyot": "Node.js versiyasini tekshiring, npm loyiha yarating, nodemon sozlang",
+                "uy_vazifa": "Node.js o'rnating va Hello World dasturi yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 2,
+                "mavzular": ["CommonJS Modules: require, module.exports, exports", "Built-in modules: fs (readFile, writeFile, watch), path (join, resolve, extname)", "OS moduli, process.env, process.argv"],
+                "amaliyot": "File watcher dasturi yarating (fayl o'zgarganda log)",
+                "uy_vazifa": "Fayl tizimi bilan ishlash: read, write, delete, list",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 3,
+                "mavzular": ["HTTP moduli bilan server yaratish", "Request: url, method, headers", "Response: writeHead, write, end, JSON javob"],
+                "amaliyot": "URL routing bilan oddiy HTTP server (/, /about, /api)",
+                "uy_vazifa": "Router va static file server yarating (HTML fayllarni serve qilish)",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 2,
             "darslar": [
-              { "dars_raqam": 4, "mavzular": ["HTTP moduli", "Server yaratish", "Request & Response"], "uy_vazifa": "Oddiy server yarating", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 5, "mavzular": ["Express.js kirish", "Routing asoslari", "Middleware tushunchasi"], "uy_vazifa": "Express server yarating", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 6, "mavzular": ["REST API tamoyillari", "JSON bilan ishlash", "Postman bilan ishlash"], "uy_vazifa": "REST API sketch yarating", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 4,
+                "mavzular": ["Express.js: o'rnatish, app yaratish, listen", "Routing: app.get/post/put/delete/patch/all", "Route parametrlar (:id), query string (?key=value)"],
+                "amaliyot": "Express bilan CRUD endpoint'lar (massivda ma'lumot saqlansin)",
+                "uy_vazifa": "Kitoblar REST API (in-memory array bilan)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 5,
+                "mavzular": ["Middleware tushunchasi: request-response cycle", "Built-in: express.json(), express.urlencoded(), express.static()", "Custom middleware va next() funksiyasi"],
+                "amaliyot": "Logger middleware yarating (method, url, time, status log)",
+                "uy_vazifa": "Request validator middleware va rate limiter yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 6,
+                "mavzular": ["REST API tamoyillari: Richardson Maturity Model", "Status kodlar: 200, 201, 204, 400, 401, 403, 404, 409, 422, 500", "Postman: collection, environment, tests, pre-request scripts"],
+                "amaliyot": "Postman collection yarating va barcha endpointlarni test qiling",
+                "uy_vazifa": "Postman collection export qiling va GitHub ga qo'shing",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 3,
             "darslar": [
-              { "dars_raqam": 7, "mavzular": ["Express Router", "Controller strukturasi", "MVC arxitekturasi"], "uy_vazifa": "MVC loyiha tuzilmasi", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 8, "mavzular": ["Error Handling", "Global Error Handler", "Async/Await catch"], "uy_vazifa": "Xatolarni ushlash tizimi", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 9, "mavzular": ["Environment Variables", "Dotenv", "Config management"], "uy_vazifa": ".env sozlash", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 7,
+                "mavzular": ["Express Router: router instance, prefix routing", "Controller pattern: business logic ajratish", "MVC arxitekturasi: Model, View, Controller"],
+                "amaliyot": "Loyiha tuzilmasini MVC ga refaktor qiling",
+                "uy_vazifa": "To'liq MVC tuzilmali loyiha: users, products route",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 8,
+                "mavzular": ["Error Handling: Express error middleware (4 argument)", "Async wrapper funksiyasi va asyncHandler", "Custom Error class yaratish (status, message, code)"],
+                "amaliyot": "Global error handler va validation error formati",
+                "uy_vazifa": "Barcha route'larni async/await va try/catch bilan himoya qiling",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 9,
+                "mavzular": ["Environment Variables: .env fayl, dotenv", "Config management: config/index.js pattern", "Nodemon, ts-node-dev, concurrently sozlash"],
+                "amaliyot": ".env bilan DB URL, PORT, JWT_SECRET sozlang",
+                "uy_vazifa": "Multi-environment config (development, production) yarating",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 4,
             "darslar": [
-              { "dars_raqam": 10, "mavzular": ["MongoDB kirish", "Atlas vs Local", "Compass ishlatish"], "uy_vazifa": "DB ulanishi", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 11, "mavzular": ["Mongoose asoslari", "Schema & Model", "Data Types"], "uy_vazifa": "Mongoose model yaratish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 12, "mavzular": ["CRUD amallari (Create)", "Validation", "Unique constraints"], "uy_vazifa": "Ma'lumot qo'shish API", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 10,
+                "mavzular": ["MongoDB: document-oriented database, BSON format", "Atlas cloud cluster yaratish, IP whitelist, connection string", "Compass GUI: collection ko'rish, filter, aggregate"],
+                "amaliyot": "Atlas cluster yaratib, Compass bilan ulaning",
+                "uy_vazifa": "MongoDB Atlas da ma'lumotlar bazasi yarating va dastlabki ma'lumot kiriting",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 11,
+                "mavzular": ["Mongoose: Schema, Model, Data Types (String, Number, Date, ObjectId, Mixed)", "SchemaType options: required, unique, default, enum, min, max", "Mongoose.connect() va connection events"],
+                "amaliyot": "User va Product schema yarating, validatsiya sinang",
+                "uy_vazifa": "E-commerce uchun: User, Product, Category schemalar",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 12,
+                "mavzular": ["CRUD: Model.create(), insertMany()", "Custom validators va validate()", "Unique index va duplicate key error handling"],
+                "amaliyot": "Postman orqali real ma'lumot qo'shing va validatsiyani sinang",
+                "uy_vazifa": "To'liq Create endpoint bilan validation error handling",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 5,
             "darslar": [
-              { "dars_raqam": 13, "mavzular": ["Querying Basics", "Find, FindOne", "Selection"], "uy_vazifa": "Ma'lumotlarni qidirish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 14, "mavzular": ["Updating & Deleting", "FindByIdAndUpdate", "DeleteMany"], "uy_vazifa": "Edit/Delete API", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 15, "mavzular": ["Pagination", "Filtering", "Sorting"], "uy_vazifa": "Qidiruv API optimizatsiyasi", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 13,
+                "mavzular": ["Mongoose querying: find(), findOne(), findById()", "Query chaining: select(), lean(), exec()", "Comparison operators: $gt, $lt, $gte, $lte, $in, $nin, $ne"],
+                "amaliyot": "Narx oralig'ida mahsulot qidirish API",
+                "uy_vazifa": "Advanced search: narx, kategoriya, rating bo'yicha filter",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 14,
+                "mavzular": ["findByIdAndUpdate (options: new, runValidators), findByIdAndDelete", "Logical operators: $and, $or, $not, $nor", "Bulk operations: updateMany, deleteMany"],
+                "amaliyot": "Batch update (kategoriya mahsulotlarini arzonlashtirish)",
+                "uy_vazifa": "Edit va Delete API endpointlarini yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 15,
+                "mavzular": ["Pagination: skip/limit va cursor-based", "Sorting: sort(), collation", "Text search: $text, $search, $regex"],
+                "amaliyot": "Pagination va search birlashgan mahsulot API",
+                "uy_vazifa": "To'liq qidiruv API: pagination, sort, filter, search",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 6,
             "darslar": [
-              { "dars_raqam": 16, "mavzular": ["Data Relationships", "Referencing (Populate)", "Embedding"], "uy_vazifa": "Relational querylar", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 17, "mavzular": ["Advanced Populating", "Virtuals", "Methods"], "uy_vazifa": "Virtual maydonlar qo'shish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 18, "mavzular": ["Middleware (Pre/Post save)", "Indexes", "Aggregation framework intro"], "uy_vazifa": "Password hashing intro", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 16,
+                "mavzular": ["Data Relationships: Referencing (ObjectId ref) va Embedding", "populate(): path, select, match, populate nested", "Qachon embed, qachon reference ishlatish"],
+                "amaliyot": "User -> Orders -> Products populate qilish",
+                "uy_vazifa": "Blog: Post, Comment, User munosabatlari va populate",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 17,
+                "mavzular": ["Virtual fields: get/set, toJSON virtuals: true", "Instance methods va static methods", "Mongoose Middleware: pre/post save, pre find"],
+                "amaliyot": "fullName virtual, preSave password hashing",
+                "uy_vazifa": "Product schema ga: averageRating virtual, preSave slug generatsiya",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 18,
+                "mavzular": ["Aggregation Pipeline: $match, $group, $sort, $limit, $skip", "$project, $unwind, $lookup (JOIN)", "$addFields, $count, $facet"],
+                "amaliyot": "Kategoriya bo'yicha mahsulot statistikasi aggregation bilan",
+                "uy_vazifa": "Dashboard statistika API: sotuvlar, buyurtmalar, foydali mahsulotlar",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 7,
             "darslar": [
-              { "dars_raqam": 19, "mavzular": ["Authentication kirish", "JWT (JSON Web Token)", "Payload & Secret"], "uy_vazifa": "Token generatsiya", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 20, "mavzular": ["Login & Register logic", "Password encryption (bcrypt)", "Salting"], "uy_vazifa": "Auth system backend", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 21, "mavzular": ["Protecting Routes", "Auth Middleware", "req.user"], "uy_vazifa": "Himoyalangan API", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 19,
+                "mavzular": ["Authentication vs Authorization farqi", "JWT: Header.Payload.Signature tuzilmasi", "jsonwebtoken: sign, verify, decode; access va refresh token"],
+                "amaliyot": "JWT sign va verify qo'lda sinab ko'ring",
+                "uy_vazifa": "Token generatsiya va tekshirish servisi yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 20,
+                "mavzular": ["Register: email unique check, password validation", "bcryptjs: hash, compare, salt rounds", "Login: email/password check, token qaytarish"],
+                "amaliyot": "Register va Login API Postman da sinang",
+                "uy_vazifa": "To'liq auth tizimi (register, login, token refresh)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 21,
+                "mavzular": ["Auth Middleware: token olish (Bearer), verify, req.user", "Token expiration va refresh token tizimi", "Cookie-based token saqlash va httpOnly cookie"],
+                "amaliyot": "Protected route: faqat login qilganlar ko'ra oladi",
+                "uy_vazifa": "Barcha muhim endpointlarni auth middleware bilan himoya qiling",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 8,
             "darslar": [
-              { "dars_raqam": 22, "mavzular": ["Authorization", "User Roles (Admin/User)", "Permissions"], "uy_vazifa": "Role check middleware", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 23, "mavzular": ["Password Reset", "Mailers (Nodemailer)", "Tokens generation"], "uy_vazifa": "Email jo'natish tizimi", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 24, "mavzular": ["Security best practices", "Helmet, Rate dynamic", "XSS prevent"], "uy_vazifa": "Security middleware qo'shish", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 22,
+                "mavzular": ["Authorization: User Roles (admin, user, moderator)", "Role-based middleware: restrictTo('admin')", "Resource ownership check: faqat o'zining resursi"],
+                "amaliyot": "Admin panel endpoint va oddiy user endpoint farqini sinang",
+                "uy_vazifa": "Role check middleware va ownership check yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 23,
+                "mavzular": ["Password Reset: crypto.randomBytes token", "Nodemailer: SMTP sozlash, HTML email yuborish", "Email templates: Handlebars yoki html-to-text"],
+                "amaliyot": "Email yuborishni Mailtrap bilan sinang",
+                "uy_vazifa": "Parolni tiklash email bilan to'liq tizim",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 24,
+                "mavzular": ["Security: helmet.js, CORS sozlash", "Rate limiting: express-rate-limit, brute-force himoya", "NoSQL injection, XSS prevent, hpp (parameter pollution)"],
+                "amaliyot": "Postman bilan SQL va NoSQL injection sinab ko'ring",
+                "uy_vazifa": "Barcha security middleware qo'shing va test qiling",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 9,
             "darslar": [
-              { "dars_raqam": 25, "mavzular": ["File Uploads", "Multer asoslari", "Disk Storage"], "uy_vazifa": "Rasm yuklash tizimi", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 26, "mavzular": ["Image resizing", "Sharp kutubxonasi", "Static files access"], "uy_vazifa": "Rasm optimizatsiyasi", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 27, "mavzular": ["Cloud Storage (R2/S3/Cloudinary)", "Integration", "Upload logic"], "uy_vazifa": "Cloudga rasm yuklash", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 25,
+                "mavzular": ["File Uploads: Multer (memoryStorage, diskStorage)", "File type validation (mimetype), size limit", "Multiple file upload va file naming strategy"],
+                "amaliyot": "Profil rasmi va mahsulot rasmlari yuklash",
+                "uy_vazifa": "Multi-image upload bilan mahsulot API",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 26,
+                "mavzular": ["Sharp: resize, crop, format convert (WebP), quality", "Thumbnail generatsiya va watermark qo'shish", "Static files Express bilan serve qilish"],
+                "amaliyot": "Yuklangan rasmni 3 o'lchamda (thumb, medium, large) saqlash",
+                "uy_vazifa": "Rasm optimallashtirish pipeline yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 27,
+                "mavzular": ["Cloudinary: o'rnatish, upload, transform, delete", "AWS S3 yoki R2 asoslari: bucket, presigned URL", "Cloud upload stream vs buffer upload"],
+                "amaliyot": "Cloudinary ga rasm yuklash va URL olish",
+                "uy_vazifa": "Barcha rasmlarni cloudga yuklash tizimi",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 10,
             "darslar": [
-              { "dars_raqam": 28, "mavzular": ["Advanced aggregation", "$match, $group, $sort", "$unwind"], "uy_vazifa": "Statistika API", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 29, "mavzular": ["GeoSpatial data", "Coordinates in Mongo", "Distance calculation"], "uy_vazifa": "Yaqin masofadagi ob'ektlar", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 30, "mavzular": ["Import/Export data", "Seeding database", "Faker.js integration"], "uy_vazifa": "Mock data generatsiya", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 28,
+                "mavzular": ["Aggregation: $lookup (left join), $unwind nested arrays", "$group: $sum, $avg, $max, $min, $push, $addToSet", "$facet bilan parallel pipeline (filtr + stats birgalikda)"],
+                "amaliyot": "Sotuvlar hisoboti: oylik, kategoriyalik, mahsulot statistikasi",
+                "uy_vazifa": "Admin dashboard uchun 5 ta statistika endpoint",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 29,
+                "mavzular": ["GeoSpatial: 2dsphere index, $near, $geoWithin", "Coordinates: [longitude, latitude] formati", "Yaqin restoran/do'kon topish API"],
+                "amaliyot": "Toshkentdagi do'konlar uchun yaqinlik qidirish API",
+                "uy_vazifa": "Radius ichidagi ob'ektlarni topish (km kiritiladi)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 30,
+                "mavzular": ["Database Seeding: Faker.js bilan realistik ma'lumot", "Import/Export: mongodump, mongorestore, mongoexport", "Mongoose transactions va session"],
+                "amaliyot": "1000 ta mahsulot va 500 ta user seeding skripti",
+                "uy_vazifa": "To'liq seed skript va rollback tizimi",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 11,
             "darslar": [
-              { "dars_raqam": 31, "mavzular": ["Documentation", "Swagger UI kirish", "YAML/JSON specs"], "uy_vazifa": "Swagger setup", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 32, "mavzular": ["Documenting routes", "Schemas", "Responses detail"], "uy_vazifa": "API docs to'ldirish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 33, "mavzular": ["Best practices (DRY/KISS)", "Code refactoring", "Modular design"], "uy_vazifa": "Loyihani refaktor qilish", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 31,
+                "mavzular": ["Swagger/OpenAPI 3.0: spec tuzilmasi, YAML formatи", "swagger-jsdoc va swagger-ui-express o'rnatish", "Info, servers, components/schemas, securitySchemes"],
+                "amaliyot": "Swagger UI ni /api-docs da ochib ko'ring",
+                "uy_vazifa": "Loyiha uchun Swagger setup qiling",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 32,
+                "mavzular": ["Swagger: route annotatsiya (tags, summary, parameters, requestBody)", "Response schema va example ko'rsatish", "Authentication (BearerAuth) Swagger da"],
+                "amaliyot": "Barcha endpointlarni Swagger da hujjatlang",
+                "uy_vazifa": "To'liq API dokumentatsiya (Swagger UI orqali sinab ko'rinadigan)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 33,
+                "mavzular": ["Code quality: ESLint, Prettier sozlash", "DRY, KISS, SOLID tamoyillari backend da", "Logging: Winston (levels, transports, format) yoki Pino"],
+                "amaliyot": "Morgan + Winston bilan structured logging",
+                "uy_vazifa": "Loyihani to'liq refaktor qiling va linting qo'shing",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 12,
             "darslar": [
-              { "dars_raqam": 34, "mavzular": ["Level 1 Review", "Q&A session", "Project planning"], "uy_vazifa": "Imtihon tayyorgarlik", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 35, "mavzular": ["Practical Exam: Microservice build", "Requirements", "Coding starts"], "uy_vazifa": "Loyiha qurish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 36, "mavzular": ["Exam Completion", "Code evaluation", "Level 1 Recap"], "uy_vazifa": "Feedback", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 34,
+                "mavzular": ["Amaliy imtihon tayyorgarlik: barcha mavzular takrorlash", "Mock intervyu: API design, DB design savollari", "Loyiha rejalashtirish va reja himoyasi"],
+                "amaliyot": "Group da kod review va feedback",
+                "uy_vazifa": "Yakuniy imtihon loyihasiga tayyorlaning",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 35,
+                "mavzular": ["Yakuniy imtihon: 2 soatlik real loyiha — E-commerce API", "Vazifa: User auth, Product CRUD, Order management", "Swagger docs, Error handling, Validation"],
+                "amaliyot": "Imtihon loyihasini kodlang",
+                "uy_vazifa": "Loyihani GitHub ga push qiling",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 36,
+                "mavzular": ["Imtihon himoyasi va kod tahlili", "Feedbacklar: nima yaxshi, nima yaxshilanishi kerak", "2-daraja haqida ma'lumot: SQL, Redis, Docker, Microservices"],
+                "amaliyot": "Kod review va o'zaro feedback",
+                "uy_vazifa": "2-daraja tayyorgarlik: PostgreSQL va SQL asoslarini o'rganish",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           }
         ]
       },
       {
         "daraja": 2,
-        "nomi": "Backend Murakkab (System Design & Scalability)",
-        "davomiyligi": "3 oy",
+        "nomi": "Backend Murakkab — System Design & Scalability",
+        "davomiyligi": "3 oy (12 hafta)",
         "haftalar": [
           {
             "hafta": 1,
             "darslar": [
-              { "dars_raqam": 37, "mavzular": ["SQL vs NoSQL", "PostgreSQL kirish", "Table structures"], "uy_vazifa": "Postgres o'rnatish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 38, "mavzular": ["Prisma ORM", "Modeling with Prisma", "Migration system"], "uy_vazifa": "Prisma schema yaratish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 39, "mavzular": ["SQL Relations (1:1, 1:N, N:N)", "Joins", "Transactions"], "uy_vazifa": "Murakkab querylar", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 37,
+                "mavzular": ["SQL vs NoSQL: qachon qaysi, tradeoffs", "PostgreSQL: o'rnatish, psql CLI, pgAdmin", "DDL: CREATE TABLE, ALTER TABLE, DROP; Constraints: PK, FK, UNIQUE, CHECK, NOT NULL"],
+                "amaliyot": "PostgreSQL da blog tizimi: users, posts, comments, tags jadvallar",
+                "uy_vazifa": "E-commerce uchun SQL schema: 5+ jadval, FK munosabatlar",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 38,
+                "mavzular": ["Prisma ORM: o'rnatish, schema.prisma, datasource, generator", "Prisma Migrate: migration yaratish, apply, reset", "Prisma Studio va Prisma Client generate"],
+                "amaliyot": "Blog schema Prisma da yarating va migrate qiling",
+                "uy_vazifa": "E-commerce Prisma schema va migration",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 39,
+                "mavzular": ["Prisma CRUD: create, findMany (where, select, include), update, delete", "SQL Joins: INNER, LEFT, RIGHT, FULL OUTER", "Transactions va Prisma.$transaction([])"],
+                "amaliyot": "Murakkab query: post ga muallif, kommentlar va teglar bilan",
+                "uy_vazifa": "E-commerce buyurtma tizimi (transaction bilan)",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 2,
             "darslar": [
-              { "dars_raqam": 40, "mavzular": ["Real-time backend", "Socket.io kirish", "Namespaces"], "uy_vazifa": "Socket server setup", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 41, "mavzular": ["Rooms in Socket.io", "Private messaging", "Broadcasting"], "uy_vazifa": "Chat app logic", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 42, "mavzular": ["Real-time notifications", "Redis integration intro", "Syncing states"], "uy_vazifa": "Notification system", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 40,
+                "mavzular": ["Socket.io: o'rnatish, server va client setup", "Connection, disconnect events, socket.id", "Namespaces: /chat, /notifications; middleware Socket da"],
+                "amaliyot": "Oddiy echo server: client yuboradi, server qaytaradi",
+                "uy_vazifa": "Real-time yoqimli xabar (typing indicator bilan) yarating",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 41,
+                "mavzular": ["Socket.io Rooms: join, leave, to(room).emit", "Private messaging: socket to socket", "Online users tizimi: Map bilan userId -> socketId"],
+                "amaliyot": "Xona asosida ko'p foydalanuvchili chat",
+                "uy_vazifa": "To'liq chat app: xonalar, private, online status",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 42,
+                "mavzular": ["Real-time notifications tizimi", "Redis bilan Socket.io adapter (birdan ko'p server)", "Xabarlarni MongoDB/PostgreSQL da saqlash"],
+                "amaliyot": "Bildirishnoma tizimi: like, comment, follow trigger",
+                "uy_vazifa": "Chat ilovaga bildirishnomalar va tarix saqlash",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 3,
             "darslar": [
-              { "dars_raqam": 43, "mavzular": ["Redis kirish", "Caching strategies", "Key-Value store"], "uy_vazifa": "API caching", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 44, "mavzular": ["Redis Data Types", "Pub/Sub system", "Sorted sets"], "uy_vazifa": "Leaderboard system", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 45, "mavzular": ["Task Queues", "BullMQ asoslari", "Background jobs"], "uy_vazifa": "Job queue setup", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 43,
+                "mavzular": ["Redis: o'rnatish, redis-cli, ioredis/node-redis", "String, Hash, List, Set, ZSet ma'lumot turlari", "TTL, EXPIRE, PERSIST; Caching strategiyalari (Cache-Aside, Write-Through)"],
+                "amaliyot": "API response caching (products list 60 soniya cache)",
+                "uy_vazifa": "Rate limiting Redis bilan (sliding window algorithm)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 44,
+                "mavzular": ["Redis Pub/Sub: publish, subscribe, pattern subscribe", "Sorted Sets: leaderboard, zadd, zrange, zrank", "Redis Streams asoslari"],
+                "amaliyot": "O'yin leaderboard: real-time ball yangilash",
+                "uy_vazifa": "Pub/Sub bilan server-to-server xabar tizimi",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 45,
+                "mavzular": ["BullMQ: Queue, Worker, Job yaratish va sozlash", "Job prioritet, delay, retry, backoff strategiyasi", "Bull Board UI va job monitoring"],
+                "amaliyot": "Email yuborish job queue (async, retry 3 marta)",
+                "uy_vazifa": "Report generatsiya va image processing job queue",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 4,
             "darslar": [
-              { "dars_raqam": 46, "mavzular": ["Testing (Unit tests)", "Jest setup", "Testing controllers"], "uy_vazifa": "Unit test yozish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 47, "mavzular": ["Integration tests", "Supertest kutubxonasi", "DB mocking"], "uy_vazifa": "API integration tests", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 48, "mavzular": ["TDD (Test Driven Development)", "Code coverage", "CI pipes intro"], "uy_vazifa": "TDD bilan function build", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 46,
+                "mavzular": ["Unit Testing: nima ni test qilish kerak", "Jest setup: jest.config.js, babel/ts-jest", "Controller va Service test: mock, spy, stub"],
+                "amaliyot": "Auth service uchun unit testlar (register, login)",
+                "uy_vazifa": "CRUD service uchun kamida 15 ta unit test",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 47,
+                "mavzular": ["Integration Testing: Supertest bilan HTTP test", "Test database: in-memory MongoDB (mongomock) yoki test DB", "beforeAll, afterAll, beforeEach, afterEach hooks"],
+                "amaliyot": "Auth endpoint integration test (register -> login -> protected)",
+                "uy_vazifa": "Barcha CRUD endpointlar uchun integration testlar",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 48,
+                "mavzular": ["TDD: Red-Green-Refactor sikli", "Code Coverage: jest --coverage, lcov report", "GitHub Actions bilan CI: har push da test ishlash"],
+                "amaliyot": "TDD bilan yangi feature: password strength checker",
+                "uy_vazifa": "80%+ coverage va GitHub Actions CI pipeline",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 5,
             "darslar": [
-              { "dars_raqam": 49, "mavzular": ["TypeScript in Backend", "Types in Express", "Interfaces for req/res"], "uy_vazifa": "TS express setup", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 50, "mavzular": ["Advanced TS", "Generics", "Decorators"], "uy_vazifa": "TS logic enhancement", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 51, "mavzular": ["Nest.js Kirish", "Modules, Controllers, Services", "Dependency Injection"], "uy_vazifa": "Nest.js boiler plate", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 49,
+                "mavzular": ["TypeScript: Express da sozlash (@types/express)", "Request/Response typing, custom interfaces", "Zod: schema validation va type inference"],
+                "amaliyot": "Express app ni TypeScript ga to'liq o'tkazing",
+                "uy_vazifa": "Zod bilan barcha API input validatsiyasini yozing",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 50,
+                "mavzular": ["TypeScript Generics: Generic services va repositories", "Decorators (experimental): Class, Method, Property decorator", "Utility Types: Partial, Required, Pick, Omit, Record"],
+                "amaliyot": "Generic Repository pattern (CRUD har bir model uchun)",
+                "uy_vazifa": "DTO (Data Transfer Object) pattern TypeScript bilan",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 51,
+                "mavzular": ["NestJS: CLI, project structure, Modules", "Controllers: Route decorators, Params, Body", "Providers va Dependency Injection container"],
+                "amaliyot": "NestJS bilan users CRUD yarating",
+                "uy_vazifa": "NestJS bilan products module (CRUD + Swagger)",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 6,
             "darslar": [
-              { "dars_raqam": 52, "mavzular": ["Nest.js: Providers & Pipes", "Exception Filters", "Guards"], "uy_vazifa": "Nest.js auth guard", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 53, "mavzular": ["Nest.js TypeORM/Prisma", "Database integration", "Repository pattern"], "uy_vazifa": "Nest.js database", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 54, "mavzular": ["Nest.js Interceptors", "File Uploads", "Custom Decorators"], "uy_vazifa": "Nest service building", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 52,
+                "mavzular": ["NestJS: Pipes (ValidationPipe, ParseIntPipe), Guards (AuthGuard)", "Exception Filters: HttpException, custom filters", "Interceptors: logging, transform response"],
+                "amaliyot": "JWT Guard va Role Guard NestJS da",
+                "uy_vazifa": "NestJS bilan to'liq auth module (JWT + Refresh Token)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 53,
+                "mavzular": ["NestJS TypeORM: Entity, Repository, Relations", "Prisma NestJS bilan integratsiya", "Database module va ConfigModule"],
+                "amaliyot": "PostgreSQL + Prisma + NestJS integratsiya",
+                "uy_vazifa": "E-commerce NestJS app (auth + products + orders)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 54,
+                "mavzular": ["NestJS: Interceptors (cache, transform), Custom Decorators", "File Upload (Multer module NestJS da)", "NestJS Testing: TestingModule, mock providers"],
+                "amaliyot": "NestJS app ni test qiling (controller + service test)",
+                "uy_vazifa": "NestJS loyihasini Swagger bilan hujjatlang",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 7,
             "darslar": [
-              { "dars_raqam": 55, "mavzular": ["Microservices asoslari", "Monolith vs Microservices", "Message Brokers"], "uy_vazifa": "Microservice design", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 56, "mavzular": ["RabbitMQ kirish", "Producer & Consumer", "Queues & Exchanges"], "uy_vazifa": "RabbitMQ message passing", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 57, "mavzular": ["Event Driven Architecture", "Nest.js Microservices", "TCP communication"], "uy_vazifa": "Multi-app connection", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 55,
+                "mavzular": ["Microservices: nimalar, afzalliklar va kamchiliklar", "Monolith -> Microservice migration strategiyalari", "Service discovery, API Gateway pattern"],
+                "amaliyot": "Monolith loyihani servisga bo'lish rejasini tuzing",
+                "uy_vazifa": "Microservice design doc: 3 ta service, ulardagi API",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 56,
+                "mavzular": ["RabbitMQ: Exchange types (direct, topic, fanout, headers)", "Producer va Consumer pattern, DLQ (Dead Letter Queue)", "amqplib bilan Node.js integratsiya"],
+                "amaliyot": "Order service -> Notification service async xabar",
+                "uy_vazifa": "E-commerce: buyurtma qo'yilganda email + SMS notification",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 57,
+                "mavzular": ["NestJS Microservices: TCP transport, RabbitMQ transport", "Hybrid application (HTTP + Microservice)", "Saga pattern va eventually consistent"],
+                "amaliyot": "3 ta NestJS microservice: API Gateway, Users, Orders",
+                "uy_vazifa": "Microservice arxitektura bilan mini e-commerce",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 8,
             "darslar": [
-              { "dars_raqam": 58, "mavzular": ["Docker Kirish", "Containers vs VMs", "Docker images"], "uy_vazifa": "Docker o'rnatish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 59, "mavzular": ["Dockerizing Node.js app", "Dockerfile", "Docker Compose"], "uy_vazifa": "Containerize loyiha", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 60, "mavzular": ["Multi-container setup", "DB & Redis in containers", "Docker networks"], "uy_vazifa": "Full stack docker compose", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 58,
+                "mavzular": ["Docker: Container vs VM, Docker Engine, Docker Hub", "Image: FROM, RUN, COPY, WORKDIR, EXPOSE, CMD, ENTRYPOINT", "docker build, run, exec, logs, stop, rm, ps"],
+                "amaliyot": "Node.js app ni Docker image qiling va ishlating",
+                "uy_vazifa": ".dockerignore, multi-stage build bilan optimallashtirilgan image",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 59,
+                "mavzular": ["Docker Compose: services, networks, volumes", "Depends_on, healthcheck, restart policy", "Environment variables va secrets boshqaruvi"],
+                "amaliyot": "Node.js + MongoDB + Redis docker-compose bilan",
+                "uy_vazifa": "To'liq loyihani docker-compose ga o'tkazing",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 60,
+                "mavzular": ["Multi-container: NestJS + PostgreSQL + Redis + RabbitMQ", "Docker networking: bridge, host, overlay", "Container logs va monitoring: docker stats"],
+                "amaliyot": "Microservice loyihani docker-compose bilan ishga tushiring",
+                "uy_vazifa": "Production-ready docker-compose (health checks, volumes)",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 9,
             "darslar": [
-              { "dars_raqam": 61, "mavzular": ["System Design Basics", "Availability vs Consistency", "CAP Theorem"], "uy_vazifa": "Architecture drawing", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 62, "mavzular": ["Load Balancing", "Nginx as Proxy", "Vertical vs Horizontal Scaling"], "uy_vazifa": "Nginx setup", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 63, "mavzular": ["Performance profiling", "Prometheus & Grafana", "Logging (Winston/Pino)"], "uy_vazifa": "Monitoring setup", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 61,
+                "mavzular": ["System Design: High Level Design, Low Level Design", "CAP Theorem, BASE vs ACID, Eventual Consistency", "Reliability, Availability, Scalability, Maintainability"],
+                "amaliyot": "Twitter/Instagram kabi tizimni HLD chizing",
+                "uy_vazifa": "URL Shortener tizim dizayni (architecture diagram bilan)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 62,
+                "mavzular": ["Nginx: reverse proxy, load balancer, static files", "Upstream servers, round-robin, least connections", "SSL termination, gzip compression, rate limiting Nginx da"],
+                "amaliyot": "3 ta Node.js instance oldida Nginx load balancer",
+                "uy_vazifa": "Nginx bilan SSL va gzip qo'shilgan production config",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 63,
+                "mavzular": ["Prometheus: metrics, /metrics endpoint, node-prom-client", "Grafana: datasource, dashboard yaratish, alerts", "Structured logging: Winston JSON format, log levels"],
+                "amaliyot": "Grafana dashboard: request count, latency, error rate",
+                "uy_vazifa": "Monitoring stack setup va alert qoidalari",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 10,
             "darslar": [
-              { "dars_raqam": 64, "mavzular": ["Deployment strategies", "CI/CD with GitHub Actions", "Cloud Providers (AWS/GCP)"], "uy_vazifa": "CI pipeline build", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 65, "mavzular": ["AWS Basics (EC2/S3/RDS)", "Server configuration", "SSH & Linux basics"], "uy_vazifa": "Serverga ulanish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 66, "mavzular": ["Process Managers (PM2)", "SSL (Let's Encrypt)", "Domain config"], "uy_vazifa": "Live deploy", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 64,
+                "mavzular": ["CI/CD: pipeline tushunchasi, GitHub Actions YAML sintaksis", "Jobs, steps, runners, secrets, artifacts", "CI: lint + test + build; CD: Docker image push + deploy"],
+                "amaliyot": "GitHub Actions bilan: push -> test -> Docker build -> push to Docker Hub",
+                "uy_vazifa": "To'liq CI/CD pipeline loyiha uchun",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 65,
+                "mavzular": ["AWS EC2: instansiya yaratish, security groups, key pair", "SSH bilan ulaning, Linux: apt, systemctl, ufw, crontab", "AWS S3: bucket, public access, CLI bilan upload"],
+                "amaliyot": "EC2 da Docker bilan Node.js app ishga tushiring",
+                "uy_vazifa": "Serverga to'liq stack deploy qiling (Nginx + SSL)",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 66,
+                "mavzular": ["PM2: ecosystem.config.js, cluster mode, auto-restart", "Let's Encrypt SSL: Certbot bilan bepul sertifikat", "Domain: DNS A record, CNAME, Nginx virtual host"],
+                "amaliyot": "Custom domain bilan HTTPS da ishlaydigan loyiha",
+                "uy_vazifa": "Loyihani production serverga to'liq deploy qiling",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 11,
             "darslar": [
-              { "dars_raqam": 67, "mavzular": ["Final Project Brainstorm", "Database Schema Design", "API spec finalization"], "uy_vazifa": "Project plan", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 68, "mavzular": ["Project coding: Auth & Core modules", "Microservices setup", "Communications"], "uy_vazifa": "Coding phase 1", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 69, "mavzular": ["Project coding: Features & Integration", "Testing included", "Scaling test"], "uy_vazifa": "Coding phase 2", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 67,
+                "mavzular": ["Yakuniy loyiha: Tizim dizayni va arxitektura", "Tech stack: NestJS + PostgreSQL + Redis + RabbitMQ + Docker", "Database schema, API spec, microservices rejasi"],
+                "amaliyot": "Texnik hujjat taqdimoti va mentor tasdiqi",
+                "uy_vazifa": "Loyiha repo yarating, Docker Compose sozlang, birinchi sprint",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 68,
+                "mavzular": ["Loyiha: Auth + Core modules + Real-time", "Microservices yoki Modular monolith", "API Gateway, JWT, Socket.io yoki Server-Sent Events"],
+                "amaliyot": "Pair programming va daily standup",
+                "uy_vazifa": "Loyihani 70% ga yetkazing",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 69,
+                "mavzular": ["Loyiha: Integration, Testing, Optimization", "Performance testing: k6 bilan load test", "Security audit va final code review"],
+                "amaliyot": "k6 bilan 100 virtual user load test",
+                "uy_vazifa": "Loyihani to'liq tayyor qiling va hujjatlang",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           },
           {
             "hafta": 12,
             "darslar": [
-              { "dars_raqam": 70, "mavzular": ["Final Review & Debugging", "Security Audit", "Documentation Final"], "uy_vazifa": "Final polish", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 71, "mavzular": ["Presentation Day Part 1", "Individual Demos", "Feedback sessions"], "uy_vazifa": "Presentation", "davomiyligi": "1.5 soat" },
-              { "dars_raqam": 72, "mavzular": ["Presentation Day Part 2", "Awards & Certificates", "Career next steps"], "uy_vazifa": "- - -", "davomiyligi": "1.5 soat" }
+              {
+                "dars_raqam": 70,
+                "mavzular": ["Yakuniy loyiha: Production deploy, monitoring sozlash", "Security final audit: OWASP Top 10 tekshiruvi", "README, Swagger docs, Architecture diagram"],
+                "amaliyot": "Grafana monitoring qo'shing va alert sozlang",
+                "uy_vazifa": "Loyihani taqdimotga to'liq tayyorlang",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 71,
+                "mavzular": ["Yakuniy taqdimot (Part 1): Individual demo va kod ko'rsatish", "Texnik qarorlar asoslanishi: nima uchun bu texnologiya", "Feedbacklar va savollar"],
+                "amaliyot": "Har bir student: live demo + kod ko'rsatish",
+                "uy_vazifa": "Portfoliongizga yakuniy loyihani qo'shing",
+                "davomiyligi": "1.5 soat"
+              },
+              {
+                "dars_raqam": 72,
+                "mavzular": ["Yakuniy taqdimot (Part 2): Group review va best projects", "Sertifikat topshiriq", "Karyera yo'li: Backend Engineer, DevOps, Full-stack"],
+                "amaliyot": "Mock intervyu: System design + texnik savol-javob",
+                "uy_vazifa": "Keyingi bosqich: Kubernetes, GraphQL, gRPC — o'qish rejasi",
+                "davomiyligi": "1.5 soat"
+              }
             ]
           }
         ]
