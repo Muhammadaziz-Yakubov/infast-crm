@@ -9,8 +9,10 @@ import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
     HiOutlineCash, HiOutlineFilter, HiOutlinePhone, HiOutlineCalendar,
     HiOutlineBadgeCheck, HiOutlineUserCircle, HiOutlineX, HiOutlineCheckCircle,
-    HiOutlineEye, HiOutlineLockClosed, HiOutlineLockOpen, HiOutlineClock, HiOutlineExclamationCircle
+    HiOutlineEye, HiOutlineLockClosed, HiOutlineLockOpen, HiOutlineClock, HiOutlineExclamationCircle,
+    HiOutlineDownload
 } from 'react-icons/hi';
+import * as XLSX from 'xlsx';
 
 const Students = () => {
     const location = useLocation();
@@ -266,7 +268,6 @@ const Students = () => {
         }
     };
 
-    // Ommaviy o'chirish
     const handleBulkDelete = async () => {
         if (selectedIds.length === 0) return;
         if (!window.confirm(`${selectedIds.length} ta o'quvchini o'chirishni xohlaysizmi? Bu amalni qaytarib bo'lmaydi!`)) return;
@@ -281,6 +282,50 @@ const Students = () => {
         } finally {
             setBulkLoading(false);
         }
+    };
+
+    const handleExportExcel = () => {
+        if (students.length === 0) {
+            toast.error("Eksport qilish uchun ma'lumot yo'q!");
+            return;
+        }
+
+        const exportData = students.map((s, index) => ({
+            "T/R": index + 1,
+            "Ism va familiya": s.ism,
+            "Telefon raqam": s.telefon,
+            "Guruh": s.guruh?.nomi || 'Guruhsiz',
+            "Kurs": s.kurs?.nomi || 'Kursiz',
+            "Oylik to'lov": s.oylikTolov || s.kurs?.narx || 0,
+            "To'lov kuni": s.tolovKuni,
+            "To'lov holati": s.tolovHolati === 'tolangan' ? "To'langan" : s.tolovHolati === 'qarzdor' ? "Qarzdor" : "To'lanmagan",
+            "Login": s.username,
+            "Holati": s.isBlocked ? 'Bloklangan' : 'Aktiv',
+            "Eslatma": s.eslatmalar || ''
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "O'quvchilar");
+        
+        // Ustun kengliklari
+        const wscols = [
+            {wch: 5},  // T/R
+            {wch: 25}, // Ism va familiya
+            {wch: 15}, // Telefon raqam
+            {wch: 15}, // Guruh
+            {wch: 20}, // Kurs
+            {wch: 15}, // Oylik to'lov
+            {wch: 10}, // To'lov kuni
+            {wch: 15}, // To'lov holati
+            {wch: 15}, // Login
+            {wch: 10}, // Holati
+            {wch: 30}  // Eslatma
+        ];
+        worksheet['!cols'] = wscols;
+
+        XLSX.writeFile(workbook, "O'quvchilar_ruyxati.xlsx");
+        toast.success("Excel fayl yuklab olindi! 📊");
     };
 
     const filteredGroups = form.kurs ? groups.filter(g => (g.kurs?._id || g.kurs) === form.kurs) : groups;
@@ -340,16 +385,25 @@ const Students = () => {
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 font-medium">Barcha ro'yxatdan o'tgan o'quvchilar va ularning holati</p>
                 </div>
-                <button
-                    onClick={openAddModal}
-                    className="group relative inline-flex items-center justify-center gap-3 bg-gray-900 dark:bg-primary-600 
-                        text-white px-8 py-4 rounded-2xl font-black text-sm shadow-xl shadow-primary-500/20 
-                        transition-all hover:-translate-y-1 active:scale-95 overflow-hidden"
-                >
-                    <HiOutlinePlus className="w-5 h-5 transition-transform group-hover:rotate-90" />
-                    <span>Yangi o'quvchi</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={handleExportExcel}
+                        className="group relative inline-flex items-center justify-center gap-2 bg-emerald-500 text-white px-6 py-4 rounded-2xl font-black text-sm shadow-xl shadow-emerald-500/20 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden"
+                    >
+                        <HiOutlineDownload className="w-5 h-5 transition-transform group-hover:-translate-y-1" />
+                        <span>Excel Export</span>
+                    </button>
+                    <button
+                        onClick={openAddModal}
+                        className="group relative inline-flex items-center justify-center gap-3 bg-gray-900 dark:bg-primary-600 
+                            text-white px-8 py-4 rounded-2xl font-black text-sm shadow-xl shadow-primary-500/20 
+                            transition-all hover:-translate-y-1 active:scale-95 overflow-hidden"
+                    >
+                        <HiOutlinePlus className="w-5 h-5 transition-transform group-hover:rotate-90" />
+                        <span>Yangi o'quvchi</span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+                    </button>
+                </div>
             </div>
 
             {/* Smart Filters Bar */}
