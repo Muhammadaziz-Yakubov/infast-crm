@@ -411,4 +411,4 @@ const MarketingKampaniyalari = () => {
     );
 };
 
-export default MarketingCampaigns;
+export default MarketingKampaniyalari;
