@@ -73,7 +73,7 @@ const MarketingLayoutContent = () => {
                         return (
                             <NavLink
                                 key={tab.path}
-                                to={tab.path}
+                                to={tab.path === '' ? '/marketing' : `/marketing/${tab.path}`}
                                 end={isMain}
                                 className={({ isActive }) => `
                                     flex items-center gap-2.5 px-5 py-3 rounded-2xl font-black text-sm transition-all duration-300
