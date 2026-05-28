@@ -43,6 +43,7 @@ const Events = React.lazy(() => import('./pages/Events'));
 const EventAttendance = React.lazy(() => import('./pages/EventAttendance'));
 const StudentEvents = React.lazy(() => import('./pages/student/StudentEvents'));
 const CurriculumManager = React.lazy(() => import('./pages/CurriculumManager'));
+const MarketingLayout = React.lazy(() => import('./pages/marketing/MarketingLayout'));
 
 
 
@@ -110,6 +111,7 @@ const AppContent = () => {
                         <Route path="/market-manager" element={<MarketManager />} />
                         <Route path="/coin-manager" element={<CoinManager />} />
                         <Route path="/settings" element={<Settings />} />
+                        <Route path="/marketing/*" element={user?.role === 'student' ? <Navigate to="/dashboard" replace /> : <MarketingLayout />} />
                         <Route path="/events" element={user?.role === 'student' ? <StudentEvents /> : <Events />} />
                         <Route path="/events/:id/attendance" element={<EventAttendance />} />
 

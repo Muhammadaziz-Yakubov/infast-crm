@@ -6,7 +6,8 @@ import {
     HiOutlineCreditCard, HiOutlineExclamationCircle, HiOutlineLogout,
     HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineCalendar, HiOutlineUserCircle,
     HiOutlineClipboardList, HiOutlineTrendingUp, HiOutlineShoppingBag,
-    HiOutlineDatabase, HiOutlineShieldCheck, HiOutlineFire, HiOutlineCollection
+    HiOutlineDatabase, HiOutlineShieldCheck, HiOutlineFire, HiOutlineCollection,
+    HiOutlineSpeakerphone
 } from 'react-icons/hi';
 
 
@@ -17,6 +18,7 @@ const adminMenu = [
     { path: '/students', label: "O'quvchilar", icon: HiOutlineUserGroup },
     { path: '/groups', label: 'Guruhlar', icon: HiOutlineAcademicCap },
     { path: '/courses', label: 'Kurslar', icon: HiOutlineBookOpen },
+    { path: '/marketing', label: 'Marketing', icon: HiOutlineSpeakerphone },
     { path: '/payments', label: "To'lovlar", icon: HiOutlineCreditCard },
     { path: '/debtors', label: 'Qarzdorlar', icon: HiOutlineExclamationCircle },
     { path: '/attendance', label: 'Davomat', icon: HiOutlineCalendar },
