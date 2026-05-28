@@ -117,22 +117,45 @@ export const MarketingProvider = ({ children }) => {
 
                 // Update advertising sources leads counts dynamically based on real data distribution
                 if (s.sourceDistribution && s.sourceDistribution.length > 0) {
-                    setAdSources(prev => prev.map(sourceObj => {
-                        const matched = s.sourceDistribution.find(d => d._id?.toLowerCase() === sourceObj.source.toLowerCase());
-                        if (matched) {
-                            // recalculate ROI based on new lead numbers
-                            const newCount = matched.count;
-                            const cost = sourceObj.cost;
-                            const conversionRate = sourceObj.conversion;
-                            // Estimate conversion sales: count * (conversion / 100)
-                            const estimatedSales = newCount * (conversionRate / 100);
-                            // Assume average student revenue is 800,000 so'm
+                    setAdSources(prev => {
+                        const existingMap = new Map(prev.map(src => [src.source.toLowerCase(), src]));
+                        const updatedSources = [];
+                        
+                        s.sourceDistribution.forEach(dist => {
+                            const sourceName = dist._id || 'Noma\'lum';
+                            const lowerName = sourceName.toLowerCase();
+                            const existing = existingMap.get(lowerName);
+                            
+                            const leadsCount = dist.count;
+                            const cost = existing ? existing.cost : 0;
+                            const conversion = existing ? existing.conversion : 15.0;
+                            
+                            const estimatedSales = leadsCount * (conversion / 100);
                             const estimatedRevenue = estimatedSales * 800000;
                             const roi = cost > 0 ? Math.round(((estimatedRevenue - cost) / cost) * 100) : 999;
-                            return { ...sourceObj, leadsCount: newCount, roi: roi < -100 ? -100 : roi };
-                        }
-                        return sourceObj;
-                    }));
+                            
+                            updatedSources.push({
+                                id: existing ? existing.id : Date.now() + Math.random(),
+                                source: sourceName,
+                                leadsCount,
+                                conversion,
+                                cost,
+                                roi: roi < -100 ? -100 : roi
+                            });
+                            
+                            existingMap.delete(lowerName);
+                        });
+                        
+                        existingMap.forEach(src => {
+                            updatedSources.push({
+                                ...src,
+                                leadsCount: 0,
+                                roi: src.cost > 0 ? -100 : 0
+                            });
+                        });
+                        
+                        return updatedSources;
+                    });
                 }
             }
         } catch (err) {

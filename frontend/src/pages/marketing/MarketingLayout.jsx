@@ -17,7 +17,6 @@ import ReklamaManbalari from './ReklamaManbalari';
 import MarketingKampaniyalari from './MarketingKampaniyalari';
 import FunnelAnalytics from './FunnelAnalytics';
 import BroadcastSystem from './BroadcastSystem';
-import MarketingSettings from './MarketingSettings';
 
 const tabs = [
     { path: '', label: 'Dashboard', icon: HiOutlineChartBar },
@@ -25,8 +24,7 @@ const tabs = [
     { path: 'sources', label: 'Manbalar', icon: HiOutlineShare },
     { path: 'campaigns', label: 'Kampaniyalar', icon: HiOutlineSpeakerphone },
     { path: 'funnel', label: 'Voronka', icon: HiOutlineFilter },
-    { path: 'broadcast', label: 'Broadcast', icon: HiOutlineChatAlt2 },
-    { path: 'settings', label: 'Sozlamalar', icon: HiOutlineCog }
+    { path: 'broadcast', label: 'Broadcast', icon: HiOutlineChatAlt2 }
 ];
 
 const MarketingLayoutContent = () => {
@@ -100,7 +98,6 @@ const MarketingLayoutContent = () => {
                     <Route path="campaigns" element={<MarketingKampaniyalari />} />
                     <Route path="funnel" element={<FunnelAnalytics />} />
                     <Route path="broadcast" element={<BroadcastSystem />} />
-                    <Route path="settings" element={<MarketingSettings />} />
                     <Route path="*" element={<Navigate to="" replace />} />
                 </Routes>
             </div>
