@@ -17,7 +17,6 @@ const leadSchema = new mongoose.Schema({
     },
     source: {
         type: String,
-        enum: ['Instagram', 'Telegram', 'YouTube', 'TikTok', 'Referral', 'Website'],
         required: [true, 'Manba tanlanishi shart']
     },
     status: {

@@ -74,6 +74,7 @@ app.use('/api/market', require('./routes/marketRoutes'));
 app.use('/api/coins', require('./routes/coinRoutes'));
 
 app.use('/api/leads', require('./routes/leadRoutes'));
+app.use('/api/marketing', require('./routes/marketingRoutes'));
 app.use('/api/curriculum', require('./routes/curriculumRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
 app.use('/api/click', require('./routes/clickRoutes'));

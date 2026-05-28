@@ -148,6 +148,20 @@ export const leadAPI = {
     publicCreate: (data) => api.post('/leads/public', data),
 };
 
+export const marketingAPI = {
+    getCampaigns: () => api.get('/marketing/campaigns'),
+    createCampaign: (data) => api.post('/marketing/campaigns', data),
+    updateCampaign: (id, data) => api.put(`/marketing/campaigns/${id}`, data),
+    deleteCampaign: (id) => api.delete(`/marketing/campaigns/${id}`),
+
+    getTemplates: () => api.get('/marketing/templates'),
+    createTemplate: (data) => api.post('/marketing/templates', data),
+    deleteTemplate: (id) => api.delete(`/marketing/templates/${id}`),
+
+    getBroadcastLogs: () => api.get('/marketing/broadcast-logs'),
+    createBroadcastLog: (data) => api.post('/marketing/broadcast-logs', data),
+};
+
 export const noteAPI = {
     getAll: () => api.get('/notes'),
     getOne: (id) => api.get(`/notes/${id}`),

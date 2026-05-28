@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { leadAPI } from '../services/api';
+import { leadAPI, marketingAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const MarketingContext = createContext(null);
@@ -20,56 +20,23 @@ export const MarketingProvider = ({ children }) => {
 
     // 2. Advertising Sources State (With default values and ROI calculation)
     const [adSources, setAdSources] = useState([
-        { id: 1, source: 'Instagram', leadsCount: 230, conversion: 22.4, cost: 2500000, roi: 260 },
-        { id: 2, source: 'Telegram', leadsCount: 145, conversion: 18.6, cost: 1500000, roi: 210 },
-        { id: 3, source: 'TikTok', leadsCount: 98, conversion: 12.2, cost: 1000000, roi: 140 },
-        { id: 4, source: 'YouTube', leadsCount: 45, conversion: 28.8, cost: 800000, roi: 320 },
-        { id: 5, source: 'Website', leadsCount: 88, conversion: 15.9, cost: 500000, roi: 180 },
-        { id: 6, source: 'Referral', leadsCount: 60, conversion: 45.0, cost: 0, roi: 999 },
-        { id: 7, source: 'Offline', leadsCount: 32, conversion: 9.4, cost: 600000, roi: 50 }
+        { id: 1, source: 'Instagram', leadsCount: 0, conversion: 22.4, cost: 2500000, roi: -100 },
+        { id: 2, source: 'Telegram', leadsCount: 0, conversion: 18.6, cost: 1500000, roi: -100 },
+        { id: 3, source: 'TikTok', leadsCount: 0, conversion: 12.2, cost: 1000000, roi: -100 },
+        { id: 4, source: 'YouTube', leadsCount: 0, conversion: 28.8, cost: 800000, roi: -100 },
+        { id: 5, source: 'Website', leadsCount: 0, conversion: 15.9, cost: 500000, roi: -100 },
+        { id: 6, source: 'Referral', leadsCount: 0, conversion: 45.0, cost: 0, roi: 0 },
+        { id: 7, source: 'Offline', leadsCount: 0, conversion: 9.4, cost: 600000, roi: -100 }
     ]);
 
     // 3. Campaigns State
-    const [campaigns, setCampaigns] = useState(() => {
-        const local = localStorage.getItem('marketing_campaigns');
-        return local ? JSON.parse(local) : [
-            { id: 1, name: 'Yozgi Qabul 2026', platform: 'Instagram', budget: 1200000, startDate: '2026-05-01', endDate: '2026-05-30', status: 'Faol', result: '124 ta lead, CPL 9,600 so\'m' },
-            { id: 2, name: 'IT Bepul Seminar', platform: 'Telegram', budget: 500000, startDate: '2026-05-15', endDate: '2026-05-22', status: 'Yakunlangan', result: '68 ta lead, CPL 7,300 so\'m' },
-            { id: 3, name: 'TikTok Challenge', platform: 'TikTok', budget: 800000, startDate: '2026-06-01', endDate: '2026-06-15', status: 'Rejalashtirilgan', result: '-' }
-        ];
-    });
-
-    useEffect(() => {
-        localStorage.setItem('marketing_campaigns', JSON.stringify(campaigns));
-    }, [campaigns]);
+    const [campaigns, setCampaigns] = useState([]);
 
     // 4. Broadcast System State
-    const [templates, setTemplates] = useState(() => {
-        const local = localStorage.getItem('marketing_templates');
-        return local ? JSON.parse(local) : [
-            { id: 1, title: 'Bepul Seminar', content: 'Assalomu alaykum {name}! {course} kursi bo\'yicha bepul master-klassimizda sizni kutamiz. Ro\'yxatdan o\'tish uchun havola: infast.uz/seminar' },
-            { id: 2, title: 'Yangi Lead Kutib Olish', content: 'Salom {name}! {course} kursimizga qiziqish bildirganingiz uchun rahmat. Tez orada menejerlarimiz siz bilan bog\'lanishadi!' },
-            { id: 3, title: 'Sinov darsiga taklif', content: 'Assalomu alaykum {name}! {course} kursi bo\'yicha sinov darsimiz ertaga soat 15:00 da boshlanadi. Kelishingizni kutib qolamiz.' }
-        ];
-    });
+    const [templates, setTemplates] = useState([]);
+    const [broadcastLogs, setBroadcastLogs] = useState([]);
 
-    useEffect(() => {
-        localStorage.setItem('marketing_templates', JSON.stringify(templates));
-    }, [templates]);
-
-    const [broadcastLogs, setBroadcastLogs] = useState(() => {
-        const local = localStorage.getItem('marketing_broadcast_logs');
-        return local ? JSON.parse(local) : [
-            { id: 1, date: '2026-05-27T10:30:00.000Z', channel: 'SMS', audience: 'Yangi Lead', title: 'Bepul seminar taklifi', sentCount: 142, status: 'Muvaffaqiyatli' },
-            { id: 2, date: '2026-05-25T14:15:00.000Z', channel: 'Telegram', audience: 'Sinov darsi', title: 'Dars eslatmasi', sentCount: 56, status: 'Muvaffaqiyatli' }
-        ];
-    });
-
-    useEffect(() => {
-        localStorage.setItem('marketing_broadcast_logs', JSON.stringify(broadcastLogs));
-    }, [broadcastLogs]);
-
-    // 5. Funnel Data State (Mock, dynamically influenced by actual numbers if needed)
+    // 5. Funnel Data State (dynamically influenced by actual database numbers)
     const [funnelData, setFunnelData] = useState({
         impressions: 25000,
         leads: 2450,
@@ -77,37 +44,57 @@ export const MarketingProvider = ({ children }) => {
         students: 412
     });
 
-    // 6. Settings State
-    const [settings, setSettings] = useState(() => {
-        const local = localStorage.getItem('marketing_settings');
-        return local ? JSON.parse(local) : {
-            botToken: '123456789:AAF_mock_token_infastcrm',
-            botUsername: '@infast_leads_bot',
-            smsProvider: 'playmobile',
-            smsSenderId: 'INFAST_ACAD',
-            smsApiKey: 'mock_key_987654321',
-            autoFollowUp: true,
-            followUpDays: 2
-        };
-    });
-
-    useEffect(() => {
-        localStorage.setItem('marketing_settings', JSON.stringify(settings));
-    }, [settings]);
-
-    // Fetch leads and stats from server
+    // Fetch leads, stats, campaigns, templates, logs from server
     const fetchLeadsAndStats = async () => {
         setLoadingLeads(true);
         try {
+            // Real Leads
             const leadsRes = await leadAPI.getAll();
             setLeads(leadsRes.data.data || []);
             
+            // Real Stats
             const statsRes = await leadAPI.getStats();
-            setStats(statsRes.data.data || null);
+            const s = statsRes.data.data;
+            setStats(s || null);
+
+            // Real Campaigns
+            try {
+                const campsRes = await marketingAPI.getCampaigns();
+                const normalized = (campsRes.data.data || []).map(c => ({
+                    ...c,
+                    id: c._id // frontend uses c.id
+                }));
+                setCampaigns(normalized);
+            } catch (cErr) {
+                console.error('Error fetching campaigns:', cErr);
+            }
+
+            // Real Templates
+            try {
+                const tempsRes = await marketingAPI.getTemplates();
+                const normalized = (tempsRes.data.data || []).map(t => ({
+                    ...t,
+                    id: t._id // frontend uses t.id
+                }));
+                setTemplates(normalized);
+            } catch (tErr) {
+                console.error('Error fetching templates:', tErr);
+            }
+
+            // Real Broadcast Logs
+            try {
+                const logsRes = await marketingAPI.getBroadcastLogs();
+                const normalized = (logsRes.data.data || []).map(l => ({
+                    ...l,
+                    id: l._id // frontend uses l.id
+                }));
+                setBroadcastLogs(normalized);
+            } catch (lErr) {
+                console.error('Error fetching broadcast logs:', lErr);
+            }
 
             // Dynamically update funnel leads and students if backend stats are present
-            if (statsRes.data.data) {
-                const s = statsRes.data.data;
+            if (s) {
                 setFunnelData(prev => ({
                     ...prev,
                     leads: s.totalLeads || prev.leads,
@@ -176,7 +163,6 @@ export const MarketingProvider = ({ children }) => {
             return res.data.data;
         } catch (err) {
             console.error(err);
-            // Local fallback
             const newLead = {
                 _id: 'local_' + Date.now(),
                 createdAt: new Date().toISOString(),
@@ -220,37 +206,74 @@ export const MarketingProvider = ({ children }) => {
         }
     };
 
-    const addCampaign = (campaign) => {
-        const newCamp = {
-            id: Date.now(),
-            result: '-',
-            ...campaign
-        };
-        setCampaigns(prev => [newCamp, ...prev]);
-        toast.success('Kampaniya muvaffaqiyatli qo\'shildi');
+    const addCampaign = async (campaign) => {
+        try {
+            const res = await marketingAPI.createCampaign(campaign);
+            const newCamp = {
+                ...res.data.data,
+                id: res.data.data._id
+            };
+            setCampaigns(prev => [newCamp, ...prev]);
+            toast.success('Kampaniya muvaffaqiyatli qo\'shildi');
+        } catch (err) {
+            console.error(err);
+            toast.error('Kampaniya qo\'shishda xatolik yuz berdi');
+        }
     };
 
-    const updateCampaign = (id, campaignData) => {
-        setCampaigns(prev => prev.map(c => c.id === id ? { ...c, ...campaignData } : c));
-        toast.success('Kampaniya ma\'lumotlari yangilandi');
+    const updateCampaign = async (id, campaignData) => {
+        try {
+            const res = await marketingAPI.updateCampaign(id, campaignData);
+            const updated = {
+                ...res.data.data,
+                id: res.data.data._id
+            };
+            setCampaigns(prev => prev.map(c => c.id === id ? updated : c));
+            toast.success('Kampaniya ma\'lumotlari yangilandi');
+        } catch (err) {
+            console.error(err);
+            toast.error('Kampaniyani yangilashda xatolik yuz berdi');
+        }
     };
 
-    const deleteCampaign = (id) => {
-        setCampaigns(prev => prev.filter(c => c.id !== id));
-        toast.success('Kampaniya o\'chirildi');
+    const deleteCampaign = async (id) => {
+        try {
+            await marketingAPI.deleteCampaign(id);
+            setCampaigns(prev => prev.filter(c => c.id !== id));
+            toast.success('Kampaniya o\'chirildi');
+        } catch (err) {
+            console.error(err);
+            toast.error('Kampaniyani o\'chirishda xatolik yuz berdi');
+        }
     };
 
-    const addTemplate = (title, content) => {
-        setTemplates(prev => [...prev, { id: Date.now(), title, content }]);
-        toast.success('Shablon qo\'shildi');
+    const addTemplate = async (title, content) => {
+        try {
+            const res = await marketingAPI.createTemplate({ title, content });
+            const newTpl = {
+                ...res.data.data,
+                id: res.data.data._id
+            };
+            setTemplates(prev => [newTpl, ...prev]);
+            toast.success('Shablon qo\'shildi');
+        } catch (err) {
+            console.error(err);
+            toast.error('Shablon qo\'shishda xatolik yuz berdi');
+        }
     };
 
-    const deleteTemplate = (id) => {
-        setTemplates(prev => prev.filter(t => t.id !== id));
-        toast.success('Shablon o\'chirildi');
+    const deleteTemplate = async (id) => {
+        try {
+            await marketingAPI.deleteTemplate(id);
+            setTemplates(prev => prev.filter(t => t.id !== id));
+            toast.success('Shablon o\'chirildi');
+        } catch (err) {
+            console.error(err);
+            toast.error('Shablonni o\'chirishda xatolik yuz berdi');
+        }
     };
 
-    const runBroadcast = (channel, audience, title, content) => {
+    const runBroadcast = async (channel, audience, title, content) => {
         // filter active leads count
         let count = leads.length;
         if (audience !== 'Barchasi') {
@@ -261,22 +284,25 @@ export const MarketingProvider = ({ children }) => {
         }
         if (count === 0) count = 25; // fallback mock size
 
-        const log = {
-            id: Date.now(),
-            date: new Date().toISOString(),
-            channel,
-            audience,
-            title,
-            sentCount: count,
-            status: 'Muvaffaqiyatli'
-        };
-        setBroadcastLogs(prev => [log, ...prev]);
-        toast.success(`${count} ta mijozga ${channel} orqali xabar yuborildi!`);
-    };
-
-    const updateSettings = (newSettings) => {
-        setSettings(prev => ({ ...prev, ...newSettings }));
-        toast.success('Marketing sozlamalari saqlandi');
+        try {
+            const logData = {
+                channel,
+                audience,
+                title,
+                sentCount: count,
+                status: 'Muvaffaqiyatli'
+            };
+            const res = await marketingAPI.createBroadcastLog(logData);
+            const newLog = {
+                ...res.data.data,
+                id: res.data.data._id
+            };
+            setBroadcastLogs(prev => [newLog, ...prev]);
+            toast.success(`${count} ta mijozga ${channel} orqali xabar yuborildi!`);
+        } catch (err) {
+            console.error(err);
+            toast.error('Xabarnomani yuborishda xatolik yuz berdi');
+        }
     };
 
     return (
@@ -288,7 +314,6 @@ export const MarketingProvider = ({ children }) => {
             templates,
             broadcastLogs,
             funnelData,
-            settings,
             loadingLeads,
             fetchLeadsAndStats,
             createLead,
@@ -299,8 +324,7 @@ export const MarketingProvider = ({ children }) => {
             deleteCampaign,
             addTemplate,
             deleteTemplate,
-            runBroadcast,
-            updateSettings
+            runBroadcast
         }}>
             {children}
         </MarketingContext.Provider>
