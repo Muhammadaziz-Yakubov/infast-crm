@@ -36,13 +36,34 @@ export const MarketingProvider = ({ children }) => {
     const [templates, setTemplates] = useState([]);
     const [broadcastLogs, setBroadcastLogs] = useState([]);
 
-    // 5. Funnel Data State (dynamically influenced by actual database numbers)
-    const [funnelData, setFunnelData] = useState({
-        impressions: 25000,
-        leads: 2450,
-        trials: 850,
-        students: 412
-    });
+    // 5. Funnel Data (dynamically computed from actual database data)
+    const funnelData = React.useMemo(() => {
+        const totalLeads = leads.length;
+        const totalBudget = campaigns.reduce((sum, c) => sum + (c.budget || 0), 0);
+        
+        // CPM assumption: 50,000 so'm spent = 1,000 impressions
+        const impressions = Math.max(totalLeads > 0 ? totalLeads * 10 : 1000, totalBudget > 0 ? Math.round((totalBudget / 50000) * 1000) : totalLeads * 10);
+        
+        const trialsCount = leads.filter(l => 
+            l.status === 'Sinov darsi' || 
+            l.status === 'Qiziqdi' || 
+            l.status === 'O\'quvchi bo\'ldi'
+        ).length;
+        
+        const studentsCount = leads.filter(l => l.status === 'O\'quvchi bo\'ldi').length;
+        
+        // Ensure cascading validity
+        const adjLeads = Math.min(impressions, totalLeads);
+        const adjTrials = Math.min(adjLeads, trialsCount);
+        const adjStudents = Math.min(adjTrials, studentsCount);
+        
+        return {
+            impressions: impressions || 1000,
+            leads: adjLeads,
+            trials: adjTrials,
+            students: adjStudents
+        };
+    }, [leads, campaigns]);
 
     // Fetch leads, stats, campaigns, templates, logs from server
     const fetchLeadsAndStats = async () => {
@@ -95,12 +116,6 @@ export const MarketingProvider = ({ children }) => {
 
             // Dynamically update funnel leads and students if backend stats are present
             if (s) {
-                setFunnelData(prev => ({
-                    ...prev,
-                    leads: s.totalLeads || prev.leads,
-                    students: s.enrolledLeads || prev.students,
-                    trials: s.funnelData?.find(f => f.name === 'Sinov darsi')?.count || prev.trials
-                }));
 
                 // Update advertising sources leads counts dynamically based on real data distribution
                 if (s.sourceDistribution && s.sourceDistribution.length > 0) {

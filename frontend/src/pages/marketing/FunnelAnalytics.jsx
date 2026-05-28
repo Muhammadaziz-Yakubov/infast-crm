@@ -27,17 +27,17 @@ const FunnelAnalytics = () => {
     const { funnelData } = useMarketing();
     const { impressions, leads, trials, students } = funnelData;
 
-    // Calculate conversion rates
-    const adToLead = ((leads / impressions) * 100).toFixed(1);
-    const leadToTrial = ((trials / leads) * 100).toFixed(1);
-    const trialToStudent = ((students / trials) * 100).toFixed(1);
-    const overallConversion = ((students / impressions) * 100).toFixed(2);
+    // Calculate conversion rates safely to avoid NaN / Infinity when database is empty
+    const adToLead = impressions > 0 ? ((leads / impressions) * 100).toFixed(1) : '0.0';
+    const leadToTrial = leads > 0 ? ((trials / leads) * 100).toFixed(1) : '0.0';
+    const trialToStudent = trials > 0 ? ((students / trials) * 100).toFixed(1) : '0.0';
+    const overallConversion = impressions > 0 ? ((students / impressions) * 100).toFixed(2) : '0.00';
 
     const funnelStages = [
         { name: '1. Reklama Namoyishi', count: impressions, pct: 100, label: 'Barcha auditoriya ko\'rishi', color: 'from-blue-600 to-blue-500', width: 'w-full' },
         { name: '2. Qabul Qilingan Leadlar', count: leads, pct: adToLead, label: `Ko'rishlardan leadga: ${adToLead}%`, color: 'from-indigo-600 to-indigo-500', width: 'w-[80%]' },
-        { name: '3. Sinov Darsiga Kelganlar', count: trials, pct: ((trials / impressions) * 100).toFixed(1), label: `Leadlardan sinov darsiga: ${leadToTrial}%`, color: 'from-purple-600 to-purple-500', width: 'w-[60%]' },
-        { name: '4. O\'quvchi Bo\'lganlar', count: students, pct: ((students / impressions) * 100).toFixed(1), label: `Sinov darsidan o'quvchiga: ${trialToStudent}%`, color: 'from-emerald-600 to-emerald-500', width: 'w-[40%]' }
+        { name: '3. Sinov Darsiga Kelganlar', count: trials, pct: impressions > 0 ? ((trials / impressions) * 100).toFixed(1) : '0.0', label: `Leadlardan sinov darsiga: ${leadToTrial}%`, color: 'from-purple-600 to-purple-500', width: 'w-[60%]' },
+        { name: '4. O\'quvchi Bo\'lganlar', count: students, pct: impressions > 0 ? ((students / impressions) * 100).toFixed(1) : '0.0', label: `Sinov darsidan o'quvchiga: ${trialToStudent}%`, color: 'from-emerald-600 to-emerald-500', width: 'w-[40%]' }
     ];
 
     // Auto generated analysis recommendations
