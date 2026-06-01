@@ -24,7 +24,7 @@ const adminMenu = [
     { path: '/attendance', label: 'Davomat', icon: HiOutlineCalendar },
     { path: '/curriculum', label: "O'quv rejasi", icon: HiOutlineCollection },
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
-    { path: '/tests', label: '📚 Testlar', icon: HiOutlineClipboardList },
+    { path: '/tests', label: 'Testlar', icon: HiOutlineClipboardList },
     { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendar },
     { path: '/market-manager', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/coin-manager', label: 'Coin Boshqaruvi', icon: HiOutlineDatabase },
@@ -40,7 +40,7 @@ const studentMenu = [
     { path: '/attendance', label: 'Davomat tarixi', icon: HiOutlineCalendar },
     { path: '/payments', label: "To'lovlar tarixi", icon: HiOutlineCreditCard },
     { path: '/tasks', label: 'Vazifalar', icon: HiOutlineClipboardList },
-    { path: '/tests', label: '📝 Testlar', icon: HiOutlineClipboardList },
+    { path: '/tests', label: 'Testlar', icon: HiOutlineClipboardList },
     { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendar },
     { path: '/market', label: 'Market', icon: HiOutlineShoppingBag },
 
