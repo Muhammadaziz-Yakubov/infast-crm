@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { paymentAPI } from '../services/api';
+import { paymentAPI, testAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import {
     HiOutlineUserGroup, HiOutlineExclamationCircle, HiOutlineCash,
@@ -14,10 +14,21 @@ const COLORS = ['#6366F1', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'
 const Dashboard = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [testWidgets, setTestWidgets] = useState(null);
 
     useEffect(() => {
         fetchDashboard();
+        fetchTestWidgets();
     }, []);
+
+    const fetchTestWidgets = async () => {
+        try {
+            const res = await testAPI.getDashboardWidgets();
+            setTestWidgets(res.data.data);
+        } catch (err) {
+            console.error('Test widgetlarini yuklashda xatolik:', err);
+        }
+    };
 
     const fetchDashboard = async () => {
         try {
@@ -121,6 +132,54 @@ const Dashboard = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Test Tizimi Widgetlari */}
+            {testWidgets && (
+                <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-6 bg-primary-500 rounded-full"></div>
+                        <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">📚 Test Tizimi Ko'rsatkichlari</h2>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
+                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-blue-500/10 mb-4">
+                                <HiOutlineClipboardList className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Bugungi testlar</p>
+                            <h3 className="text-lg md:text-2xl font-black text-gray-900 dark:text-white tracking-tighter">{testWidgets.bugungiTestlar || 0} ta</h3>
+                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Bugun faol yoki boshlanadigan</p>
+                        </div>
+
+                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
+                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-indigo-500/10 mb-4">
+                                <HiOutlineCalendar className="w-5 h-5 md:w-6 md:h-6 text-indigo-600 dark:text-indigo-400" />
+                            </div>
+                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Shu haftadagi testlar</p>
+                            <h3 className="text-lg md:text-2xl font-black text-gray-900 dark:text-white tracking-tighter">{testWidgets.haftalikTestlar || 0} ta</h3>
+                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Joriy haftalik reja</p>
+                        </div>
+
+                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
+                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-emerald-500/10 mb-4">
+                                <HiOutlineTrendingUp className="w-5 h-5 md:w-6 md:h-6 text-emerald-600 dark:text-emerald-400" />
+                            </div>
+                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">O'rtacha natija</p>
+                            <h3 className="text-lg md:text-2xl font-black text-emerald-500 tracking-tighter">{testWidgets.ortachaNatija || 0}%</h3>
+                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Barcha topshirilgan natijalar</p>
+                        </div>
+
+                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
+                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-rose-500/10 mb-4">
+                                <HiOutlineXCircle className="w-5 h-5 md:w-6 md:h-6 text-rose-600 dark:text-rose-400" />
+                            </div>
+                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Topshirmaganlar soni</p>
+                            <h3 className="text-lg md:text-2xl font-black text-rose-500 tracking-tighter">{testWidgets.topshirmaganlarSoni || 0} ta</h3>
+                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Faol testlar bo'yicha</p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Main Content: Chart & Activities */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8">

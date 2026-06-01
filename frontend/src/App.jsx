@@ -21,6 +21,8 @@ const Payments = React.lazy(() => import('./pages/Payments'));
 const Debtors = React.lazy(() => import('./pages/Debtors'));
 const Attendance = React.lazy(() => import('./pages/Attendance'));
 const Tasks = React.lazy(() => import('./pages/Tasks'));
+const AdminTests = React.lazy(() => import('./pages/AdminTests'));
+const StudentTests = React.lazy(() => import('./pages/student/StudentTests'));
 const StudentMarket = React.lazy(() => import('./pages/student/StudentMarket'));
 const CoinLogs = React.lazy(() => import('./pages/student/CoinLogs'));
 const ScanAttendance = React.lazy(() => import('./pages/student/ScanAttendance'));
@@ -98,6 +100,7 @@ const AppContent = () => {
                         <Route path="/payments" element={user?.role === 'student' ? <StudentPayments /> : <Payments />} />
                         <Route path="/profile" element={<StudentProfile />} />
                         <Route path="/tasks" element={<Tasks />} />
+                        <Route path="/tests" element={user?.role === 'student' ? <StudentTests /> : <AdminTests />} />
                         <Route path="/market" element={user?.role === 'student' ? <StudentMarket /> : <MarketManager />} />
                         <Route path="/market/logs" element={<CoinLogs />} />
                         <Route path="/classmates" element={<Classmates />} />

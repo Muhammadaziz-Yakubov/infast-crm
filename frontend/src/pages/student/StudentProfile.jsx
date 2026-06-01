@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { studentAPI } from '../../services/api';
+import { studentAPI, testAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -22,9 +22,21 @@ const StudentProfile = () => {
         confirmPassword: ''
     });
 
+    const [testStats, setTestStats] = useState(null);
+
     useEffect(() => {
         fetchProfile();
+        fetchTestStats();
     }, []);
+
+    const fetchTestStats = async () => {
+        try {
+            const res = await testAPI.getStats();
+            setTestStats(res.data.data);
+        } catch (err) {
+            console.error('Test statistikalarini yuklashda xatolik:', err);
+        }
+    };
 
     const fetchProfile = async () => {
         try {
@@ -284,8 +296,83 @@ const StudentProfile = () => {
                 <HiOutlineLogout className="w-5 h-5" />
                 Hisobdan chiqish
             </button>
-        </div>
 
+            {/* 📊 Test Statistikasi Blok */}
+            {testStats && (
+                <div className="pt-10 border-t border-gray-100 dark:border-white/5 space-y-8">
+                    <div className="space-y-2 text-center md:text-left">
+                        <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">📊 Test <span className="text-primary-500">Statistikasi</span></h2>
+                        <p className="text-xs font-medium text-gray-500">Muntazam test ko'rsatkichlaringiz va reyting tahlili</p>
+                    </div>
+
+                    {/* Stats Widget Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-white dark:bg-dark-800 p-5 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm text-center">
+                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">Testlar soni</p>
+                            <h3 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-none">{testStats.totalTests || 0} ta</h3>
+                        </div>
+
+                        <div className="bg-white dark:bg-dark-800 p-5 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm text-center">
+                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">O'rtacha foiz</p>
+                            <h3 className="text-2xl md:text-3xl font-black text-primary-500 leading-none">{testStats.avgPercentage || 0}%</h3>
+                        </div>
+
+                        <div className="bg-white dark:bg-dark-800 p-5 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm text-center">
+                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">Eng yuqori</p>
+                            <h3 className="text-2xl md:text-3xl font-black text-emerald-500 leading-none">{testStats.maxPercentage || 0}%</h3>
+                        </div>
+
+                        <div className="bg-white dark:bg-dark-800 p-5 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm text-center">
+                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-1">Oxirgi natija</p>
+                            <h3 className="text-2xl md:text-3xl font-black text-amber-500 leading-none">
+                                {testStats.lastTestResult ? `${testStats.lastTestResult.percentage}%` : 'Yo\'q'}
+                            </h3>
+                        </div>
+                    </div>
+
+                    {/* Testlar tarixi jadvali */}
+                    <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm">
+                        <div className="p-6 border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-dark-900/30">
+                            <h3 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wider italic">Test Topsihirish Tarixi</h3>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse text-left text-xs font-bold text-gray-500 dark:text-gray-400">
+                                <thead>
+                                    <tr className="bg-gray-50 dark:bg-dark-900 border-b border-gray-100 dark:border-white/5 text-[9px] font-black uppercase text-gray-400 tracking-wider">
+                                        <th className="p-4 italic">Test Nomi</th>
+                                        <th className="p-4 italic">Ball</th>
+                                        <th className="p-4 italic">Foiz</th>
+                                        <th className="p-4 italic">Sana</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                                    {(!testStats.history || testStats.history.length === 0) ? (
+                                        <tr>
+                                            <td colSpan="4" className="p-8 text-center text-[10px] font-black uppercase tracking-wider text-gray-400">Test topshirish tarixi mavjud emas</td>
+                                        </tr>
+                                    ) : (
+                                        testStats.history.map(hist => (
+                                            <tr key={hist._id} className="hover:bg-gray-50/50 dark:hover:bg-dark-900/30 transition-colors">
+                                                <td className="p-4 font-black text-gray-900 dark:text-white">{hist.nomi}</td>
+                                                <td className="p-4">{hist.score} / {hist.totalScore}</td>
+                                                <td className="p-4 font-black text-primary-500">{hist.percentage}%</td>
+                                                <td className="p-4 text-[10px]">
+                                                    {new Date(hist.completedAt).toLocaleDateString('uz-UZ', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };
 

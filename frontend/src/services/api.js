@@ -194,7 +194,23 @@ export const eventAPI = {
     getAnalytics: (id) => api.get(`/events/${id}/analytics`),
 };
 
+// Testlar API xizmatlari
+export const testAPI = {
+    // Admin
+    getAll: (params) => api.get('/tests', { params }),
+    getOne: (id) => api.get(`/tests/${id}`),
+    create: (data) => api.post('/tests', data),
+    update: (id, data) => api.put(`/tests/${id}`, data),
+    delete: (id) => api.delete(`/tests/${id}`),
+    clone: (id) => api.post(`/tests/${id}/clone`),
+    getResults: (id) => api.get(`/tests/${id}/results`),
+    getDashboardWidgets: () => api.get('/tests/dashboard/widgets'),
 
-
+    // Student
+    getMyTests: () => api.get('/tests/my'),
+    getTestForTaking: (id) => api.get(`/tests/${id}/take`),
+    submitTest: (id, data) => api.post(`/tests/${id}/submit`, data),
+    getStats: () => api.get('/tests/my/stats'),
+};
 
 export default api;

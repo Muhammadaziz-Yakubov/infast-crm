@@ -133,9 +133,82 @@ const sendAttendanceNotification = async (groupId, date, attendanceData) => {
     }
 };
 
+// Guruhga test haqida xabar yuborish
+const sendTestNotification = async (testId, notificationType, specificGroupId = null) => {
+    try {
+        const Test = require('../models/Test');
+        const Group = require('../models/Group');
+        
+        const test = await Test.findById(testId).populate('kurs');
+        if (!test) {
+            console.log('⚠️ Test topilmadi, xabar yuborilmadi');
+            return { success: false, message: 'Test topilmadi' };
+        }
+
+        const groupsToNotify = specificGroupId ? [specificGroupId] : test.guruhlar;
+
+        for (const groupId of groupsToNotify) {
+            const group = await Group.findById(groupId);
+            if (!group || !group.telegramChatId) {
+                continue;
+            }
+
+            const boshlanishDate = new Date(test.boshlanishVaqti);
+            // Format: "Dushanba, 1-iyun, 15:30"
+            const boshlanishSanaVaqt = boshlanishDate.toLocaleString('uz-UZ', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Asia/Tashkent'
+            });
+
+            let message = '';
+
+            if (notificationType === 'created') {
+                message = `📢 <b>Yangi test yaratildi</b>\n\n` +
+                    `📚 <b>Kurs:</b> ${escapeHTML(test.kurs?.nomi || 'Kurs nomi kiritilmagan')}\n` +
+                    `👥 <b>Guruh:</b> ${escapeHTML(group.nomi)}\n` +
+                    `📝 <b>Test:</b> ${escapeHTML(test.nomi)}\n` +
+                    `🕒 <b>Boshlanish:</b> ${boshlanishSanaVaqt}\n` +
+                    `⏱️ <b>Davomiyligi:</b> ${test.vaqtLimiti} daqiqa\n\n` +
+                    `CRM orqali topshiring.`;
+            } else if (notificationType === 'oneDayBefore') {
+                message = `🔔 <b>Eslatma</b>\n` +
+                    `Ertaga <b>"${escapeHTML(test.nomi)}"</b> testi bo'lib o'tadi.`;
+            } else if (notificationType === 'oneHourBefore') {
+                message = `⏰ Test boshlanishiga <b>1 soat</b> qoldi.`;
+            } else if (notificationType === 'tenMinutesBefore') {
+                message = `🚨 Test boshlanishiga <b>10 daqiqa</b> qoldi.`;
+            } else if (notificationType === 'started') {
+                message = `✅ <b>Test boshlandi</b>\n\n` +
+                    `📝 <b>Test:</b> ${escapeHTML(test.nomi)}\n` +
+                    `⏱️ <b>Vaqt limiti:</b> ${test.vaqtLimiti} daqiqa\n\n` +
+                    `Hozir tizimga kirib topshirishni boshlang!`;
+            } else if (notificationType === 'ended') {
+                message = `🏁 <b>Test yakunlandi</b>\n\n` +
+                    `📝 <b>Test:</b> ${escapeHTML(test.nomi)}\n\n` +
+                    `Barcha topshirgan o'quvchilar natijalarini shaxsiy kabinetida ko'rishlari mumkin.`;
+            }
+
+            if (message) {
+                await bot.telegram.sendMessage(group.telegramChatId, message, { parse_mode: 'HTML' });
+            }
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Telegram test xabari xatosi:', error.message);
+        return { success: false, message: error.message };
+    }
+};
+
 module.exports = {
     bot,
     initScheduler,
     sendTaskNotification,
-    sendAttendanceNotification
+    sendAttendanceNotification,
+    sendTestNotification
 };

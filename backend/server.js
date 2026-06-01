@@ -10,6 +10,7 @@ const errorHandler = require('./middleware/errorHandler');
 const setupSecurity = require('./middleware/security');
 const logger = require('./utils/logger');
 const startPaymentChecker = require('./cron/paymentChecker');
+const startTestReminder = require('./cron/testReminder');
 
 const cors = require('cors');
 
@@ -72,6 +73,7 @@ app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/market', require('./routes/marketRoutes'));
 app.use('/api/coins', require('./routes/coinRoutes'));
+app.use('/api/tests', require('./routes/testRoutes'));
 
 app.use('/api/leads', require('./routes/leadRoutes'));
 app.use('/api/marketing', require('./routes/marketingRoutes'));
@@ -115,7 +117,8 @@ const server = app.listen(PORT, () => {
     // Start Cron jobs
     try {
         startPaymentChecker();
-        logger.info('⏰ To\'lov kuzatuvchisi (Cron) ishga tushdi');
+        startTestReminder();
+        logger.info('⏰ To\'lov kuzatuvchisi va Test eslatmalari (Cron) ishga tushdi');
     } catch (err) {
         logger.error(`Cron job error: ${err.message}`);
     }
