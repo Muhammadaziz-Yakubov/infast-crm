@@ -4,7 +4,8 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import {
     HiOutlineUserGroup, HiOutlineExclamationCircle, HiOutlineCash,
     HiOutlineTrendingUp, HiOutlineAcademicCap, HiOutlineBookOpen,
-    HiOutlineArrowNarrowRight, HiOutlineQrcode, HiOutlineLightningBolt, HiOutlineFire, HiOutlineUserAdd
+    HiOutlineArrowNarrowRight, HiOutlineQrcode, HiOutlineLightningBolt, HiOutlineFire, HiOutlineUserAdd,
+    HiOutlineClipboardList, HiOutlineCalendar, HiOutlineXCircle
 } from 'react-icons/hi';
 import { QRCodeCanvas } from 'qrcode.react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts';
