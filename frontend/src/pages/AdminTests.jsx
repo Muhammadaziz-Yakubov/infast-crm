@@ -667,8 +667,8 @@ const AdminTests = () => {
 
             {/* Test Yaratish / Tahrirlash Modali */}
             {showModal && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-                    <div className="bg-white dark:bg-dark-800 w-full max-w-4xl rounded-[2.5rem] shadow-3xl overflow-hidden border border-gray-100 dark:border-white/5 max-h-[90vh] flex flex-col animate-scale-up">
+                <div className="fixed inset-0 z-[100] flex items-start justify-center py-6 px-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+                    <div className="bg-white dark:bg-dark-800 w-full max-w-4xl rounded-[2.5rem] shadow-3xl overflow-hidden border border-gray-100 dark:border-white/5 my-auto flex flex-col animate-scale-up">
                         {/* Modal Header */}
                         <div className="p-6 md:p-8 border-b border-gray-100 dark:border-white/5 flex items-center justify-between bg-gray-900 text-white">
                             <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tight">
