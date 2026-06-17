@@ -22,31 +22,27 @@ const Layout = () => {
             {isStudent && <MobileBottomBar />}
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col min-h-screen relative overflow-hidden lg:ml-72">
-                {/* Background Blobs */}
-                <div className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
-
+            <main className="flex-1 flex flex-col min-h-screen relative overflow-hidden lg:ml-[240px]">
                 {/* Mobile Header */}
-                <header className="lg:hidden sticky top-0 z-40 bg-white/80 dark:bg-dark-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 px-4 h-16 flex items-center">
+                <header className="lg:hidden sticky top-0 z-40 bg-white/80 dark:bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-gray-100 dark:border-zinc-950 px-4 h-16 flex items-center">
                     <div className="flex items-center justify-between w-full gap-3">
                         <div className="flex items-center gap-2 min-w-0">
                             {!isStudent ? (
                                 <>
                                     <button
                                         onClick={() => setSidebarOpen(true)}
-                                        className="p-2 rounded-xl bg-white dark:bg-dark-800 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-white/5 flex-shrink-0"
+                                        className="p-2 rounded-lg bg-white dark:bg-zinc-900 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-zinc-800 flex-shrink-0"
                                     >
                                         <HiOutlineMenuAlt2 className="w-5 h-5" />
                                     </button>
                                     <div className="flex flex-col min-w-0">
-                                        <span className="text-xs font-black tracking-tight text-gray-900 dark:text-white leading-none truncate">InFast CRM</span>
-                                        <span className="text-[8px] uppercase font-bold text-primary-500 tracking-wider">Admin</span>
+                                        <span className="text-xs font-semibold tracking-tight text-gray-900 dark:text-white leading-none truncate">InFast CRM</span>
+                                        <span className="text-[8px] uppercase font-bold text-[#0066FF] tracking-wider">Admin</span>
                                     </div>
                                 </>
                             ) : (
                                 <>
-                                    <Link to="/profile" className="w-9 h-9 rounded-xl overflow-hidden border border-primary-500/20 shadow-lg flex-shrink-0 bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center">
+                                    <Link to="/profile" className="w-8 h-8 rounded-lg overflow-hidden border border-gray-100 dark:border-zinc-850 shadow-sm flex-shrink-0 bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
                                         {user?.profileImage ? (
                                             <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
                                         ) : (
@@ -54,8 +50,8 @@ const Layout = () => {
                                         )}
                                     </Link>
                                     <div className="flex flex-col min-w-0">
-                                        <span className="text-xs font-black tracking-tight text-gray-900 dark:text-white leading-tight capitalize truncate">{user?.ism || 'InFast Academy'}</span>
-                                        <span className="text-[8px] uppercase font-bold text-primary-500 tracking-wider">Student</span>
+                                        <span className="text-xs font-semibold tracking-tight text-gray-900 dark:text-white leading-tight capitalize truncate">{user?.ism || 'InFast Academy'}</span>
+                                        <span className="text-[8px] uppercase font-bold text-[#0066FF] tracking-wider">Student</span>
                                     </div>
                                 </>
                             )}
@@ -65,24 +61,24 @@ const Layout = () => {
                             <div className="flex items-center gap-2 flex-shrink-0">
                                 <button
                                     onClick={toggleDarkMode}
-                                    className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-dark-800 text-gray-800 dark:text-white shadow-sm border border-gray-100 dark:border-white/5 active:scale-90 transition-all flex items-center justify-center"
+                                    className="w-9 h-9 rounded-lg bg-gray-55 dark:bg-zinc-900 text-gray-800 dark:text-white border border-gray-150 dark:border-zinc-850 active:scale-95 transition-all flex items-center justify-center"
                                     title="Mavzuni o'zgartirish"
                                 >
-                                    {darkMode ? <HiOutlineSun className="w-5 h-5" /> : <HiOutlineMoon className="w-5 h-5" />}
+                                    {darkMode ? <HiOutlineSun className="w-4 h-4" /> : <HiOutlineMoon className="w-4 h-4" />}
                                 </button>
                                 <Link
                                     to="/wheel"
-                                    className="w-10 h-10 rounded-xl bg-amber-500 text-white shadow-lg shadow-amber-500/20 active:scale-90 transition-all flex items-center justify-center"
+                                    className="w-9 h-9 rounded-lg bg-amber-500 text-white shadow-sm active:scale-95 transition-all flex items-center justify-center"
                                     title="Omad G'ildiragi"
                                 >
-                                    <HiOutlineGift className="w-5 h-5" />
+                                    <HiOutlineGift className="w-4 h-4" />
                                 </Link>
                                 <Link
                                     to="/scan"
-                                    className="w-10 h-10 rounded-xl bg-primary-500 text-white shadow-lg shadow-primary-500/20 active:scale-90 transition-all flex items-center justify-center"
+                                    className="w-9 h-9 rounded-lg bg-[#0066FF] text-white shadow-sm active:scale-95 transition-all flex items-center justify-center"
                                     title="Skaner"
                                 >
-                                    <HiOutlineQrcode className="w-5 h-5" />
+                                    <HiOutlineQrcode className="w-4 h-4" />
                                 </Link>
                             </div>
                         )}
@@ -91,7 +87,7 @@ const Layout = () => {
 
                 {/* Page Content Container */}
                 <section className="flex-1 relative z-10">
-                    <div className="container mx-auto px-4 py-6 md:px-8 md:py-10 max-w-7xl">
+                    <div className="container mx-auto px-4 py-6 md:px-8 md:py-8 max-w-7xl">
                         <div className="animate-slide-up">
                             <Outlet />
                         </div>
@@ -99,8 +95,8 @@ const Layout = () => {
                 </section>
 
                 {/* Footer for desktop (Optional but adds polish) */}
-                <footer className="px-8 py-6 text-center border-t border-gray-100 dark:border-white/5 opacity-40">
-                    <p className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                <footer className="px-8 py-6 text-center border-t border-gray-100 dark:border-zinc-900/50 opacity-40">
+                    <p className="text-[10px] font-medium text-gray-500 tracking-widest uppercase">
                         &copy; 2026 InFast CRM &bull; All Rights Reserved Created By: Muhammadaziz Yakubov
                     </p>
                 </footer>
