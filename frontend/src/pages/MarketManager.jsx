@@ -3,7 +3,7 @@ import { marketAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
 import toast from 'react-hot-toast';
-import { HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlinePhotograph, HiOutlineShoppingBag, HiOutlineClipboardList } from 'react-icons/hi';
+import { HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineShoppingBag, HiOutlineClipboardList } from 'react-icons/hi';
 
 const MarketManager = () => {
     const [products, setProducts] = useState([]);
@@ -96,14 +96,14 @@ const MarketManager = () => {
         setIsModalOpen(true);
     };
 
-    if (loading) return <LoadingSpinner text="Mahsulotlar yuklanmoqda..." />;
+    if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="p-4 lg:p-8 max-w-7xl mx-auto min-h-screen animate-fade-in">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-                <div className="space-y-1">
-                    <h1 className="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Market <span className="text-primary-500">Boshqaruvi</span></h1>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Mahsulotlarni va buyurtmalarni nazorat qilish</p>
+        <div className="space-y-6 animate-fade-in max-w-7xl mx-auto pb-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Market boshqaruvi</h1>
+                    <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">Mahsulotlarni va buyurtmalarni nazorat qilish</p>
                 </div>
 
                 {activeTab === 'products' && (
@@ -113,142 +113,142 @@ const MarketManager = () => {
                             setFormData({ nomi: '', tavsif: '', narxi: '', rasm: '', soni: '', holati: 'active' });
                             setIsModalOpen(true);
                         }}
-                        className="group relative flex items-center justify-center gap-3 bg-primary-500 text-white px-8 py-4 rounded-[1.5rem] font-black uppercase tracking-widest text-[10px] hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/20 active:scale-95 overflow-hidden"
+                        className="btn-primary flex items-center gap-2"
                     >
-                        <HiOutlinePlus className="w-5 h-5 transition-transform group-hover:rotate-90" />
+                        <HiOutlinePlus className="w-4 h-4" />
                         <span>Yangi mahsulot</span>
                     </button>
                 )}
             </div>
 
             {/* Premium Tabs */}
-            <div className="flex p-1.5 bg-gray-100 dark:bg-dark-900 rounded-[2rem] mb-10 w-full max-w-md mx-auto sm:mx-0">
+            <div className="flex gap-2 p-1 bg-zinc-50 dark:bg-zinc-900 rounded-lg w-fit border border-zinc-200 dark:border-zinc-800">
                 <button
                     onClick={() => setActiveTab('products')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'products' ? 'bg-white dark:bg-dark-800 text-primary-500 shadow-md' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${activeTab === 'products' ? 'bg-white dark:bg-zinc-800 text-[#0066FF] shadow-sm' : 'text-zinc-500 hover:text-zinc-750'}`}
                 >
                     <HiOutlineShoppingBag className="w-4 h-4" />
-                    Mahsulotlar
+                    <span>Mahsulotlar</span>
                 </button>
                 <button
                     onClick={() => setActiveTab('orders')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'orders' ? 'bg-white dark:bg-dark-800 text-primary-500 shadow-md' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${activeTab === 'orders' ? 'bg-white dark:bg-zinc-800 text-[#0066FF] shadow-sm' : 'text-zinc-500 hover:text-zinc-750'}`}
                 >
                     <HiOutlineClipboardList className="w-4 h-4" />
-                    Buyurtmalar
+                    <span>Buyurtmalar</span>
                 </button>
             </div>
 
-            {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 opacity-30">
-                    <LoadingSpinner />
-                </div>
-            ) : (
-                <>
-                    {activeTab === 'products' ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {products.length === 0 ? (
-                                <div className="col-span-full py-20 text-center opacity-30">
-                                    <HiOutlineShoppingBag className="w-20 h-20 mx-auto mb-4" />
-                                    <h3 className="text-xl font-black uppercase tracking-widest">Mahsulotlar yo'q</h3>
-                                </div>
-                            ) : (
-                                products.map((product) => (
-                                    <div key={product._id} className="bg-white dark:bg-dark-800 rounded-[2.5rem] border border-gray-100 dark:border-white/5 overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                                        <div className="relative aspect-video">
-                                            <img src={product.rasm} alt={product.nomi} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
-                                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
-                                            <div className="absolute top-4 right-4 flex gap-2 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                                                <button onClick={() => openEditModal(product)} className="p-3 bg-white dark:bg-dark-900 rounded-[1.2rem] text-blue-500 hover:bg-blue-500 hover:text-white transition-all shadow-xl">
-                                                    <HiOutlinePencil className="w-4 h-4" />
-                                                </button>
-                                                <button onClick={() => handleDelete(product._id)} className="p-3 bg-white dark:bg-dark-900 rounded-[1.2rem] text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-xl">
-                                                    <HiOutlineTrash className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="p-8">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase truncate italic tracking-tight">{product.nomi}</h3>
-                                                <span className={`px-4 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${product.holati === 'active' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
-                                                    {product.holati}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-white/5">
-                                                <div className="space-y-1">
-                                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Narxi</p>
-                                                    <p className="text-lg font-black text-amber-500 tracking-tighter italic">🪙 {product.narxi}</p>
-                                                </div>
-                                                <div className="text-right space-y-1">
-                                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Zaxirada</p>
-                                                    <p className={`text-lg font-black tracking-tighter italic ${product.soni < 5 ? 'text-red-500' : 'text-primary-500'}`}>{product.soni} ta</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
+            {activeTab === 'products' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {products.length === 0 ? (
+                        <div className="col-span-full py-20 text-center text-zinc-400">
+                            <HiOutlineShoppingBag className="w-12 h-12 mx-auto mb-2" />
+                            <h3 className="text-sm font-semibold">Mahsulotlar mavjud emas</h3>
                         </div>
                     ) : (
-                        <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] border border-gray-100 dark:border-white/5 overflow-hidden shadow-sm">
-                            <div className="overflow-x-auto custom-scrollbar">
-                                <table className="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr className="bg-gray-50/50 dark:bg-dark-900/50 border-b border-gray-100 dark:border-white/5">
-                                            <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">O'quvchi</th>
-                                            <th className="px-6 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Mahsulot</th>
-                                            <th className="px-6 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Narxi</th>
-                                            <th className="px-6 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Sana</th>
-                                            <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Holat</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-50 dark:divide-white/5">
-                                        {orders.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="5" className="py-20 text-center opacity-30">
-                                                    <HiOutlineClipboardList className="w-16 h-16 mx-auto mb-4" />
-                                                    <h3 className="text-xl font-black uppercase tracking-widest italic">Buyurtmalar mavjud emas</h3>
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            orders.map((order) => (
-                                                <tr key={order._id} className="group hover:bg-gray-50 dark:hover:bg-dark-900/50 transition-all">
-                                                    <td className="px-8 py-6">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-10 h-10 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center font-black text-sm border border-primary-500/20">
-                                                                {order.student?.ism?.charAt(0)}
-                                                            </div>
-                                                            <div>
-                                                                <p className="font-black text-gray-900 dark:text-white uppercase tracking-tight italic">{order.student?.ism}</p>
-                                                                <p className="text-[10px] font-bold text-gray-400 italic">{order.student?.telefon}</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-6">
-                                                        <div className="flex items-center gap-3">
-                                                            <img src={order.product?.rasm} className="w-10 h-10 rounded-lg object-cover ring-2 ring-gray-100 dark:ring-white/5 shadow-md" alt="" />
-                                                            <span className="font-black text-gray-800 dark:text-gray-200 uppercase text-xs tracking-tight italic">{order.product?.nomi}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-6 font-black text-amber-500 italic text-sm">🪙 {order.narxi}</td>
-                                                    <td className="px-6 py-6">
-                                                        <p className="text-xs font-black text-gray-900 dark:text-white uppercase italic">{new Date(order.createdAt).toLocaleDateString('uz')}</p>
-                                                        <p className="text-[10px] font-bold text-gray-400 italic">{new Date(order.createdAt).toLocaleTimeString('uz', { hour: '2-digit', minute: '2-digit' })}</p>
-                                                    </td>
-                                                    <td className="px-8 py-6 text-right">
-                                                        <span className="px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[8px] font-black uppercase tracking-widest border border-emerald-500/20 shadow-sm">
-                                                            Muvaffaqiyatli
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            ))
+                        products.map((product) => (
+                            <div key={product._id} className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden flex flex-col justify-between">
+                                <div>
+                                    <div className="relative aspect-video bg-zinc-100 dark:bg-zinc-900">
+                                        <img src={product.rasm} alt={product.nomi} className="w-full h-full object-cover" />
+                                        <div className="absolute top-3 right-3 flex gap-1.5">
+                                            <button onClick={() => openEditModal(product)} className="p-1.5 bg-white/95 dark:bg-zinc-900/95 border border-zinc-200 dark:border-zinc-850 rounded text-zinc-500 hover:text-[#0066FF] transition-all shadow-sm">
+                                                <HiOutlinePencil className="w-4 h-4" />
+                                            </button>
+                                            <button onClick={() => handleDelete(product._id)} className="p-1.5 bg-white/95 dark:bg-zinc-900/95 border border-zinc-200 dark:border-zinc-850 rounded text-zinc-500 hover:text-[#FF3B30] transition-all shadow-sm">
+                                                <HiOutlineTrash className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="p-5">
+                                        <div className="flex items-center justify-between gap-4 mb-2">
+                                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{product.nomi}</h3>
+                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold border ${product.holati === 'active' ? 'bg-[#00C853]/10 text-[#00C853] border-[#00C853]/20' : 'bg-[#FF3B30]/10 text-[#FF3B30] border-[#FF3B30]/20'}`}>
+                                                {product.holati}
+                                            </span>
+                                        </div>
+                                        {product.tavsif && (
+                                            <p className="text-xs text-zinc-400 mt-1 line-clamp-2">{product.tavsif}</p>
                                         )}
-                                    </tbody>
-                                </table>
+                                    </div>
+                                </div>
+                                <div className="p-5 pt-0">
+                                    <div className="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-zinc-900/40">
+                                        <div>
+                                            <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block">Narxi</span>
+                                            <span className="text-sm font-bold text-[#FF9500] block mt-0.5">🪙 {product.narxi}</span>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block">Zaxirada</span>
+                                            <span className={`text-sm font-bold block mt-0.5 ${product.soni < 5 ? 'text-[#FF3B30]' : 'text-gray-900 dark:text-white'}`}>{product.soni} ta</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        ))
                     )}
-                </>
+                </div>
+            ) : (
+                <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead>
+                                <tr className="bg-gray-50/50 dark:bg-zinc-900/50 border-b border-gray-150 dark:border-zinc-900/60">
+                                    <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">O'quvchi</th>
+                                    <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Mahsulot</th>
+                                    <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Narxi</th>
+                                    <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Sana</th>
+                                    <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider text-right">Holat</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-150 dark:divide-zinc-900/60">
+                                {orders.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="5" className="py-16 text-center text-zinc-400">
+                                            <HiOutlineClipboardList className="w-10 h-10 mx-auto mb-2" />
+                                            <p className="text-xs font-semibold">Buyurtmalar mavjud emas</p>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    orders.map((order) => (
+                                        <tr key={order._id} className="hover:bg-gray-50/30 dark:hover:bg-zinc-900/20 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-full bg-zinc-150 dark:bg-zinc-800 flex items-center justify-center font-semibold text-xs text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 uppercase">
+                                                        {order.student?.ism?.charAt(0)}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{order.student?.ism}</p>
+                                                        <p className="text-xs text-zinc-400">{order.student?.telefon}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-2">
+                                                    {order.product?.rasm && (
+                                                        <img src={order.product?.rasm} className="w-8 h-8 rounded object-cover border border-zinc-200 dark:border-zinc-850" alt="" />
+                                                    )}
+                                                    <span className="text-xs font-semibold text-gray-800 dark:text-zinc-200">{order.product?.nomi}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-xs font-bold text-[#FF9500]">🪙 {order.narxi}</td>
+                                            <td className="px-6 py-4">
+                                                <p className="text-xs text-gray-900 dark:text-white font-semibold">{new Date(order.createdAt).toLocaleDateString('uz')}</p>
+                                                <p className="text-[10px] text-zinc-400 mt-0.5">{new Date(order.createdAt).toLocaleTimeString('uz', { hour: '2-digit', minute: '2-digit' })}</p>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#00C853]/10 text-[#00C853] border border-[#00C853]/20">
+                                                    Muvaffaqiyatli
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             )}
 
             {/* Modal */}
@@ -259,70 +259,59 @@ const MarketManager = () => {
             >
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Mahsulot nomi</label>
+                        <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Mahsulot nomi</label>
                         <input
                             type="text"
                             required
-                            className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all uppercase tracking-tight"
+                            className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold"
                             value={formData.nomi}
                             onChange={(e) => setFormData({ ...formData, nomi: e.target.value })}
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Narxi (Coin)</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Narxi (Coin)</label>
                             <input
                                 type="number"
                                 required
-                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all italic"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-bold"
                                 value={formData.narxi}
                                 onChange={(e) => setFormData({ ...formData, narxi: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Soni (Omborda)</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Soni (Omborda)</label>
                             <input
                                 type="number"
                                 required
-                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all italic"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-bold"
                                 value={formData.soni}
                                 onChange={(e) => setFormData({ ...formData, soni: e.target.value })}
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Rasm URL</label>
+                        <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Rasm URL</label>
                         <input
                             type="text"
                             required
-                            className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
+                            className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold"
                             placeholder="https://example.com/image.jpg"
                             value={formData.rasm}
                             onChange={(e) => setFormData({ ...formData, rasm: e.target.value })}
                         />
                     </div>
                     <div>
-                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Tavsif</label>
+                        <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Tavsif</label>
                         <textarea
-                            className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all min-h-[100px]"
+                            className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold min-h-[80px]"
                             value={formData.tavsif}
                             onChange={(e) => setFormData({ ...formData, tavsif: e.target.value })}
                         />
                     </div>
-                    <div className="flex gap-3 pt-4">
-                        <button
-                            type="button"
-                            onClick={() => setIsModalOpen(false)}
-                            className="flex-1 py-4 bg-gray-100 dark:bg-dark-900 text-gray-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-200 transition-all"
-                        >
-                            Bekor qilish
-                        </button>
-                        <button
-                            type="submit"
-                            className="flex-1 py-4 bg-primary-500 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20"
-                        >
-                            Saqlash
-                        </button>
+                    <div className="flex gap-3 justify-end pt-4 border-t border-gray-100 dark:border-zinc-900/60">
+                        <button type="button" onClick={() => setIsModalOpen(false)} className="btn-secondary">Bekor qilish</button>
+                        <button type="submit" className="btn-primary">Saqlash</button>
                     </div>
                 </form>
             </Modal>

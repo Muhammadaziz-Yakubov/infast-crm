@@ -5,9 +5,9 @@ import toast from 'react-hot-toast';
 import {
     HiOutlineSearch, HiOutlineAcademicCap, HiOutlineCheckCircle,
     HiOutlineClock, HiOutlineChevronDown, HiOutlineChevronUp,
-    HiOutlineLightningBolt, HiOutlineCalendar, HiOutlineBookOpen,
+    HiOutlineLightningBolt, HiOutlineCalendar,
     HiOutlineRefresh, HiOutlineCheck, HiOutlineAdjustments,
-    HiOutlinePlay, HiOutlineArrowRight, HiOutlineUserGroup, HiOutlineLockClosed
+    HiOutlinePlay
 } from 'react-icons/hi';
 
 const CurriculumManager = () => {
@@ -47,7 +47,6 @@ const CurriculumManager = () => {
             setGroups(activeGroups);
             setFilteredGroups(activeGroups);
             
-            // Avtomatik birinchi guruhni tanlash
             if (activeGroups.length > 0) {
                 handleSelectGroup(activeGroups[0]);
             }
@@ -72,12 +71,10 @@ const CurriculumManager = () => {
             setAllLessons(lessonsRes.data.data);
             setManualProgressVal(currRes.data.data.guruh.darsProgress || 0);
 
-            // Barcha haftalarni boshlang'ichda yopiq holda, lekin joriy dars bor haftani ochiq qilish
             const currentLessonNum = (currRes.data.data.guruh.darsProgress || 0) + 1;
             const tempExpanded = {};
             if (lessonsRes.data.data?.haftalar) {
                 lessonsRes.data.data.haftalar.forEach(hafta => {
-                    // Agar joriy dars shu haftada bo'lsa, uni ochiq qilamiz
                     const hasCurrentLesson = hafta.darslar.some(d => d.dars_raqam === currentLessonNum);
                     tempExpanded[hafta.hafta] = hasCurrentLesson;
                 });
@@ -97,8 +94,6 @@ const CurriculumManager = () => {
             toast.loading("Progress saqlanmoqda...", { id: 'curriculum-action' });
             const res = await curriculumAPI.markCompleted(selectedGroup._id);
             toast.success(res.data.message || "Dars muvaffaqiyatli o'tildi deb belgilandi! ✅", { id: 'curriculum-action' });
-            
-            // Ma'lumotlarni qayta yuklash
             await refreshCurriculumData();
         } catch (err) {
             toast.error(err.response?.data?.message || "Xatolik yuz berdi", { id: 'curriculum-action' });
@@ -111,7 +106,6 @@ const CurriculumManager = () => {
             toast.loading("Amal bekor qilinmoqda...", { id: 'curriculum-action' });
             const res = await curriculumAPI.undoCompleted(selectedGroup._id);
             toast.success(res.data.message || "Dars qaytarildi ↩️", { id: 'curriculum-action' });
-            
             await refreshCurriculumData();
         } catch (err) {
             toast.error(err.response?.data?.message || "Xatolik yuz berdi", { id: 'curriculum-action' });
@@ -126,7 +120,6 @@ const CurriculumManager = () => {
             const res = await curriculumAPI.setProgress(selectedGroup._id, manualProgressVal);
             toast.success(res.data.message || "Progress muvaffaqiyatli o'rnatildi ⚡", { id: 'curriculum-action' });
             setManualProgressOpen(false);
-            
             await refreshCurriculumData();
         } catch (err) {
             toast.error(err.response?.data?.message || "Xatolik yuz berdi", { id: 'curriculum-action' });
@@ -140,7 +133,6 @@ const CurriculumManager = () => {
                 toast.loading("Progress yangilanmoqda...", { id: 'curriculum-action' });
                 const res = await curriculumAPI.setProgress(selectedGroup._id, lessonNum - 1);
                 toast.success(res.data.message || "Progress yangilandi! ⚡", { id: 'curriculum-action' });
-                
                 await refreshCurriculumData();
             } catch (err) {
                 toast.error(err.response?.data?.message || "Xatolik yuz berdi", { id: 'curriculum-action' });
@@ -159,7 +151,6 @@ const CurriculumManager = () => {
             setAllLessons(lessonsRes.data.data);
             setManualProgressVal(currRes.data.data.guruh.darsProgress || 0);
             
-            // Guruhlar ro'yxatidagi progressni ham yangilaymiz
             const updatedGroups = groups.map(g => {
                 if (g._id === selectedGroup._id) {
                     return { ...g, darsProgress: currRes.data.data.guruh.darsProgress };
@@ -179,28 +170,24 @@ const CurriculumManager = () => {
         }));
     };
 
-    if (loading) return <LoadingSpinner text="Sahifa yuklanmoqda..." />;
+    if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-6 animate-fade-in max-w-[1600px] mx-auto pb-32">
+        <div className="space-y-6 animate-fade-in max-w-7xl mx-auto pb-10">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white uppercase">
-                        O'quv <span className="text-primary-500">Rejasi & Progress</span>
-                    </h1>
-                    <p className="text-gray-500 dark:text-gray-400 font-medium">Guruhlarning dars mavzularini va progressini boshqarish</p>
-                </div>
+            <div>
+                <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">O'quv rejasi</h1>
+                <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">Guruhlarning dars mavzularini va progressini boshqarish</p>
             </div>
 
             {/* Split Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
                 {/* Left Panel: Groups List */}
-                <div className="lg:col-span-4 bg-white dark:bg-dark-800 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm p-6 space-y-6">
-                    <div className="space-y-2">
-                        <h3 className="font-black text-gray-900 dark:text-white text-lg">Faol Guruhlar</h3>
-                        <p className="text-xs text-gray-400">Curriculum progressini sozlash uchun guruhni tanlang</p>
+                <div className="lg:col-span-4 bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-4 space-y-4">
+                    <div>
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Faol guruhlar</h3>
+                        <p className="text-xs text-zinc-400 mt-0.5">Syllabus va darslarni boshqarish uchun guruhni tanlang</p>
                     </div>
 
                     {/* Search */}
@@ -210,18 +197,17 @@ const CurriculumManager = () => {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Guruh nomi yoki o'qituvchi..."
-                            className="w-full px-5 py-4 pl-12 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent 
-                                focus:border-primary-500 shadow-inner outline-none transition-all font-bold text-sm"
+                            className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold"
                         />
-                        <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <HiOutlineSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
                     </div>
 
                     {/* List */}
-                    <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                    <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
                         {filteredGroups.length === 0 ? (
-                            <div className="text-center py-16 opacity-30">
-                                <HiOutlineAcademicCap className="w-16 h-16 mx-auto mb-3" />
-                                <p className="font-bold text-sm">Guruhlar topilmadi</p>
+                            <div className="text-center py-10 text-zinc-400">
+                                <HiOutlineAcademicCap className="w-10 h-10 mx-auto mb-2" />
+                                <p className="text-xs font-semibold">Guruhlar topilmadi</p>
                             </div>
                         ) : (
                             filteredGroups.map(group => {
@@ -230,36 +216,35 @@ const CurriculumManager = () => {
                                     <button
                                         key={group._id}
                                         onClick={() => handleSelectGroup(group)}
-                                        className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-4 ${
+                                        className={`w-full text-left p-3.5 rounded-lg border transition-all flex items-center justify-between gap-4 ${
                                             isSelected
-                                                ? 'bg-primary-500 text-white border-transparent shadow-lg shadow-primary-500/25 scale-[1.02]'
-                                                : 'bg-gray-50 dark:bg-dark-900/50 hover:bg-gray-100 dark:hover:bg-dark-900 border-gray-100 dark:border-white/5'
+                                                ? 'bg-[#0066FF]/5 text-[#0066FF] border-[#0066FF]/30'
+                                                : 'bg-transparent border-gray-200 dark:border-zinc-850 hover:bg-zinc-50 dark:hover:bg-zinc-900'
                                         }`}
                                     >
                                         <div className="min-w-0 flex-1">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <HiOutlineAcademicCap className={`w-4 h-4 flex-shrink-0 ${isSelected ? 'text-white' : 'text-primary-500'}`} />
-                                                <h4 className="font-black truncate uppercase text-sm">{group.nomi}</h4>
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <h4 className="font-semibold text-sm text-gray-900 dark:text-white truncate">{group.nomi}</h4>
                                             </div>
-                                            <p className={`text-[10px] uppercase font-bold truncate tracking-wider ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
+                                            <p className="text-xs text-zinc-400 truncate">
                                                 {group.kurs?.nomi || 'Kurs belgilanmagan'}
                                             </p>
-                                            <div className="flex items-center gap-3 mt-2">
-                                                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg ${
-                                                    isSelected ? 'bg-white/20 text-white' : 'bg-primary-500/10 text-primary-600 dark:text-primary-400'
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${
+                                                    isSelected ? 'bg-[#0066FF]/10 border-[#0066FF]/20 text-[#0066FF]' : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500'
                                                 }`}>
                                                     {(group.curriculumKalit || 'frontend').toUpperCase()}
                                                 </span>
-                                                <span className={`text-[10px] font-bold ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
+                                                <span className="text-[10px] text-zinc-400 truncate">
                                                     Ustoz: {group.oqituvchi || 'Kiritilmagan'}
                                                 </span>
                                             </div>
                                         </div>
                                         <div className="text-right flex-shrink-0">
-                                            <span className="text-xs font-black block mb-1">
+                                            <span className="text-xs font-bold text-gray-900 dark:text-white block">
                                                 {group.darsProgress || 0}-dars
                                             </span>
-                                            <span className={`text-[10px] font-bold ${isSelected ? 'text-white/70' : 'text-gray-400'}`}>
+                                            <span className="text-[10px] text-zinc-400 block mt-0.5">
                                                 Progress
                                             </span>
                                         </div>
@@ -273,39 +258,39 @@ const CurriculumManager = () => {
                 {/* Right Panel: Detailed Curriculum Boshqaruvi */}
                 <div className="lg:col-span-8 space-y-6">
                     {curriculumLoading ? (
-                        <div className="bg-white dark:bg-dark-800 rounded-[2rem] border border-gray-100 dark:border-white/5 p-20 flex justify-center items-center shadow-sm min-h-[400px]">
-                            <LoadingSpinner text="Curriculum yuklanmoqda..." />
+                        <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-20 flex justify-center items-center">
+                            <LoadingSpinner />
                         </div>
                     ) : !selectedGroup || !curriculum ? (
-                        <div className="bg-white dark:bg-dark-800 rounded-[2rem] border border-gray-100 dark:border-white/5 p-20 text-center shadow-sm min-h-[400px] flex flex-col justify-center items-center">
-                            <div className="w-20 h-20 rounded-[2rem] bg-gray-50 dark:bg-dark-900 border border-gray-100 dark:border-white/5 flex items-center justify-center mb-6 shadow-inner text-gray-400">
-                                <HiOutlineAcademicCap className="w-10 h-10" />
+                        <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-16 text-center flex flex-col justify-center items-center">
+                            <div className="w-12 h-12 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center mb-4 text-zinc-400">
+                                <HiOutlineAcademicCap className="w-6 h-6" />
                             </div>
-                            <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">Guruh tanlanmagan</h3>
-                            <p className="text-gray-400 max-w-sm font-medium text-sm">Progress va dars mavzularini boshqarish uchun chap tomondagi ro'yxatdan guruhni tanlang.</p>
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Guruh tanlanmagan</h3>
+                            <p className="text-zinc-400 max-w-sm text-xs">Progress va dars mavzularini boshqarish uchun chap tomondagi ro'yxatdan guruhni tanlang.</p>
                         </div>
                     ) : (
                         <>
                             {/* Group Card Details */}
-                            <div className="bg-white dark:bg-dark-800 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm p-6 md:p-8 space-y-6">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-gray-100 dark:border-white/5">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-primary-500/20 text-white transform rotate-3">
-                                            <HiOutlineAcademicCap className="w-9 h-9" />
+                            <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-6 space-y-6">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-150 dark:border-zinc-900/60">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 rounded-lg bg-[#0066FF]/10 text-[#0066FF] border border-[#0066FF]/20 flex items-center justify-center">
+                                            <HiOutlineAcademicCap className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight italic">
+                                            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
                                                 {curriculum.guruh.nomi}
                                             </h2>
-                                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest mt-1">
+                                            <p className="text-xs text-zinc-400 mt-0.5">
                                                 {curriculum.guruh.kurs?.nomi || "Kurs nomi ko'rsatilmagan"} • Daraja {curriculum.guruh.daraja} • {curriculum.guruh.oqituvchi || 'Ustoz'}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="flex gap-2">
                                         <button
                                             onClick={() => setManualProgressOpen(!manualProgressOpen)}
-                                            className="flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-50 dark:bg-dark-900 border border-gray-100 dark:border-white/5 hover:bg-gray-100 dark:hover:bg-dark-800 transition-colors text-xs font-black text-gray-500 dark:text-gray-400"
+                                            className="px-3 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-xs font-semibold text-zinc-500 hover:text-zinc-700 transition-colors flex items-center gap-1.5"
                                         >
                                             <HiOutlineAdjustments className="w-4 h-4" />
                                             <span>Manual progress</span>
@@ -313,29 +298,29 @@ const CurriculumManager = () => {
                                     </div>
                                 </div>
 
-                                {/* Circular/Linear Progress Info */}
+                                {/* Progress Info */}
                                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                                    <div className="md:col-span-8 space-y-3">
-                                        <div className="flex justify-between items-center text-sm">
-                                            <span className="font-black text-gray-900 dark:text-white uppercase text-xs tracking-wider">O'quv progressi</span>
-                                            <span className="font-black text-primary-500">{curriculum.progressFoiz}%</span>
+                                    <div className="md:col-span-8 space-y-2">
+                                        <div className="flex justify-between items-center text-xs">
+                                            <span className="font-semibold text-zinc-400 uppercase tracking-wider">O'quv progressi</span>
+                                            <span className="font-bold text-[#0066FF]">{curriculum.progressFoiz}%</span>
                                         </div>
-                                        <div className="w-full h-4 bg-gray-100 dark:bg-dark-900 rounded-full overflow-hidden p-0.5 shadow-inner">
+                                        <div className="w-full h-2.5 bg-zinc-100 dark:bg-zinc-900 rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-800">
                                             <div
-                                                className="h-full rounded-full bg-gradient-to-r from-primary-500 to-indigo-600 transition-all duration-1000 ease-out shadow-lg"
+                                                className="h-full rounded-full bg-[#0066FF] transition-all duration-500"
                                                 style={{ width: `${curriculum.progressFoiz}%` }}
                                             />
                                         </div>
-                                        <div className="flex justify-between text-[11px] font-bold text-gray-400">
+                                        <div className="flex justify-between text-[10px] text-zinc-400 font-semibold">
                                             <span>{curriculum.guruh.darsProgress} dars o'tildi</span>
                                             <span>Jami: {curriculum.guruh.jamiDarslar} dars</span>
                                         </div>
                                     </div>
-                                    <div className="md:col-span-4 bg-gray-50 dark:bg-dark-900/50 rounded-2xl p-4 border border-gray-100 dark:border-white/5 text-center">
-                                        <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Dars Kunlari</div>
-                                        <div className="flex flex-wrap gap-1.5 justify-center">
+                                    <div className="md:col-span-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-800 text-center">
+                                        <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-2">Dars kunlari</span>
+                                        <div className="flex flex-wrap gap-1 justify-center">
                                             {curriculum.guruh.darsKunlari?.map((kun, i) => (
-                                                <span key={i} className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-800 text-[10px] font-black text-primary-500 uppercase tracking-wider border border-gray-100 dark:border-white/5">
+                                                <span key={i} className="px-2 py-0.5 rounded bg-white dark:bg-zinc-800 text-[10px] font-bold text-[#0066FF] uppercase border border-zinc-200 dark:border-zinc-700">
                                                     {kun}
                                                 </span>
                                             ))}
@@ -343,13 +328,13 @@ const CurriculumManager = () => {
                                     </div>
                                 </div>
 
-                                {/* Manual Progress Settings form */}
+                                {/* Manual Progress Form */}
                                 {manualProgressOpen && (
-                                    <form onSubmit={handleSetProgress} className="p-4 rounded-2xl bg-primary-500/5 border border-primary-500/10 space-y-3 animate-slide-up">
-                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <form onSubmit={handleSetProgress} className="p-4 rounded-lg bg-[#0066FF]/5 border border-[#0066FF]/20 space-y-3">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                             <div>
-                                                <h4 className="text-xs font-black text-primary-600 dark:text-primary-400 uppercase tracking-wider">Progressni qo'lda o'rnatish</h4>
-                                                <p className="text-[10px] text-gray-400 mt-0.5">Eski guruhlar uchun o'tilgan darslar sonini o'rnatish:</p>
+                                                <h4 className="text-xs font-semibold text-[#0066FF] uppercase tracking-wider">Progressni qo'lda sozlash</h4>
+                                                <p className="text-[10px] text-zinc-400 mt-0.5">O'tilgan darslar sonini o'zgartirish:</p>
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <input
@@ -358,12 +343,12 @@ const CurriculumManager = () => {
                                                     max={curriculum.guruh.jamiDarslar}
                                                     value={manualProgressVal}
                                                     onChange={(e) => setManualProgressVal(parseInt(e.target.value) || 0)}
-                                                    className="w-20 px-3 py-2 rounded-xl bg-white dark:bg-dark-900 border-2 border-gray-200 dark:border-dark-700 focus:border-primary-500 outline-none text-center font-black text-sm"
+                                                    className="w-16 px-2 py-1.5 rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-center font-bold text-sm"
                                                 />
-                                                <span className="text-xs font-bold text-gray-400">/ {curriculum.guruh.jamiDarslar}</span>
+                                                <span className="text-xs text-zinc-400">/ {curriculum.guruh.jamiDarslar}</span>
                                                 <button
                                                     type="submit"
-                                                    className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary-500/20 transition-all active:scale-95"
+                                                    className="px-3 py-1.5 bg-[#0066FF] hover:bg-[#0052cc] text-white rounded-lg text-xs font-semibold shadow-sm transition-colors"
                                                 >
                                                     O'rnatish
                                                 </button>
@@ -373,60 +358,56 @@ const CurriculumManager = () => {
                                 )}
                             </div>
 
-                            {/* Navigation Tabs (Today's Lesson / Syllabus Timeline) */}
-                            <div className="flex border-b border-gray-200 dark:border-white/5">
+                            {/* Navigation Tabs */}
+                            <div className="flex border-b border-gray-150 dark:border-zinc-900/60">
                                 <button
                                     onClick={() => setActiveTab('current')}
-                                    className={`px-6 py-4 font-black text-sm uppercase tracking-wider border-b-2 transition-all ${
+                                    className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
                                         activeTab === 'current'
-                                            ? 'border-primary-500 text-primary-500'
-                                            : 'border-transparent text-gray-400 hover:text-gray-500 dark:hover:text-gray-300'
+                                            ? 'border-[#0066FF] text-[#0066FF]'
+                                            : 'border-transparent text-zinc-400 hover:text-zinc-650'
                                     }`}
                                 >
-                                    Bugungi & Navbatdagi Dars
+                                    Bugungi & navbatdagi dars
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('syllabus')}
-                                    className={`px-6 py-4 font-black text-sm uppercase tracking-wider border-b-2 transition-all ${
+                                    className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
                                         activeTab === 'syllabus'
-                                            ? 'border-primary-500 text-primary-500'
-                                            : 'border-transparent text-gray-400 hover:text-gray-500 dark:hover:text-gray-300'
+                                            ? 'border-[#0066FF] text-[#0066FF]'
+                                            : 'border-transparent text-zinc-400 hover:text-zinc-650'
                                     }`}
                                 >
-                                    Syllabus / Barcha Darslar ({allLessons?.haftalar?.reduce((sum, h) => sum + h.darslar.length, 0) || 0})
+                                    Syllabus ({allLessons?.haftalar?.reduce((sum, h) => sum + h.darslar.length, 0) || 0} ta dars)
                                 </button>
                             </div>
 
                             {/* Tab 1: Current & Next Lesson */}
                             {activeTab === 'current' && (
                                 <div className="space-y-6">
-                                    {/* Bugungi dars bormi tekshiruvi */}
                                     {!curriculum.bugunDarsBor && (
-                                        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center gap-3">
-                                            <HiOutlineCalendar className="w-5 h-5 flex-shrink-0 animate-bounce" />
-                                            <span>Bugun bu guruh uchun jadval bo'yicha dars kuni emas. Keyingi dars kuni: <strong>{curriculum.keyingiDarsKuni || 'Kiritilmagan'}</strong>. Lekin siz dars progressini baribir boshqarishingiz mumkin.</span>
+                                        <div className="p-4 rounded-lg bg-[#FF9500]/10 border border-[#FF9500]/20 text-[#FF9500] font-semibold text-xs flex items-center gap-2">
+                                            <HiOutlineCalendar className="w-4 h-4 flex-shrink-0" />
+                                            <span>Bugun bu guruh uchun jadval bo'yicha dars kuni emas. Keyingi dars kuni: <strong>{curriculum.keyingiDarsKuni || 'Kiritilmagan'}</strong>.</span>
                                         </div>
                                     )}
 
                                     {/* Bugungi/Joriy Dars Card */}
                                     {curriculum.joriyDars ? (
-                                        <div className="bg-gradient-to-br from-white to-gray-50/30 dark:from-dark-800 dark:to-dark-800/80 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm p-6 md:p-8 space-y-6 relative overflow-hidden group">
-                                            {/* Glow Accent */}
-                                            <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl opacity-10 bg-primary-500 -mr-12 -mt-12 transition-all duration-700 group-hover:scale-125" />
-
-                                            <div className="flex items-start justify-between relative z-10">
-                                                <div className="flex items-center gap-3.5">
-                                                    <div className="w-12 h-12 rounded-2xl bg-primary-500 text-white flex items-center justify-center shadow-lg shadow-primary-500/20 animate-pulse">
-                                                        <HiOutlineLightningBolt className="w-6 h-6" />
+                                        <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-6 space-y-6">
+                                            <div className="flex items-start justify-between gap-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-lg bg-[#0066FF]/10 text-[#0066FF] flex items-center justify-center border border-[#0066FF]/20">
+                                                        <HiOutlineLightningBolt className="w-5 h-5" />
                                                     </div>
                                                     <div>
-                                                        <span className="px-3 py-1 rounded-full bg-primary-500/10 text-primary-500 text-[10px] font-black uppercase tracking-widest">
+                                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-semibold bg-[#0066FF]/10 text-[#0066FF] border border-[#0066FF]/20 uppercase">
                                                             Navbatdagi dars
                                                         </span>
-                                                        <h3 className="text-xl font-black text-gray-900 dark:text-white mt-2">
-                                                            {curriculum.joriyDarsRaqam}-Dars: {curriculum.joriyDars.darajaNomi || 'Dars Mavzulari'}
+                                                        <h3 className="text-base font-semibold text-gray-900 dark:text-white mt-1">
+                                                            {curriculum.joriyDarsRaqam}-dars: {curriculum.joriyDars.darajaNomi || 'Mavzu nomi'}
                                                         </h3>
-                                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">
+                                                        <p className="text-[10px] text-zinc-400 mt-0.5">
                                                             {curriculum.joriyDars.hafta}-hafta • {curriculum.joriyDars.davomiyligi || '1.5 soat'}
                                                         </p>
                                                     </div>
@@ -434,12 +415,12 @@ const CurriculumManager = () => {
                                             </div>
 
                                             {/* Topics List */}
-                                            <div className="space-y-3 relative z-10">
-                                                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">O'tiladigan mavzular</h4>
-                                                <div className="flex flex-wrap gap-2.5">
+                                            <div className="space-y-2">
+                                                <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block">O'tiladigan mavzular</span>
+                                                <div className="flex flex-wrap gap-2">
                                                     {curriculum.joriyDars.mavzular?.map((mavzu, idx) => (
-                                                        <span key={idx} className="px-4 py-2.5 rounded-xl bg-white dark:bg-dark-900 text-sm font-bold text-gray-800 dark:text-gray-200 shadow-sm border border-gray-100 dark:border-white/5 flex items-center gap-2">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
+                                                        <span key={idx} className="px-3 py-1 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-xs font-semibold text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 flex items-center gap-1.5">
+                                                            <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF]" />
                                                             {mavzu}
                                                         </span>
                                                     ))}
@@ -448,28 +429,28 @@ const CurriculumManager = () => {
 
                                             {/* Home assignment if exists */}
                                             {curriculum.joriyDars.uy_vazifa && (
-                                                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border border-gray-100 dark:border-white/5 space-y-2 relative z-10">
-                                                    <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Uy vazifasi</div>
-                                                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-relaxed">
+                                                <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 space-y-1.5">
+                                                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block">Uy vazifasi</span>
+                                                    <p className="text-xs text-zinc-600 dark:text-zinc-350 leading-relaxed font-semibold">
                                                         {curriculum.joriyDars.uy_vazifa}
                                                     </p>
                                                 </div>
                                             )}
 
                                             {/* Control Buttons */}
-                                            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100 dark:border-white/5 relative z-10">
+                                            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-50 dark:border-zinc-900/40">
                                                 <button
                                                     onClick={handleMarkCompleted}
-                                                    className="flex-1 py-4 bg-gradient-to-r from-primary-500 to-indigo-600 hover:from-primary-600 hover:to-indigo-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary-500/20 transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2"
+                                                    className="btn-primary flex items-center justify-center gap-2 flex-1"
                                                 >
-                                                    <HiOutlineCheckCircle className="w-5 h-5" />
+                                                    <HiOutlineCheckCircle className="w-4 h-4" />
                                                     <span>Dars o'tildi deb belgilash</span>
                                                 </button>
 
                                                 {curriculum.guruh.darsProgress > 0 && (
                                                     <button
                                                         onClick={handleUndo}
-                                                        className="px-6 py-4 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest border border-red-200/50 dark:border-red-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                                        className="px-4 py-2 bg-[#FF3B30]/10 hover:bg-[#FF3B30]/20 text-[#FF3B30] rounded-lg text-xs font-semibold border border-[#FF3B30]/20 transition-all flex items-center justify-center gap-1.5"
                                                         title="Oxirgi o'tilgan darsni bekor qilish"
                                                     >
                                                         <HiOutlineRefresh className="w-4 h-4" />
@@ -479,34 +460,33 @@ const CurriculumManager = () => {
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="bg-white dark:bg-dark-800 rounded-[2rem] border border-gray-100 dark:border-white/5 p-12 text-center shadow-sm">
-                                            <div className="w-16 h-16 rounded-[1.5rem] bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-4">
-                                                <HiOutlineCheck className="w-8 h-8" />
+                                        <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-12 text-center">
+                                            <div className="w-10 h-10 rounded-lg bg-[#00C853]/10 text-[#00C853] flex items-center justify-center mx-auto mb-3 border border-[#00C853]/20">
+                                                <HiOutlineCheck className="w-6 h-6" />
                                             </div>
-                                            <h3 className="text-lg font-black text-gray-900 dark:text-white">Kurs yakunlandi! 🎓</h3>
-                                            <p className="text-gray-400 text-sm mt-1 max-w-sm mx-auto">Ushbu guruh curriculumdagi barcha darslarni to'liq tamomladi.</p>
+                                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Kurs yakunlandi! 🎓</h3>
+                                            <p className="text-zinc-400 text-xs mt-1 max-w-sm mx-auto">Ushbu guruh syllabusdagi barcha darslarni to'liq tamomladi.</p>
                                         </div>
                                     )}
 
                                     {/* Next lessons preview list */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {/* Keyingi dars */}
                                         {curriculum.keyingiDars && (
-                                            <div className="bg-white dark:bg-dark-800 rounded-3xl border border-gray-100 dark:border-white/5 p-6 space-y-4 shadow-sm opacity-80">
+                                            <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-4 space-y-3 opacity-90">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest px-2.5 py-1 rounded-lg bg-amber-500/10">
-                                                        Keyingi dars ({curriculum.joriyDarsRaqam + 1}-dars)
+                                                    <span className="text-[9px] font-semibold text-[#FF9500] px-2 py-0.5 rounded border border-[#FF9500]/20 bg-[#FF9500]/10 uppercase">
+                                                        Keyingi ({curriculum.joriyDarsRaqam + 1}-dars)
                                                     </span>
-                                                    <span className="text-[10px] text-gray-400 font-bold">
+                                                    <span className="text-[10px] text-zinc-400 font-semibold">
                                                         {curriculum.keyingiDars.hafta}-hafta
                                                     </span>
                                                 </div>
-                                                <h4 className="font-black text-gray-900 dark:text-white text-base">
-                                                    {curriculum.keyingiDars.mavzular?.[0] || 'Dars mavzusi'}
+                                                <h4 className="font-semibold text-gray-900 dark:text-white text-sm">
+                                                    {curriculum.keyingiDars.mavzular?.[0] || 'Mavzu nomi'}
                                                 </h4>
-                                                <div className="flex flex-wrap gap-1.5">
+                                                <div className="flex flex-wrap gap-1">
                                                     {curriculum.keyingiDars.mavzular?.map((m, idx) => (
-                                                        <span key={idx} className="px-2 py-1 rounded-lg bg-gray-50 dark:bg-dark-900 text-[10px] font-bold text-gray-500">
+                                                        <span key={idx} className="px-2 py-0.5 rounded bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[10px] font-medium text-zinc-500">
                                                             {m}
                                                         </span>
                                                     ))}
@@ -514,23 +494,22 @@ const CurriculumManager = () => {
                                             </div>
                                         )}
 
-                                        {/* Undan keyingi dars */}
                                         {curriculum.unganDars && (
-                                            <div className="bg-white dark:bg-dark-800 rounded-3xl border border-gray-100 dark:border-white/5 p-6 space-y-4 shadow-sm opacity-60">
+                                            <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-4 space-y-3 opacity-70">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-dark-900">
+                                                    <span className="text-[9px] font-semibold text-zinc-400 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 uppercase">
                                                         Undan keyingi ({curriculum.joriyDarsRaqam + 2}-dars)
                                                     </span>
-                                                    <span className="text-[10px] text-gray-400 font-bold">
+                                                    <span className="text-[10px] text-zinc-400 font-semibold">
                                                         {curriculum.unganDars.hafta}-hafta
                                                     </span>
                                                 </div>
-                                                <h4 className="font-black text-gray-900 dark:text-white text-base">
-                                                    {curriculum.unganDars.mavzular?.[0] || 'Dars mavzusi'}
+                                                <h4 className="font-semibold text-gray-900 dark:text-white text-sm">
+                                                    {curriculum.unganDars.mavzular?.[0] || 'Mavzu nomi'}
                                                 </h4>
-                                                <div className="flex flex-wrap gap-1.5">
+                                                <div className="flex flex-wrap gap-1">
                                                     {curriculum.unganDars.mavzular?.map((m, idx) => (
-                                                        <span key={idx} className="px-2 py-1 rounded-lg bg-gray-50 dark:bg-dark-900 text-[10px] font-bold text-gray-500">
+                                                        <span key={idx} className="px-2 py-0.5 rounded bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[10px] font-medium text-zinc-500">
                                                             {m}
                                                         </span>
                                                     ))}
@@ -543,64 +522,60 @@ const CurriculumManager = () => {
 
                             {/* Tab 2: Syllabus / Full Timeline */}
                             {activeTab === 'syllabus' && allLessons && (
-                                <div className="bg-white dark:bg-dark-800 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm p-6 md:p-8 space-y-6">
-                                    <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-white/5">
-                                        <div>
-                                            <h3 className="font-black text-gray-900 dark:text-white text-lg">Kurs Syllabus Tuzilmasi</h3>
-                                            <p className="text-xs text-gray-400 mt-0.5">Barcha darslar ketma-ketligi ro'yxati</p>
-                                        </div>
+                                <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 p-4 md:p-6 space-y-4">
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Kurs syllabus tuzilmasi</h3>
+                                        <p className="text-xs text-zinc-400 mt-0.5">Barcha haftalar va darslar ketma-ketligi</p>
                                     </div>
 
                                     {/* Weeks List */}
-                                    <div className="space-y-4">
+                                    <div className="space-y-3">
                                         {allLessons.haftalar?.map((hafta) => {
                                             const isOpen = expandedWeeks[hafta.hafta];
-                                            
-                                            // Tekshirish: Bu haftada biror dars o'tilganmi yoki o'tilyaptimi?
                                             const completedCount = hafta.darslar.filter(d => d.dars_raqam <= allLessons.darsProgress).length;
                                             const isFullyCompleted = completedCount === hafta.darslar.length;
                                             const hasActiveDars = hafta.darslar.some(d => d.dars_raqam === allLessons.darsProgress + 1);
 
                                             return (
-                                                <div key={hafta.hafta} className="rounded-2xl border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-300">
+                                                <div key={hafta.hafta} className="rounded-lg border border-gray-150 dark:border-zinc-900/60 overflow-hidden">
                                                     {/* Week Header */}
                                                     <button
                                                         onClick={() => toggleWeek(hafta.hafta)}
-                                                        className={`w-full flex items-center justify-between p-4 text-left transition-colors font-bold ${
+                                                        className={`w-full flex items-center justify-between p-3.5 text-left transition-colors font-semibold ${
                                                             isFullyCompleted
-                                                                ? 'bg-emerald-500/5 dark:bg-emerald-500/2 hover:bg-emerald-500/10 dark:hover:bg-emerald-500/5 text-emerald-700 dark:text-emerald-400'
+                                                                ? 'bg-[#00C853]/5 hover:bg-[#00C853]/10 text-[#00C853]'
                                                                 : hasActiveDars
-                                                                ? 'bg-primary-500/5 hover:bg-primary-500/10 text-primary-600 dark:text-primary-400'
-                                                                : 'bg-gray-50 dark:bg-dark-900 hover:bg-gray-100 dark:hover:bg-dark-800'
+                                                                ? 'bg-[#0066FF]/5 hover:bg-[#0066FF]/10 text-[#0066FF]'
+                                                                : 'bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-850'
                                                         }`}
                                                     >
                                                         <div className="flex items-center gap-3">
-                                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black ${
+                                                            <div className={`w-7 h-7 rounded flex items-center justify-center text-xs font-bold ${
                                                                 isFullyCompleted
-                                                                    ? 'bg-emerald-500 text-white'
+                                                                    ? 'bg-[#00C853] text-white'
                                                                     : hasActiveDars
-                                                                    ? 'bg-primary-500 text-white animate-pulse'
-                                                                    : 'bg-gray-200 dark:bg-dark-700 text-gray-500'
+                                                                    ? 'bg-[#0066FF] text-white'
+                                                                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-500'
                                                             }`}>
                                                                 {hafta.hafta}
                                                             </div>
                                                             <div>
-                                                                <h4 className="text-sm font-black uppercase tracking-wide">
-                                                                    {hafta.hafta}-Hafta: {hafta.darajaNomi || 'O\'quv rejasi'}
+                                                                <h4 className="text-xs font-semibold uppercase tracking-wider">
+                                                                    {hafta.hafta}-hafta: {hafta.darajaNomi || 'O\'quv rejasi'}
                                                                 </h4>
-                                                                <span className="text-[10px] text-gray-400 block font-normal mt-0.5">
-                                                                    {completedCount} / {hafta.darslar.length} dars yakunlandi
+                                                                <span className="text-[10px] text-zinc-400 block font-normal mt-0.5">
+                                                                    {completedCount} / {hafta.darslar.length} dars tugatildi
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <div className="flex items-center gap-3">
-                                                            {isOpen ? <HiOutlineChevronUp className="w-5 h-5 text-gray-400" /> : <HiOutlineChevronDown className="w-5 h-5 text-gray-400" />}
+                                                        <div>
+                                                            {isOpen ? <HiOutlineChevronUp className="w-4 h-4 text-zinc-400" /> : <HiOutlineChevronDown className="w-4 h-4 text-zinc-400" />}
                                                         </div>
                                                     </button>
 
                                                     {/* Week Lessons List */}
                                                     {isOpen && (
-                                                        <div className="p-4 space-y-3 bg-white dark:bg-dark-800 border-t border-gray-100 dark:border-white/5 animate-slide-up">
+                                                        <div className="p-3 space-y-2 bg-white dark:bg-[#111111] border-t border-gray-150 dark:border-zinc-900/60">
                                                             {hafta.darslar.map((dars) => {
                                                                 const isCompleted = dars.dars_raqam <= allLessons.darsProgress;
                                                                 const isCurrent = dars.dars_raqam === allLessons.darsProgress + 1;
@@ -608,68 +583,68 @@ const CurriculumManager = () => {
                                                                 return (
                                                                     <div
                                                                         key={dars.dars_raqam}
-                                                                        className={`p-4 rounded-xl border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ${
+                                                                        className={`p-3 rounded border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${
                                                                             isCompleted
-                                                                                ? 'bg-emerald-500/5 dark:bg-emerald-500/2 border-emerald-200/40 dark:border-emerald-500/10'
+                                                                                ? 'bg-[#00C853]/5 border-[#00C853]/15'
                                                                                 : isCurrent
-                                                                                ? 'bg-primary-500/5 dark:bg-primary-500/2 border-primary-300 dark:border-primary-500/30 shadow-md shadow-primary-500/5'
-                                                                                : 'bg-gray-50 dark:bg-dark-900 border-gray-100 dark:border-white/5 opacity-70'
+                                                                                ? 'bg-[#0066FF]/5 border-[#0066FF]/30'
+                                                                                : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-150 dark:border-zinc-850 opacity-70'
                                                                         }`}
                                                                     >
-                                                                        <div className="flex items-start gap-3 flex-1 min-w-0">
-                                                                            <div className={`w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center text-xs font-black ${
+                                                                        <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                                                                            <div className={`w-6 h-6 rounded flex-shrink-0 flex items-center justify-center text-[10px] font-bold ${
                                                                                 isCompleted
-                                                                                    ? 'bg-emerald-500 text-white'
+                                                                                    ? 'bg-[#00C853] text-white'
                                                                                     : isCurrent
-                                                                                    ? 'bg-primary-500 text-white'
-                                                                                    : 'bg-gray-200 dark:bg-dark-700 text-gray-500'
+                                                                                    ? 'bg-[#0066FF] text-white'
+                                                                                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-500'
                                                                             }`}>
-                                                                                {isCompleted ? <HiOutlineCheck className="w-4 h-4" /> : dars.dars_raqam}
+                                                                                {isCompleted ? <HiOutlineCheck className="w-3.5 h-3.5" /> : dars.dars_raqam}
                                                                             </div>
-                                                                            <div className="space-y-1.5 flex-1 min-w-0">
-                                                                                <div className="flex flex-wrap gap-1.5">
+                                                                            <div className="space-y-1 flex-1 min-w-0">
+                                                                                <div className="flex flex-wrap gap-1">
                                                                                     {dars.mavzular?.map((m, mi) => (
-                                                                                        <span key={mi} className={`px-2.5 py-1 rounded-lg text-[10px] font-bold ${
+                                                                                        <span key={mi} className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
                                                                                             isCompleted
-                                                                                                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                                                                                ? 'bg-[#00C853]/10 border-[#00C853]/20 text-[#00C853]'
                                                                                                 : isCurrent
-                                                                                                ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-extrabold'
-                                                                                                : 'bg-gray-100 dark:bg-dark-800 text-gray-500'
+                                                                                                ? 'bg-[#0066FF]/10 border-[#0066FF]/20 text-[#0066FF]'
+                                                                                                : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500'
                                                                                         }`}>
                                                                                             {m}
                                                                                         </span>
                                                                                     ))}
                                                                                 </div>
                                                                                 {dars.uy_vazifa && (
-                                                                                    <p className="text-[11px] text-gray-400 font-medium italic mt-1 line-clamp-1 hover:line-clamp-none transition-all duration-300">
+                                                                                    <p className="text-[10px] text-zinc-400 mt-1 line-clamp-1">
                                                                                         Vazifa: {dars.uy_vazifa}
                                                                                     </p>
                                                                                 )}
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="flex items-center gap-3 self-end md:self-center">
-                                                                            <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1">
+                                                                        <div className="flex items-center gap-3 self-end sm:self-center">
+                                                                            <span className="text-[10px] text-zinc-400 font-semibold flex items-center gap-1">
                                                                                 <HiOutlineClock className="w-3.5 h-3.5" />
                                                                                 {dars.davomiyligi || '1.5 soat'}
                                                                             </span>
                                                                             {!isCompleted && !isCurrent && (
                                                                                 <button
                                                                                     onClick={() => handleJumpToLesson(dars.dars_raqam)}
-                                                                                    className="px-3.5 py-1.5 bg-white dark:bg-dark-900 border border-gray-200 dark:border-white/5 hover:border-primary-500 hover:text-primary-500 dark:hover:border-primary-500 rounded-lg text-[10px] font-black uppercase tracking-wider transition-colors shadow-sm"
+                                                                                    className="px-2 py-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[10px] font-semibold rounded hover:border-[#0066FF] hover:text-[#0066FF] transition-all shadow-sm"
                                                                                     title="Guruh progressini shu darsga o'tkazish"
                                                                                 >
                                                                                     Sakrash
                                                                                 </button>
                                                                             )}
                                                                             {isCurrent && (
-                                                                                <span className="px-3 py-1 bg-primary-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest flex items-center gap-1">
+                                                                                <span className="px-2 py-0.5 bg-[#0066FF] text-white rounded text-[9px] font-semibold flex items-center gap-1 uppercase">
                                                                                     <HiOutlinePlay className="w-3 h-3" />
                                                                                     Joriy
                                                                                 </span>
                                                                             )}
                                                                             {isCompleted && (
-                                                                                <span className="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg text-[9px] font-black uppercase tracking-widest">
+                                                                                <span className="px-2 py-0.5 bg-[#00C853]/10 text-[#00C853] rounded text-[9px] font-semibold border border-[#00C853]/20 uppercase">
                                                                                     O'tildi
                                                                                 </span>
                                                                             )}

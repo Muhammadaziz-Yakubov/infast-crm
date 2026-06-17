@@ -20,7 +20,6 @@ const Debtors = () => {
     const [payForm, setPayForm] = useState({ summa: '', tolovTuri: 'naqd', izoh: '' });
     const [sendingSms, setSendingSms] = useState(null);
 
-
     useEffect(() => {
         fetchDebtors();
     }, []);
@@ -55,7 +54,7 @@ const Debtors = () => {
                 tolovTuri: payForm.tolovTuri,
                 izoh: payForm.izoh
             });
-            toast.success("To'lov muvaffaqiyatli amalga oshirildi! 💸");
+            toast.success("To'lov muvaffaqiyatli amalga oshirildi");
             setPayModalOpen(false);
             fetchDebtors();
         } catch (err) {
@@ -75,26 +74,25 @@ const Debtors = () => {
             link.click();
             link.remove();
             window.URL.revokeObjectURL(url);
-            toast.success('Excel fayl yuklandi! 📁');
+            toast.success('Excel fayl yuklandi');
         } catch (err) {
             toast.error('Export qilishda xatolik');
         } finally {
             setExporting(false);
         }
     };
-    
+
     const handleSendSMS = async (debtor) => {
         try {
             setSendingSms(debtor._id);
             await studentAPI.sendDebtSMS(debtor._id);
-            toast.success(`${debtor.ism}ga SMS muvaffaqiyatli yuborildi! 📩`);
+            toast.success(`${debtor.ism}ga SMS muvaffaqiyatli yuborildi`);
         } catch (err) {
             toast.error(err.response?.data?.message || 'SMS yuborishda xatolik');
         } finally {
             setSendingSms(null);
         }
     };
-
 
     const formatMoney = (amount) => {
         return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
@@ -110,181 +108,156 @@ const Debtors = () => {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-6xl mx-auto">
+        <div className="space-y-6 animate-fade-in max-w-7xl mx-auto pb-10">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white">
-                        Qarzdorlar <span className="text-red-500">Ro'yxati</span>
-                    </h1>
-                    <p className="text-gray-500 dark:text-gray-400 font-medium">To'lov muddati o'tib ketgan o'quvchilar nazorati</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Qarzdorlar ro'yxati</h1>
+                    <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1">To'lov muddati o'tib ketgan o'quvchilar nazorati</p>
                 </div>
                 <button
                     onClick={handleExport}
                     disabled={exporting || debtors.length === 0}
-                    className="flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white dark:bg-dark-800 
-                        text-gray-800 dark:text-white font-black text-sm border-2 border-gray-100 dark:border-white/5 
-                        shadow-sm hover:border-primary-500 dark:hover:border-primary-500/30 transition-all hover:-translate-y-1 disabled:opacity-50"
+                    className="btn-secondary flex items-center gap-2"
                 >
-                    <HiOutlineDownload className="w-5 h-5 text-primary-500" />
-                    <span>{exporting ? 'Eksport qilinmoqda...' : 'Excel ga yuklash'}</span>
+                    <HiOutlineDownload className="w-4 h-4 text-[#0066FF]" />
+                    <span>{exporting ? 'Eksport qilinmoqda...' : 'Excel fayl yuklash'}</span>
                 </button>
             </div>
 
             {/* Premium Warning Card */}
             {debtors.length > 0 && (
-                <div className="relative overflow-hidden group">
-                    <div className="relative z-10 bg-gradient-to-br from-red-600 via-rose-600 to-red-800 rounded-[2.5rem] p-8 md:p-10 text-white shadow-2xl shadow-red-500/20">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                            <div className="flex items-center gap-6">
-                                <div className="p-4 rounded-3xl bg-white/20 backdrop-blur-md shadow-inner">
-                                    <HiOutlineExclamationCircle className="w-10 h-10 text-white animate-pulse" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h3 className="text-2xl font-black tracking-tight">Kutilayotgan umumiy qarz</h3>
-                                    <p className="text-red-100 font-medium opacity-80 uppercase tracking-widest text-xs">Jami {debtors.length} ta o'quvchidan</p>
-                                </div>
+                <div className="bg-white dark:bg-[#111111] rounded-xl p-5 border border-red-100 dark:border-red-950/30">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-[#FF3B30]/10 flex items-center justify-center text-[#FF3B30] border border-[#FF3B30]/20">
+                                <HiOutlineExclamationCircle className="w-5 h-5" />
                             </div>
-                            <div className="bg-white/10 backdrop-blur-md px-10 py-6 rounded-[2rem] border border-white/10 text-center md:text-right">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-70">Umumiy balans</p>
-                                <h2 className="text-4xl font-black tracking-tighter">{formatMoney(totalDebt)}</h2>
+                            <div>
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Kutilayotgan umumiy qarz</h3>
+                                <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">Jami {debtors.length} ta o'quvchidan</p>
                             </div>
                         </div>
+                        <div className="bg-zinc-50 dark:bg-zinc-900/60 px-5 py-3 rounded-lg border border-zinc-200 dark:border-zinc-800 text-center md:text-right">
+                            <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-0.5">Umumiy balans</span>
+                            <span className="text-xl font-bold text-[#FF3B30] tracking-tight block">{formatMoney(totalDebt)}</span>
+                        </div>
                     </div>
-                    {/* Decorative blobs */}
-                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-48 h-48 bg-black/20 rounded-full blur-3xl pointer-events-none" />
                 </div>
             )}
 
-            {/* Smart Search */}
-            <div className="relative group">
+            {/* Search */}
+            <div className="relative">
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full px-12 py-5 rounded-3xl bg-white dark:bg-dark-800 border-2 border-transparent 
-                        focus:border-primary-500 shadow-sm focus:shadow-xl focus:shadow-primary-500/5 outline-none transition-all 
-                        font-bold text-gray-800 dark:text-white"
+                    className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 outline-none focus:border-[#0066FF] transition-all text-gray-800 dark:text-white"
                     placeholder="Ism yoki telefon bo'yicha tezkor qidiruv..."
                 />
-                <HiOutlineSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 w-6 h-6 transition-colors" />
+                <HiOutlineSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
             </div>
 
             {/* Debtors Content */}
             {filteredDebtors.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-32 bg-white dark:bg-dark-800 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-dark-700">
-                    <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/10 rounded-full flex items-center justify-center mb-6">
-                        <HiOutlineEmojiHappy className="w-12 h-12 text-emerald-500" />
-                    </div>
-                    <h3 className="text-xl font-black text-gray-800 dark:text-white">Toza ro'yxat!</h3>
-                    <p className="text-gray-400 font-medium mt-2">Hozirda hech qanday qarzdorliklar mavjud emas.</p>
+                <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
+                    <HiOutlineEmojiHappy className="w-12 h-12 mb-2 text-[#00C853]" />
+                    <h3 className="text-sm font-medium">Toza ro'yxat!</h3>
+                    <p className="text-xs text-zinc-500 mt-1">Hozirda hech qanday qarzdorliklar mavjud emas.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
-                    {filteredDebtors.map((d, i) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredDebtors.map((d) => (
                         <div
                             key={d._id}
-                            className="group bg-white dark:bg-dark-800 rounded-[2.5rem] p-6 border border-gray-100 dark:border-white/5 
-                                shadow-sm hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-300 hover:-translate-y-1.5"
-                            style={{ animationDelay: `${i * 50}ms` }}
+                            className="bg-white dark:bg-[#111111] rounded-xl p-5 border border-gray-100 dark:border-zinc-900/60 flex flex-col justify-between"
                         >
-                            <div className="flex items-start justify-between mb-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-400 to-rose-600 
-                                        flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-red-500/20 transform transition-transform group-hover:rotate-6">
-                                        {d.ism?.charAt(0)}
-                                    </div>
-                                    <div className="min-w-0">
-                                        <h3 className="font-black text-gray-900 dark:text-white truncate text-lg group-hover:text-red-600 transition-colors uppercase tracking-tight">
-                                            {d.ism}
-                                        </h3>
-                                        <div className="flex items-center gap-2 mt-1 text-xs font-bold text-gray-400">
-                                            <HiOutlineCollection className="w-4 h-4" />
-                                            {d.guruh?.nomi || 'Guruhsiz'}
+                            <div>
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-800 dark:text-zinc-100 font-semibold text-sm border border-zinc-200 dark:border-zinc-700 uppercase">
+                                            {d.ism?.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{d.ism}</h3>
+                                            <div className="flex items-center gap-1.5 mt-0.5 text-xs text-zinc-400">
+                                                <HiOutlineCollection className="w-3.5 h-3.5" />
+                                                <span>{d.guruh?.nomi || 'Guruhsiz'}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-xl font-black text-red-600 dark:text-red-400 tracking-tighter">
-                                        -{new Intl.NumberFormat('uz-UZ').format(d.oylikTolov || d.kurs?.narx || 0)}
-                                    </p>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">
-                                        {d.tolovKuni}-sanalik to'lov
-                                    </p>
+                                    <div className="text-right">
+                                        <span className="text-sm font-semibold text-[#FF3B30] tracking-tight block">
+                                            -{new Intl.NumberFormat('uz-UZ').format(d.oylikTolov || d.kurs?.narx || 0)}
+                                        </span>
+                                        <span className="text-[10px] text-zinc-400 block mt-0.5">
+                                            {d.tolovKuni}-sanalik to'lov
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-2 mt-auto">
-                                <a
-                                    href={`tel:${d.telefon}`}
-                                    className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-gray-50 dark:bg-dark-900 
-                                        text-gray-600 dark:text-gray-400 font-bold text-xs hover:bg-primary-50 dark:hover:bg-primary-900/10 
-                                        hover:text-primary-600 transition-all active:scale-95"
-                                >
-                                    <HiOutlinePhone className="w-4 h-4" />
-                                    Tel
-                                </a>
-                                <button
-                                    onClick={() => handleSendSMS(d)}
-                                    disabled={sendingSms === d._id}
-                                    className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-primary-50 dark:bg-primary-900/10 
-                                        text-primary-600 font-bold text-xs hover:bg-primary-100 dark:hover:bg-primary-900/20 
-                                        transition-all active:scale-95 disabled:opacity-50"
-                                >
-                                    <HiOutlineChatAlt2 className="w-4 h-4" />
-                                    {sendingSms === d._id ? '...' : 'SMS'}
-                                </button>
-                                <button
-                                    onClick={() => openPayModal(d)}
-                                    className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-emerald-500 
-                                        text-white font-black text-xs shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                                >
-                                    <HiOutlineCash className="w-4 h-4" />
-                                    To'lov
-                                </button>
-                            </div>
-
-
-                            {d.eslatmalar && (
-                                <div className="mt-4 pt-4 border-t border-gray-50 dark:border-dark-700/50">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 opacity-50">Eslatma</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 italic">"{d.eslatmalar}"</p>
+                            <div className="mt-4 pt-4 border-t border-gray-50 dark:border-zinc-900/40 flex flex-col gap-3">
+                                {d.eslatmalar && (
+                                    <div className="text-[11px] text-zinc-500 italic">
+                                        "{d.eslatmalar}"
+                                    </div>
+                                )}
+                                <div className="grid grid-cols-3 gap-2">
+                                    <a
+                                        href={`tel:${d.telefon}`}
+                                        className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+                                    >
+                                        <HiOutlinePhone className="w-4 h-4" />
+                                        <span>Tel</span>
+                                    </a>
+                                    <button
+                                        onClick={() => handleSendSMS(d)}
+                                        disabled={sendingSms === d._id}
+                                        className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-[#0066FF] hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                                    >
+                                        <HiOutlineChatAlt2 className="w-4 h-4" />
+                                        <span>SMS</span>
+                                    </button>
+                                    <button
+                                        onClick={() => openPayModal(d)}
+                                        className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-[#00C853] hover:bg-[#00B04A] text-white text-xs font-semibold transition-colors"
+                                    >
+                                        <HiOutlineCash className="w-4 h-4" />
+                                        <span>To'lov</span>
+                                    </button>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     ))}
                 </div>
             )}
 
-            {/* Pay Modal - Custom for Debtors */}
+            {/* Pay Modal */}
             <Modal isOpen={payModalOpen} onClose={() => setPayModalOpen(false)} title="Qarzni yopish" size="sm">
                 <form onSubmit={handlePay} className="space-y-6">
-                    <div className="p-8 rounded-[2rem] bg-gradient-to-br from-red-600 to-rose-700 text-white shadow-2xl relative overflow-hidden">
-                        <div className="relative z-10">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-70">To'lovchi</p>
-                            <h4 className="text-2xl font-black tracking-tight">{selectedDebtor?.ism}</h4>
-                            <div className="mt-6 flex flex-col items-center">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">Qarzdorlik miqdori</p>
-                                <h2 className="text-4xl font-black mt-1 tracking-tighter">
-                                    {formatMoney(selectedDebtor?.oylikTolov || selectedDebtor?.kurs?.narx || 0)}
-                                </h2>
-                            </div>
+                    <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 text-center">
+                        <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider block mb-1">To'lovchi</span>
+                        <h4 className="text-base font-semibold text-gray-900 dark:text-white">{selectedDebtor?.ism}</h4>
+                        <div className="mt-4 py-2 border-t border-zinc-200 dark:border-zinc-800">
+                            <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider block">Qarzdorlik miqdori</span>
+                            <h2 className="text-2xl font-bold text-[#FF3B30] mt-1">
+                                {formatMoney(selectedDebtor?.oylikTolov || selectedDebtor?.kurs?.narx || 0)}
+                            </h2>
                         </div>
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16" />
                     </div>
 
                     <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Summa (UZS)</label>
+                                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Summa (UZS)</label>
                                 <input type="number" value={payForm.summa} onChange={e => setPayForm({ ...payForm, summa: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-black" required />
+                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold" required />
                             </div>
                             <div>
-                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Turi</label>
+                                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Turi</label>
                                 <select value={payForm.tolovTuri} onChange={e => setPayForm({ ...payForm, tolovTuri: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-bold">
+                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-medium cursor-pointer">
                                     <option value="naqd">💵 Naqd</option>
                                     <option value="karta">💳 Karta</option>
                                     <option value="online">📱 Online</option>
@@ -292,18 +265,18 @@ const Debtors = () => {
                             </div>
                         </div>
                         <div>
-                            <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Izoh</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Izoh</label>
                             <input type="text" value={payForm.izoh} onChange={e => setPayForm({ ...payForm, izoh: e.target.value })}
-                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-emerald-500 outline-none transition-all font-bold" placeholder="Ixtiyoriy izoh..." />
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-medium" placeholder="Ixtiyoriy izoh..." />
                         </div>
                     </div>
 
-                    <button type="submit" className="w-full py-5 rounded-2xl font-black text-white bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-95 transition-all text-lg">
-                        To'lovni qabul qilish
-                    </button>
-                    <button type="button" onClick={() => setPayModalOpen(false)} className="w-full py-2 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors">
-                        Hozir emas, bekor qilish
-                    </button>
+                    <div className="flex gap-3 justify-end pt-4 border-t border-gray-100 dark:border-zinc-900/60">
+                        <button type="button" onClick={() => setPayModalOpen(false)} className="btn-secondary">Bekor qilish</button>
+                        <button type="submit" className="btn-primary">
+                            To'lovni qabul qilish
+                        </button>
+                    </div>
                 </form>
             </Modal>
         </div>

@@ -17,120 +17,102 @@ const PaymentRequired = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#050505] p-4 relative overflow-hidden">
-            {/* Animated background elements */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-600/10 rounded-full blur-[120px] animate-pulse-soft" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-600/10 rounded-full blur-[120px] animate-pulse-soft" />
+        <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] p-6 relative overflow-hidden">
+            <div className="absolute top-[-10%] left-[-10%] w-[35%] h-[35%] bg-[#0066FF]/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[35%] h-[35%] bg-red-600/5 rounded-full blur-[120px] pointer-events-none" />
 
-            <div className="relative w-full max-w-lg animate-fade-in">
-                {/* Card */}
-                <div className="bg-white/5 backdrop-blur-3xl rounded-[3rem] p-10 md:p-14 border border-white/10 shadow-3xl text-center space-y-8">
-                    <div className="flex flex-col items-center space-y-4">
-                        <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center">
-                            <HiOutlineLockClosed className="w-10 h-10 text-red-500 animate-bounce" />
+            <div className="relative w-full max-w-md animate-fade-in space-y-6">
+                <div className="bg-[#111111] rounded-xl p-8 border border-zinc-800/80 shadow-2xl text-center space-y-6">
+                    <div className="flex flex-col items-center space-y-3">
+                        <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center justify-center text-red-500">
+                            <HiOutlineLockClosed className="w-6 h-6" />
                         </div>
-                        <div className="space-y-2">
-                            <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Kechirasiz, {user?.fullName}!</h2>
-                            <p className="text-sm font-bold text-gray-500 italic leading-relaxed">
-                                Sizning hisobingiz to'lov amalga oshirilmaganligi sababli vaqtincha blocklangan.
-                                Iltimos, to'lovni amalga oshirib, tizimdan to'liq foydalanish imkonini tiklang.
+                        <div className="space-y-1.5">
+                            <h2 className="text-lg font-semibold text-[#F5F5F5] tracking-tight">Kechirasiz, {user?.fullName}!</h2>
+                            <p className="text-xs text-zinc-405 leading-relaxed font-medium">
+                                Sizning hisobingiz to'lov amalga oshirilmaganligi sababli vaqtincha bloklangan. Tizimdan foydalanishni davom ettirish uchun to'lovni amalga oshiring.
                             </p>
                         </div>
                     </div>
 
-                    <div className="p-8 rounded-[2rem] bg-gradient-to-br from-gray-900 to-indigo-900 shadow-2xl relative overflow-hidden group text-left">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
-
-                        <div className="relative z-10 space-y-6">
+                    {/* Credit Card Graphic */}
+                    <div className="p-5 rounded-lg bg-zinc-900 border border-zinc-800 text-left relative overflow-hidden group">
+                        <div className="relative z-10 space-y-5">
                             <div className="flex justify-between items-start">
-                                <HiOutlineCreditCard className="w-10 h-10 text-white/40" />
-                                <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Kartaga tolov qilib chekni adminga tashlang</div>
+                                <HiOutlineCreditCard className="w-6 h-6 text-zinc-500" />
+                                <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest">Karta orqali to'lov</span>
                             </div>
 
                             <div className="space-y-1">
-                                <p className="text-[10px] font-black text-white/50 uppercase tracking-widest italic ml-1">Karta raqami</p>
+                                <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest block">Karta raqami</span>
                                 <button
                                     onClick={() => {
                                         navigator.clipboard.writeText(paymentDetails.cardNumber);
-                                        toast.success("Karta raqami nusxalandi! ✨");
+                                        toast.success("Karta raqami nusxalandi");
                                     }}
-                                    className="text-2xl font-black text-white tracking-[0.1em] hover:text-primary-400 transition-colors text-left w-full"
+                                    className="text-lg font-bold text-white tracking-widest hover:text-[#0066FF] transition-colors text-left w-full"
                                 >
                                     {paymentDetails.cardNumber.replace(/(.{4})/g, '$1 ')}
                                 </button>
                             </div>
 
                             <div className="flex justify-between items-end">
-                                <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-white/50 uppercase tracking-widest italic ml-1">Karta egasi</p>
-                                    <p className="text-lg font-black text-white uppercase italic">{paymentDetails.cardName}</p>
+                                <div className="space-y-0.5">
+                                    <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest block">Karta egasi</span>
+                                    <p className="text-xs font-semibold text-[#F5F5F5] uppercase tracking-wide">{paymentDetails.cardName}</p>
                                 </div>
-                                <div className="w-10 h-10 bg-white/10 rounded-xl backdrop-blur-md flex items-center justify-center">
-                                    <div className="w-6 h-4 bg-orange-500 rounded-sm opacity-50" />
-                                </div>
+                                <span className="text-[9px] font-medium text-zinc-500 italic">Chekni adminga yuboring</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Click Payment Section */}
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <div className="flex-1 h-[1px] bg-white/10"></div>
-                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Yoki Click orqali</span>
-                            <div className="flex-1 h-[1px] bg-white/10"></div>
+                    {/* Click Payment Option */}
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                            <div className="flex-1 h-[1px] bg-zinc-800"></div>
+                            <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest">Yoki</span>
+                            <div className="flex-1 h-[1px] bg-zinc-800"></div>
                         </div>
 
-                        <div
-                            className="group relative flex items-center justify-between p-5 rounded-[2rem] bg-white/5 text-white/30 font-black overflow-hidden transition-all border border-white/5 cursor-not-allowed"
-                        >
-                            <div className="relative z-10 flex items-center gap-4">
-                                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center p-2 grayscale opacity-50">
-                                    <img src={clickLogo} alt="Click" className="w-full h-full object-contain" />
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-900/60 border border-zinc-800/60 opacity-60">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-zinc-800 rounded flex items-center justify-center p-1.5">
+                                    <img src={clickLogo} alt="Click" className="w-full h-full object-contain grayscale" />
                                 </div>
-                                <div className="text-left">
-                                    <p className="text-[10px] uppercase tracking-[0.2em] opacity-40">Click orqali to'lov</p>
-                                    <div className="flex items-center gap-2">
-                                        <p className="text-xl font-black italic tracking-tight">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
-                                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500 text-[8px] uppercase tracking-widest border border-amber-500/30">Tez Kunda</span>
+                                <div className="text-left space-y-0.5">
+                                    <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest">Click orqali to'lov</span>
+                                    <div className="flex items-center gap-1.5">
+                                        <p className="text-sm font-bold text-zinc-400">{(user?.oylikTolov || user?.kurs?.narx || 0).toLocaleString()} UZS</p>
+                                        <span className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-[8px] font-semibold text-zinc-400 uppercase tracking-widest">Tez kunda</span>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div className="relative z-10 flex flex-col items-end">
-                                <HiOutlineLockClosed className="w-8 h-8 opacity-20" />
-                            </div>
+                            <HiOutlineLockClosed className="w-5 h-5 text-zinc-650" />
                         </div>
-                        
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic px-4">
-                            Click orqali to'lov qilinganda hisobingiz avtomatik tarzda faollashadi.
-                        </p>
                     </div>
 
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic px-4">
-                        Boshqa to'lov turlari uchun chekni administratorga yuboring.
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* Actions */}
+                    <div className="grid grid-cols-2 gap-3 pt-2">
                         <button
                             onClick={handleRefresh}
-                            className="py-5 rounded-2xl bg-white/10 text-white font-black uppercase tracking-[0.2em] text-xs hover:bg-white/20 transition-all flex items-center justify-center gap-3"
+                            className="py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-750 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 border border-zinc-700/60"
                         >
-                            <HiOutlineRefresh className="w-5 h-5 animate-spin-slow" />
-                            Yangilash
+                            <HiOutlineRefresh className="w-4 h-4" />
+                            <span>Yangilash</span>
                         </button>
                         <button
                             onClick={logout}
-                            className="py-5 rounded-2xl bg-red-600/10 text-red-500 font-black uppercase tracking-[0.2em] text-xs hover:bg-red-600/20 transition-all flex items-center justify-center gap-3"
+                            className="py-2.5 rounded-lg bg-red-650/15 hover:bg-red-650/25 text-red-500 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 border border-red-500/20"
                         >
-                            <HiOutlineLogout className="w-5 h-5" />
-                            Chiqish
+                            <HiOutlineLogout className="w-4 h-4" />
+                            <span>Chiqish</span>
                         </button>
                     </div>
                 </div>
 
-                <div className="mt-12 text-center opacity-30">
-                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">
-                        Reserved &bull; InFast CRM &bull; 2026
+                <div className="text-center">
+                    <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-widest">
+                        InFast CRM &bull; 2026
                     </p>
                 </div>
             </div>

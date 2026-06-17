@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api, { eventAPI, studentAPI } from '../services/api';
+import api, { eventAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 import { 
     HiOutlineChevronLeft, HiOutlineCheckCircle, HiOutlineXCircle, 
-    HiOutlineSave, HiOutlineUserGroup, HiOutlineTrendingUp,
-    HiOutlineCash
+    HiOutlineSave, HiOutlineUserGroup, HiOutlineCash
 } from 'react-icons/hi';
 
 const EventAttendance = () => {
@@ -24,13 +23,9 @@ const EventAttendance = () => {
 
     const fetchData = async () => {
         try {
-            // In a real app, I'd have a specific route for registrations, 
-            // but for now I'll use a generic one or assume the backend has it.
-            // Based on my controller, I need an endpoint for registrations.
-            // Let's assume /api/events/:id/registrations exists in backend (I should add it).
             const [eventRes, regRes, statsRes] = await Promise.all([
                 api.get(`/events/${id}`),
-                api.get(`/events/${id}/registrations`), // Need to implement this in backend
+                api.get(`/events/${id}/registrations`),
                 eventAPI.getAnalytics(id)
             ]);
 
@@ -59,7 +54,7 @@ const EventAttendance = () => {
                 status: reg.status
             }));
             await eventAPI.saveAttendance(id, attendanceData);
-            toast.success("Yo'qlama saqlandi va coinlar yangilandi ✨");
+            toast.success("Yo'qlama saqlandi va coinlar yangilandi");
             fetchData();
         } catch (err) {
             toast.error("Saqlashda xatolik");
@@ -79,115 +74,115 @@ const EventAttendance = () => {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto pb-20">
-            <div className="flex items-center justify-between gap-4">
-                <button onClick={() => navigate('/events')} className="p-3 rounded-2xl bg-white dark:bg-dark-800 shadow-sm hover:bg-gray-50 transition-all border border-gray-100 dark:border-white/5">
-                    <HiOutlineChevronLeft className="w-6 h-6 text-gray-500" />
+        <div className="space-y-6 animate-fade-in max-w-7xl mx-auto pb-10">
+            <div className="flex items-center gap-4">
+                <button onClick={() => navigate('/events')} className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-zinc-500 hover:text-[#0066FF] transition-colors">
+                    <HiOutlineChevronLeft className="w-5 h-5" />
                 </button>
-                <div className="flex-1 text-center md:text-left">
-                    <h1 className="text-2xl font-black text-gray-900 dark:text-white uppercase truncate px-4">{event?.title}</h1>
-                    <p className="text-xs font-black text-primary-500 uppercase tracking-widest px-4 mt-1">Yo'qlama va Coin boshqaruvi</p>
+                <div className="flex-1">
+                    <h1 className="text-xl font-semibold text-gray-900 dark:text-white truncate">{event?.title}</h1>
+                    <p className="text-xs text-zinc-400 mt-0.5">Yo'qlama va Coin boshqaruvi</p>
                 </div>
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="flex items-center gap-2 px-8 py-4 rounded-2xl bg-emerald-500 text-white font-black text-sm shadow-xl shadow-emerald-500/20 hover:-translate-y-1 transition-all disabled:opacity-50"
+                    className="btn-primary flex items-center gap-2"
                 >
-                    <HiOutlineSave className="w-5 h-5" />
-                    <span className="hidden md:inline">Saqlash</span>
+                    <HiOutlineSave className="w-4 h-4" />
+                    <span>Saqlash</span>
                 </button>
             </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white dark:bg-dark-800 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Jami registratsiya</p>
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-500/10 rounded-lg"><HiOutlineUserGroup className="text-blue-500" /></div>
-                        <span className="text-xl font-black text-gray-900 dark:text-white">{stats?.total || 0}</span>
+                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60">
+                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Jami registratsiya</span>
+                    <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-[#0066FF]/10 rounded text-[#0066FF] border border-[#0066FF]/20"><HiOutlineUserGroup className="w-4 h-4" /></div>
+                        <span className="text-base font-bold text-gray-900 dark:text-white">{stats?.total || 0}</span>
                     </div>
                 </div>
-                <div className="bg-white dark:bg-dark-800 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
-                    <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Kelganlar</p>
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-emerald-500/10 rounded-lg"><HiOutlineCheckCircle className="text-emerald-500" /></div>
-                        <span className="text-xl font-black text-gray-900 dark:text-white">{stats?.attended || 0}</span>
+                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60">
+                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Kelganlar</span>
+                    <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-[#00C853]/10 rounded text-[#00C853] border border-[#00C853]/20"><HiOutlineCheckCircle className="w-4 h-4" /></div>
+                        <span className="text-base font-bold text-gray-900 dark:text-white">{stats?.attended || 0}</span>
                     </div>
                 </div>
-                <div className="bg-white dark:bg-dark-800 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
-                    <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Kelmaganlar</p>
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-red-500/10 rounded-lg"><HiOutlineXCircle className="text-red-500" /></div>
-                        <span className="text-xl font-black text-gray-900 dark:text-white">{stats?.absent || 0}</span>
+                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60">
+                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Kelmaganlar</span>
+                    <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-[#FF3B30]/10 rounded text-[#FF3B30] border border-[#FF3B30]/20"><HiOutlineXCircle className="w-4 h-4" /></div>
+                        <span className="text-base font-bold text-gray-900 dark:text-white">{stats?.absent || 0}</span>
                     </div>
                 </div>
-                <div className="bg-white dark:bg-dark-800 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
-                    <p className="text-[10px] font-black text-amber-400 uppercase tracking-widest mb-1">Reward Coins</p>
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-amber-500/10 rounded-lg"><HiOutlineCash className="text-amber-500" /></div>
-                        <span className="text-xl font-black text-gray-900 dark:text-white">+{stats?.rewardedCoins || 0}</span>
+                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60">
+                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Reward Coins</span>
+                    <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-[#FF9500]/10 rounded text-[#FF9500] border border-[#FF9500]/20"><HiOutlineCash className="w-4 h-4" /></div>
+                        <span className="text-base font-bold text-gray-900 dark:text-white">+{stats?.rewardedCoins || 0}</span>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
-                <div className="p-8 border-b border-gray-50 dark:border-dark-700 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tight">Studentlar ro'yxati</h3>
+            <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden">
+                <div className="p-4 border-b border-gray-150 dark:border-zinc-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Studentlar ro'yxati</h3>
                     <div className="flex gap-2">
-                        <button onClick={markAllAttended} className="px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-600 text-xs font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all">Hammasini Keldi qilish</button>
-                        <button onClick={markAllAbsent} className="px-4 py-2 rounded-xl bg-red-500/10 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">Hammasini Kelmadi qilish</button>
+                        <button onClick={markAllAttended} className="px-3 py-1.5 rounded-lg bg-[#00C853]/10 text-[#00C853] border border-[#00C853]/20 text-xs font-semibold hover:bg-[#00C853]/20 transition-colors">Hammasini keldi qilish</button>
+                        <button onClick={markAllAbsent} className="px-3 py-1.5 rounded-lg bg-[#FF3B30]/10 text-[#FF3B30] border border-[#FF3B30]/20 text-xs font-semibold hover:bg-[#FF3B30]/20 transition-colors">Hammasini kelmadi qilish</button>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="bg-gray-50 dark:bg-dark-900 border-b border-gray-100 dark:border-white/5">
-                                <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Student</th>
-                                <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Guruh</th>
-                                <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Holati</th>
-                                <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Amal</th>
+                            <tr className="bg-gray-50/50 dark:bg-zinc-900/50 border-b border-gray-150 dark:border-zinc-900/60">
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Student</th>
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Guruh</th>
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Holati</th>
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider text-right">Amal</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50 dark:divide-dark-700">
+                        <tbody className="divide-y divide-gray-150 dark:divide-zinc-900/60">
                             {registrations.map((reg) => (
-                                <tr key={reg._id} className="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors group">
-                                    <td className="px-8 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-black text-sm uppercase">
+                                <tr key={reg._id} className="hover:bg-gray-50/30 dark:hover:bg-zinc-900/20 transition-colors">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-850 flex items-center justify-center text-zinc-800 dark:text-zinc-200 font-semibold text-xs uppercase border border-zinc-250 dark:border-zinc-750">
                                                 {reg.student.ism?.[0] || 'S'}
                                             </div>
                                             <div>
-                                                <p className="font-black text-gray-900 dark:text-white uppercase text-sm">{reg.student.ism}</p>
-                                                <p className="text-xs text-gray-500 font-medium">{reg.student.username}</p>
+                                                <p className="text-sm font-semibold text-gray-900 dark:text-white">{reg.student.ism}</p>
+                                                <p className="text-xs text-zinc-400">{reg.student.username}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-5">
-                                        <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase bg-gray-100 dark:bg-dark-900 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/5">
+                                    <td className="px-6 py-4">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
                                             {reg.student.guruh?.nomi || 'Guruhsiz'}
                                         </span>
                                     </td>
-                                    <td className="px-8 py-5">
-                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
-                                            ${reg.status === 'ATTENDED' ? 'bg-emerald-500/10 text-emerald-600' : 
-                                              reg.status === 'ABSENT' ? 'bg-red-500/10 text-red-600' : 
-                                              'bg-blue-500/10 text-blue-600'}`}>
+                                    <td className="px-6 py-4">
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-semibold border
+                                            ${reg.status === 'ATTENDED' ? 'bg-[#00C853]/10 text-[#00C853] border-[#00C853]/20' : 
+                                              reg.status === 'ABSENT' ? 'bg-[#FF3B30]/10 text-[#FF3B30] border-[#FF3B30]/20' : 
+                                              'bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/20'}`}>
                                             {reg.status}
                                         </span>
                                     </td>
-                                    <td className="px-8 py-5 text-right">
-                                        <div className="flex items-center justify-end gap-2">
+                                    <td className="px-6 py-4 text-right">
+                                        <div className="flex items-center justify-end gap-1.5">
                                             <button
                                                 onClick={() => updateStatus(reg.student._id, 'ATTENDED')}
-                                                className={`p-3 rounded-xl transition-all shadow-sm ${reg.status === 'ATTENDED' ? 'bg-emerald-500 text-white' : 'bg-gray-50 dark:bg-dark-900 text-gray-400 hover:text-emerald-500'}`}
+                                                className={`p-1.5 rounded transition-all border ${reg.status === 'ATTENDED' ? 'bg-[#00C853] border-[#00C853] text-white' : 'bg-transparent border-gray-200 dark:border-zinc-800 text-zinc-400 hover:text-[#00C853]'}`}
                                             >
-                                                <HiOutlineCheckCircle className="w-5 h-5" />
+                                                <HiOutlineCheckCircle className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => updateStatus(reg.student._id, 'ABSENT')}
-                                                className={`p-3 rounded-xl transition-all shadow-sm ${reg.status === 'ABSENT' ? 'bg-red-500 text-white' : 'bg-gray-50 dark:bg-dark-900 text-gray-400 hover:text-red-500'}`}
+                                                className={`p-1.5 rounded transition-all border ${reg.status === 'ABSENT' ? 'bg-[#FF3B30] border-[#FF3B30] text-white' : 'bg-transparent border-gray-200 dark:border-zinc-800 text-zinc-400 hover:text-[#FF3B30]'}`}
                                             >
-                                                <HiOutlineXCircle className="w-5 h-5" />
+                                                <HiOutlineXCircle className="w-4 h-4" />
                                             </button>
                                         </div>
                                     </td>
@@ -196,11 +191,9 @@ const EventAttendance = () => {
                         </tbody>
                     </table>
                     {registrations.length === 0 && (
-                        <div className="p-20 text-center space-y-4">
-                            <div className="w-20 h-20 bg-gray-50 dark:bg-dark-900 rounded-full flex items-center justify-center mx-auto">
-                                <HiOutlineUserGroup className="w-10 h-10 text-gray-300" />
-                            </div>
-                            <p className="font-black text-gray-400 uppercase tracking-widest text-sm text-center">Hali hech kim yozilmagan</p>
+                        <div className="py-16 text-center text-zinc-400">
+                            <HiOutlineUserGroup className="w-10 h-10 mx-auto mb-2" />
+                            <p className="text-xs font-semibold">Hali hech kim yozilmagan</p>
                         </div>
                     )}
                 </div>

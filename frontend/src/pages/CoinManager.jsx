@@ -9,9 +9,7 @@ import {
     HiOutlineUserGroup,
     HiOutlineClock,
     HiOutlinePlusCircle,
-    HiOutlineMinusCircle,
-    HiOutlineCheckCircle,
-    HiOutlineX
+    HiOutlineMinusCircle
 } from 'react-icons/hi';
 
 const CoinManager = () => {
@@ -90,122 +88,107 @@ const CoinManager = () => {
         }
     };
 
-
-
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto pb-20">
+        <div className="space-y-6 animate-fade-in max-w-7xl mx-auto pb-10">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                        Coin <span className="text-primary-500 italic">Boshqaruvi</span>
-                    </h1>
-                    <p className="text-gray-500 dark:text-gray-400 font-medium mt-1">
-                        O'quvchilarga mukofot yoki jarima coinlarini bering
-                    </p>
-                </div>
-                <div className="flex items-center gap-3">
-                </div>
+            <div>
+                <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Coin boshqaruvi</h1>
+                <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">O'quvchilarga mukofot yoki jarima coinlarini taqsimlash</p>
             </div>
 
             {/* Action Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <button
                     onClick={() => handleOpenModal('all')}
-                    className="group relative p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-indigo-600 to-indigo-800 text-white shadow-xl shadow-indigo-500/20 hover:-translate-y-2 transition-all overflow-hidden"
+                    className="p-6 rounded-xl bg-white dark:bg-[#111111] border border-gray-150 dark:border-zinc-900/60 hover:border-[#0066FF]/30 transition-all text-left flex flex-col justify-between h-40"
                 >
-                    <HiOutlineUsers className="w-12 h-12 md:w-16 md:h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
-                    <div className="relative z-10 flex flex-col items-start text-left">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 md:mb-6">
-                            <HiOutlineUsers className="w-5 h-5 md:w-6 md:h-6" />
-                        </div>
-                        <h3 className="text-sm md:text-xl font-black uppercase tracking-tight italic">Barchaga</h3>
-                        <p className="text-indigo-100/70 text-[10px] md:text-sm font-medium mt-2">Barcha o'quvchilarga</p>
+                    <div className="w-10 h-10 rounded-lg bg-[#0066FF]/10 text-[#0066FF] flex items-center justify-center border border-[#0066FF]/20">
+                        <HiOutlineUsers className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Barchaga coin berish</h3>
+                        <p className="text-xs text-zinc-400 mt-1">Markazdagi barcha faol o'quvchilarga ommaviy coin yozish</p>
                     </div>
                 </button>
 
                 <button
                     onClick={() => handleOpenModal('group')}
-                    className="group relative p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-purple-600 to-purple-800 text-white shadow-xl shadow-purple-500/20 hover:-translate-y-2 transition-all overflow-hidden"
+                    className="p-6 rounded-xl bg-white dark:bg-[#111111] border border-gray-150 dark:border-zinc-900/60 hover:border-[#00C853]/30 transition-all text-left flex flex-col justify-between h-40"
                 >
-                    <HiOutlineUserGroup className="w-12 h-12 md:w-16 md:h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
-                    <div className="relative z-10 flex flex-col items-start text-left">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 md:mb-6">
-                            <HiOutlineUserGroup className="w-5 h-5 md:w-6 md:h-6" />
-                        </div>
-                        <h3 className="text-sm md:text-xl font-black uppercase tracking-tight italic">Guruhga</h3>
-                        <p className="text-purple-100/70 text-[10px] md:text-sm font-medium mt-2">Guruh o'quvchilariga</p>
+                    <div className="w-10 h-10 rounded-lg bg-[#00C853]/10 text-[#00C853] flex items-center justify-center border border-[#00C853]/20">
+                        <HiOutlineUserGroup className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Guruhga coin berish</h3>
+                        <p className="text-xs text-zinc-400 mt-1">Tanlangan guruh tarkibidagi barcha o'quvchilarga coin yozish</p>
                     </div>
                 </button>
 
                 <button
                     onClick={() => handleOpenModal('students')}
-                    className="group relative p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-xl shadow-emerald-500/20 hover:-translate-y-2 transition-all overflow-hidden"
+                    className="p-6 rounded-xl bg-white dark:bg-[#111111] border border-gray-150 dark:border-zinc-900/60 hover:border-[#FF9500]/30 transition-all text-left flex flex-col justify-between h-40"
                 >
-                    <HiOutlineCash className="w-12 h-12 md:w-16 md:h-16 opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:scale-125 transition-transform" />
-                    <div className="relative z-10 flex flex-col items-start text-left">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 md:mb-6">
-                            <HiOutlinePlusCircle className="w-5 h-5 md:w-6 md:h-6" />
-                        </div>
-                        <h3 className="text-sm md:text-xl font-black uppercase tracking-tight italic">Tanlangan</h3>
-                        <p className="text-emerald-100/70 text-[10px] md:text-sm font-medium mt-2">Ma'lum o'quvchilarga</p>
+                    <div className="w-10 h-10 rounded-lg bg-[#FF9500]/10 text-[#FF9500] flex items-center justify-center border border-[#FF9500]/20">
+                        <HiOutlineCash className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">O'quvchilarga coin berish</h3>
+                        <p className="text-xs text-zinc-400 mt-1">Ro'yxatdan bir yoki bir nechta o'quvchilarni tanlab coin yozish</p>
                     </div>
                 </button>
-
-
             </div>
 
             {/* History Table */}
-            <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
-                <div className="px-8 py-6 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-dark-900 flex items-center justify-center text-primary-500">
-                            <HiOutlineClock className="w-5 h-5" />
+            <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden">
+                <div className="p-4 border-b border-gray-150 dark:border-zinc-900/60 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-[#0066FF]">
+                            <HiOutlineClock className="w-4 h-4" />
                         </div>
-                        <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Oxirgi Amallar</h3>
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Oxirgi amallar</h3>
                     </div>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 dark:bg-dark-900 px-3 py-1.5 rounded-lg">Real-time</span>
+                    <span className="text-[10px] text-zinc-400 font-semibold bg-zinc-50 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">Real-time</span>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="bg-gray-50/50 dark:bg-dark-900/50">
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">O'quvchi</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Amal</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Coin</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Sabab</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Sana</th>
+                            <tr className="bg-gray-50/50 dark:bg-zinc-900/50 border-b border-gray-150 dark:border-zinc-900/60">
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">O'quvchi</th>
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider text-center">Amal</th>
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Coin</th>
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Sabab</th>
+                                <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Sana</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                        <tbody className="divide-y divide-gray-150 dark:divide-zinc-900/60">
                             {logs.map((log) => (
-                                <tr key={log._id} className="hover:bg-gray-50/50 dark:hover:bg-dark-700/30 transition-colors">
-                                    <td className="px-8 py-5">
-                                        <div className="font-bold text-gray-900 dark:text-white">{log.student?.ism}</div>
-                                        <div className="text-[10px] text-gray-400 font-bold uppercase">{log.student?.phone}</div>
+                                <tr key={log._id} className="hover:bg-gray-50/30 dark:hover:bg-zinc-900/20 transition-colors">
+                                    <td className="px-6 py-4">
+                                        <div className="text-sm font-semibold text-gray-900 dark:text-white">{log.student?.ism}</div>
+                                        <div className="text-[10px] text-zinc-400 mt-0.5">{log.student?.telefon || log.student?.username}</div>
                                     </td>
-                                    <td className="px-8 py-5 text-center">
+                                    <td className="px-6 py-4 text-center">
                                         {log.type === 'plus' ? (
-                                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase">
-                                                <HiOutlinePlusCircle className="w-3.5 h-3.5" /> Berildi
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#00C853]/10 text-[#00C853] border border-[#00C853]/20">
+                                                Berildi
                                             </span>
                                         ) : (
-                                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] font-black uppercase">
-                                                <HiOutlineMinusCircle className="w-3.5 h-3.5" /> Olindi
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FF3B30]/10 text-[#FF3B30] border border-[#FF3B30]/20">
+                                                Olindi
                                             </span>
                                         )}
                                     </td>
-                                    <td className="px-8 py-5">
-                                        <div className={`text-sm font-black ${log.type === 'plus' ? 'text-emerald-500' : 'text-red-500'}`}>
+                                    <td className="px-6 py-4">
+                                        <span className={`text-sm font-semibold ${log.type === 'plus' ? 'text-[#00C853]' : 'text-[#FF3B30]'}`}>
                                             {log.type === 'plus' ? '+' : '-'}{log.amount} 🪙
-                                        </div>
+                                        </span>
                                     </td>
-                                    <td className="px-8 py-5">
-                                        <div className="text-sm font-bold text-gray-600 dark:text-gray-300 max-w-xs">{log.reason}</div>
+                                    <td className="px-6 py-4">
+                                        <span className="text-xs text-zinc-600 dark:text-zinc-300">{log.reason}</span>
                                     </td>
-                                    <td className="px-8 py-5 text-[10px] text-gray-400 font-black">
+                                    <td className="px-6 py-4 text-xs text-zinc-400">
                                         {new Date(log.sana).toLocaleString('uz-UZ', {
                                             day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
                                         })}
@@ -221,40 +204,40 @@ const CoinManager = () => {
             <Modal
                 isOpen={isUpdateModalOpen}
                 onClose={() => setIsUpdateModalOpen(false)}
-                title={`Coinlarni Boshqarish: ${targetType === 'all' ? 'Hamma' : (targetType === 'group' ? 'Guruh' : 'Tanlanganlar')}`}
+                title={`Coinlarni boshqarish: ${targetType === 'all' ? 'Barchaga' : (targetType === 'group' ? 'Guruhga' : 'Tanlanganlarga')}`}
             >
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Action Selector */}
-                    <div className="flex p-1 bg-gray-100 dark:bg-dark-900 rounded-2xl">
+                    <div className="flex p-1 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
                         <button
                             type="button"
                             onClick={() => setFormData({ ...formData, action: 'plus' })}
-                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all font-black text-xs uppercase
-                                ${formData.action === 'plus' ? 'bg-white dark:bg-dark-800 text-emerald-500 shadow-sm' : 'text-gray-400'}`}
+                            className={`flex-1 py-1.5 rounded text-xs font-semibold transition-all
+                                ${formData.action === 'plus' ? 'bg-white dark:bg-zinc-800 text-[#00C853] shadow-sm' : 'text-zinc-500'}`}
                         >
-                            <HiOutlinePlusCircle className="w-5 h-5" /> Qo'shish
+                            Qo'shish
                         </button>
                         <button
                             type="button"
                             onClick={() => setFormData({ ...formData, action: 'minus' })}
-                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all font-black text-xs uppercase
-                                ${formData.action === 'minus' ? 'bg-white dark:bg-dark-800 text-red-500 shadow-sm' : 'text-gray-400'}`}
+                            className={`flex-1 py-1.5 rounded text-xs font-semibold transition-all
+                                ${formData.action === 'minus' ? 'bg-white dark:bg-zinc-800 text-[#FF3B30] shadow-sm' : 'text-zinc-500'}`}
                         >
-                            <HiOutlineMinusCircle className="w-5 h-5" /> Ayirish
+                            Ayirish
                         </button>
                     </div>
 
                     {/* Target Specific View */}
                     {targetType === 'group' && (
                         <div>
-                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Guruhni tanlang</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Guruhni tanlang</label>
                             <select
                                 required
                                 value={formData.targetId}
                                 onChange={(e) => setFormData({ ...formData, targetId: e.target.value })}
-                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-medium cursor-pointer"
                             >
-                                <option value="">Tanlang...</option>
+                                <option value="">Guruhni tanlang</option>
                                 {groups.map(g => (
                                     <option key={g._id} value={g._id}>{g.nomi}</option>
                                 ))}
@@ -264,7 +247,7 @@ const CoinManager = () => {
 
                     {targetType === 'students' && (
                         <div>
-                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">O'quvchilarni tanlang (Multi-select)</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">O'quvchilarni tanlang (Multi-select)</label>
                             <select
                                 multiple
                                 required
@@ -273,50 +256,52 @@ const CoinManager = () => {
                                     ...formData,
                                     targetIds: Array.from(e.target.selectedOptions, option => option.value)
                                 })}
-                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all min-h-[150px]"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-medium min-h-[120px] cursor-pointer"
                             >
                                 {students.map(s => (
                                     <option key={s._id} value={s._id}>{s.ism}</option>
                                 ))}
                             </select>
-                            <p className="text-[10px] text-gray-400 mt-2 italic px-1">* Bir nechta tanlash uchun Ctrl (Windows) yoki Command (Mac) bosing</p>
+                            <span className="block text-[10px] text-zinc-400 mt-2 italic px-1">* Bir nechta tanlash uchun Ctrl (Windows) yoki Command (Mac) bosing</span>
                         </div>
                     )}
 
                     <div className="grid grid-cols-1 gap-4">
                         <div>
-                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Coin Miqdori</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Coin miqdori</label>
                             <input
                                 type="number"
                                 required
                                 min="1"
                                 value={formData.amount}
                                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-xl font-black text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all text-center"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-bold"
                                 placeholder="Masalan: 50"
                             />
                         </div>
                         <div>
-                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Sabab/Izoh</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Sabab/Izoh</label>
                             <input
                                 type="text"
                                 required
                                 value={formData.reason}
                                 onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                                className="w-full bg-gray-50 dark:bg-dark-900/50 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold"
                                 placeholder="Masalan: Faol qatnashgani uchun"
                             />
                         </div>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={submitLoading}
-                        className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-xs text-white shadow-xl transition-all active:scale-95 disabled:opacity-50
-                            ${formData.action === 'plus' ? 'bg-emerald-500 shadow-emerald-500/20' : 'bg-red-500 shadow-red-500/20'}`}
-                    >
-                        {submitLoading ? 'Bajarilmoqda...' : (formData.action === 'plus' ? 'Coin Berish' : 'Coin Olib Tashlash')}
-                    </button>
+                    <div className="flex gap-3 justify-end pt-4 border-t border-gray-100 dark:border-zinc-900/60">
+                        <button type="button" onClick={() => setIsUpdateModalOpen(false)} className="btn-secondary">Bekor qilish</button>
+                        <button
+                            type="submit"
+                            disabled={submitLoading}
+                            className={`btn-primary ${formData.action === 'plus' ? 'bg-[#00C853] hover:bg-[#00B04A]' : 'bg-[#FF3B30] hover:bg-[#E03026]'}`}
+                        >
+                            {submitLoading ? 'Bajarilmoqda...' : (formData.action === 'plus' ? 'Coin Berish' : 'Coin Olib Tashlash')}
+                        </button>
+                    </div>
                 </form>
             </Modal>
         </div>

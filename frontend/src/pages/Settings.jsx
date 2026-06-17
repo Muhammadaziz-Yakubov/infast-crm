@@ -28,7 +28,7 @@ const Settings = () => {
                 currentPassword: form.currentPassword,
                 newPassword: form.newPassword
             });
-            toast.success("Parol muvaffaqiyatli o'zgartirildi ✨");
+            toast.success("Parol muvaffaqiyatli o'zgartirildi");
             setForm({
                 currentPassword: '',
                 newPassword: '',
@@ -42,105 +42,98 @@ const Settings = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-10 animate-fade-in pb-24 lg:pb-10">
-            <div className="space-y-2 text-center md:text-left">
-                <h1 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">
-                    Tizim <span className="text-primary-500">Sozlamalari</span>
-                </h1>
-                <p className="text-sm font-medium text-gray-500">Xavfsizlik va parollarni boshqarish</p>
+        <div className="max-w-2xl mx-auto space-y-6 animate-fade-in pb-10">
+            <div>
+                <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Tizim sozlamalari</h1>
+                <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">Xavfsizlik va parollarni boshqarish</p>
             </div>
 
-            <div className="bg-white dark:bg-dark-800 rounded-[3rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-2xl group transition-all duration-500 hover:shadow-primary-500/10">
-                <div className="bg-gray-900 p-10 md:p-14 relative overflow-hidden flex flex-col items-center">
-                    <div className="relative z-10 w-24 h-24 rounded-[2rem] bg-gradient-to-br from-primary-500 to-orange-600 flex items-center justify-center text-white shadow-3xl transform group-hover:scale-110 transition-transform duration-500">
-                        <HiOutlineShieldCheck className="w-12 h-12" />
+            <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden">
+                <div className="p-6 border-b border-gray-150 dark:border-zinc-900/60 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#0066FF]/10 text-[#0066FF] flex items-center justify-center border border-[#0066FF]/20">
+                        <HiOutlineShieldCheck className="w-5 h-5" />
                     </div>
-                    
-                    <div className="mt-6 text-center z-10">
-                        <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Xavfsizlik Markazi</h2>
-                        <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1 opacity-60">Account Security Status: High</p>
+                    <div>
+                        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Xavfsizlik markazi</h2>
+                        <p className="text-[10px] text-zinc-400 mt-0.5">Hisobingiz xavfsizlik holati: Yuqori</p>
                     </div>
-
-                    {/* Decorative gradients */}
-                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary-600/20 rounded-full blur-[100px] pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-primary-900/40 rounded-full blur-[100px] pointer-events-none" />
                 </div>
 
-                <div className="p-8 md:p-12">
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="space-y-6">
-                            <div className="space-y-3">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-2 italic">Joriy Parol</label>
-                                <div className="relative group/input">
-                                    <HiOutlineKey className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/input:text-primary-500 transition-colors w-5 h-5" />
+                <div className="p-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Joriy parol</label>
+                            <div className="relative">
+                                <HiOutlineKey className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
+                                <input
+                                    type="password"
+                                    required
+                                    value={form.currentPassword}
+                                    onChange={e => setForm({ ...form, currentPassword: e.target.value })}
+                                    placeholder="Eski parolingizni kiriting"
+                                    className="w-full pl-9 pr-4 py-2 text-sm rounded-lg bg-gray-50 dark:bg-zinc-900/60 border border-gray-250 dark:border-zinc-800 outline-none focus:border-[#0066FF] text-gray-950 dark:text-white transition-all"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Yangi parol</label>
+                                <div className="relative">
+                                    <HiOutlineLockClosed className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
                                     <input
                                         type="password"
                                         required
-                                        value={form.currentPassword}
-                                        onChange={e => setForm({ ...form, currentPassword: e.target.value })}
-                                        placeholder="Eski parolingizni kiriting"
-                                        className="w-full pl-16 pr-8 py-5 rounded-[1.5rem] bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none font-bold text-gray-900 dark:text-white transition-all"
+                                        value={form.newPassword}
+                                        onChange={e => setForm({ ...form, newPassword: e.target.value })}
+                                        placeholder="Yangi parol"
+                                        className="w-full pl-9 pr-4 py-2 text-sm rounded-lg bg-gray-50 dark:bg-zinc-900/60 border border-gray-250 dark:border-zinc-800 outline-none focus:border-[#0066FF] text-gray-950 dark:text-white transition-all"
                                     />
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-2 italic">Yangi Parol</label>
-                                    <div className="relative group/input">
-                                        <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/input:text-primary-500 transition-colors w-5 h-5" />
-                                        <input
-                                            type="password"
-                                            required
-                                            value={form.newPassword}
-                                            onChange={e => setForm({ ...form, newPassword: e.target.value })}
-                                            placeholder="Yangi parol"
-                                            className="w-full pl-16 pr-8 py-5 rounded-[1.5rem] bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none font-bold text-gray-900 dark:text-white transition-all"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-2 italic">Tasdiqlash</label>
-                                    <div className="relative group/input">
-                                        <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/input:text-primary-500 transition-colors w-5 h-5" />
-                                        <input
-                                            type="password"
-                                            required
-                                            value={form.confirmPassword}
-                                            onChange={e => setForm({ ...form, confirmPassword: e.target.value })}
-                                            placeholder="Parolni takrorlang"
-                                            className="w-full pl-16 pr-8 py-5 rounded-[1.5rem] bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none font-bold text-gray-900 dark:text-white transition-all"
-                                        />
-                                    </div>
+                            <div>
+                                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Parolni tasdiqlash</label>
+                                <div className="relative">
+                                    <HiOutlineLockClosed className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
+                                    <input
+                                        type="password"
+                                        required
+                                        value={form.confirmPassword}
+                                        onChange={e => setForm({ ...form, confirmPassword: e.target.value })}
+                                        placeholder="Parolni takrorlang"
+                                        className="w-full pl-9 pr-4 py-2 text-sm rounded-lg bg-gray-50 dark:bg-zinc-900/60 border border-gray-250 dark:border-zinc-800 outline-none focus:border-[#0066FF] text-gray-950 dark:text-white transition-all"
+                                    />
                                 </div>
                             </div>
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full py-5 rounded-[1.5rem] bg-gray-900 dark:bg-primary-600 text-white font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-4 active:scale-95 transition-all shadow-2xl shadow-primary-500/20 italic ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-                        >
-                            {loading ? (
-                                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                            ) : (
-                                <HiOutlineShieldCheck className="w-5 h-5" />
-                            )}
-                            Parolni yangilash
-                        </button>
+                        <div className="pt-4 border-t border-gray-100 dark:border-zinc-900/60 flex justify-end">
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="btn-primary flex items-center justify-center gap-2"
+                            >
+                                {loading ? (
+                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                    <HiOutlineShieldCheck className="w-4 h-4" />
+                                )}
+                                <span>Parolni yangilash</span>
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
 
             {/* Hint Box */}
-            <div className="p-8 rounded-[2rem] bg-amber-500/10 border border-amber-500/20 flex gap-6 items-start">
-                <div className="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 animate-pulse">
-                    <HiOutlineLockClosed className="w-6 h-6" />
+            <div className="p-4 rounded-xl bg-[#FF9500]/5 border border-[#FF9500]/20 flex gap-3 items-start">
+                <div className="w-8 h-8 rounded-lg bg-[#FF9500]/10 text-[#FF9500] flex items-center justify-center flex-shrink-0 border border-[#FF9500]/20">
+                    <HiOutlineLockClosed className="w-4.5 h-4.5" />
                 </div>
-                <div className="space-y-1">
-                    <h3 className="text-amber-900 dark:text-amber-400 font-black uppercase text-xs tracking-wider italic">Xavfsizlik bo'yicha maslahat</h3>
-                    <p className="text-amber-800/70 dark:text-amber-400/60 text-[10px] font-medium leading-relaxed">
+                <div>
+                    <h3 className="text-xs font-semibold text-gray-900 dark:text-zinc-300">Xavfsizlik bo'yicha maslahat</h3>
+                    <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1 leading-relaxed">
                         Parolingizni muntazam ravishda o'zgartirib turish hisobingiz xavfsizligini oshiradi. Kuchli paroldan foydalaning (harflar, sonlar va maxsus belgilar aralashmasi).
                     </p>
                 </div>

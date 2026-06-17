@@ -6,8 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
-    HiOutlineBookOpen, HiOutlineCurrencyDollar, HiOutlineClock,
-    HiOutlineSparkles
+    HiOutlineBookOpen, HiOutlineClock, HiOutlineSparkles
 } from 'react-icons/hi';
 
 const Courses = () => {
@@ -62,10 +61,10 @@ const Courses = () => {
             const submitData = { ...form, narx: Number(form.narx) };
             if (selectedCourse) {
                 await courseAPI.update(selectedCourse._id, submitData);
-                toast.success("Kurs yangilandi ✨");
+                toast.success("Kurs yangilandi");
             } else {
                 await courseAPI.create(submitData);
-                toast.success("Kurs qo'shildi 🚀");
+                toast.success("Kurs qo'shildi");
             }
             setModalOpen(false);
             fetchCourses();
@@ -77,7 +76,7 @@ const Courses = () => {
     const handleDelete = async () => {
         try {
             await courseAPI.delete(deleteId);
-            toast.success("Kurs o'chirildi 👋");
+            toast.success("Kurs o'chirildi");
             setConfirmOpen(false);
             fetchCourses();
         } catch (err) {
@@ -93,142 +92,135 @@ const Courses = () => {
         c.nomi?.toLowerCase().includes(search.toLowerCase())
     );
 
-    const cardColors = [
-        { gradient: 'from-blue-500 to-indigo-600', shadow: 'shadow-blue-500/20', bg: 'bg-blue-50/50 dark:bg-blue-900/10' },
-        { gradient: 'from-emerald-500 to-teal-600', shadow: 'shadow-emerald-500/20', bg: 'bg-emerald-50/50 dark:bg-emerald-900/10' },
-        { gradient: 'from-purple-500 to-pink-600', shadow: 'shadow-purple-500/20', bg: 'bg-purple-50/50 dark:bg-purple-900/10' },
-        { gradient: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/20', bg: 'bg-amber-50/50 dark:bg-amber-900/10' },
-    ];
-
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+        <div className="space-y-6 animate-fade-in max-w-7xl mx-auto pb-10">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white uppercase italic">
-                        O'quv <span className="text-primary-500">Kurslari</span>
-                    </h1>
-                    <p className="text-gray-500 dark:text-gray-400 font-medium">Markazda mavjud bo'lgan barcha ta'lim yo'nalishlari</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">O'quv kurslari</h1>
+                    <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1">Markazda mavjud bo'lgan barcha ta'lim yo'nalishlari</p>
                 </div>
                 <button
                     onClick={openAddModal}
-                    className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gray-900 dark:bg-primary-600 
-                        text-white font-black text-sm shadow-xl shadow-primary-500/20 transition-all hover:-translate-y-1 active:scale-95"
+                    className="btn-primary flex items-center gap-2"
                 >
-                    <HiOutlinePlus className="w-5 h-5" />
+                    <HiOutlinePlus className="w-4 h-4" />
                     <span>Yangi kurs qo'shish</span>
                 </button>
             </div>
 
-            {/* Premium Search */}
-            <div className="relative group">
+            {/* Search */}
+            <div className="relative">
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full px-12 py-5 rounded-3xl bg-white dark:bg-dark-800 border-2 border-transparent 
-                        focus:border-primary-500 shadow-sm focus:shadow-xl outline-none transition-all font-bold"
+                    className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 outline-none focus:border-[#0066FF] transition-all text-gray-800 dark:text-white"
                     placeholder="Kerakli kursni qidiring..."
                 />
-                <HiOutlineSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 w-6 h-6" />
+                <HiOutlineSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
             </div>
 
             {/* Dynamic Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredCourses.length === 0 ? (
-                    <div className="col-span-full py-32 text-center opacity-30">
-                        <HiOutlineBookOpen className="w-20 h-20 mx-auto mb-4" />
-                        <h3 className="text-2xl font-black">Hali kurslar yo'q</h3>
+                    <div className="col-span-full py-24 text-center text-zinc-400">
+                        <HiOutlineBookOpen className="w-12 h-12 mx-auto mb-3" />
+                        <h3 className="text-sm font-medium">Hali kurslar qo'shilmagan</h3>
                     </div>
                 ) : (
-                    filteredCourses.map((c, index) => {
-                        const style = cardColors[index % cardColors.length];
+                    filteredCourses.map((c) => {
                         return (
                             <div
                                 key={c._id}
-                                className="group relative bg-white dark:bg-dark-800 rounded-[2.5rem] p-7 border border-gray-100 dark:border-white/5 
-                                    shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+                                className="bg-white dark:bg-[#111111] rounded-xl p-5 border border-gray-100 dark:border-zinc-900/60 flex flex-col justify-between"
                             >
-                                <div className="relative z-10 flex flex-col h-full">
-                                    <div className="flex items-start justify-between mb-6">
-                                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${style.gradient} 
-                                            flex items-center justify-center text-white shadow-lg ${style.shadow} group-hover:rotate-6 transition-transform`}>
-                                            <HiOutlineSparkles className="w-8 h-8" />
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="w-8 h-8 rounded-lg bg-[#0066FF]/10 text-[#0066FF] flex items-center justify-center border border-[#0066FF]/20">
+                                            <HiOutlineSparkles className="w-4 h-4" />
                                         </div>
-                                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${c.holati === 'faol' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-red-500/10 text-red-600'
-                                            }`}>
+                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border ${
+                                            c.holati === 'faol'
+                                                ? 'bg-[#00C853]/10 text-[#00C853] border-[#00C853]/20'
+                                                : 'bg-[#FF3B30]/10 text-[#FF3B30] border-[#FF3B30]/20'
+                                        }`}>
                                             {c.holati}
-                                        </div>
+                                        </span>
                                     </div>
 
-                                    <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 leading-tight uppercase italic">{c.nomi}</h3>
-                                    <p className="text-sm text-gray-400 font-medium mb-8 line-clamp-2 h-10">{c.tavsif || "Kurs haqida qisqacha ma'lumot kiritilmagan."}</p>
-
-                                    <div className="space-y-3 mt-auto">
-                                        <div className={`flex items-center justify-between p-4 rounded-2xl ${style.bg}`}>
-                                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Oylik to'lov</span>
-                                            <span className="font-black text-gray-900 dark:text-white">{formatMoney(c.narx)}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-xs font-black text-gray-500 px-2 uppercase tracking-tight">
-                                            <HiOutlineClock className="w-4 h-4 text-primary-500" />
-                                            Davomiyligi: <span className="text-gray-900 dark:text-white">{c.davomiyligi || 'Nomalum'}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center justify-end gap-2 mt-8 pt-6 border-t border-gray-50 dark:border-dark-700/50 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                                        <button
-                                            onClick={() => openEditModal(c)}
-                                            className="p-3 rounded-xl bg-gray-50 dark:bg-dark-900 text-blue-500 hover:bg-blue-500 hover:text-white transition-all shadow-sm"
-                                        >
-                                            <HiOutlinePencil className="w-5 h-5" />
-                                        </button>
-                                        <button
-                                            onClick={() => { setDeleteId(c._id); setConfirmOpen(true); }}
-                                            className="p-3 rounded-xl bg-gray-50 dark:bg-dark-900 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
-                                        >
-                                            <HiOutlineTrash className="w-5 h-5" />
-                                        </button>
+                                    <div>
+                                        <h3 className="text-base font-semibold text-gray-900 dark:text-white">{c.nomi}</h3>
+                                        <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1 line-clamp-2 h-8">
+                                            {c.tavsif || "Kurs haqida qisqacha ma'lumot kiritilmagan."}
+                                        </p>
                                     </div>
                                 </div>
-                                <div className={`absolute -right-8 -bottom-8 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br ${style.gradient}`} />
+
+                                <div className="mt-6 space-y-4">
+                                    <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                                        <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Oylik to'lov</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white">{formatMoney(c.narx)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs text-zinc-500">
+                                        <span className="flex items-center gap-1.5">
+                                            <HiOutlineClock className="w-4 h-4 text-[#0066FF]" />
+                                            <span>Davomiyligi: <strong className="text-gray-800 dark:text-zinc-200">{c.davomiyligi || 'Nomalum'}</strong></span>
+                                        </span>
+                                        <div className="flex items-center gap-1.5">
+                                            <button
+                                                onClick={() => openEditModal(c)}
+                                                className="p-1 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-[#0066FF] transition-colors"
+                                            >
+                                                <HiOutlinePencil className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => { setDeleteId(c._id); setConfirmOpen(true); }}
+                                                className="p-1 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-[#FF3B30] transition-colors"
+                                            >
+                                                <HiOutlineTrash className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         );
                     })
                 )}
             </div>
 
-            {/* Modal - Modernized */}
-            <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedCourse ? "Kursni yangilash" : "Yangi kurs"} size="md">
+            {/* Modal */}
+            <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedCourse ? "Kursni tahrirlash" : "Yangi kurs qo'shish"} size="md">
                 <form onSubmit={handleSubmit} className="space-y-6 py-2">
                     <div className="space-y-4">
                         <div>
-                            <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Kurs nomi *</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Kurs nomi *</label>
                             <input type="text" value={form.nomi} onChange={e => setForm({ ...form, nomi: e.target.value })}
-                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none transition-all font-bold" placeholder="Masalan: Graphic Design" required />
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white" placeholder="Masalan: Graphic Design" required />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Narxi (so'm) *</label>
+                                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Narxi (so'm) *</label>
                                 <input type="number" value={form.narx} onChange={e => setForm({ ...form, narx: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none transition-all font-black" placeholder="700000" required />
+                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-bold text-gray-800 dark:text-white" placeholder="700000" required />
                             </div>
                             <div>
-                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Davomiyligi</label>
+                                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Davomiyligi</label>
                                 <input type="text" value={form.davomiyligi} onChange={e => setForm({ ...form, davomiyligi: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none transition-all font-bold" placeholder="6 oy" />
+                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white" placeholder="6 oy" />
                             </div>
                         </div>
                         <div>
-                            <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Tavsif</label>
+                            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Tavsif</label>
                             <textarea value={form.tavsif} onChange={e => setForm({ ...form, tavsif: e.target.value })}
-                                className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-dark-900 border-2 border-transparent focus:border-primary-500 outline-none transition-all font-bold resize-none" rows="3" placeholder="Kurs haqida batafsil..." />
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white resize-none" rows="3" placeholder="Kurs haqida batafsil..." />
                         </div>
                     </div>
-                    <div className="flex gap-4 pt-4">
-                        <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-4 rounded-2xl font-black text-gray-500 bg-gray-100 transition-active active:scale-95">Bekor qilish</button>
-                        <button type="submit" className="flex-1 py-4 rounded-2xl font-black text-white bg-primary-600 shadow-xl active:scale-95 transition-all">
+                    <div className="flex gap-3 justify-end pt-4 border-t border-gray-100 dark:border-zinc-900/60">
+                        <button type="button" onClick={() => setModalOpen(false)} className="btn-secondary">Bekor qilish</button>
+                        <button type="submit" className="btn-primary">
                             {selectedCourse ? 'Saqlash' : "Yaratish"}
                         </button>
                     </div>

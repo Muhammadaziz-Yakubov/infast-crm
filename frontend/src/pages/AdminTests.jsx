@@ -3,9 +3,9 @@ import { testAPI, courseAPI, groupAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import {
     HiOutlineClipboardList, HiOutlinePlus, HiOutlinePencil, HiOutlineTrash,
-    HiOutlineDocumentDuplicate, HiOutlineEye, HiOutlineChartBar, HiOutlineCheckCircle,
+    HiOutlineDocumentDuplicate, HiOutlineChartBar, HiOutlineCheckCircle,
     HiOutlineXCircle, HiOutlineClock, HiOutlineUserGroup, HiOutlineBookOpen,
-    HiOutlineChevronLeft, HiOutlineSearch, HiOutlineFilter
+    HiOutlineChevronLeft, HiOutlineSearch, HiOutlineX
 } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
@@ -96,7 +96,6 @@ const AdminTests = () => {
         }
     }, [filterCourse, filterGroup, searchTerm]);
 
-    // Savol qo'shish modalda
     const addQuestion = () => {
         setForm({
             ...form,
@@ -112,7 +111,6 @@ const AdminTests = () => {
         });
     };
 
-    // Savolni o'chirish modalda
     const removeQuestion = (index) => {
         if (form.savollar.length === 1) {
             return toast.error('Testda kamida bitta savol bo\'lishi shart!');
@@ -121,35 +119,30 @@ const AdminTests = () => {
         setForm({ ...form, savollar: updated });
     };
 
-    // Savol matnini yangilash
     const handleQuestionChange = (index, value) => {
         const updated = [...form.savollar];
         updated[index].questionText = value;
         setForm({ ...form, savollar: updated });
     };
 
-    // Variantni yangilash
     const handleOptionChange = (qIndex, oIndex, value) => {
         const updated = [...form.savollar];
         updated[qIndex].options[oIndex] = value;
         setForm({ ...form, savollar: updated });
     };
 
-    // To'g'ri variantni tanlash
     const handleCorrectOptionChange = (qIndex, value) => {
         const updated = [...form.savollar];
         updated[qIndex].correctOption = parseInt(value);
         setForm({ ...form, savollar: updated });
     };
 
-    // Savol ballini o'zgartirish
     const handleScoreChange = (qIndex, value) => {
         const updated = [...form.savollar];
         updated[qIndex].score = parseInt(value) || 0;
         setForm({ ...form, savollar: updated });
     };
 
-    // Guruhlarni tanlashni boshqarish
     const handleGroupSelection = (groupId) => {
         const current = [...form.guruhlar];
         if (current.includes(groupId)) {
@@ -159,7 +152,6 @@ const AdminTests = () => {
         }
     };
 
-    // Yaratish modalini ochish
     const openCreateModal = () => {
         setModalMode('create');
         setEditingTestId(null);
@@ -183,12 +175,10 @@ const AdminTests = () => {
         setShowModal(true);
     };
 
-    // Tahrirlash modalini ochish
     const openEditModal = (test) => {
         setModalMode('edit');
         setEditingTestId(test._id);
         
-        // datetime-local input formati uchun sanalarni moslashtirish (YYYY-MM-DDThh:mm)
         const start = test.boshlanishVaqti ? new Date(test.boshlanishVaqti).toISOString().substring(0, 16) : '';
         const end = test.tugashVaqti ? new Date(test.tugashVaqti).toISOString().substring(0, 16) : '';
 
@@ -210,7 +200,6 @@ const AdminTests = () => {
         setShowModal(true);
     };
 
-    // Formani yuborish
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -218,7 +207,6 @@ const AdminTests = () => {
             return toast.error('Kamida bitta guruh tanlanishi shart!');
         }
 
-        // Savollar validatsiyasi
         for (let i = 0; i < form.savollar.length; i++) {
             const q = form.savollar[i];
             if (!q.questionText.trim()) {
@@ -246,7 +234,6 @@ const AdminTests = () => {
         }
     };
 
-    // O'chirish
     const handleDelete = async (id) => {
         if (window.confirm('Haqiqatdan ham ushbu testni va barcha o\'quvchi natijalarini o\'chirmoqchimisiz?')) {
             try {
@@ -259,7 +246,6 @@ const AdminTests = () => {
         }
     };
 
-    // Klonlash
     const handleClone = async (id) => {
         try {
             await testAPI.clone(id);
@@ -270,7 +256,6 @@ const AdminTests = () => {
         }
     };
 
-    // Natijalar ko'rinishiga o'tish
     const handleViewResults = async (testId) => {
         try {
             setView('results');
@@ -287,7 +272,6 @@ const AdminTests = () => {
         }
     };
 
-    // Sanani formatlash
     const formatDateTime = (dateStr) => {
         return new Date(dateStr).toLocaleString('uz-UZ', {
             month: 'short',
@@ -297,7 +281,6 @@ const AdminTests = () => {
         });
     };
 
-    // Statusga qarab rang va matn
     const getStatusBadge = (test) => {
         const now = new Date();
         const start = new Date(test.boshlanishVaqti);
@@ -305,28 +288,27 @@ const AdminTests = () => {
 
         if (now < start) {
             return (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-wider italic">
-                    <HiOutlineClock className="w-3.5 h-3.5" /> Rejalashtirilgan
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-semibold border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500">
+                    Kutilmoqda
                 </span>
             );
         } else if (now >= start && now < end) {
             return (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-black uppercase tracking-wider animate-pulse italic">
-                    <HiOutlineCheckCircle className="w-3.5 h-3.5" /> Faol
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-semibold border bg-[#00C853]/10 text-[#00C853] border-[#00C853]/20">
+                    Faol
                 </span>
             );
         } else {
             return (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-black uppercase tracking-wider italic">
-                    <HiOutlineXCircle className="w-3.5 h-3.5" /> Tugagan
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-semibold border bg-[#FF3B30]/10 text-[#FF3B30] border-[#FF3B30]/20">
+                    Tugagan
                 </span>
             );
         }
     };
 
-    if (loading) return <LoadingSpinner text="Testlar tizimi yuklanmoqda..." />;
+    if (loading) return <LoadingSpinner />;
 
-    // Filtrlanadigan natijalar
     const filteredResults = selectedTestResults?.results.filter(r => {
         const nameMatch = r.student?.ism.toLowerCase().includes(resultsSearch.toLowerCase());
         const groupMatch = resultsGroupFilter ? r.guruh?._id === resultsGroupFilter : true;
@@ -340,39 +322,36 @@ const AdminTests = () => {
     }) || [];
 
     return (
-        <div className="space-y-6 md:space-y-10 animate-fade-in max-w-7xl mx-auto pb-24 lg:pb-10 px-4 md:px-0">
-            
+        <div className="space-y-6 animate-fade-in max-w-7xl mx-auto pb-10">
             {/* Header section */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div className="space-y-2">
-                    {view === 'results' ? (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    {view === 'results' && (
                         <button
                             onClick={() => setView('list')}
-                            className="inline-flex items-center gap-2 text-sm font-black text-primary-500 hover:text-primary-600 dark:text-primary-400 uppercase tracking-widest italic"
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0066FF] hover:underline mb-2"
                         >
-                            <HiOutlineChevronLeft className="w-4 h-4" /> Testlar ro'yxatiga qaytish
+                            <HiOutlineChevronLeft className="w-4 h-4" />
+                            <span>Orqaga qaytish</span>
                         </button>
-                    ) : null}
-                    <h1 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">
-                        {view === 'list' ? (
-                            <>📚 Testlar <span className="text-primary-500">Boshqaruvi</span></>
-                        ) : (
-                            <>🏆 Test <span className="text-primary-500">Natijalari</span></>
-                        )}
+                    )}
+                    <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">
+                        {view === 'list' ? 'Testlar boshqaruvi' : 'Test natijalari'}
                     </h1>
-                    <p className="text-sm font-medium text-gray-500">
+                    <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">
                         {view === 'list' 
-                            ? "Kurslar va guruhlar bo'yicha testlarni rejalashtirish va boshqarish" 
-                            : `"${selectedTestResults?.testInfo.nomi}" testi bo'yicha batafsil statistika`}
+                            ? "Kurslar va guruhlar bo'yicha oraliq/yakuniy testlar" 
+                            : `"${selectedTestResults?.testInfo.nomi}" bo'yicha batafsil statistika`}
                     </p>
                 </div>
 
                 {view === 'list' && (
                     <button
                         onClick={openCreateModal}
-                        className="px-6 py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-primary-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 italic"
+                        className="btn-primary flex items-center gap-2"
                     >
-                        <HiOutlinePlus className="w-5 h-5" /> Yangi Test Yaratish
+                        <HiOutlinePlus className="w-4 h-4" />
+                        <span>Yangi test yaratish</span>
                     </button>
                 )}
             </div>
@@ -380,24 +359,23 @@ const AdminTests = () => {
             {view === 'list' ? (
                 <>
                     {/* Filters Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-dark-800 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60">
                         <div className="relative">
-                            <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <HiOutlineSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
                             <input
                                 type="text"
-                                placeholder="Test nomi bo'yicha qidirish..."
+                                placeholder="Qidirish..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 dark:focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all"
+                                className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold"
                             />
                         </div>
 
-                        <div className="relative">
-                            <HiOutlineBookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <div>
                             <select
                                 value={filterCourse}
                                 onChange={e => setFilterCourse(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all appearance-none"
+                                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold cursor-pointer"
                             >
                                 <option value="">Barcha kurslar</option>
                                 {courses.map(c => (
@@ -406,12 +384,11 @@ const AdminTests = () => {
                             </select>
                         </div>
 
-                        <div className="relative">
-                            <HiOutlineUserGroup className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <div>
                             <select
                                 value={filterGroup}
                                 onChange={e => setFilterGroup(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all appearance-none"
+                                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold cursor-pointer"
                             >
                                 <option value="">Barcha guruhlar</option>
                                 {groups.map(g => (
@@ -422,86 +399,86 @@ const AdminTests = () => {
                     </div>
 
                     {/* Tests List Card */}
-                    <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm">
+                    <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden">
                         <div className="overflow-x-auto">
-                            <table className="w-full border-collapse text-left">
+                            <table className="w-full text-left">
                                 <thead>
-                                    <tr className="bg-gray-50 dark:bg-dark-900 border-b border-gray-100 dark:border-white/5">
-                                        <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Test Nomi</th>
-                                        <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Kurs</th>
-                                        <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Guruh(lar)</th>
-                                        <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Savollar / Vaqt</th>
-                                        <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Muddati</th>
-                                        <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Status</th>
-                                        <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-wider italic text-center">Amallar</th>
+                                    <tr className="bg-gray-50/50 dark:bg-zinc-900/50 border-b border-gray-150 dark:border-zinc-900/60">
+                                        <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Test nomi</th>
+                                        <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Kurs</th>
+                                        <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Guruhlar</th>
+                                        <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Savollar / Vaqt</th>
+                                        <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Muddati</th>
+                                        <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider">Status</th>
+                                        <th className="px-6 py-4 text-xs font-medium text-zinc-400 uppercase tracking-wider text-right">Amal</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                                <tbody className="divide-y divide-gray-150 dark:divide-zinc-900/60">
                                     {tests.length === 0 ? (
                                         <tr>
-                                            <td colSpan="7" className="p-12 text-center text-sm font-bold text-gray-400 uppercase tracking-wider">
-                                                Testlar topilmadi. Yangi test yaratish uchun yuqoridagi tugmani bosing.
+                                            <td colSpan="7" className="px-6 py-12 text-center text-xs text-zinc-400 font-semibold">
+                                                Testlar topilmadi.
                                             </td>
                                         </tr>
                                     ) : (
                                         tests.map(test => (
-                                            <tr key={test._id} className="hover:bg-gray-50/50 dark:hover:bg-dark-900/30 transition-colors">
-                                                <td className="p-6">
-                                                    <p className="text-sm font-black text-gray-900 dark:text-white leading-tight">{test.nomi}</p>
-                                                    <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-tight">Urinishlar: {test.urinishlarSoni || 1}</p>
+                                            <tr key={test._id} className="hover:bg-gray-50/30 dark:hover:bg-zinc-900/20 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{test.nomi}</p>
+                                                    <span className="text-[10px] text-zinc-400 mt-1 block">Urinishlar: {test.urinishlarSoni || 1} marta</span>
                                                 </td>
-                                                <td className="p-6 text-sm font-bold text-gray-500 dark:text-gray-400">
-                                                    {test.kurs?.nomi || "Nomalum Kurs"}
+                                                <td className="px-6 py-4 text-xs font-semibold text-zinc-600 dark:text-zinc-350">
+                                                    {test.kurs?.nomi || "Yo'q"}
                                                 </td>
-                                                <td className="p-6">
+                                                <td className="px-6 py-4">
                                                     <div className="flex flex-wrap gap-1 max-w-[200px]">
                                                         {test.guruhlar?.map(g => (
-                                                            <span key={g._id} className="px-2 py-0.5 rounded bg-gray-100 dark:bg-dark-950 border border-gray-200 dark:border-white/5 text-[9px] font-black uppercase text-gray-600 dark:text-gray-300">
+                                                            <span key={g._id} className="px-1.5 py-0.5 rounded bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[9px] font-semibold text-zinc-600 dark:text-zinc-300">
                                                                 {g.nomi}
                                                             </span>
                                                         ))}
                                                     </div>
                                                 </td>
-                                                <td className="p-6">
-                                                    <p className="text-sm font-black text-gray-900 dark:text-white leading-tight">{test.savollar?.length || 0} ta savol</p>
-                                                    <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-tight">{test.vaqtLimiti} daqiqa limit</p>
+                                                <td className="px-6 py-4">
+                                                    <p className="text-xs font-bold text-gray-900 dark:text-white">{test.savollar?.length || 0} ta savol</p>
+                                                    <p className="text-[10px] text-zinc-400 mt-0.5">{test.vaqtLimiti} daqiqa</p>
                                                 </td>
-                                                <td className="p-6 text-xs font-bold text-gray-500 dark:text-gray-400">
-                                                    <div className="space-y-1">
-                                                        <p><span className="text-emerald-500 font-extrabold uppercase">B:</span> {formatDateTime(test.boshlanishVaqti)}</p>
-                                                        <p><span className="text-rose-500 font-extrabold uppercase">T:</span> {formatDateTime(test.tugashVaqti)}</p>
+                                                <td className="px-6 py-4 text-xs font-medium text-zinc-500">
+                                                    <div className="space-y-0.5">
+                                                        <p><span className="text-[#00C853] font-semibold">B:</span> {formatDateTime(test.boshlanishVaqti)}</p>
+                                                        <p><span className="text-[#FF3B30] font-semibold">T:</span> {formatDateTime(test.tugashVaqti)}</p>
                                                     </div>
                                                 </td>
-                                                <td className="p-6">
+                                                <td className="px-6 py-4">
                                                     {getStatusBadge(test)}
                                                 </td>
-                                                <td className="p-6">
-                                                    <div className="flex items-center justify-center gap-2">
+                                                <td className="px-6 py-4 text-right">
+                                                    <div className="flex items-center justify-end gap-1.5">
                                                         <button
                                                             onClick={() => handleViewResults(test._id)}
                                                             title="Natijalarni ko'rish"
-                                                            className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white transition-all"
+                                                            className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-[#0066FF] transition-all"
                                                         >
                                                             <HiOutlineChartBar className="w-4 h-4" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleClone(test._id)}
                                                             title="Testni nusxalash"
-                                                            className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all"
+                                                            className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-[#0066FF] transition-all"
                                                         >
                                                             <HiOutlineDocumentDuplicate className="w-4 h-4" />
                                                         </button>
                                                         <button
                                                             onClick={() => openEditModal(test)}
                                                             title="Tahrirlash"
-                                                            className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all"
+                                                            className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-[#0066FF] transition-all"
                                                         >
                                                             <HiOutlinePencil className="w-4 h-4" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(test._id)}
                                                             title="O'chirish"
-                                                            className="p-2.5 rounded-xl bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+                                                            className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-[#FF3B30] transition-all"
                                                         >
                                                             <HiOutlineTrash className="w-4 h-4" />
                                                         </button>
@@ -518,63 +495,52 @@ const AdminTests = () => {
             ) : (
                 /* Natijalar ko'rinishi */
                 resultsLoading ? (
-                    <LoadingSpinner text="Natijalar yuklanmoqda..." />
+                    <LoadingSpinner />
                 ) : (
                     selectedTestResults && (
-                        <div className="space-y-8 animate-fade-in">
+                        <div className="space-y-6 animate-fade-in">
                             {/* Analytics Grid */}
-                            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
-                                <div className="bg-white dark:bg-dark-800 rounded-3xl p-6 border border-gray-100 dark:border-white/5 shadow-sm text-center">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2 italic">Topshirganlar</p>
-                                    <h3 className="text-2xl md:text-4xl font-black text-emerald-500 tracking-tight leading-none">
-                                        {selectedTestResults.analytics.topshirganlarSoni}
-                                    </h3>
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60 text-center">
+                                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Topshirganlar</span>
+                                    <span className="text-xl font-bold text-[#00C853]">{selectedTestResults.analytics.topshirganlarSoni}</span>
                                 </div>
-                                <div className="bg-white dark:bg-dark-800 rounded-3xl p-6 border border-gray-100 dark:border-white/5 shadow-sm text-center">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2 italic">Topshirmaganlar</p>
-                                    <h3 className="text-2xl md:text-4xl font-black text-rose-500 tracking-tight leading-none">
-                                        {selectedTestResults.analytics.topshirmaganlarSoni}
-                                    </h3>
+                                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60 text-center">
+                                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Topshirmaganlar</span>
+                                    <span className="text-xl font-bold text-[#FF3B30]">{selectedTestResults.analytics.topshirmaganlarSoni}</span>
                                 </div>
-                                <div className="bg-white dark:bg-dark-800 rounded-3xl p-6 border border-gray-100 dark:border-white/5 shadow-sm text-center">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2 italic">O'rtacha natija</p>
-                                    <h3 className="text-2xl md:text-4xl font-black text-primary-500 tracking-tight leading-none">
-                                        {selectedTestResults.analytics.ortachaFoiz}%
-                                    </h3>
+                                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60 text-center">
+                                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">O'rtacha foiz</span>
+                                    <span className="text-xl font-bold text-[#0066FF]">{selectedTestResults.analytics.ortachaFoiz}%</span>
                                 </div>
-                                <div className="bg-white dark:bg-dark-800 rounded-3xl p-6 border border-gray-100 dark:border-white/5 shadow-sm text-center">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2 italic">Eng yuqori ball</p>
-                                    <h3 className="text-2xl md:text-4xl font-black text-amber-500 tracking-tight leading-none">
-                                        {selectedTestResults.analytics.engYuqoriBall}
-                                    </h3>
+                                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60 text-center">
+                                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Eng yuqori ball</span>
+                                    <span className="text-xl font-bold text-[#FF9500]">{selectedTestResults.analytics.engYuqoriBall}</span>
                                 </div>
-                                <div className="bg-white dark:bg-dark-800 rounded-3xl p-6 border border-gray-100 dark:border-white/5 shadow-sm text-center col-span-2 lg:col-span-1">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2 italic">Eng past ball</p>
-                                    <h3 className="text-2xl md:text-4xl font-black text-gray-600 dark:text-gray-400 tracking-tight leading-none">
-                                        {selectedTestResults.analytics.engPastBall}
-                                    </h3>
+                                <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60 text-center col-span-2 md:col-span-1">
+                                    <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block mb-1">Eng past ball</span>
+                                    <span className="text-xl font-bold text-zinc-500">{selectedTestResults.analytics.engPastBall}</span>
                                 </div>
                             </div>
 
                             {/* Natijalar filtri */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-dark-800 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-[#111111] p-4 rounded-xl border border-gray-150 dark:border-zinc-900/60">
                                 <div className="relative">
-                                    <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                    <HiOutlineSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
                                     <input
                                         type="text"
-                                        placeholder="O'quvchi ismi bo'yicha qidirish..."
+                                        placeholder="O'quvchi ismi..."
                                         value={resultsSearch}
                                         onChange={e => setResultsSearch(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 dark:focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all"
+                                        className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold"
                                     />
                                 </div>
 
-                                <div className="relative">
-                                    <HiOutlineUserGroup className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <div>
                                     <select
                                         value={resultsGroupFilter}
                                         onChange={e => setResultsGroupFilter(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all appearance-none"
+                                        className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold cursor-pointer"
                                     >
                                         <option value="">Barcha guruhlar</option>
                                         {groups.map(g => (
@@ -585,47 +551,47 @@ const AdminTests = () => {
                             </div>
 
                             {/* Tables section */}
-                            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 {/* Topshirganlar */}
-                                <div className="xl:col-span-2 bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm flex flex-col">
-                                    <div className="p-6 border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-dark-900/30">
-                                        <h3 className="text-md font-black text-gray-900 dark:text-white uppercase tracking-wider italic">Topshirganlar ({filteredResults.length})</h3>
+                                <div className="lg:col-span-2 bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden">
+                                    <div className="p-4 border-b border-gray-150 dark:border-zinc-900/60 bg-gray-50/30 dark:bg-zinc-900/10">
+                                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Topshirganlar ({filteredResults.length})</h3>
                                     </div>
-                                    <div className="overflow-x-auto flex-1">
-                                        <table className="w-full border-collapse text-left">
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left">
                                             <thead>
-                                                <tr className="bg-gray-50 dark:bg-dark-900 border-b border-gray-100 dark:border-white/5">
-                                                    <th className="p-4 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">O'quvchi</th>
-                                                    <th className="p-4 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Guruh</th>
-                                                    <th className="p-4 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Ball / Foiz</th>
-                                                    <th className="p-4 text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Topshirgan Vaqt</th>
+                                                <tr className="bg-gray-50/50 dark:bg-zinc-900/50 border-b border-gray-150 dark:border-zinc-900/60">
+                                                    <th className="px-4 py-3 text-xs font-medium text-zinc-400 uppercase tracking-wider">O'quvchi</th>
+                                                    <th className="px-4 py-3 text-xs font-medium text-zinc-400 uppercase tracking-wider">Guruh</th>
+                                                    <th className="px-4 py-3 text-xs font-medium text-zinc-400 uppercase tracking-wider">Ball / Foiz</th>
+                                                    <th className="px-4 py-3 text-xs font-medium text-zinc-400 uppercase tracking-wider">Sana</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                                            <tbody className="divide-y divide-gray-150 dark:divide-zinc-900/60">
                                                 {filteredResults.length === 0 ? (
                                                     <tr>
-                                                        <td colSpan="4" className="p-10 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Topshirganlar topilmadi.</td>
+                                                        <td colSpan="4" className="px-4 py-8 text-center text-xs text-zinc-400 font-semibold">Topshirganlar topilmadi.</td>
                                                     </tr>
                                                 ) : (
                                                     filteredResults.map(r => (
-                                                        <tr key={r._id} className="hover:bg-gray-50/50 dark:hover:bg-dark-900/30 transition-colors">
-                                                            <td className="p-4">
-                                                                <p className="text-sm font-black text-gray-900 dark:text-white">{r.student?.ism}</p>
-                                                                <p className="text-[9px] font-bold text-gray-400 font-mono mt-0.5 uppercase">ID: {r.student?.username}</p>
+                                                        <tr key={r._id} className="hover:bg-gray-50/30 dark:hover:bg-zinc-900/20 transition-colors">
+                                                            <td className="px-4 py-3">
+                                                                <p className="text-sm font-semibold text-gray-900 dark:text-white">{r.student?.ism}</p>
+                                                                <span className="text-[10px] text-zinc-400 mt-0.5 block">ID: {r.student?.username}</span>
                                                             </td>
-                                                            <td className="p-4 text-xs font-bold text-gray-500">
-                                                                {r.guruh?.nomi || 'Nomalum guruh'}
+                                                            <td className="px-4 py-3 text-xs text-zinc-500 font-medium">
+                                                                {r.guruh?.nomi || 'Yo\'q'}
                                                             </td>
-                                                            <td className="p-4">
-                                                                <p className="text-sm font-black text-gray-900 dark:text-white leading-none">{r.score} / {r.totalScore} ball</p>
-                                                                <div className="flex items-center gap-1.5 mt-1.5">
-                                                                    <div className="w-16 h-1.5 bg-gray-100 dark:bg-dark-950 rounded-full overflow-hidden">
-                                                                        <div className="h-full bg-primary-500 rounded-full" style={{ width: `${r.percentage}%` }}></div>
+                                                            <td className="px-4 py-3">
+                                                                <p className="text-xs font-bold text-gray-900 dark:text-white leading-none">{r.score} / {r.totalScore} ball</p>
+                                                                <div className="flex items-center gap-2 mt-1">
+                                                                    <div className="w-16 h-1 bg-zinc-100 dark:bg-zinc-900 rounded-full overflow-hidden">
+                                                                        <div className="h-full bg-[#0066FF] rounded-full" style={{ width: `${r.percentage}%` }}></div>
                                                                     </div>
-                                                                    <span className="text-[10px] font-black text-primary-500">{r.percentage}%</span>
+                                                                    <span className="text-[10px] font-bold text-[#0066FF]">{r.percentage}%</span>
                                                                 </div>
                                                             </td>
-                                                            <td className="p-4 text-xs font-bold text-gray-400">
+                                                            <td className="px-4 py-3 text-xs text-zinc-400">
                                                                 {formatDateTime(r.completedAt)}
                                                             </td>
                                                         </tr>
@@ -637,22 +603,22 @@ const AdminTests = () => {
                                 </div>
 
                                 {/* Topshirmaganlar */}
-                                <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm flex flex-col">
-                                    <div className="p-6 border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-dark-900/30">
-                                        <h3 className="text-md font-black text-gray-900 dark:text-white uppercase tracking-wider italic">Topshirmaganlar ({filteredNonSubmitters.length})</h3>
+                                <div className="bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 overflow-hidden flex flex-col">
+                                    <div className="p-4 border-b border-gray-150 dark:border-zinc-900/60 bg-gray-50/30 dark:bg-zinc-900/10">
+                                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Topshirmaganlar ({filteredNonSubmitters.length})</h3>
                                     </div>
-                                    <div className="p-4 space-y-3 flex-1 overflow-y-auto max-h-[450px] custom-scrollbar">
+                                    <div className="p-4 space-y-3 flex-1 overflow-y-auto max-h-[400px]">
                                         {filteredNonSubmitters.length === 0 ? (
-                                            <p className="p-8 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Topshirmaganlar yo'q, hamma topshirgan! 🎉</p>
+                                            <p className="py-8 text-center text-xs text-zinc-400 font-semibold">Topshirmaganlar yo'q! 🎉</p>
                                         ) : (
                                             filteredNonSubmitters.map(s => (
-                                                <div key={s._id} className="p-4 rounded-2xl bg-gray-50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5">
-                                                    <p className="text-sm font-black text-gray-900 dark:text-white line-clamp-1">{s.ism}</p>
+                                                <div key={s._id} className="p-3.5 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                                                    <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">{s.ism}</p>
                                                     <div className="flex items-center justify-between mt-2">
-                                                        <span className="px-2 py-0.5 rounded bg-gray-200 dark:bg-dark-950 text-[9px] font-black uppercase text-gray-600 dark:text-gray-300">
+                                                        <span className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-[9px] font-semibold text-zinc-600 dark:text-zinc-350">
                                                             {s.guruh?.nomi}
                                                         </span>
-                                                        <a href={`tel:${s.telefon}`} className="text-[10px] font-black text-primary-500 uppercase tracking-widest italic font-mono">{s.telefon}</a>
+                                                        <a href={`tel:${s.telefon}`} className="text-[10px] font-semibold text-[#0066FF]">{s.telefon}</a>
                                                     </div>
                                                 </div>
                                             ))
@@ -667,42 +633,42 @@ const AdminTests = () => {
 
             {/* Test Yaratish / Tahrirlash Modali */}
             {showModal && (
-                <div className="fixed inset-0 z-[100] flex items-start justify-center py-6 px-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-                    <div className="bg-white dark:bg-dark-800 w-full max-w-4xl rounded-[2.5rem] shadow-3xl overflow-hidden border border-gray-100 dark:border-white/5 my-auto flex flex-col animate-scale-up">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+                    <div className="bg-white dark:bg-[#111111] w-full max-w-4xl rounded-xl shadow-xl overflow-hidden border border-gray-100 dark:border-zinc-900/60 flex flex-col max-h-[90vh]">
                         {/* Modal Header */}
-                        <div className="p-6 md:p-8 border-b border-gray-100 dark:border-white/5 flex items-center justify-between bg-gray-900 text-white">
-                            <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tight">
-                                {modalMode === 'create' ? '📚 Yangi Test Yaratish' : '📝 Testni Tahrirlash'}
+                        <div className="p-4 border-b border-gray-150 dark:border-zinc-900/60 flex items-center justify-between">
+                            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+                                {modalMode === 'create' ? 'Yangi test yaratish' : 'Testni tahrirlash'}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all"
+                                className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-zinc-850 text-zinc-400 hover:text-zinc-600"
                             >
-                                <HiOutlineXCircle className="w-6 h-6" />
+                                <HiOutlineX className="w-5 h-5" />
                             </button>
                         </div>
 
                         {/* Modal Body */}
-                        <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6 overflow-y-auto flex-1 custom-scrollbar">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Test Nomi</label>
+                        <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto flex-1 custom-scrollbar">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Test nomi</label>
                                     <input
                                         type="text"
                                         required
                                         value={form.nomi}
                                         onChange={e => setForm({ ...form, nomi: e.target.value })}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all"
-                                        placeholder="Masalan: JavaScript Oraliq Nazorat"
+                                        className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold"
+                                        placeholder="Masalan: HTML & CSS imtihoni"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Kurs tanlang</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Kursni tanlang</label>
                                     <select
                                         value={form.kurs}
                                         onChange={e => setForm({ ...form, kurs: e.target.value })}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all appearance-none"
+                                        className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-medium cursor-pointer"
                                     >
                                         {courses.map(c => (
                                             <option key={c._id} value={c._id}>{c.nomi}</option>
@@ -710,9 +676,9 @@ const AdminTests = () => {
                                     </select>
                                 </div>
 
-                                <div className="space-y-2 md:col-span-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Guruhlarni belgilang (ko'p tanlov)</label>
-                                    <div className="flex flex-wrap gap-2 p-4 bg-gray-50 dark:bg-dark-900 rounded-2xl border border-gray-100 dark:border-white/5 max-h-[120px] overflow-y-auto">
+                                <div className="space-y-1 md:col-span-2">
+                                    <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Guruhlarni tanlang</label>
+                                    <div className="flex flex-wrap gap-1.5 p-3 bg-gray-50 dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 max-h-[100px] overflow-y-auto">
                                         {groups.map(g => {
                                             const isSelected = form.guruhlar.includes(g._id);
                                             return (
@@ -720,7 +686,7 @@ const AdminTests = () => {
                                                     type="button"
                                                     key={g._id}
                                                     onClick={() => handleGroupSelection(g._id)}
-                                                    className={`px-3 py-1.5 rounded-xl border text-xs font-black uppercase tracking-wider transition-all ${isSelected ? 'bg-primary-500 text-white border-primary-500 shadow-md' : 'bg-white dark:bg-dark-800 border-gray-200 dark:border-white/5 text-gray-600 dark:text-gray-300'}`}
+                                                    className={`px-2.5 py-1 rounded text-xs font-semibold border transition-all ${isSelected ? 'bg-[#0066FF] text-white border-[#0066FF]' : 'bg-white dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'}`}
                                                 >
                                                     {g.nomi}
                                                 </button>
@@ -729,117 +695,117 @@ const AdminTests = () => {
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Vaqt limiti (Daqiqada)</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Vaqt limiti (Daqiqada)</label>
                                     <input
                                         type="number"
                                         required
                                         min="1"
                                         value={form.vaqtLimiti}
                                         onChange={e => setForm({ ...form, vaqtLimiti: parseInt(e.target.value) || 0 })}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all"
+                                        className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-bold"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Urinishlar soni</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Urinishlar soni</label>
                                     <input
                                         type="number"
                                         required
                                         min="1"
                                         value={form.urinishlarSoni}
                                         onChange={e => setForm({ ...form, urinishlarSoni: parseInt(e.target.value) || 1 })}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all"
+                                        className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-bold"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Boshlanish vaqti</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Boshlanish vaqti</label>
                                     <input
                                         type="datetime-local"
                                         required
                                         value={form.boshlanishVaqti}
                                         onChange={e => setForm({ ...form, boshlanishVaqti: e.target.value })}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all"
+                                        className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold cursor-pointer"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider italic">Tugash vaqti</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Tugash vaqti</label>
                                     <input
                                         type="datetime-local"
                                         required
                                         value={form.tugashVaqti}
                                         onChange={e => setForm({ ...form, tugashVaqti: e.target.value })}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-gray-50 dark:bg-dark-900 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all"
+                                        className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold cursor-pointer"
                                     />
                                 </div>
                             </div>
 
                             {/* SAVOLLAR RO'YXATI */}
-                            <div className="pt-6 border-t border-gray-100 dark:border-white/5 space-y-6">
+                            <div className="pt-4 border-t border-gray-150 dark:border-zinc-900/60 space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-md font-black text-gray-900 dark:text-white uppercase tracking-wider italic">Test Savollari ({form.savollar.length})</h3>
+                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Savollar ro'yxati ({form.savollar.length})</h3>
                                     <button
                                         type="button"
                                         onClick={addQuestion}
-                                        className="px-4 py-2 rounded-xl bg-primary-500/10 text-primary-500 border border-primary-500/20 hover:bg-primary-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all italic flex items-center gap-1.5"
+                                        className="px-2.5 py-1.5 rounded bg-[#0066FF]/10 text-[#0066FF] border border-[#0066FF]/20 hover:bg-[#0066FF]/25 text-xs font-semibold transition-all flex items-center gap-1"
                                     >
-                                        <HiOutlinePlus className="w-3.5 h-3.5" /> Savol Qo'shish
+                                        <HiOutlinePlus className="w-3.5 h-3.5" />
+                                        <span>Savol qo'shish</span>
                                     </button>
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="space-y-4">
                                     {form.savollar.map((q, qIndex) => (
-                                        <div key={qIndex} className="p-6 bg-gray-50 dark:bg-dark-900/50 rounded-[2rem] border border-gray-100 dark:border-white/5 relative group/q shadow-sm">
-                                            
+                                        <div key={qIndex} className="p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg relative group">
                                             {/* Savolni o'chirish */}
                                             <button
                                                 type="button"
                                                 onClick={() => removeQuestion(qIndex)}
-                                                className="absolute top-4 right-4 p-1.5 rounded-xl bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all opacity-0 group-hover/q:opacity-100"
+                                                className="absolute top-3 right-3 p-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-400 hover:text-[#FF3B30] transition-colors"
                                             >
                                                 <HiOutlineTrash className="w-4 h-4" />
                                             </button>
 
                                             <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                                                 {/* Savol matni */}
-                                                <div className="md:col-span-5 space-y-2">
-                                                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic">{qIndex + 1}-Savol Matni</label>
+                                                <div className="md:col-span-5 space-y-1">
+                                                    <label className="block text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">{qIndex + 1}-savol matni</label>
                                                     <input
                                                         type="text"
                                                         required
                                                         value={q.questionText}
                                                         onChange={e => handleQuestionChange(qIndex, e.target.value)}
-                                                        className="w-full px-5 py-3 rounded-xl bg-white dark:bg-dark-800 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all shadow-sm"
-                                                        placeholder="Savol matnini yozing..."
+                                                        className="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 focus:border-[#0066FF] outline-none text-sm font-semibold"
+                                                        placeholder="Savol matni..."
                                                     />
                                                 </div>
 
                                                 {/* Ball */}
-                                                <div className="space-y-2">
-                                                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest italic">Ball</label>
+                                                <div className="space-y-1">
+                                                    <label className="block text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Ball</label>
                                                     <input
                                                         type="number"
                                                         required
                                                         min="1"
                                                         value={q.score}
                                                         onChange={e => handleScoreChange(qIndex, e.target.value)}
-                                                        className="w-full px-5 py-3 rounded-xl bg-white dark:bg-dark-800 border border-transparent focus:border-primary-500 outline-none text-sm font-bold text-gray-900 dark:text-white transition-all shadow-sm"
+                                                        className="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 focus:border-[#0066FF] outline-none text-sm font-bold"
                                                     />
                                                 </div>
 
                                                 {/* 4 ta Variant */}
-                                                <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-3">
                                                     {['A', 'B', 'C', 'D'].map((char, oIndex) => (
                                                         <div key={oIndex} className="space-y-1">
-                                                            <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest italic">{char}-Variant</label>
+                                                            <label className="block text-[9px] font-semibold text-zinc-400 uppercase tracking-wider">{char}-variant</label>
                                                             <input
                                                                 type="text"
                                                                 required
                                                                 value={q.options[oIndex]}
                                                                 onChange={e => handleOptionChange(qIndex, oIndex, e.target.value)}
-                                                                className="w-full px-5 py-2.5 rounded-xl bg-white dark:bg-dark-800 border border-transparent focus:border-primary-500 outline-none text-xs font-bold text-gray-900 dark:text-white transition-all shadow-sm"
+                                                                className="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 focus:border-[#0066FF] outline-none text-xs font-semibold"
                                                                 placeholder={`${char} javob varianti`}
                                                             />
                                                         </div>
@@ -847,9 +813,9 @@ const AdminTests = () => {
                                                 </div>
 
                                                 {/* To'g'ri javob */}
-                                                <div className="md:col-span-6 flex items-center justify-between p-4 bg-white dark:bg-dark-800 rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm mt-2">
-                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-wider italic">To'g'ri Javob Varianti</span>
-                                                    <div className="flex gap-2">
+                                                <div className="md:col-span-6 flex items-center justify-between p-3 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg mt-2">
+                                                    <span className="text-xs font-semibold text-zinc-500">To'g'ri variant</span>
+                                                    <div className="flex gap-1.5">
                                                         {['A', 'B', 'C', 'D'].map((char, index) => {
                                                             const isSelected = q.correctOption === index;
                                                             return (
@@ -857,7 +823,7 @@ const AdminTests = () => {
                                                                     type="button"
                                                                     key={index}
                                                                     onClick={() => handleCorrectOptionChange(qIndex, index)}
-                                                                    className={`w-9 h-9 rounded-full border text-xs font-black transition-all ${isSelected ? 'bg-emerald-500 border-emerald-500 text-white shadow-md' : 'bg-gray-50 dark:bg-dark-900 border-gray-200 dark:border-white/5 text-gray-600 dark:text-gray-400'}`}
+                                                                    className={`w-7 h-7 rounded-full border text-xs font-bold transition-all ${isSelected ? 'bg-[#00C853] border-[#00C853] text-white' : 'bg-transparent border-gray-200 dark:border-zinc-700 text-zinc-500'}`}
                                                                 >
                                                                     {char}
                                                                 </button>
@@ -872,20 +838,9 @@ const AdminTests = () => {
                             </div>
 
                             {/* Modal Actions */}
-                            <div className="flex gap-4 pt-6 border-t border-gray-100 dark:border-white/5">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModal(false)}
-                                    className="flex-1 py-4 rounded-xl bg-gray-100 dark:bg-dark-700 text-gray-500 hover:text-gray-700 dark:hover:text-white font-black text-[10px] uppercase tracking-wider transition-all italic"
-                                >
-                                    Bekor qilish
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 py-4 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-black text-[10px] uppercase tracking-wider shadow-lg shadow-primary-500/20 transition-all italic"
-                                >
-                                    {modalMode === 'create' ? 'Testni Yaratish' : 'O\'zgarishlarni Saqlash'}
-                                </button>
+                            <div className="flex gap-3 justify-end pt-4 border-t border-gray-150 dark:border-zinc-900/60">
+                                <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">Bekor qilish</button>
+                                <button type="submit" className="btn-primary">{modalMode === 'create' ? 'Yaratish' : 'Saqlash'}</button>
                             </div>
                         </form>
                     </div>
