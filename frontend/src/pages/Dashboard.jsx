@@ -3,14 +3,13 @@ import { paymentAPI, testAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import {
     HiOutlineUserGroup, HiOutlineExclamationCircle, HiOutlineCash,
-    HiOutlineTrendingUp, HiOutlineAcademicCap, HiOutlineBookOpen,
-    HiOutlineArrowNarrowRight, HiOutlineQrcode, HiOutlineLightningBolt, HiOutlineFire, HiOutlineUserAdd,
+    HiOutlineLightningBolt, HiOutlineUserAdd, HiOutlineFire,
     HiOutlineClipboardList, HiOutlineCalendar, HiOutlineXCircle
 } from 'react-icons/hi';
 import { QRCodeCanvas } from 'qrcode.react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts';
 
-const COLORS = ['#6366F1', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+const COLORS = ['#0066FF', '#00C853', '#FF9500', '#FF3B30', '#8E8E93', '#AF52DE'];
 
 const Dashboard = () => {
     const [data, setData] = useState(null);
@@ -50,10 +49,10 @@ const Dashboard = () => {
     if (loading) return <LoadingSpinner text="Dashboard yuklanmoqda..." />;
     if (!data) return (
         <div className="flex flex-col items-center justify-center py-24 animate-fade-in">
-            <div className="w-24 h-24 bg-gray-50 dark:bg-dark-800 rounded-full flex items-center justify-center mb-4">
-                <HiOutlineExclamationCircle className="w-12 h-12 text-gray-300" />
+            <div className="w-16 h-16 bg-gray-55 dark:bg-zinc-900 rounded-full flex items-center justify-center mb-4">
+                <HiOutlineExclamationCircle className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">Ma'lumot topilmadi</h3>
+            <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Ma'lumot topilmadi</h3>
         </div>
     );
 
@@ -62,30 +61,22 @@ const Dashboard = () => {
             label: "Talabalar",
             value: data.umumiyOquvchilar,
             icon: HiOutlineUserGroup,
-            bg: 'bg-blue-500/10',
-            textColor: 'text-blue-600 dark:text-blue-400'
         },
         {
             label: 'Bugun Tushum',
             value: formatMoney(data.bugunTushum || 0),
             detail: `${data.bugunTolovlarSoni || 0} ta to'lov`,
             icon: HiOutlineLightningBolt,
-            bg: 'bg-amber-500/10',
-            textColor: 'text-amber-600 dark:text-amber-400'
         },
         {
             label: 'Oyliq Tushum',
             value: data.oyliqTushum > 1000000 ? `${(data.oyliqTushum / 1000000).toFixed(1)}M` : formatMoney(data.oyliqTushum),
             icon: HiOutlineCash,
-            bg: 'bg-emerald-500/10',
-            textColor: 'text-emerald-600 dark:text-emerald-400'
         },
         {
             label: 'Yangi Leadlar',
             value: data.yangiLeadlar || 0,
             icon: HiOutlineUserAdd,
-            bg: 'bg-indigo-500/10',
-            textColor: 'text-indigo-600 dark:text-indigo-400'
         },
     ];
 
@@ -95,40 +86,29 @@ const Dashboard = () => {
     })) || [];
 
     return (
-        <div className="space-y-6 md:space-y-10 animate-fade-in max-w-7xl mx-auto pb-10">
-            {/* Premium Welcome Header */}
-            <div className="relative overflow-hidden group">
-                <div className="relative z-10 bg-gray-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 transition-transform group-hover:rotate-45 duration-700">
-                        <HiOutlineTrendingUp className="w-48 h-48" />
-                    </div>
-                    <div className="relative z-20 space-y-4 max-w-xl">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-[0.2em]">
-                            System Overview • {new Date().toLocaleDateString('uz', { month: 'long', day: 'numeric' })}
-                        </div>
-                        <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
-                            Boshqaruv <span className="text-primary-400">Markaziga</span> xush kelibsiz
-                        </h1>
-                        <p className="text-gray-400 font-medium md:text-lg">Markaz ko'rsatkichlari va savdo tahlili</p>
-                    </div>
+        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto pb-10">
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Boshqaruv paneli</h1>
+                    <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1">Markaz ko'rsatkichlari va oylik statistika tahlili</p>
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, i) => (
                     <div
                         key={i}
-                        className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 
-                        shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95"
+                        className="bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60 transition-all duration-200"
                     >
-                        <div className={`inline-flex p-2.5 md:p-3 rounded-2xl ${stat.bg} mb-4`}>
-                            <stat.icon className={`w-5 h-5 md:w-6 md:h-6 ${stat.textColor}`} />
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="text-[11px] font-medium text-[#6B6B6B] dark:text-[#8A8A8A] uppercase tracking-wider">{stat.label}</span>
+                            <stat.icon className="w-5 h-5 text-zinc-400" />
                         </div>
-                        <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{stat.label}</p>
-                        <h3 className="text-lg md:text-2xl font-black text-gray-900 dark:text-white tracking-tighter">{stat.value}</h3>
+                        <h3 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">{stat.value}</h3>
                         {stat.detail && (
-                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">{stat.detail}</p>
+                            <p className="text-[11px] text-zinc-400 mt-1 uppercase tracking-tight">{stat.detail}</p>
                         )}
                     </div>
                 ))}
@@ -137,78 +117,73 @@ const Dashboard = () => {
             {/* Test Tizimi Widgetlari */}
             {testWidgets && (
                 <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-6 bg-primary-500 rounded-full"></div>
-                        <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">📚 Test Tizimi Ko'rsatkichlari</h2>
-                    </div>
+                    <h2 className="text-sm font-semibold text-[#6B6B6B] dark:text-[#8A8A8A] uppercase tracking-wider">Test Tizimi Ko'rsatkichlari</h2>
                     
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
-                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-blue-500/10 mb-4">
-                                <HiOutlineClipboardList className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60">
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-[11px] font-medium text-[#6B6B6B] dark:text-[#8A8A8A] uppercase tracking-wider">Bugungi testlar</span>
+                                <HiOutlineClipboardList className="w-5 h-5 text-zinc-400" />
                             </div>
-                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Bugungi testlar</p>
-                            <h3 className="text-lg md:text-2xl font-black text-gray-900 dark:text-white tracking-tighter">{testWidgets.bugungiTestlar || 0} ta</h3>
-                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Bugun faol yoki boshlanadigan</p>
+                            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">{testWidgets.bugungiTestlar || 0} ta</h3>
+                            <p className="text-xs text-zinc-400 mt-1">Bugun faol yoki boshlanadigan</p>
                         </div>
 
-                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
-                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-indigo-500/10 mb-4">
-                                <HiOutlineCalendar className="w-5 h-5 md:w-6 md:h-6 text-indigo-600 dark:text-indigo-400" />
+                        <div className="bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60">
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-[11px] font-medium text-[#6B6B6B] dark:text-[#8A8A8A] uppercase tracking-wider">Shu haftadagi testlar</span>
+                                <HiOutlineCalendar className="w-5 h-5 text-zinc-400" />
                             </div>
-                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Shu haftadagi testlar</p>
-                            <h3 className="text-lg md:text-2xl font-black text-gray-900 dark:text-white tracking-tighter">{testWidgets.haftalikTestlar || 0} ta</h3>
-                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Joriy haftalik reja</p>
+                            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">{testWidgets.haftalikTestlar || 0} ta</h3>
+                            <p className="text-xs text-zinc-400 mt-1">Joriy haftalik reja</p>
                         </div>
 
-                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
-                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-emerald-500/10 mb-4">
-                                <HiOutlineTrendingUp className="w-5 h-5 md:w-6 md:h-6 text-emerald-600 dark:text-emerald-400" />
+                        <div className="bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60">
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-[11px] font-medium text-[#6B6B6B] dark:text-[#8A8A8A] uppercase tracking-wider">O'rtacha natija</span>
+                                <HiOutlineFire className="w-5 h-5 text-[#0066FF]" />
                             </div>
-                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">O'rtacha natija</p>
-                            <h3 className="text-lg md:text-2xl font-black text-emerald-500 tracking-tighter">{testWidgets.ortachaNatija || 0}%</h3>
-                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Barcha topshirilgan natijalar</p>
+                            <h3 className="text-2xl font-semibold text-[#0066FF] tracking-tight">{testWidgets.ortachaNatija || 0}%</h3>
+                            <p className="text-xs text-zinc-400 mt-1">Barcha topshirilgan natijalar</p>
                         </div>
 
-                        <div className="bg-white dark:bg-dark-800 rounded-3xl p-5 md:p-8 border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 transform active:scale-95">
-                            <div className="inline-flex p-2.5 md:p-3 rounded-2xl bg-rose-500/10 mb-4">
-                                <HiOutlineXCircle className="w-5 h-5 md:w-6 md:h-6 text-rose-600 dark:text-rose-400" />
+                        <div className="bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60">
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-[11px] font-medium text-[#6B6B6B] dark:text-[#8A8A8A] uppercase tracking-wider">Topshirmaganlar soni</span>
+                                <HiOutlineXCircle className="w-5 h-5 text-[#FF3B30]" />
                             </div>
-                            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Topshirmaganlar soni</p>
-                            <h3 className="text-lg md:text-2xl font-black text-rose-500 tracking-tighter">{testWidgets.topshirmaganlarSoni || 0} ta</h3>
-                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">Faol testlar bo'yicha</p>
+                            <h3 className="text-2xl font-semibold text-[#FF3B30] tracking-tight">{testWidgets.topshirmaganlarSoni || 0} ta</h3>
+                            <p className="text-xs text-zinc-400 mt-1">Faol testlar bo'yicha</p>
                         </div>
                     </div>
                 </div>
             )}
 
             {/* Main Content: Chart & Activities */}
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
                 {/* Revenue Section */}
-                <div className="xl:col-span-8 bg-white dark:bg-dark-800 rounded-[2.5rem] p-6 md:p-10 border border-gray-100 dark:border-white/5 shadow-sm">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 md:mb-12">
-                        <div className="space-y-1">
-                            <h3 className="text-xl md:text-2xl font-black text-gray-900 dark:text-white tracking-tight">Oylik Statistika</h3>
-                            <p className="text-sm font-medium text-gray-500">Tushumlar dinamikasi (6 oylik)</p>
-                        </div>
+                <div className="xl:col-span-8 bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60">
+                    <div className="mb-6">
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white">Oylik statistika</h3>
+                        <p className="text-xs text-zinc-500 mt-0.5">Tushumlar dinamikasi (6 oylik)</p>
                     </div>
 
-                    <div className="h-[280px] md:h-[350px] w-full">
+                    <div className="h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={data.oylikStatistika} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" className="dark:opacity-5" />
-                                <XAxis dataKey="oyNomi" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 800, fill: '#9CA3AF' }} dy={10} />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 800, fill: '#9CA3AF' }} tickFormatter={(v) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : v} />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.06)" />
+                                <XAxis dataKey="oyNomi" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#888' }} dy={10} />
+                                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#888' }} tickFormatter={(v) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : v} />
                                 <Tooltip
-                                    cursor={{ fill: 'rgba(99,102,241,0.05)', radius: [12, 12, 0, 0] }}
-                                    contentStyle={{ backgroundColor: '#111827', border: 'none', borderRadius: '16px', padding: '12px', shadow: '0 20px 40px rgba(0,0,0,0.2)' }}
-                                    itemStyle={{ color: '#fff', fontSize: '13px', fontWeight: 800 }}
-                                    labelStyle={{ display: 'none' }}
+                                    cursor={{ fill: 'rgba(0,102,255,0.02)' }}
+                                    contentStyle={{ backgroundColor: '#111111', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px' }}
+                                    itemStyle={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}
+                                    labelStyle={{ color: '#888', fontSize: '11px', marginBottom: '4px' }}
                                     formatter={(value) => [formatMoney(value), 'Tushum']}
                                 />
-                                <Bar dataKey="tushum" radius={[10, 10, 0, 0]} barSize={35}>
+                                <Bar dataKey="tushum" radius={[6, 6, 0, 0]} barSize={28}>
                                     {data.oylikStatistika.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={index === data.oylikStatistika.length - 1 ? '#6366F1' : '#E2E8F0'} className="dark:fill-dark-700 hover:fill-primary-500 transition-colors" />
+                                        <Cell key={`cell-${index}`} fill={index === data.oylikStatistika.length - 1 ? '#0066FF' : 'rgba(0, 102, 255, 0.15)'} className="hover:fill-[#0066FF] transition-colors" />
                                     ))}
                                 </Bar>
                             </BarChart>
@@ -217,30 +192,24 @@ const Dashboard = () => {
                 </div>
 
                 {/* Recent Payments Section */}
-                <div className="xl:col-span-4 space-y-6">
-                    <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white shadow-2xl h-full flex flex-col">
-                        <div className="flex items-center justify-between mb-8">
-                            <h3 className="text-xl font-black tracking-tight">So'nggi To'lovlar</h3>
-                            <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-primary-400">
-                                <HiOutlineCash className="w-5 h-5" />
-                            </div>
-                        </div>
-
-                        <div className="space-y-4 flex-1 overflow-y-auto max-h-[450px] pr-2 custom-scrollbar">
+                <div className="xl:col-span-4 bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60 flex flex-col justify-between">
+                    <div>
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-6">So'nggi to'lovlar</h3>
+                        <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1 scrollbar-none">
                             {data.songgiTolovlar.map((payment, i) => (
-                                <div key={i} className="group flex items-center justify-between p-4 rounded-3xl bg-white/5 hover:bg-white/10 transition-all">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center font-black text-sm text-primary-400 uppercase">
+                                <div key={i} className="flex items-center justify-between py-2 border-b border-gray-50 dark:border-zinc-900/40 last:border-b-0">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center font-medium text-xs text-[#0066FF] uppercase">
                                             {payment.oquvchi?.ism?.charAt(0)}
                                         </div>
                                         <div>
-                                            <p className="text-sm font-black text-white leading-tight">{payment.oquvchi?.ism}</p>
-                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate max-w-[120px]">{payment.oquvchi?.kurs?.nomi}</p>
+                                            <p className="text-sm font-medium text-gray-900 dark:text-white leading-tight">{payment.oquvchi?.ism}</p>
+                                            <p className="text-[10px] text-zinc-400 mt-0.5 uppercase tracking-wider truncate max-w-[120px]">{payment.oquvchi?.kurs?.nomi}</p>
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-sm font-black text-emerald-400">+{payment.summa > 1000000 ? `${(payment.summa / 1000000).toFixed(1)}M` : `${payment.summa / 1000}k`}</p>
-                                        <p className="text-[10px] font-bold text-gray-600">{new Date(payment.sana).toLocaleDateString('uz', { day: 'numeric', month: 'short' })}</p>
+                                        <p className="text-sm font-semibold text-[#00C853]">+{payment.summa > 1000000 ? `${(payment.summa / 1000000).toFixed(1)}M` : `${payment.summa / 1000}k`}</p>
+                                        <p className="text-[10px] text-zinc-400 mt-0.5">{new Date(payment.sana).toLocaleDateString('uz')}</p>
                                     </div>
                                 </div>
                             ))}
@@ -252,18 +221,18 @@ const Dashboard = () => {
             {/* Secondary Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Lead Status Chart */}
-                <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-8 md:p-10 border border-gray-100 dark:border-white/5 shadow-sm">
-                    <h3 className="text-xl font-black text-gray-900 dark:text-white mb-8 tracking-tight">Leadlar Holati</h3>
-                    <div className="h-[280px]">
+                <div className="bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60">
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-6">Leadlar holati</h3>
+                    <div className="h-[260px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
                                     data={leadChartData}
                                     cx="50%"
                                     cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={5}
+                                    innerRadius={55}
+                                    outerRadius={75}
+                                    paddingAngle={4}
                                     dataKey="value"
                                 >
                                     {leadChartData.map((entry, index) => (
@@ -271,29 +240,29 @@ const Dashboard = () => {
                                     ))}
                                 </Pie>
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: '#111827', border: 'none', borderRadius: '16px', color: '#fff' }}
+                                    contentStyle={{ backgroundColor: '#111111', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#fff' }}
                                 />
-                                <Legend />
+                                <Legend verticalAlign="bottom" height={36} iconType="circle" />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
                 {/* Course Popularity Chart */}
-                <div className="bg-white dark:bg-dark-800 rounded-[2.5rem] p-8 md:p-10 border border-gray-100 dark:border-white/5 shadow-sm">
-                    <h3 className="text-xl font-black text-gray-900 dark:text-white mb-8 tracking-tight">Kurslar Mashhurligi</h3>
-                    <div className="h-[280px]">
+                <div className="bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60">
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-6">Kurslar mashhurligi</h3>
+                    <div className="h-[260px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data.kursStatistika} layout="vertical" margin={{ left: 40, right: 40 }}>
-                                <CartesianGrid strokeDasharray="3 3" horizontal={false} className="dark:opacity-5" />
+                            <BarChart data={data.kursStatistika} layout="vertical" margin={{ left: 20, right: 20 }}>
+                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(0,0,0,0.06)" />
                                 <XAxis type="number" hide />
-                                <YAxis dataKey="nomi" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 700, fill: '#6B7280' }} />
+                                <YAxis dataKey="nomi" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#888' }} />
                                 <Tooltip
                                     cursor={{ fill: 'transparent' }}
-                                    contentStyle={{ backgroundColor: '#111827', border: 'none', borderRadius: '16px' }}
-                                    itemStyle={{ color: '#fff', fontWeight: 800 }}
+                                    contentStyle={{ backgroundColor: '#111111', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px' }}
+                                    itemStyle={{ color: '#fff', fontSize: '13px' }}
                                 />
-                                <Bar dataKey="count" fill="#6366F1" radius={[0, 10, 10, 0]} barSize={20} />
+                                <Bar dataKey="count" fill="#0066FF" radius={[0, 6, 6, 0]} barSize={14} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
@@ -303,34 +272,29 @@ const Dashboard = () => {
             {/* Leaders and QR Section */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
                 {/* Top Students Card */}
-                <div className="xl:col-span-4 bg-white dark:bg-dark-800 rounded-[2.5rem] p-8 border border-gray-100 dark:border-white/5 shadow-sm flex flex-col">
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="p-2.5 rounded-2xl bg-amber-500/10 text-amber-500">
-                            <HiOutlineFire className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">Top Talabalar</h3>
+                <div className="xl:col-span-5 bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60 flex flex-col">
+                    <div className="flex items-center gap-3 mb-6">
+                        <HiOutlineFire className="w-5 h-5 text-amber-500" />
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white">Top talabalar</h3>
                     </div>
 
                     <div className="space-y-4 flex-1">
-                        {data.topTalabalar?.map((student, i) => (
-                            <div key={i} className="flex items-center justify-between p-4 rounded-3xl bg-gray-50 dark:bg-dark-900/50">
-                                <div className="flex items-center gap-4">
+                        {data.topTalabalar?.slice(0, 5).map((student, i) => (
+                            <div key={i} className="flex items-center justify-between p-3.5 rounded-xl border border-gray-100 dark:border-zinc-900/60 bg-gray-50/50 dark:bg-zinc-900/20">
+                                <div className="flex items-center gap-3">
                                     <div className="relative">
-                                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-black">
+                                        <div className="w-9 h-9 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-900 dark:text-white font-medium text-sm border border-gray-200 dark:border-zinc-700">
                                             {student.ism?.charAt(0).toUpperCase()}
-                                        </div>
-                                        <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white dark:bg-dark-800 shadow-md flex items-center justify-center text-[10px] font-black text-primary-600 border border-gray-100 dark:border-white/10">
-                                            #{i + 1}
                                         </div>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-black text-gray-900 dark:text-white line-clamp-1">{student.ism}</p>
-                                        <p className="text-[10px] font-bold text-primary-500 uppercase tracking-widest">Active Member</p>
+                                        <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">{student.ism}</p>
+                                        <p className="text-[10px] text-zinc-400 uppercase tracking-wider">Reyting #{i + 1}</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm font-black text-amber-500">{student.coins}</p>
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase">Coins</p>
+                                    <p className="text-sm font-semibold text-amber-500">{student.coins} t</p>
+                                    <p className="text-[10px] text-zinc-400 uppercase">Coins</p>
                                 </div>
                             </div>
                         ))}
@@ -338,18 +302,14 @@ const Dashboard = () => {
                 </div>
 
                 {/* Central QR Code Card */}
-                <div className="xl:col-span-8 bg-gradient-to-br from-primary-600 to-indigo-700 rounded-[2.5rem] p-8 md:p-10 text-white shadow-2xl relative overflow-hidden flex flex-col justify-center">
-                    <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
-                        <HiOutlineQrcode className="w-64 h-64" />
-                    </div>
-
-                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
-                        <div className="space-y-6 flex-1 text-center md:text-left">
-                            <h2 className="text-2xl md:text-3xl font-black tracking-tight leading-tight">
-                                Markaz <span className="text-white/70">Doimiy QR Kodi</span>
+                <div className="xl:col-span-7 bg-white dark:bg-[#111111] rounded-2xl p-6 border border-gray-100 dark:border-zinc-900/60 relative overflow-hidden flex flex-col justify-center">
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                        <div className="space-y-4 flex-1 text-center md:text-left">
+                            <h2 className="text-lg font-semibold tracking-tight text-gray-950 dark:text-white">
+                                Markaz doimiy QR kodi
                             </h2>
-                            <p className="text-primary-100 font-medium text-sm md:text-base opacity-80">
-                                O'quvchilar ushbu kodni skanerlash orqali davomat qilishlari va ballar to'plashlari mumkin.
+                            <p className="text-sm text-zinc-500 max-w-sm">
+                                O'quvchilar ushbu kodni skanerlash orqali darsda davomat qilishlari va tangalar to'plashlari mumkin.
                             </p>
 
                             <button
@@ -365,24 +325,18 @@ const Dashboard = () => {
                                         document.body.removeChild(downloadLink);
                                     }
                                 }}
-                                className="px-6 py-3 rounded-2xl bg-white text-primary-600 font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+                                className="btn-secondary"
                             >
-                                Yuklab Olish
+                                QR Yuklab olish
                             </button>
                         </div>
 
-                        <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                        <div className="p-4 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white">
                             <QRCodeCanvas
                                 id="central-qr"
                                 value={`${window.location.origin}/scan`}
-                                size={150}
+                                size={140}
                                 level="H"
-                                imageSettings={{
-                                    src: "/favicon.ico",
-                                    height: 30,
-                                    width: 30,
-                                    excavate: true,
-                                }}
                             />
                         </div>
                     </div>
@@ -392,4 +346,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default Dashboard;oard;
