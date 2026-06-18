@@ -639,6 +639,33 @@ exports.sendDebtSMS = async (req, res) => {
     }
 };
 
+// @desc    Bir necha o'quvchini boshqa guruhga o'tkazish
+// @route   POST /api/students/bulk-move-group
+exports.bulkMoveGroup = async (req, res) => {
+    try {
+        const { ids, guruhId } = req.body;
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ success: false, message: "O'quvchilar tanlanmagan" });
+        }
+        if (!guruhId) {
+            return res.status(400).json({ success: false, message: "Yangi guruh tanlanmagan" });
+        }
+
+        const result = await Student.updateMany(
+            { _id: { $in: ids } },
+            { $set: { guruh: guruhId } }
+        );
+
+        res.json({
+            success: true,
+            message: `${result.modifiedCount} ta o'quvchi muvaffaqiyatli boshqa guruhga o'tkazildi`,
+            modifiedCount: result.modifiedCount
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi: ' + error.message });
+    }
+};
+
 // @desc    O'quvchini blocklash/blokdan chiqarish
 // @route   PUT /api/students/:id/toggle-block
 exports.toggleBlock = async (req, res) => {

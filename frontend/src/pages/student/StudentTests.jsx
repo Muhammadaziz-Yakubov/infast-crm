@@ -8,7 +8,6 @@ import {
 import toast from 'react-hot-toast';
 
 const StudentTests = () => {
-    // Tabs: 'faol' | 'rejalashtirilgan' | 'tugatilgan'
     const [activeTab, setActiveTab] = useState('faol');
     const [loading, setLoading] = useState(true);
 
@@ -16,16 +15,13 @@ const StudentTests = () => {
     const [rejalashtirilganTests, setRejalashtirilganTests] = useState([]);
     const [tugatilganTests, setTugatilganTests] = useState([]);
 
-    // Test Topsihirish jarayoni
     const [isTakingTest, setIsTakingTest] = useState(false);
     const [takingTestInfo, setTakingTestInfo] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [answers, setAnswers] = useState({}); // { questionId: selectedOptionIndex }
-    const [timeLeft, setTimeLeft] = useState(0); // soniyalarda
+    const [answers, setAnswers] = useState({});
+    const [timeLeft, setTimeLeft] = useState(0);
 
-    // Test natijasi ko'rsatilishi
     const [testResult, setTestResult] = useState(null);
-
     const timerRef = useRef(null);
 
     useEffect(() => {
@@ -48,7 +44,6 @@ const StudentTests = () => {
         }
     };
 
-    // Testni topshirishni boshlash
     const startTest = async (testId) => {
         if (window.confirm('Testni topshirishni boshlamoqchimisiz? Vaqt taymeri darhol ishga tushadi!')) {
             try {
@@ -60,10 +55,7 @@ const StudentTests = () => {
                 setCurrentQuestionIndex(0);
                 setTestResult(null);
 
-                // Vaqt limitini soniyalarda belgilash
                 const limitSeconds = test.vaqtLimiti * 60;
-                
-                // Test tugash vaqtiga qancha vaqt qolganligini tekshirish va uni limit bilan taqqoslash (xavfsizlik uchun)
                 const now = new Date();
                 const end = new Date(test.tugashVaqti);
                 const timeRemainingSeconds = Math.max(0, Math.floor((end - now) / 1000));
@@ -81,7 +73,6 @@ const StudentTests = () => {
         }
     };
 
-    // Taymerni ishga tushirish
     const startTimer = () => {
         if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = setInterval(() => {
@@ -102,14 +93,12 @@ const StudentTests = () => {
         };
     }, []);
 
-    // Taymer vaqtini formatlash (mm:ss)
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
         const s = seconds % 60;
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    // Variant tanlanganda
     const selectOption = (questionId, optionIndex) => {
         setAnswers({
             ...answers,
@@ -117,14 +106,12 @@ const StudentTests = () => {
         });
     };
 
-    // Testni topshirish (Manual)
     const handleTestSubmit = async () => {
         if (window.confirm('Haqiqatdan ham testni yakunlab, natijalarni yubormoqchimisiz?')) {
             submitAnswers();
         }
     };
 
-    // Avtomatik topshirish (vaqt tugaganda)
     const autoSubmitTest = () => {
         toast.error('Vaqt tugadi! Test avtomatik ravishda topshirilmoqda...', { duration: 5000 });
         submitAnswers(true);
@@ -132,7 +119,6 @@ const StudentTests = () => {
 
     const submitAnswers = async (isAuto = false) => {
         if (timerRef.current) clearInterval(timerRef.current);
-        
         try {
             setLoading(true);
             const formattedAnswers = Object.entries(answers).map(([qId, oIdx]) => ({
@@ -151,7 +137,6 @@ const StudentTests = () => {
         }
     };
 
-    // Sana vaqtni formatlash
     const formatDateTime = (dateStr) => {
         return new Date(dateStr).toLocaleString('uz-UZ', {
             month: 'long',
@@ -161,20 +146,20 @@ const StudentTests = () => {
         });
     };
 
-    if (loading && !isTakingTest) return <LoadingSpinner text="Testlar yuklanmoqda..." />;
+    if (loading && !isTakingTest) return <LoadingSpinner />;
 
-    // Agar o'quvchi test topshirayotgan bo'lsa
+    // Test Topshirish UI
     if (isTakingTest && takingTestInfo) {
         const currentQuestion = takingTestInfo.savollar[currentQuestionIndex];
         const isLastQuestion = currentQuestionIndex === takingTestInfo.savollar.length - 1;
 
         return (
-            <div className="min-h-[80vh] flex flex-col md:flex-row gap-6 max-w-5xl mx-auto py-6 px-4 md:px-0 animate-fade-in pb-24 md:pb-10">
-                {/* Savollar navigatsiyasi (Chap panel) */}
-                <div className="w-full md:w-80 bg-white dark:bg-dark-800 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm flex flex-col justify-between order-2 md:order-1 h-fit gap-6">
+            <div className="min-h-[85vh] flex flex-col md:flex-row gap-6 max-w-5xl mx-auto py-6 px-4 md:px-0 animate-fade-in pb-16">
+                {/* Savollar navigatsiyasi */}
+                <div className="w-full md:w-64 bg-white dark:bg-[#111111] p-5 rounded-xl border border-gray-200 dark:border-zinc-800 flex flex-col justify-between order-2 md:order-1 h-fit gap-6">
                     <div>
-                        <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest italic mb-4">Savollar ro'yxati</h3>
-                        <div className="grid grid-cols-5 gap-2">
+                        <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">Savollar</h3>
+                        <div className="grid grid-cols-5 gap-1.5">
                             {takingTestInfo.savollar.map((_, idx) => {
                                 const qId = takingTestInfo.savollar[idx]._id;
                                 const isAnswered = answers[qId] !== undefined;
@@ -184,7 +169,13 @@ const StudentTests = () => {
                                     <button
                                         key={idx}
                                         onClick={() => setCurrentQuestionIndex(idx)}
-                                        className={`w-10 h-10 rounded-xl font-black text-xs transition-all flex items-center justify-center ${isActive ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20 scale-105' : isAnswered ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-gray-50 dark:bg-dark-900 border border-gray-100 dark:border-white/5 text-gray-500 dark:text-gray-400'}`}
+                                        className={`w-9 h-9 rounded-lg font-bold text-xs transition-all flex items-center justify-center border ${
+                                            isActive 
+                                                ? 'bg-[#0066FF] border-[#0066FF] text-white' 
+                                                : isAnswered 
+                                                ? 'bg-[#00C853]/10 border-[#00C853]/20 text-[#00C853]' 
+                                                : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500'
+                                        }`}
                                     >
                                         {idx + 1}
                                     </button>
@@ -195,41 +186,44 @@ const StudentTests = () => {
 
                     <button
                         onClick={handleTestSubmit}
-                        className="w-full py-4 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-rose-500/20 transition-all italic flex items-center justify-center gap-1.5"
+                        className="btn-primary w-full flex items-center justify-center gap-1.5"
                     >
-                        <HiOutlineCheckCircle className="w-4 h-4" /> Testni Yakunlash
+                        <HiOutlineCheckCircle className="w-4 h-4" />
+                        <span>Testni tugatish</span>
                     </button>
                 </div>
 
-                {/* Savol matni va variantlari (O'rta panel) */}
-                <div className="flex-1 bg-white dark:bg-dark-800 p-6 md:p-10 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm flex flex-col justify-between order-1 md:order-2 space-y-8">
+                {/* Savol matni va variantlari */}
+                <div className="flex-1 bg-white dark:bg-[#111111] p-6 md:p-8 rounded-xl border border-gray-200 dark:border-zinc-800 flex flex-col justify-between order-1 md:order-2 space-y-6">
                     
-                    {/* Top panel (Timer & Progress) */}
-                    <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-6">
-                        <div className="space-y-1">
-                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic leading-none">Joriy test</span>
-                            <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase italic leading-none">{takingTestInfo.nomi}</h2>
+                    <div className="flex items-center justify-between border-b border-gray-150 dark:border-zinc-800 pb-4">
+                        <div>
+                            <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider block">Joriy test</span>
+                            <h2 className="text-base font-semibold text-gray-900 dark:text-white mt-0.5">{takingTestInfo.nomi}</h2>
                         </div>
 
                         {/* Taymer */}
-                        <div className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border font-mono font-black text-lg transition-all ${timeLeft < 60 ? 'bg-rose-500/10 text-rose-500 border-rose-500/20 animate-pulse' : 'bg-primary-500/10 text-primary-500 border-primary-500/20'}`}>
-                            <HiOutlineClock className="w-5 h-5 animate-spin" />
+                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-mono font-bold text-sm transition-all ${
+                            timeLeft < 60 
+                                ? 'bg-red-500/10 text-red-500 border-red-500/20' 
+                                : 'bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/20'
+                        }`}>
+                            <HiOutlineClock className="w-4 h-4" />
                             {formatTime(timeLeft)}
                         </div>
                     </div>
 
-                    {/* Question Content */}
-                    <div className="flex-1 space-y-6">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-500/10 text-primary-500 text-[10px] font-black uppercase tracking-wider italic">
-                            <HiOutlineBookmark className="w-3.5 h-3.5" /> Savol: {currentQuestionIndex + 1} / {takingTestInfo.savollar.length}
-                        </div>
+                    <div className="flex-1 space-y-5">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-[#0066FF]/10 text-[#0066FF] text-[9px] font-semibold border border-[#0066FF]/20 uppercase">
+                            Savol: {currentQuestionIndex + 1} / {takingTestInfo.savollar.length}
+                        </span>
 
-                        <h3 className="text-lg md:text-xl font-black text-gray-900 dark:text-white leading-relaxed">
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white leading-relaxed">
                             {currentQuestion.questionText}
                         </h3>
 
-                        {/* Options List */}
-                        <div className="grid grid-cols-1 gap-4 pt-4">
+                        {/* Options */}
+                        <div className="grid grid-cols-1 gap-3 pt-2">
                             {currentQuestion.options.map((opt, oIdx) => {
                                 const isSelected = answers[currentQuestion._id] === oIdx;
                                 const charMap = ['A', 'B', 'C', 'D'];
@@ -238,24 +232,30 @@ const StudentTests = () => {
                                     <button
                                         key={oIdx}
                                         onClick={() => selectOption(currentQuestion._id, oIdx)}
-                                        className={`w-full p-5 rounded-2xl border text-left flex items-center gap-4 transition-all hover:scale-[1.01] active:scale-95 ${isSelected ? 'bg-primary-500 text-white border-primary-500 shadow-lg shadow-primary-500/20' : 'bg-gray-50 dark:bg-dark-900/50 border-gray-100 dark:border-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-900'}`}
+                                        className={`w-full p-4 rounded-lg border text-left flex items-center gap-3 transition-colors ${
+                                            isSelected 
+                                                ? 'bg-[#0066FF]/5 border-[#0066FF]/40 text-[#0066FF]' 
+                                                : 'bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                                        }`}
                                     >
-                                        <span className={`w-8 h-8 rounded-xl font-black text-xs flex items-center justify-center ${isSelected ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-dark-800 text-gray-600 dark:text-gray-400'}`}>
+                                        <span className={`w-6 h-6 rounded font-bold text-xs flex items-center justify-center ${
+                                            isSelected ? 'bg-[#0066FF] text-white' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-500'
+                                        }`}>
                                             {charMap[oIdx]}
                                         </span>
-                                        <span className="text-sm font-bold">{opt}</span>
+                                        <span className="text-xs font-semibold">{opt}</span>
                                     </button>
                                 );
                             })}
                         </div>
                     </div>
 
-                    {/* Bottom Nav Buttons */}
-                    <div className="flex justify-between items-center pt-6 border-t border-gray-100 dark:border-white/5">
+                    {/* Bottom Nav */}
+                    <div className="flex justify-between items-center pt-4 border-t border-gray-150 dark:border-zinc-800">
                         <button
                             disabled={currentQuestionIndex === 0}
                             onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-                            className="px-5 py-3 rounded-xl border border-gray-200 dark:border-white/5 text-gray-500 hover:bg-gray-50 dark:hover:bg-dark-900 text-xs font-black uppercase tracking-wider italic flex items-center gap-1.5 transition-all disabled:opacity-30 disabled:pointer-events-none"
+                            className="px-3.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-30"
                         >
                             <HiOutlineChevronLeft className="w-4 h-4" /> Oldingi
                         </button>
@@ -268,7 +268,7 @@ const StudentTests = () => {
                                     setCurrentQuestionIndex(prev => prev + 1);
                                 }
                             }}
-                            className={`px-5 py-3 rounded-xl text-white text-xs font-black uppercase tracking-wider italic flex items-center gap-1.5 transition-all ${isLastQuestion ? 'bg-rose-500 hover:bg-rose-600' : 'bg-primary-500 hover:bg-primary-600'}`}
+                            className="btn-primary px-4 py-1.5 flex items-center gap-1"
                         >
                             {isLastQuestion ? 'Tugatish' : 'Keyingi'} <HiOutlineChevronRight className="w-4 h-4" />
                         </button>
@@ -278,23 +278,23 @@ const StudentTests = () => {
         );
     }
 
-    // Agar o'quvchi testni muvaffaqiyatli topshirgan va natija ekranda ko'rsatilishi kerak bo'lsa
+    // Natija ko'rsatuvchi card
     if (testResult) {
         return (
-            <div className="max-w-xl mx-auto bg-white dark:bg-dark-800 rounded-[3rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-2xl p-8 md:p-12 text-center animate-scale-up pb-24 md:pb-12">
-                <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
-                    <HiOutlineCheckCircle className="w-12 h-12" />
+            <div className="max-w-md mx-auto bg-white dark:bg-[#111111] rounded-xl border border-gray-250 dark:border-zinc-900/60 shadow-xl p-8 text-center animate-scale-up mt-10">
+                <div className="w-12 h-12 bg-[#00C853]/10 text-[#00C853] border border-[#00C853]/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <HiOutlineCheckCircle className="w-6 h-6" />
                 </div>
                 
-                <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">Test Muvaffaqiyatli topshirildi! 🎉</h2>
-                <p className="text-sm font-medium text-gray-500 mt-2">Sizning javoblaringiz qabul qilindi va avtomatik tekshirildi</p>
+                <h2 className="text-lg font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Test topshirildi! 🎉</h2>
+                <p className="text-xs text-zinc-400 mt-1">Sizning javoblaringiz qabul qilindi va avtomatik ravishda tekshirildi</p>
 
                 {/* Score panel */}
-                <div className="my-8 p-8 rounded-[2rem] bg-gray-50 dark:bg-dark-900/50 border border-gray-100 dark:border-white/5">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest italic mb-2">Sizning natijangiz</p>
-                    <h3 className="text-5xl font-black text-primary-500 leading-none mb-4">{testResult.percentage}%</h3>
-                    <p className="text-md font-bold text-gray-800 dark:text-gray-200">
-                        To'plangan ball: <span className="font-black text-primary-500">{testResult.score}</span> / {testResult.totalScore} ball
+                <div className="my-6 p-6 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+                    <span className="text-[9px] font-semibold text-zinc-450 uppercase tracking-widest block mb-1">Natijangiz</span>
+                    <h3 className="text-4xl font-bold text-[#0066FF] leading-none mb-3">{testResult.percentage}%</h3>
+                    <p className="text-xs font-semibold text-zinc-650 dark:text-zinc-300">
+                        To'plangan ball: <span className="font-bold text-[#0066FF]">{testResult.score}</span> / {testResult.totalScore} ball
                     </p>
                 </div>
 
@@ -303,7 +303,7 @@ const StudentTests = () => {
                         setTestResult(null);
                         fetchStudentTests();
                     }}
-                    className="w-full py-4.5 rounded-xl bg-gray-900 dark:bg-primary-600 text-white font-black text-xs uppercase tracking-widest active:scale-95 transition-all italic"
+                    className="btn-primary w-full py-2.5"
                 >
                     Testlar sahifasiga qaytish
                 </button>
@@ -311,40 +311,39 @@ const StudentTests = () => {
         );
     }
 
-    // Default testlar ro'yxati
     const tabsList = [
-        { id: 'faol', label: 'Faol testlar', count: faolTests.length, color: 'text-emerald-500 bg-emerald-500/10' },
-        { id: 'rejalashtirilgan', label: 'Rejalashtirilgan', count: rejalashtirilganTests.length, color: 'text-blue-500 bg-blue-500/10' },
-        { id: 'tugatilgan', label: 'Tugatilgan', count: tugatilganTests.length, color: 'text-gray-400 bg-gray-100 dark:bg-dark-900/50' }
+        { id: 'faol', label: 'Faol testlar', count: faolTests.length, color: 'text-[#00C853] bg-[#00C853]/10 border-[#00C853]/20' },
+        { id: 'rejalashtirilgan', label: 'Rejalashtirilgan', count: rejalashtirilganTests.length, color: 'text-[#0066FF] bg-[#0066FF]/10 border-[#0066FF]/20' },
+        { id: 'tugatilgan', label: 'Tugatilgan', count: tugatilganTests.length, color: 'text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800' }
     ];
 
-    const getActiveList = () => {
-        if (activeTab === 'faol') return faolTests;
-        if (activeTab === 'rejalashtirilgan') return rejalashtirilganTests;
-        return tugatilganTests;
-    };
-
-    const activeList = getActiveList();
+    const activeList = activeTab === 'faol' 
+        ? faolTests 
+        : activeTab === 'rejalashtirilgan' 
+        ? rejalashtirilganTests 
+        : tugatilganTests;
 
     return (
-        <div className="space-y-6 md:space-y-10 animate-fade-in max-w-5xl mx-auto pb-24 lg:pb-10 px-4 md:px-0">
-            <div className="space-y-2 text-center md:text-left">
-                <h1 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white uppercase italic tracking-tight">
-                    📝 Mening <span className="text-primary-500">Testlarim</span>
-                </h1>
-                <p className="text-sm font-medium text-gray-500">Testlarni o'z vaqtida topshiring, bilimingizni tekshiring va markazda reytingingizni oshiring!</p>
+        <div className="space-y-6 animate-fade-in max-w-4xl mx-auto pb-10">
+            <div>
+                <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Mening testlarim</h1>
+                <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">Bilimingizni tekshiring, test topshiring va o'zlashtirishni nazorat qiling</p>
             </div>
 
-            {/* Premium Tabs */}
-            <div className="flex p-1.5 bg-gray-100 dark:bg-dark-900/50 rounded-2xl border border-gray-200 dark:border-white/5">
+            {/* Tabs */}
+            <div className="flex p-1 bg-zinc-100 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
                 {tabsList.map(tab => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex-1 py-3 px-4 rounded-xl font-black text-xs uppercase tracking-wider transition-all italic flex items-center justify-center gap-2 ${activeTab === tab.id ? 'bg-white dark:bg-dark-800 text-gray-900 dark:text-white shadow-md' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'}`}
+                        className={`flex-1 py-2 px-3 rounded text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
+                            activeTab === tab.id 
+                                ? 'bg-white dark:bg-zinc-800 text-gray-950 dark:text-white shadow-sm border border-zinc-200/50 dark:border-zinc-700' 
+                                : 'text-zinc-400 hover:text-zinc-650'
+                        }`}
                     >
-                        {tab.label}
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black ${tab.color}`}>
+                        <span>{tab.label}</span>
+                        <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold border ${tab.color}`}>
                             {tab.count}
                         </span>
                     </button>
@@ -352,73 +351,74 @@ const StudentTests = () => {
             </div>
 
             {/* Tests list */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {activeList.length === 0 ? (
-                    <div className="col-span-2 py-24 text-center bg-white dark:bg-dark-800 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm">
-                        <div className="w-16 h-16 bg-gray-50 dark:bg-dark-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <HiOutlineClipboardList className="w-8 h-8 text-gray-300" />
+                    <div className="col-span-2 py-16 text-center bg-white dark:bg-[#111111] rounded-xl border border-gray-150 dark:border-zinc-900/60 shadow-sm">
+                        <div className="w-10 h-10 bg-zinc-50 dark:bg-zinc-900 rounded-lg flex items-center justify-center mx-auto mb-3 border border-zinc-200 dark:border-zinc-800">
+                            <HiOutlineClipboardList className="w-5 h-5 text-zinc-350" />
                         </div>
-                        <h3 className="text-md font-black text-gray-400 uppercase tracking-widest italic">Ushbu bo'limda testlar yo'q</h3>
+                        <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Testlar yo'q</h3>
                     </div>
                 ) : (
                     activeList.map(test => (
                         <div
                             key={test._id}
-                            className="bg-white dark:bg-dark-800 p-6 md:p-8 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+                            className="bg-white dark:bg-[#111111] p-5 rounded-xl border border-gray-150 dark:border-zinc-900/60 shadow-sm flex flex-col justify-between hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
                         >
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 <div className="flex items-center justify-between">
-                                    <span className="px-3 py-1 rounded-full bg-primary-500/10 text-primary-500 text-[9px] font-black uppercase tracking-wider italic">
-                                        {test.kurs?.nomi || 'Mening Kursim'}
+                                    <span className="px-2 py-0.5 rounded bg-[#0066FF]/10 border border-[#0066FF]/20 text-[#0066FF] text-[9px] font-semibold uppercase tracking-wider">
+                                        {test.kurs?.nomi || 'Kurs nomi'}
                                     </span>
                                     
-                                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
+                                    <div className="flex items-center gap-1 text-[10px] font-semibold text-zinc-400">
                                         <HiOutlineClock className="w-3.5 h-3.5" />
-                                        {test.vaqtLimiti} daqiqa
+                                        <span>{test.vaqtLimiti} daqiqa</span>
                                     </div>
                                 </div>
 
-                                <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase italic tracking-tight group-hover:text-primary-500 transition-colors">
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
                                     {test.nomi}
                                 </h3>
 
-                                <div className="space-y-2 text-xs font-bold text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-50 dark:border-white/5">
-                                    <p><span className="text-emerald-500 font-extrabold uppercase">Boshlanish:</span> {formatDateTime(test.boshlanishVaqti)}</p>
-                                    <p><span className="text-rose-500 font-extrabold uppercase">Tugash:</span> {formatDateTime(test.tugashVaqti)}</p>
+                                <div className="space-y-1 text-[11px] text-zinc-450 pt-2 border-t border-zinc-50 dark:border-zinc-900/50">
+                                    <p><span className="text-[#00C853] font-semibold uppercase">Boshlanish:</span> {formatDateTime(test.boshlanishVaqti)}</p>
+                                    <p><span className="text-[#FF3B30] font-semibold uppercase">Tugash:</span> {formatDateTime(test.tugashVaqti)}</p>
                                 </div>
                             </div>
 
-                            {/* Actions or result information */}
-                            <div className="pt-6 mt-6 border-t border-gray-100 dark:border-white/5">
+                            {/* Actions */}
+                            <div className="pt-4 mt-4 border-t border-gray-50 dark:border-zinc-900/40">
                                 {activeTab === 'faol' && (
                                     <button
                                         onClick={() => startTest(test._id)}
-                                        className="w-full py-3.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 italic"
+                                        className="btn-primary w-full flex items-center justify-center gap-1.5"
                                     >
-                                        <HiOutlinePlay className="w-4 h-4" /> Topsirishni Boshlash
+                                        <HiOutlinePlay className="w-4 h-4" />
+                                        <span>Testni boshlash</span>
                                     </button>
                                 )}
 
                                 {activeTab === 'rejalashtirilgan' && (
-                                    <div className="w-full py-3 px-4 rounded-xl bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/5 text-center text-[10px] font-black uppercase text-gray-400 tracking-wider italic">
+                                    <div className="w-full py-2 px-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-center text-[10px] font-semibold uppercase text-zinc-400 tracking-wider">
                                         Test vaqtini kuting... ⏳
                                     </div>
                                 )}
 
                                 {activeTab === 'tugatilgan' && (
                                     test.myResult ? (
-                                        <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-between">
-                                            <div className="space-y-1">
-                                                <p className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest italic leading-none">Topshirdingiz</p>
-                                                <p className="text-xs font-bold text-gray-700 dark:text-gray-300">
-                                                    Natija: <span className="font-black text-emerald-500">{test.myResult.score}</span> / {test.myResult.totalScore} ball
+                                        <div className="p-3 rounded-lg bg-[#00C853]/5 border border-[#00C853]/15 flex items-center justify-between">
+                                            <div className="space-y-0.5">
+                                                <span className="text-[9px] font-semibold text-[#00C853] uppercase tracking-widest block leading-none">Topshirildi</span>
+                                                <p className="text-xs font-semibold text-zinc-650 dark:text-zinc-300">
+                                                    Natija: <span className="font-bold text-[#00C853]">{test.myResult.score}</span> / {test.myResult.totalScore} ball
                                                 </p>
                                             </div>
-                                            <h4 className="text-xl font-black text-emerald-500">{test.myResult.percentage}%</h4>
+                                            <h4 className="text-lg font-bold text-[#00C853]">{test.myResult.percentage}%</h4>
                                         </div>
                                     ) : (
-                                        <div className="w-full py-3 px-4 rounded-xl bg-rose-500/10 text-center text-[10px] font-black uppercase text-rose-500 tracking-wider italic">
-                                            Topshirish muddati o'tib ketgan ❌
+                                        <div className="w-full py-2.5 rounded-lg bg-[#FF3B30]/10 border border-[#FF3B30]/20 text-center text-[10px] font-semibold uppercase text-[#FF3B30] tracking-wider">
+                                            Muddati o'tib ketgan ❌
                                         </div>
                                     )
                                 )}

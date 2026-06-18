@@ -35,6 +35,8 @@ const Students = () => {
     const [bulkPayForm, setBulkPayForm] = useState({ tolovTuri: 'naqd', izoh: '', sana: new Date().toISOString().split('T')[0] });
     const [bulkLoading, setBulkLoading] = useState(false);
     const [filterGuruh, setFilterGuruh] = useState('');
+    const [moveGroupModalOpen, setMoveGroupModalOpen] = useState(false);
+    const [targetGroupId, setTargetGroupId] = useState('');
 
     const [form, setForm] = useState({
         ism: '', telefon: '', kurs: '', guruh: '', tolovKuni: 1, oylikTolov: '', eslatmalar: '', shuOyTolagan: '', username: '', password: ''
@@ -284,6 +286,24 @@ const Students = () => {
         }
     };
 
+    const handleBulkMoveGroup = async (e) => {
+        e.preventDefault();
+        if (selectedIds.length === 0 || !targetGroupId) return;
+        setBulkLoading(true);
+        try {
+            const res = await studentAPI.bulkMoveGroup(selectedIds, targetGroupId);
+            toast.success(res.data.message);
+            setMoveGroupModalOpen(false);
+            setTargetGroupId('');
+            setSelectedIds([]);
+            fetchStudents();
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Xatolik');
+        } finally {
+            setBulkLoading(false);
+        }
+    };
+
     const handleExportExcel = () => {
         if (students.length === 0) {
             toast.error("Eksport qilish uchun ma'lumot yo'q!");
@@ -458,6 +478,13 @@ const Students = () => {
                             className="px-4 py-2 rounded-lg bg-[#00C853] hover:bg-[#00B04A] text-white text-xs font-medium transition-all disabled:opacity-50"
                         >
                             To'lov qilish
+                        </button>
+                        <button
+                            onClick={() => { setTargetGroupId(''); setMoveGroupModalOpen(true); }}
+                            disabled={bulkLoading}
+                            className="px-4 py-2 rounded-lg bg-[#0066FF] hover:bg-[#0052CC] text-white text-xs font-medium transition-all disabled:opacity-50"
+                        >
+                            Guruhga o'tkazish
                         </button>
                         <button
                             onClick={handleBulkDelete}
@@ -860,6 +887,43 @@ const Students = () => {
                 title="O'quvchini o'chirish"
                 message="Haqiqatan ham bu o'quvchini o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi."
             />
+
+            {/* Bulk Move Group Modal */}
+            <Modal isOpen={moveGroupModalOpen} onClose={() => setMoveGroupModalOpen(false)} title="Guruhga o'tkazish" size="sm">
+                <form onSubmit={handleBulkMoveGroup} className="space-y-4">
+                    <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800">
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full bg-[#0066FF]/10 flex items-center justify-center">
+                                <HiOutlineFilter className="w-4 h-4 text-[#0066FF]" />
+                            </div>
+                            <div>
+                                <h4 className="text-sm font-semibold text-gray-900 dark:text-white">{selectedIds.length} ta o'quvchi tanlangan</h4>
+                                <p className="text-xs text-zinc-400 mt-0.5">Ularni boshqa guruhga o'tkazish</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Yangi guruhni tanlang *</label>
+                        <select
+                            value={targetGroupId}
+                            onChange={e => setTargetGroupId(e.target.value)}
+                            className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none transition-all text-sm font-medium cursor-pointer"
+                            required
+                        >
+                            <option value="">Guruhni tanlang</option>
+                            {groups.map(g => (
+                                <option key={g._id} value={g._id}>{g.nomi}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex gap-3 justify-end pt-4 border-t border-gray-100 dark:border-zinc-900/60">
+                        <button type="button" onClick={() => setMoveGroupModalOpen(false)} className="btn-secondary">Bekor</button>
+                        <button type="submit" disabled={bulkLoading || !targetGroupId} className="btn-primary disabled:opacity-50">
+                            {bulkLoading ? 'Yuklanmoqda...' : "O'tkazish"}
+                        </button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 };

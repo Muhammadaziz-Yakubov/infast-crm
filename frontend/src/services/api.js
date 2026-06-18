@@ -69,6 +69,7 @@ export const studentAPI = {
     update: (id, data) => api.put(`/students/${id}`, data),
     delete: (id) => api.delete(`/students/${id}`),
     bulkDelete: (ids) => api.post('/students/bulk-delete', { ids }),
+    bulkMoveGroup: (ids, guruhId) => api.post('/students/bulk-move-group', { ids, guruhId }),
     getDebtors: () => api.get('/students/debtors/list'),
     getMyDashboard: () => api.get('/students/me/dashboard'),
     updateMe: (data) => api.put('/students/me/update', data),
