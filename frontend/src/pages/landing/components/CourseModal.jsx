@@ -45,7 +45,7 @@ const CourseModal = ({ isOpen, onClose, course }) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={onClose}
-                    className="fixed inset-0 bg-black/80 backdrop-blur-md"
+                    className="fixed inset-0 bg-black/85 backdrop-blur-md"
                 />
 
                 <motion.div
@@ -56,7 +56,7 @@ const CourseModal = ({ isOpen, onClose, course }) => {
                 >
                     <button
                         onClick={onClose}
-                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all text-white"
+                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all text-white border border-white/10"
                     >
                         <X size={24} />
                     </button>
@@ -64,37 +64,37 @@ const CourseModal = ({ isOpen, onClose, course }) => {
                     <div className="flex flex-col md:flex-row h-full">
                         {/* Course Info */}
                         <div className="flex-1 p-8 md:p-12 border-b md:border-b-0 md:border-r border-white/5">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold mb-6 uppercase tracking-wider">
                                 <Bookmark size={14} /> {course.title}
                             </div>
-                            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-none uppercase tracking-tighter italic">
-                                {course.title} <span className="text-blue-500">KURSIDAN</span> NIMANI KUTASIZ?
+                            <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-none uppercase tracking-tighter italic">
+                                {course.title} <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500">KURSIDAN</span> NIMANI KUTASIZ?
                             </h2>
-                            <p className="text-gray-400 text-lg mb-8 italic">
+                            <p className="text-zinc-400 text-lg mb-8 italic font-medium">
                                 "{course.desc}"
                             </p>
 
                             <div className="space-y-4 mb-10">
                                 {course.details?.map((detail, i) => (
                                     <div key={i} className="flex items-start gap-3">
-                                        <CheckCircle2 className="text-blue-500 mt-1 flex-shrink-0" size={20} />
-                                        <span className="text-gray-300 font-medium">{detail}</span>
+                                        <CheckCircle2 className="text-amber-500 mt-1 flex-shrink-0" size={20} />
+                                        <span className="text-zinc-300 font-bold text-sm md:text-base">{detail}</span>
                                     </div>
                                 ))}
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-3">
-                                    <Clock size={20} className="text-blue-500" />
+                                <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/5 flex items-center gap-3">
+                                    <Clock size={20} className="text-amber-500" />
                                     <div>
-                                        <p className="text-[10px] text-gray-500 uppercase font-black">Davomiyligi</p>
+                                        <p className="text-[10px] text-zinc-500 uppercase font-black">Davomiyligi</p>
                                         <p className="text-white font-bold">{course.duration}</p>
                                     </div>
                                 </div>
-                                <div className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-3">
-                                    <Calendar size={20} className="text-blue-500" />
+                                <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/5 flex items-center gap-3">
+                                    <Calendar size={20} className="text-amber-500" />
                                     <div>
-                                        <p className="text-[10px] text-gray-500 uppercase font-black">Haftada</p>
+                                        <p className="text-[10px] text-zinc-500 uppercase font-black">Haftada</p>
                                         <p className="text-white font-bold">3 kun / 2 soat</p>
                                     </div>
                                 </div>
@@ -102,26 +102,26 @@ const CourseModal = ({ isOpen, onClose, course }) => {
                         </div>
 
                         {/* Registration Form */}
-                        <div className="w-full md:w-[40%] p-8 md:p-12 bg-blue-600/5">
-                            <h3 className="text-2xl font-black text-white mb-8 uppercase italic tracking-tighter underline decoration-blue-500 decoration-4">Ro'yxatdan o'tish</h3>
+                        <div className="w-full md:w-[40%] p-8 md:p-12 bg-amber-500/5">
+                            <h3 className="text-2xl font-black text-white mb-8 uppercase italic tracking-tighter underline decoration-amber-500 decoration-4">Ro'yxatdan o'tish</h3>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Ismingiz</label>
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase mb-2 block tracking-widest">Ismingiz</label>
                                     <input
                                         type="text"
                                         required
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold outline-none focus:border-amber-500 transition-all placeholder:text-zinc-700"
                                         placeholder="Ism"
                                         value={form.name}
                                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-black text-gray-500 uppercase mb-2 block tracking-widest">Telefon raqam</label>
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase mb-2 block tracking-widest">Telefon raqam</label>
                                     <input
                                         type="tel"
                                         required
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold outline-none focus:border-amber-500 transition-all placeholder:text-zinc-700"
                                         placeholder="+998"
                                         value={form.phone}
                                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -130,10 +130,10 @@ const CourseModal = ({ isOpen, onClose, course }) => {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-black text-lg rounded-2xl transition-all shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 group disabled:opacity-50"
+                                    className="w-full py-5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-black font-black text-lg rounded-2xl transition-all shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2 group disabled:opacity-50"
                                 >
                                     {loading ? (
-                                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <div className="w-6 h-6 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
                                     ) : (
                                         <>
                                             Xabar qoldirish
@@ -141,7 +141,7 @@ const CourseModal = ({ isOpen, onClose, course }) => {
                                         </>
                                     )}
                                 </button>
-                                <p className="text-[10px] text-gray-500 text-center leading-relaxed font-bold italic">
+                                <p className="text-[10px] text-zinc-500 text-center leading-relaxed font-bold italic">
                                     Ariza topshirish orqali siz maxfiylik siyosatiga rozilik bildirasiz. <br />Adminlarimiz yaqin vaqt ichida bog'lanishadi.
                                 </p>
                             </form>

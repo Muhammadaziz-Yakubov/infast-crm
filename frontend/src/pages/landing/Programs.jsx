@@ -6,8 +6,8 @@ import CourseModal from './components/CourseModal';
 
 const programs = [
     {
-        title: "Frontend Development",
-        icon: <Layout className="text-blue-500" />,
+        title: "Frontend Engineering",
+        icon: <Layout className="text-amber-500" />,
         duration: "9 oy",
         desc: "Zamonaviy web-interfeyslarni dunyo standartlari darajasida yarating. Foydalanuvchi tajribasini (UX) kodingiz orqali boshqaring.",
         details: [
@@ -19,11 +19,11 @@ const programs = [
         ],
         tools: ["HTML/CSS", "JS", "React", "Next.JS", "Git"],
         price: "300,000 so'm/oy",
-        color: "from-blue-600/20 to-blue-400/5"
+        color: "from-amber-600/20 to-amber-400/5"
     },
     {
-        title: "Backend (Node.js)",
-        icon: <Server className="text-green-500" />,
+        title: "Backend Development (Node.js)",
+        icon: <Server className="text-amber-500" />,
         duration: "5 oy",
         desc: "Murakkab tizimlar arxitekturasi, ma'lumotlar xavfsizligi va yuqori tezlikdagi server qismini mukammal o'rganing.",
         details: [
@@ -35,11 +35,11 @@ const programs = [
         ],
         tools: ["Node.js", "Express", "SQL", "Docker", "AWS"],
         price: "600,000 so'm/oy",
-        color: "from-green-600/20 to-green-400/5"
+        color: "from-amber-600/20 to-yellow-500/5"
     },
     {
-        title: "UI/UX Design",
-        icon: <Palette className="text-purple-500" />,
+        title: "UI/UX Product Design",
+        icon: <Palette className="text-amber-500" />,
         duration: "4 oy",
         desc: "Foydalanuvchilar yoqtiradigan interfeyslar yaratish sirlari. Vizual estetika va funksionallikning uyg'unligi.",
         details: [
@@ -51,11 +51,11 @@ const programs = [
         ],
         tools: ["Figma", "Photoshop", "Principle", "Mirror"],
         price: "500,000 so'm/oy",
-        color: "from-purple-600/20 to-purple-400/5"
+        color: "from-amber-600/20 to-orange-500/5"
     },
     {
-        title: "Fullstack Python",
-        icon: <Database className="text-yellow-500" />,
+        title: "Fullstack Python & AI",
+        icon: <Database className="text-amber-500" />,
         duration: "9 oy",
         desc: "Python tilida murakkab loyihalar, ma'lumotlar tahlili va sun'iy intellekt asoslarini kompleks o'zlashtiring.",
         details: [
@@ -67,7 +67,7 @@ const programs = [
         ],
         tools: ["Python", "Django", "NumPy", "AI Basics", "Linux"],
         price: "1,400,000 so'm/oy",
-        color: "from-yellow-600/20 to-yellow-400/5"
+        color: "from-amber-600/20 to-amber-950/5"
     }
 ];
 
@@ -84,11 +84,11 @@ const Programs = () => {
         <LandingLayout>
             <section className="pt-32 pb-20 bg-black min-h-screen">
                 <div className="container mx-auto px-6">
-                    <div className="max-w-4xl mb-32">
+                    <div className="max-w-4xl mb-24">
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-black mb-10 tracking-widest uppercase"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-black mb-10 tracking-widest uppercase"
                         >
                             <Bookmark size={14} /> Kelajak Kasblari
                         </motion.div>
@@ -96,13 +96,13 @@ const Programs = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="text-6xl md:text-9xl font-black mb-10 leading-[0.9] tracking-tighter"
+                            className="text-6xl md:text-8xl lg:text-9xl font-black mb-10 leading-[0.9] tracking-tighter"
                         >
-                            BIZNING <span className="text-blue-500 italic">KURSlarIMIZ</span>
+                            BIZNING <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500 italic">KURSLARIMIZ</span>
                         </motion.h1>
-                        <p className="text-gray-400 text-xl leading-relaxed max-w-2xl">
+                        <p className="text-zinc-400 text-xl leading-relaxed max-w-2xl font-medium">
                             InFast Academy darslari Muhammadaziz Yakubov tomonidan tasdiqlangan maxsus
-                            metodika asosida o'tiladi. Bizning maqsadimiz — sizni ishga tayyor mutaxassis qilish.
+                            metodika va dunyo standartlari asosida o'tiladi. Bizning maqsadimiz — sizni ishga tayyor professional qilish.
                         </p>
                     </div>
 
@@ -118,24 +118,24 @@ const Programs = () => {
                             >
                                 <div className="bg-[#080808] rounded-[2.9rem] p-10 md:p-14 h-full flex flex-col relative z-10 transition-colors group-hover:bg-[#0c0c0c]">
                                     <div className="flex justify-between items-start mb-12">
-                                        <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500 group-hover:border-blue-500/30">
+                                        <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500 group-hover:border-amber-500/30">
                                             {program.icon}
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-[10px] text-gray-500 uppercase font-black mb-1 tracking-widest">Davomiyligi</p>
-                                            <span className="px-5 py-2 rounded-full bg-blue-500/10 text-white text-sm font-bold border border-blue-500/20">
+                                            <p className="text-[10px] text-zinc-500 uppercase font-black mb-1 tracking-widest">Davomiyligi</p>
+                                            <span className="px-5 py-2 rounded-full bg-amber-500/10 text-white text-sm font-bold border border-amber-500/20">
                                                 {program.duration}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <h3 className="text-4xl font-black text-white mb-6 tracking-tight group-hover:text-blue-500 transition-colors uppercase italic">{program.title}</h3>
-                                    <p className="text-gray-400 text-lg mb-10 leading-relaxed flex-grow">{program.desc}</p>
+                                    <h3 className="text-4xl font-black text-white mb-6 tracking-tight group-hover:text-amber-450 transition-colors uppercase italic">{program.title}</h3>
+                                    <p className="text-zinc-400 text-lg mb-10 leading-relaxed flex-grow font-medium">{program.desc}</p>
 
                                     <div className="mb-12">
                                         <div className="flex flex-wrap gap-2">
                                             {program.tools.map((tool, i) => (
-                                                <span key={i} className="px-4 py-2 rounded-xl bg-white/5 text-[11px] text-white/50 border border-white/10 font-bold uppercase tracking-widest">
+                                                <span key={i} className="px-4 py-2 rounded-xl bg-white/5 text-[11px] text-zinc-400 border border-white/10 font-bold uppercase tracking-widest">
                                                     {tool}
                                                 </span>
                                             ))}
@@ -144,12 +144,12 @@ const Programs = () => {
 
                                     <div className="pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6 font-black">
                                         <div>
-                                            <p className="text-[10px] text-gray-600 mb-2 leading-none uppercase tracking-widest">Kurs qiymati</p>
+                                            <p className="text-[10px] text-zinc-655 mb-2 leading-none uppercase tracking-widest">Kurs qiymati</p>
                                             <p className="text-2xl text-white italic">{program.price}</p>
                                         </div>
                                         <button
                                             onClick={() => openModal(program)}
-                                            className="w-full sm:w-auto px-10 py-5 bg-white text-black font-black rounded-2xl transition-all group/btn flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white"
+                                            className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-black font-black rounded-2xl transition-all group/btn flex items-center justify-center gap-2"
                                         >
                                             Batafsil
                                             <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />

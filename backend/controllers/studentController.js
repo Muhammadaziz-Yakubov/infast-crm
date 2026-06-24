@@ -479,6 +479,8 @@ exports.getPublicProfile = async (req, res) => {
 
 // @desc    Get student leaderboard
 // @route   GET /api/students/leaderboard
+exports.getLeaderboard = async (req, res) => {
+    try {
         const matchStage = { holati: 'faol' };
         if (req.branchFilter && req.branchFilter.branchId) {
             matchStage.branchId = new mongoose.Types.ObjectId(req.branchFilter.branchId);

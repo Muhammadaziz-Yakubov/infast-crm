@@ -48,25 +48,25 @@ const Contact = () => {
         <LandingLayout>
             <section className="pt-32 pb-40 min-h-screen bg-black overflow-hidden relative">
                 {/* Background Decorations */}
-                <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-600/5 blur-[150px] -z-10"></div>
+                <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-amber-600/5 blur-[150px] -z-10"></div>
 
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="text-center mb-32">
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-black mb-10 tracking-[0.2em] uppercase"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-black mb-10 tracking-[0.2em] uppercase"
                         >
                             <Send size={14} /> Aloqa Markazi
                         </motion.div>
                         <motion.h1
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="text-6xl md:text-9xl font-black mb-10 leading-[0.8] tracking-tighter uppercase italic"
+                            className="text-6xl md:text-8xl lg:text-9xl font-black mb-10 leading-[0.8] tracking-tighter uppercase italic text-white"
                         >
-                            BIZ BILAN <br /><span className="text-blue-500">BOG'LANING</span>
+                            BIZ BILAN <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-550">BOG'LANING</span>
                         </motion.h1>
-                        <p className="text-gray-400 text-xl max-w-2xl mx-auto italic">
+                        <p className="text-zinc-400 text-xl max-w-2xl mx-auto italic font-medium">
                             Savollaringiz bormi yoki professional maslahat kerakmi?
                             Bizning mutaxassislarimiz sizga yordam berishga tayyor.
                         </p>
@@ -87,22 +87,22 @@ const Contact = () => {
                                         whileHover={{ x: 10 }}
                                         className="flex items-start gap-8 group"
                                     >
-                                        <div className="w-16 h-16 rounded-[1.2rem] bg-white/5 border border-white/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
+                                        <div className="w-16 h-16 rounded-[1.2rem] bg-white/5 border border-white/10 flex items-center justify-center text-amber-500 group-hover:bg-gradient-to-r group-hover:from-amber-500 group-hover:to-yellow-600 group-hover:text-black transition-all duration-500">
                                             {item.icon}
                                         </div>
                                         <div>
-                                            <h4 className="text-gray-500 text-[10px] font-black uppercase mb-2 tracking-[0.3em]">{item.title}</h4>
-                                            <p className="text-white text-2xl font-black tracking-tight leading-tight">{item.val}</p>
+                                            <h4 className="text-zinc-550 text-[10px] font-black uppercase mb-2 tracking-[0.3em]">{item.title}</h4>
+                                            <p className="text-white text-2xl font-black tracking-tight leading-tight uppercase italic">{item.val}</p>
                                         </div>
                                     </motion.div>
                                 ))}
                             </div>
 
                             <div className="pt-12 border-t border-white/5">
-                                <h4 className="text-gray-500 text-[10px] font-black uppercase mb-8 tracking-[0.3em]">Ijtimoiy tarmoqlarimiz</h4>
+                                <h4 className="text-zinc-500 text-[10px] font-black uppercase mb-8 tracking-[0.3em]">Ijtimoiy tarmoqlarimiz</h4>
                                 <div className="flex gap-6">
-                                    {[Instagram, Linkedin, Github, Globe].map((Icon, i) => (
-                                        <a key={i} href="#" className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:text-blue-500 transition-all">
+                                    {[Instagram, Send, Linkedin, Github].map((Icon, i) => (
+                                        <a key={i} href="#" className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-amber-500 hover:text-black transition-all">
                                             <Icon size={24} />
                                         </a>
                                     ))}
@@ -116,29 +116,29 @@ const Contact = () => {
                                 initial={{ opacity: 0, x: 50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="p-12 md:p-20 rounded-[4rem] bg-gradient-to-br from-white/10 to-transparent border border-white/10 shadow-3xl backdrop-blur-3xl relative"
+                                className="p-12 md:p-20 rounded-[4rem] bg-gradient-to-br from-zinc-900/40 to-transparent border border-white/10 shadow-3xl backdrop-blur-3xl relative"
                             >
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-                                <h3 className="text-4xl font-black mb-12 text-white uppercase italic tracking-tighter">Xabar <span className="text-blue-500">Yuborish</span></h3>
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+                                <h3 className="text-4xl font-black mb-12 text-white uppercase italic tracking-tighter">Xabar <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500">Yuborish</span></h3>
                                 <form onSubmit={handleSubmit} className="space-y-8">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div>
-                                            <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Sizning Ismingiz</label>
+                                            <label className="text-[10px] font-black text-zinc-500 uppercase mb-3 block tracking-[0.2em]">Sizning Ismingiz</label>
                                             <input
                                                 type="text"
                                                 required
-                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-amber-500 transition-all placeholder:text-zinc-700"
                                                 placeholder="Ism-sharifingizni kiriting"
                                                 value={form.name}
                                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Telefon Raqamingiz</label>
+                                            <label className="text-[10px] font-black text-zinc-500 uppercase mb-3 block tracking-[0.2em]">Telefon Raqamingiz</label>
                                             <input
                                                 type="tel"
                                                 required
-                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-amber-500 transition-all placeholder:text-zinc-700"
                                                 placeholder="+998"
                                                 value={form.phone}
                                                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -146,9 +146,9 @@ const Contact = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Qiziqqan Yo'nalishingiz</label>
+                                        <label className="text-[10px] font-black text-zinc-500 uppercase mb-3 block tracking-[0.2em]">Qiziqqan Yo'nalishingiz</label>
                                         <select
-                                            className="w-full bg-[#111] border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer"
+                                            className="w-full bg-zinc-950 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-amber-500 transition-all appearance-none cursor-pointer"
                                             value={form.course}
                                             onChange={(e) => setForm({ ...form, course: e.target.value })}
                                         >
@@ -159,10 +159,10 @@ const Contact = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] font-black text-gray-500 uppercase mb-3 block tracking-[0.2em]">Xabar Yoki Savolingiz</label>
+                                        <label className="text-[10px] font-black text-zinc-500 uppercase mb-3 block tracking-[0.2em]">Xabar Yoki Savolingiz</label>
                                         <textarea
                                             rows="4"
-                                            className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-gray-700"
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white font-bold outline-none focus:border-amber-500 transition-all placeholder:text-zinc-700"
                                             placeholder="Savollaringizni shu yerda qoldiring..."
                                             value={form.message}
                                             onChange={(e) => setForm({ ...form, message: e.target.value })}
@@ -171,10 +171,10 @@ const Contact = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-[2rem] transition-all shadow-[0_25px_60px_-15px_rgba(37,99,235,0.4)] flex items-center justify-center gap-4 group disabled:opacity-50"
+                                        className="w-full py-7 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-black font-black text-2xl rounded-[2rem] transition-all shadow-[0_25px_60px_-15px_rgba(234,179,8,0.3)] flex items-center justify-center gap-4 group disabled:opacity-50"
                                     >
                                         {loading ? (
-                                            <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            <div className="w-8 h-8 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
                                         ) : (
                                             <>
                                                 Ariza Yuborish

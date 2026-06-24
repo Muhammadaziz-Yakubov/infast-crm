@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronRight, Award } from 'lucide-react';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -27,14 +27,14 @@ const Navbar = () => {
     const isActive = (path) => location.pathname === path;
 
     return (
-        <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/90 backdrop-blur-xl border-b border-white/10 py-3' : 'bg-transparent py-5'}`}>
+        <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/90 backdrop-blur-xl border-b border-white/5 py-3' : 'bg-transparent py-5'}`}>
             <div className="container mx-auto px-6 flex justify-between items-center">
-                <Link to="/" className="flex items-center space-x-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <span className="text-white font-bold text-xl italic">IF</span>
+                <Link to="/" className="flex items-center space-x-2.5">
+                    <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+                        <span className="text-black font-black text-xl italic">IF</span>
                     </div>
                     <span className="text-2xl font-black tracking-tighter text-white">
-                        INFAST <span className="text-blue-500">ACADEMY</span>
+                        INFAST <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500">ACADEMY</span>
                     </span>
                 </Link>
 
@@ -44,14 +44,14 @@ const Navbar = () => {
                         <Link
                             key={link.name}
                             to={link.path}
-                            className={`text-sm font-semibold transition-all hover:text-blue-400 ${isActive(link.path) ? 'text-blue-500' : 'text-gray-400'}`}
+                            className={`text-sm font-bold tracking-tight uppercase transition-all hover:text-amber-400 ${isActive(link.path) ? 'text-amber-500' : 'text-zinc-400'}`}
                         >
                             {link.name}
                         </Link>
                     ))}
                     <Link
                         to="/login"
-                        className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-all duration-300 flex items-center group shadow-lg shadow-blue-500/20"
+                        className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-black font-black rounded-full transition-all duration-300 flex items-center group shadow-lg shadow-amber-500/10 text-sm tracking-tight"
                     >
                         Kirish
                         <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -76,13 +76,19 @@ const Navbar = () => {
                         exit={{ opacity: 0, x: '100%' }}
                         className="fixed inset-0 bg-black z-40 md:hidden flex flex-col items-center justify-center p-6"
                     >
-                        <div className="flex flex-col space-y-8 text-center">
+                        <button
+                            className="absolute top-6 right-6 text-white p-2"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            <X size={32} />
+                        </button>
+                        <div className="flex flex-col space-y-8 text-center w-full max-w-xs">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.name}
                                     to={link.path}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`text-4xl font-black ${isActive(link.path) ? 'text-blue-500' : 'text-white'}`}
+                                    className={`text-4xl font-black uppercase tracking-tight ${isActive(link.path) ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500' : 'text-white'}`}
                                 >
                                     {link.name}
                                 </Link>
@@ -90,7 +96,7 @@ const Navbar = () => {
                             <Link
                                 to="/login"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="w-full py-5 bg-blue-600 text-white text-xl font-black rounded-2xl"
+                                className="w-full py-5 bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-xl font-black rounded-2xl shadow-xl shadow-amber-500/10 uppercase tracking-widest"
                             >
                                 Kirish
                             </Link>
