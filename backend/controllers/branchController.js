@@ -149,3 +149,26 @@ exports.deleteBranch = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
     }
 };
+
+// @desc    Filial statusini o'zgartirish (aktiv/aktivmas)
+// @route   PATCH /api/branches/:id/toggle
+// @access  Private (superadmin)
+exports.toggleBranchStatus = async (req, res) => {
+    try {
+        const branch = await Branch.findById(req.params.id);
+        if (!branch) {
+            return res.status(404).json({ success: false, message: 'Filial topilmadi' });
+        }
+
+        branch.status = branch.status === 'active' ? 'inactive' : 'active';
+        await branch.save();
+
+        res.json({
+            success: true,
+            message: "Filial holati muvaffaqiyatli o'zgartirildi",
+            data: branch
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
+    }
+};

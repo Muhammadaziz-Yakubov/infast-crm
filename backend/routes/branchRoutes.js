@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
-    getBranches, getBranch, createBranch, updateBranch, deleteBranch
+    getBranches, getBranch, createBranch, updateBranch, deleteBranch, toggleBranchStatus
 } = require('../controllers/branchController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -15,5 +15,7 @@ router.route('/:id')
     .get(getBranch)
     .put(authorize('superadmin'), updateBranch)
     .delete(authorize('superadmin'), deleteBranch);
+
+router.patch('/:id/toggle', authorize('superadmin'), toggleBranchStatus);
 
 module.exports = router;

@@ -117,86 +117,89 @@ const Branches = () => {
                         <p className="text-sm font-medium">Hozircha hech qanday filial qo'shilmagan.</p>
                     </div>
                 ) : (
-                    branches.map((branch) => (
-                        <div
-                            key={branch._id}
-                            className={`p-6 bg-white dark:bg-[#111111] rounded-xl border transition-all duration-300 relative group overflow-hidden ${
-                                branch.isActive
-                                    ? 'border-gray-100 dark:border-zinc-900/60 hover:shadow-md hover:border-blue-100 dark:hover:border-blue-900/30'
-                                    : 'border-red-100 dark:border-red-950/20 bg-red-50/10 dark:bg-red-950/5 opacity-75'
-                            }`}
-                        >
-                            {/* Decorative Top Accent */}
-                            <div className={`absolute top-0 left-0 right-0 h-1 transition-colors ${
-                                branch.isActive ? 'bg-[#0066FF]' : 'bg-red-500'
-                            }`} />
+                    branches.map((branch) => {
+                        const isBranchActive = branch.status === 'active';
+                        return (
+                            <div
+                                key={branch._id}
+                                className={`p-6 bg-white dark:bg-[#111111] rounded-xl border transition-all duration-300 relative group overflow-hidden ${
+                                    isBranchActive
+                                        ? 'border-gray-100 dark:border-zinc-900/60 hover:shadow-md hover:border-amber-100 dark:hover:border-amber-950/30'
+                                        : 'border-red-100 dark:border-red-950/20 bg-red-50/10 dark:bg-red-950/5 opacity-75'
+                                }`}
+                            >
+                                {/* Decorative Top Accent */}
+                                <div className={`absolute top-0 left-0 right-0 h-1 transition-colors ${
+                                    isBranchActive ? 'bg-amber-500' : 'bg-red-500'
+                                }`} />
 
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold ${
-                                        branch.isActive 
-                                            ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400' 
-                                            : 'bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400'
-                                    }`}>
-                                        <HiOutlineOfficeBuilding className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-[#0066FF] transition-colors">{branch.name}</h3>
-                                        <span className={`inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                                            branch.isActive
-                                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/35 dark:text-emerald-400'
-                                                : 'bg-red-100 text-red-800 dark:bg-red-950/35 dark:text-red-400'
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold ${
+                                            isBranchActive 
+                                                ? 'bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400' 
+                                                : 'bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400'
                                         }`}>
-                                            {branch.isActive ? 'Faol' : 'Faol emas'}
-                                        </span>
+                                            <HiOutlineOfficeBuilding className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-amber-500 transition-colors">{branch.name}</h3>
+                                            <span className={`inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                                isBranchActive
+                                                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/35 dark:text-emerald-400'
+                                                    : 'bg-red-100 text-red-800 dark:bg-red-950/35 dark:text-red-400'
+                                            }`}>
+                                                {isBranchActive ? 'Faol' : 'Muzlatilgan'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="space-y-2 mb-6 text-sm text-zinc-650 dark:text-zinc-400 font-medium">
-                                <div className="flex items-start gap-2">
-                                    <HiOutlineLocationMarker className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
-                                    <span>{branch.address || "Manzil ko'rsatilmagan"}</span>
+                                <div className="space-y-2 mb-6 text-sm text-zinc-650 dark:text-zinc-400 font-medium">
+                                    <div className="flex items-start gap-2">
+                                        <HiOutlineLocationMarker className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
+                                        <span>{branch.address || "Manzil ko'rsatilmagan"}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <HiOutlinePhone className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                                        <span>{branch.phone || "Telefon ko'rsatilmagan"}</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <HiOutlinePhone className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                                    <span>{branch.phone || "Telefon ko'rsatilmagan"}</span>
-                                </div>
-                            </div>
 
-                            {user?.role === 'superadmin' && (
-                                <div className="flex gap-2 pt-4 border-t border-gray-150 dark:border-zinc-900/60">
-                                    <button
-                                        onClick={() => openEditModal(branch)}
-                                        className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-gray-50 hover:bg-gray-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-gray-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 transition-colors flex items-center justify-center gap-1.5"
-                                    >
-                                        <HiOutlinePencil className="w-3.5 h-3.5" />
-                                        Tahrirlash
-                                    </button>
-                                    <button
-                                        onClick={() => handleToggleStatus(branch._id)}
-                                        className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold border transition-colors flex items-center justify-center gap-1.5 ${
-                                            branch.isActive
-                                                ? 'bg-red-50 hover:bg-red-100/85 dark:bg-red-950/15 dark:hover:bg-red-950/25 border-red-100 dark:border-red-950/30 text-red-600 dark:text-red-400'
-                                                : 'bg-emerald-50 hover:bg-emerald-100/85 dark:bg-emerald-950/15 dark:hover:bg-emerald-950/25 border-emerald-100 dark:border-emerald-950/30 text-emerald-600 dark:text-emerald-400'
-                                        }`}
-                                    >
-                                        {branch.isActive ? (
-                                            <>
-                                                <HiOutlineMinusCircle className="w-3.5 h-3.5" />
-                                                Muzlatish
-                                            </>
-                                        ) : (
-                                            <>
-                                                <HiOutlineCheckCircle className="w-3.5 h-3.5" />
-                                                Faollashtirish
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ))
+                                {user?.role === 'superadmin' && (
+                                    <div className="flex gap-2 pt-4 border-t border-gray-150 dark:border-zinc-900/60">
+                                        <button
+                                            onClick={() => openEditModal(branch)}
+                                            className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-gray-50 hover:bg-gray-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-gray-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 transition-colors flex items-center justify-center gap-1.5"
+                                        >
+                                            <HiOutlinePencil className="w-3.5 h-3.5" />
+                                            Tahrirlash
+                                        </button>
+                                        <button
+                                            onClick={() => handleToggleStatus(branch._id)}
+                                            className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold border transition-colors flex items-center justify-center gap-1.5 ${
+                                                isBranchActive
+                                                    ? 'bg-red-50 hover:bg-red-100/85 dark:bg-red-950/15 dark:hover:bg-red-950/25 border-red-100 dark:border-red-950/30 text-red-600 dark:text-red-400'
+                                                    : 'bg-emerald-50 hover:bg-emerald-100/85 dark:bg-emerald-950/15 dark:hover:bg-emerald-950/25 border-emerald-100 dark:border-emerald-950/30 text-emerald-600 dark:text-emerald-400'
+                                            }`}
+                                        >
+                                            {isBranchActive ? (
+                                                <>
+                                                    <HiOutlineMinusCircle className="w-3.5 h-3.5" />
+                                                    Muzlatish
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <HiOutlineCheckCircle className="w-3.5 h-3.5" />
+                                                    Faollashtirish
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })
                 )}
             </div>
 
@@ -215,7 +218,7 @@ const Branches = () => {
                                 type="text"
                                 value={form.name}
                                 onChange={e => setForm({ ...form, name: e.target.value })}
-                                className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 outline-none text-sm font-semibold text-gray-800 dark:text-white transition-all"
                                 placeholder="Masalan: Chilonzor filiali"
                                 required
                             />
@@ -227,7 +230,7 @@ const Branches = () => {
                                 type="text"
                                 value={form.address}
                                 onChange={e => setForm({ ...form, address: e.target.value })}
-                                className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 outline-none text-sm font-semibold text-gray-800 dark:text-white transition-all"
                                 placeholder="Masalan: Chilonzor metro, 5-uy"
                             />
                         </div>
@@ -238,7 +241,7 @@ const Branches = () => {
                                 type="text"
                                 value={form.phone}
                                 onChange={e => setForm({ ...form, phone: e.target.value })}
-                                className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
+                                className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 outline-none text-sm font-semibold text-gray-800 dark:text-white transition-all"
                                 placeholder="Masalan: +998901234567"
                             />
                         </div>
