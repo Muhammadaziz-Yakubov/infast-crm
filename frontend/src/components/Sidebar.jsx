@@ -16,6 +16,7 @@ import Logo from '../infastacademy.jpg';
 const adminMenu = [
     { path: '/', label: 'Bosh sahifa', icon: HiOutlineHome },
     { path: '/students', label: "O'quvchilar", icon: HiOutlineUserGroup },
+    { path: '/branches', label: 'Filiallar', icon: HiOutlineOfficeBuilding },
     { path: '/users', label: 'Foydalanuvchilar', icon: HiOutlineUsers },
     { path: '/groups', label: 'Guruhlar', icon: HiOutlineAcademicCap },
     { path: '/courses', label: 'Kurslar', icon: HiOutlineBookOpen },
@@ -59,13 +60,6 @@ const Sidebar = ({ isOpen, onClose }) => {
     if (user) {
         if (user.role === 'student') {
             menuItems = studentMenu;
-        } else if (user.role === 'superadmin') {
-            // Insert Filiallar route at index 2
-            menuItems = [
-                ...adminMenu.slice(0, 2),
-                { path: '/branches', label: 'Filiallar', icon: HiOutlineOfficeBuilding },
-                ...adminMenu.slice(2)
-            ];
         } else {
             menuItems = adminMenu;
         }
@@ -96,7 +90,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto max-h-[calc(100vh-230px)] scrollbar-none">
                     {menuItems.map((item) => (
                         <NavLink key={item.path} to={item.path} onClick={onClose}
-                            className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all duration-150 font-medium text-sm ${isActive ? 'bg-[#0066FF] text-white' : 'text-zinc-500 dark:text-zinc-400 hover:bg-gray-100/50 dark:hover:bg-zinc-800/50'}`}>
+                            className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all duration-150 font-semibold text-sm ${isActive ? 'bg-amber-500 text-black shadow-md shadow-amber-500/20' : 'text-zinc-500 dark:text-zinc-400 hover:bg-gray-100/50 dark:hover:bg-zinc-800/50'}`}>
                             <item.icon className="w-4.5 h-4.5 flex-shrink-0 opacity-80" />
                             <span>{item.label}</span>
                         </NavLink>
@@ -105,11 +99,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <div className="p-4 border-t border-gray-100 dark:border-zinc-900/80">
                     <button onClick={toggleDarkMode} className="w-full flex items-center justify-between p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 mb-3 hover:bg-gray-100 dark:hover:bg-zinc-800/80 transition-colors">
                         <span className="text-xs font-medium text-zinc-500">{darkMode ? 'Yorug\' rejim' : 'Tungi rejim'}</span>
-                        {darkMode ? <HiOutlineSun className="w-4 h-4 text-amber-500" /> : <HiOutlineMoon className="w-4 h-4 text-[#0066FF]" />}
+                        {darkMode ? <HiOutlineSun className="w-4 h-4 text-amber-500" /> : <HiOutlineMoon className="w-4 h-4 text-amber-500" />}
                     </button>
                     {user ? (
                         <div className="flex items-center gap-2.5 px-1">
-                            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center font-semibold text-[#0066FF] text-sm">
+                            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center font-semibold text-amber-500 text-sm border border-amber-500/20">
                                 {user?.fullName?.charAt(0) || user?.ism?.charAt(0) || 'A'}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -121,7 +115,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                             </button>
                         </div>
                     ) : (
-                        <NavLink to="/login" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-[#0066FF] text-white font-medium text-xs hover:bg-[#0052cc] transition-all">
+                        <NavLink to="/login" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-amber-500 text-black font-semibold text-xs hover:bg-amber-600 transition-all">
                             <HiOutlineLogout className="w-4 h-4" />
                             Kirish
                         </NavLink>
