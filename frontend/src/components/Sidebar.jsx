@@ -7,7 +7,7 @@ import {
     HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineCalendar, HiOutlineUserCircle,
     HiOutlineClipboardList, HiOutlineTrendingUp, HiOutlineShoppingBag,
     HiOutlineDatabase, HiOutlineShieldCheck, HiOutlineFire, HiOutlineCollection,
-    HiOutlineSpeakerphone
+    HiOutlineSpeakerphone, HiOutlineUsers
 } from 'react-icons/hi';
 
 
@@ -16,6 +16,7 @@ import Logo from '../infastacademy.jpg';
 const adminMenu = [
     { path: '/', label: 'Bosh sahifa', icon: HiOutlineHome },
     { path: '/students', label: "O'quvchilar", icon: HiOutlineUserGroup },
+    { path: '/users', label: 'Foydalanuvchilar', icon: HiOutlineUsers },
     { path: '/groups', label: 'Guruhlar', icon: HiOutlineAcademicCap },
     { path: '/courses', label: 'Kurslar', icon: HiOutlineBookOpen },
     { path: '/marketing', label: 'Marketing', icon: HiOutlineSpeakerphone },
