@@ -8,8 +8,8 @@ exports.getBranches = async (req, res) => {
     try {
         let query = {};
         
-        // Agar superadmin bo'lmasa, faqat o'z filialini ko'radi
-        if (req.user.role !== 'superadmin') {
+        // Agar superadmin yoki admin bo'lmasa, faqat o'z filialini ko'radi
+        if (req.user.role !== 'superadmin' && req.user.role !== 'admin') {
             query._id = req.user.branchId;
         }
 
@@ -33,7 +33,7 @@ exports.getBranches = async (req, res) => {
 exports.getBranch = async (req, res) => {
     try {
         // Ruxsatni tekshirish
-        if (req.user.role !== 'superadmin' && req.user.branchId?.toString() !== req.params.id) {
+        if (req.user.role !== 'superadmin' && req.user.role !== 'admin' && req.user.branchId?.toString() !== req.params.id) {
             return res.status(403).json({ success: false, message: 'Ruxsat etilmagan' });
         }
 

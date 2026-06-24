@@ -9,13 +9,13 @@ router.use(protect);
 
 router.route('/')
     .get(getBranches)
-    .post(authorize('superadmin'), createBranch);
+    .post(authorize('superadmin', 'admin'), createBranch);
 
 router.route('/:id')
     .get(getBranch)
-    .put(authorize('superadmin'), updateBranch)
-    .delete(authorize('superadmin'), deleteBranch);
+    .put(authorize('superadmin', 'admin'), updateBranch)
+    .delete(authorize('superadmin', 'admin'), deleteBranch);
 
-router.patch('/:id/toggle', authorize('superadmin'), toggleBranchStatus);
+router.patch('/:id/toggle', authorize('superadmin', 'admin'), toggleBranchStatus);
 
 module.exports = router;

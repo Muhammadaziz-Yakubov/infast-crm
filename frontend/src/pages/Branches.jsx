@@ -98,7 +98,7 @@ const Branches = () => {
                     <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">O'quv markaz filiallari</h1>
                     <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1">Markaz filiallari ro'yxati va ularni boshqarish oynasi</p>
                 </div>
-                {user?.role === 'superadmin' && (
+                {(user?.role === 'superadmin' || user?.role === 'admin') && (
                     <button
                         onClick={openAddModal}
                         className="btn-primary flex items-center gap-2"
@@ -166,7 +166,7 @@ const Branches = () => {
                                     </div>
                                 </div>
 
-                                {user?.role === 'superadmin' && (
+                                {(user?.role === 'superadmin' || user?.role === 'admin') && (
                                     <div className="flex gap-2 pt-4 border-t border-gray-150 dark:border-zinc-900/60">
                                         <button
                                             onClick={() => openEditModal(branch)}
