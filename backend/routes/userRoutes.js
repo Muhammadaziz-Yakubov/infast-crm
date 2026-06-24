@@ -3,10 +3,11 @@ const router = express.Router();
 const {
     getUsers, getUser, createUser, updateUser, deleteUser
 } = require('../controllers/userController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, checkBranchAccess } = require('../middleware/auth');
 
 // Hamma user marşrutlarini faqat login bo'lgan superadmin va adminlar ishlata oladi
 router.use(protect);
+router.use(checkBranchAccess);
 router.use(authorize('superadmin', 'admin'));
 
 router.route('/')

@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { getAttendance, saveAttendance, scanAttendance, sendAttendanceReport } = require('../controllers/attendanceController');
-const { protect } = require('../middleware/auth');
+const { protect, checkBranchAccess } = require('../middleware/auth');
 
 router.use(protect);
+router.use(checkBranchAccess);
 
 router.get('/:groupId/:date', getAttendance);
 router.post('/', saveAttendance);

@@ -85,6 +85,12 @@ const studentSchema = new mongoose.Schema({
     qoshilganSana: {
         type: Date,
         default: Date.now
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true

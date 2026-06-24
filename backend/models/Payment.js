@@ -42,6 +42,12 @@ const paymentSchema = new mongoose.Schema({
     guruh: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Group'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true

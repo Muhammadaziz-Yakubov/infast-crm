@@ -28,6 +28,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         enum: ['active', 'inactive'],
         default: 'active'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true

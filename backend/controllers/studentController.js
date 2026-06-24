@@ -15,7 +15,7 @@ exports.getStudents = async (req, res) => {
     try {
         const { search, guruh, kurs, holat, tolovKuni, page = 1, limit = 50 } = req.query;
 
-        let query = {};
+        let query = { ...(req.branchFilter || {}) };
 
         if (search) {
             query.$or = [
@@ -61,7 +61,7 @@ exports.getStudents = async (req, res) => {
 // @route   GET /api/students/:id
 exports.getStudent = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id)
+        const student = await Student.findOne({ _id: req.params.id, ...(req.branchFilter || {}) })
             .populate('kurs', 'nomi narx davomiyligi')
             .populate('guruh', 'nomi oqituvchi jadval');
 
@@ -70,7 +70,7 @@ exports.getStudent = async (req, res) => {
         }
 
         // O'quvchi to'lovlar tarixini olish
-        const payments = await Payment.find({ oquvchi: req.params.id })
+        const payments = await Payment.find({ oquvchi: req.params.id, ...(req.branchFilter || {}) })
             .sort({ sana: -1 })
             .limit(12);
 
@@ -94,6 +94,9 @@ exports.createStudent = async (req, res) => {
 
     try {
         const { shuOyTolagan, ...studentData } = req.body;
+
+        // Filialni belgilash
+        studentData.branchId = req.branchId || studentData.branchId || req.user.branchId;
 
         // Kursni tekshirish
         if (!studentData.kurs) {
@@ -189,7 +192,8 @@ exports.createStudent = async (req, res) => {
                 tolovTuri: 'naqd',
                 izoh: "Ro'yxatga olishda to'langan",
                 kurs: student.kurs,
-                guruh: student.guruh
+                guruh: student.guruh,
+                branchId: student.branchId
             }], { session });
         }
 
@@ -222,7 +226,7 @@ exports.createStudent = async (req, res) => {
 // @route   PUT /api/students/:id
 exports.updateStudent = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id);
+        const student = await Student.findOne({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
@@ -261,7 +265,7 @@ exports.updateStudent = async (req, res) => {
 // @route   DELETE /api/students/:id
 exports.deleteStudent = async (req, res) => {
     try {
-        const student = await Student.findByIdAndDelete(req.params.id);
+        const student = await Student.findOneAndDelete({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
@@ -283,7 +287,7 @@ exports.bulkDeleteStudents = async (req, res) => {
             return res.status(400).json({ success: false, message: "O'quvchilar tanlanmagan" });
         }
 
-        const result = await Student.deleteMany({ _id: { $in: ids } });
+        const result = await Student.deleteMany({ _id: { $in: ids }, ...(req.branchFilter || {}) });
 
         res.json({
             success: true,
@@ -301,7 +305,8 @@ exports.getDebtors = async (req, res) => {
     try {
         const debtors = await Student.find({
             tolovHolati: { $in: ['tolanmagan', 'qarzdor'] },
-            holati: 'faol'
+            holati: 'faol',
+            ...(req.branchFilter || {})
         })
             .populate('kurs', 'nomi narx')
             .populate('guruh', 'nomi')
@@ -451,7 +456,7 @@ exports.getClassmates = async (req, res) => {
 // @route   GET /api/students/public-profile/:id
 exports.getPublicProfile = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id)
+        const student = await Student.findOne({ _id: req.params.id, ...(req.branchFilter || {}) })
             .select('ism coins profileImage username guruh')
             .populate('guruh', 'nomi');
 
@@ -474,10 +479,13 @@ exports.getPublicProfile = async (req, res) => {
 
 // @desc    Get student leaderboard
 // @route   GET /api/students/leaderboard
-exports.getLeaderboard = async (req, res) => {
-    try {
+        const matchStage = { holati: 'faol' };
+        if (req.branchFilter && req.branchFilter.branchId) {
+            matchStage.branchId = new mongoose.Types.ObjectId(req.branchFilter.branchId);
+        }
+
         const leaderboard = await Student.aggregate([
-            { $match: { holati: 'faol' } },
+            { $match: matchStage },
 
             // Attendance points (sum of balls for each 'keldi: true')
             {
@@ -593,7 +601,7 @@ exports.getLeaderboard = async (req, res) => {
 exports.resetPaymentsStatus = async (req, res) => {
     try {
         await Student.updateMany(
-            { holati: 'faol' },
+            { holati: 'faol', ...(req.branchFilter || {}) },
             { $set: { tolovHolati: 'tolanmagan' } }
         );
 
@@ -611,7 +619,7 @@ exports.resetPaymentsStatus = async (req, res) => {
 // @route   POST /api/students/:id/send-debt-sms
 exports.sendDebtSMS = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id).populate('kurs');
+        const student = await Student.findOne({ _id: req.params.id, ...(req.branchFilter || {}) }).populate('kurs');
         
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
@@ -652,7 +660,7 @@ exports.bulkMoveGroup = async (req, res) => {
         }
 
         const result = await Student.updateMany(
-            { _id: { $in: ids } },
+            { _id: { $in: ids }, ...(req.branchFilter || {}) },
             { $set: { guruh: guruhId } }
         );
 
@@ -670,13 +678,13 @@ exports.bulkMoveGroup = async (req, res) => {
 // @route   PUT /api/students/:id/toggle-block
 exports.toggleBlock = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id);
+        const student = await Student.findOne({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
 
-        const updatedStudent = await Student.findByIdAndUpdate(
-            req.params.id,
+        const updatedStudent = await Student.findOneAndUpdate(
+            { _id: req.params.id, ...(req.branchFilter || {}) },
             { isBlocked: !student.isBlocked },
             { new: true, runValidators: true }
         );

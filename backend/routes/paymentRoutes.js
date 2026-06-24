@@ -3,9 +3,10 @@ const router = express.Router();
 const {
     getPayments, createPayment, getDashboard, exportDebtors, deletePayment, bulkCreatePayment, deleteAllPayments
 } = require('../controllers/paymentController');
-const { protect } = require('../middleware/auth');
+const { protect, checkBranchAccess } = require('../middleware/auth');
 
 router.use(protect);
+router.use(checkBranchAccess);
 router.get('/dashboard', getDashboard);
 router.get('/export/debtors', exportDebtors);
 router.post('/bulk', bulkCreatePayment);

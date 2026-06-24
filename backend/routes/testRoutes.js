@@ -15,10 +15,11 @@ const {
     getDashboardWidgets
 } = require('../controllers/testController');
 
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, checkBranchAccess } = require('../middleware/auth');
 
-// Barcha marshrutlar tizimga kirishni talab qiladi
+// Barcha marshrutlar tizimga kirishni talab qiladi va filial bo'yicha cheklanadi
 router.use(protect);
+router.use(checkBranchAccess);
 
 // ==========================================
 // O'QUVCHI MARSHRUTLARI (Student) - MUST BE FIRST!

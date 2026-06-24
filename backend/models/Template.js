@@ -10,6 +10,11 @@ const templateSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Shablon matni kiritilishi shart'],
         trim: true
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        required: false
     }
 }, {
     timestamps: true

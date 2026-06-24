@@ -4,7 +4,8 @@ const Course = require('../models/Course');
 // @route   GET /api/courses
 exports.getCourses = async (req, res) => {
     try {
-        const courses = await Course.find().sort({ createdAt: -1 });
+        const query = { ...(req.branchFilter || {}) };
+        const courses = await Course.find(query).sort({ createdAt: -1 });
         res.json({
             success: true,
             count: courses.length,
@@ -19,7 +20,8 @@ exports.getCourses = async (req, res) => {
 // @route   GET /api/courses/:id
 exports.getCourse = async (req, res) => {
     try {
-        const course = await Course.findById(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const course = await Course.findOne(query);
         if (!course) {
             return res.status(404).json({ success: false, message: 'Kurs topilmadi' });
         }
@@ -33,7 +35,11 @@ exports.getCourse = async (req, res) => {
 // @route   POST /api/courses
 exports.createCourse = async (req, res) => {
     try {
-        const course = await Course.create(req.body);
+        const courseData = {
+            ...req.body,
+            branchId: req.branchId || req.body.branchId || req.user.branchId
+        };
+        const course = await Course.create(courseData);
         res.status(201).json({
             success: true,
             message: "Kurs muvaffaqiyatli qo'shildi",
@@ -48,7 +54,8 @@ exports.createCourse = async (req, res) => {
 // @route   PUT /api/courses/:id
 exports.updateCourse = async (req, res) => {
     try {
-        const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const course = await Course.findOneAndUpdate(query, req.body, {
             new: true,
             runValidators: true
         });
@@ -69,7 +76,8 @@ exports.updateCourse = async (req, res) => {
 // @route   DELETE /api/courses/:id
 exports.deleteCourse = async (req, res) => {
     try {
-        const course = await Course.findByIdAndDelete(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const course = await Course.findOneAndDelete(query);
         if (!course) {
             return res.status(404).json({ success: false, message: 'Kurs topilmadi' });
         }

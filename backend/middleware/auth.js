@@ -60,4 +60,60 @@ exports.authorize = (...roles) => {
     };
 };
 
+// Filiallarga kirish huquqini tekshirish va filtrlash middleware
+exports.checkBranchAccess = (req, res, next) => {
+    if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Ushbu amalni bajarish uchun tizimga kiring' });
+    }
+
+    const role = req.user.role;
+    
+    // Header, query yoki bodydan tanlangan filial ID sini olish
+    let selectedBranchId = req.headers['x-branch-id'] || req.query.branchId || req.body.branchId;
+
+    // Tanlangan filial 'all' yoki bo'sh bo'lishi mumkin (faqat superadmin uchun)
+    if (selectedBranchId === 'undefined' || selectedBranchId === 'null') {
+        selectedBranchId = undefined;
+    }
+
+    if (role === 'superadmin') {
+        if (selectedBranchId && selectedBranchId !== 'all') {
+            req.branchId = selectedBranchId;
+            req.branchFilter = { branchId: selectedBranchId };
+        } else {
+            req.branchId = null;
+            req.branchFilter = {}; // Hammasini ko'rish ruxsati
+        }
+    } else if (role === 'admin') {
+        // Admin faqat o'z filialiga tegishli ma'lumotlarni ko'ra oladi
+        req.branchId = req.user.branchId;
+        req.branchFilter = { branchId: req.user.branchId };
+
+        if (selectedBranchId && selectedBranchId.toString() !== req.user.branchId?.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: 'Ushbu filial ma\'lumotlariga kirish huquqiga ega emassiz'
+            });
+        }
+    } else if (role === 'student') {
+        // O'quvchi faqat o'z filialini ko'ra oladi
+        req.branchId = req.user.branchId;
+        req.branchFilter = { branchId: req.user.branchId };
+
+        if (selectedBranchId && selectedBranchId.toString() !== req.user.branchId?.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: 'Ushbu filial ma\'lumotlariga kirish huquqiga ega emassiz'
+            });
+        }
+    } else {
+        // Boshqa har qanday rol
+        req.branchId = req.user.branchId || null;
+        req.branchFilter = req.user.branchId ? { branchId: req.user.branchId } : {};
+    }
+
+    next();
+};
+
+
 

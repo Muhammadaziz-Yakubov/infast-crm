@@ -8,7 +8,7 @@ exports.getPayments = async (req, res) => {
     try {
         const { oy, yil, search, page = 1, limit = 50 } = req.query;
 
-        let query = {};
+        let query = { ...(req.branchFilter || {}) };
         if (oy) query.oy = parseInt(oy);
         if (yil) query.yil = parseInt(yil);
 
@@ -53,7 +53,7 @@ exports.createPayment = async (req, res) => {
     try {
         const { oquvchi, summa, tolovTuri, izoh } = req.body;
 
-        const student = await Student.findById(oquvchi).populate('kurs', 'narx');
+        const student = await Student.findOne({ _id: oquvchi, ...(req.branchFilter || {}) }).populate('kurs', 'narx');
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
@@ -89,7 +89,8 @@ const now = new Date();
             tolovTuri: tolovTuri || 'naqd',
             izoh: izoh || '',
             kurs: student.kurs?._id || student.kurs,
-            guruh: student.guruh
+            guruh: student.guruh,
+            branchId: student.branchId || req.branchId || req.user.branchId
         });
 
         // O'quvchi to'lov holatini yangilash va blokdan chiqarish
@@ -133,7 +134,7 @@ exports.bulkCreatePayment = async (req, res) => {
 
         for (const studentId of studentIds) {
             try {
-                const student = await Student.findById(studentId).populate('kurs', 'narx tolovKuni');
+                const student = await Student.findOne({ _id: studentId, ...(req.branchFilter || {}) }).populate('kurs', 'narx tolovKuni');
                 if (!student) { failCount++; continue; }
 
                 const tolovKuni = student.tolovKuni || 15;
@@ -159,7 +160,8 @@ exports.bulkCreatePayment = async (req, res) => {
                     tolovTuri: tolovTuri || 'naqd',
                     izoh: izoh || 'Ommaviy to\'lov',
                     kurs: student.kurs?._id || student.kurs,
-                    guruh: student.guruh
+                    guruh: student.guruh,
+                    branchId: student.branchId || req.branchId || req.user.branchId
                 });
 
                 student.tolovHolati = 'tolangan';
@@ -191,22 +193,25 @@ exports.getDashboard = async (req, res) => {
         const currentYear = now.getFullYear();
 
         // Umumiy o'quvchilar
-        const totalStudents = await Student.countDocuments({ holati: 'faol' });
+        const totalStudents = await Student.countDocuments({ holati: 'faol', ...(req.branchFilter || {}) });
 
         // Qarzdorlar
         const totalDebtors = await Student.countDocuments({
             tolovHolati: { $in: ['tolanmagan', 'qarzdor'] },
-            holati: 'faol'
+            holati: 'faol',
+            ...(req.branchFilter || {})
         });
 
         // Oyliq tushum
+        const monthlyMatch = {
+            oy: currentMonth,
+            yil: currentYear
+        };
+        if (req.branchFilter && req.branchFilter.branchId) {
+            monthlyMatch.branchId = new mongoose.Types.ObjectId(req.branchFilter.branchId);
+        }
         const monthlyPayments = await Payment.aggregate([
-            {
-                $match: {
-                    oy: currentMonth,
-                    yil: currentYear
-                }
-            },
+            { $match: monthlyMatch },
             {
                 $group: {
                     _id: null,
@@ -217,11 +222,11 @@ exports.getDashboard = async (req, res) => {
         const monthlyRevenue = monthlyPayments[0]?.total || 0;
 
         // Kutilayotgan tushum (faol o'quvchilar * kurs narxi - to'langan)
-        const activeStudents = await Student.find({ holati: 'faol' }).populate('kurs', 'narx');
+        const activeStudents = await Student.find({ holati: 'faol', ...(req.branchFilter || {}) }).populate('kurs', 'narx');
         const expectedRevenue = activeStudents.reduce((sum, s) => sum + (s.oylikTolov || s.kurs?.narx || 0), 0);
 
         // So'nggi to'lovlar
-        const recentPayments = await Payment.find()
+        const recentPayments = await Payment.find(req.branchFilter || {})
             .populate({
                 path: 'oquvchi',
                 select: 'ism',
@@ -237,8 +242,13 @@ exports.getDashboard = async (req, res) => {
             let y = currentYear;
             if (m <= 0) { m += 12; y -= 1; }
 
+            const statMatch = { oy: m, yil: y };
+            if (req.branchFilter && req.branchFilter.branchId) {
+                statMatch.branchId = new mongoose.Types.ObjectId(req.branchFilter.branchId);
+            }
+
             const monthPayments = await Payment.aggregate([
-                { $match: { oy: m, yil: y } },
+                { $match: statMatch },
                 { $group: { _id: null, total: { $sum: '$summa' }, count: { $sum: 1 } } }
             ]);
 
@@ -265,11 +275,14 @@ exports.getDashboard = async (req, res) => {
         const startOfToday = new Date(Date.UTC(y, m, d, 0, 0, 0) - offset);
         const endOfToday = new Date(startOfToday.getTime() + 24 * 60 * 60 * 1000);
 
+        const todayMatch = { sana: { $gte: startOfToday, $lt: endOfToday } };
+        if (req.branchFilter && req.branchFilter.branchId) {
+            todayMatch.branchId = new mongoose.Types.ObjectId(req.branchFilter.branchId);
+        }
+
         const todayPayments = await Payment.aggregate([
             {
-                $match: {
-                    sana: { $gte: startOfToday, $lt: endOfToday }
-                }
+                $match: todayMatch
             },
             {
                 $group: {
@@ -284,7 +297,13 @@ exports.getDashboard = async (req, res) => {
 
         // Lead statistika
         const Lead = require('../models/Lead');
+        const leadMatch = {};
+        if (req.branchFilter && req.branchFilter.branchId) {
+            leadMatch.branchId = new mongoose.Types.ObjectId(req.branchFilter.branchId);
+        }
+
         const leadStats = await Lead.aggregate([
+            { $match: leadMatch },
             {
                 $group: {
                     _id: '$status',
@@ -294,6 +313,7 @@ exports.getDashboard = async (req, res) => {
         ]);
 
         const leadSourceStats = await Lead.aggregate([
+            { $match: leadMatch },
             {
                 $group: {
                     _id: '$source',
@@ -303,18 +323,24 @@ exports.getDashboard = async (req, res) => {
         ]);
 
         const newLeadsToday = await Lead.countDocuments({
-            createdAt: { $gte: startOfToday, $lt: endOfToday }
+            createdAt: { $gte: startOfToday, $lt: endOfToday },
+            ...(req.branchFilter || {})
         });
 
         // Guruhlar va Kurslar soni
         const Group = require('../models/Group');
         const Course = require('../models/Course');
-        const totalGroups = await Group.countDocuments({ holati: 'faol' });
-        const totalCourses = await Course.countDocuments({ holati: 'faol' });
+        const totalGroups = await Group.countDocuments({ holati: 'faol', ...(req.branchFilter || {}) });
+        const totalCourses = await Course.countDocuments({ holati: 'faol', ...(req.branchFilter || {}) });
 
         // Kurslar bo'yicha o'quvchilar soni
+        const courseStudentMatch = { holati: 'faol' };
+        if (req.branchFilter && req.branchFilter.branchId) {
+            courseStudentMatch.branchId = new mongoose.Types.ObjectId(req.branchFilter.branchId);
+        }
+
         const courseStudentStats = await Student.aggregate([
-            { $match: { holati: 'faol' } },
+            { $match: courseStudentMatch },
             {
                 $group: {
                     _id: '$kurs',
@@ -339,7 +365,7 @@ exports.getDashboard = async (req, res) => {
         ]);
 
         // Top o'quvchilar (coinlar bo'yicha)
-        const topStudents = await Student.find({ holati: 'faol' })
+        const topStudents = await Student.find({ holati: 'faol', ...(req.branchFilter || {}) })
             .select('ism coins profileImage')
             .sort({ coins: -1 })
             .limit(5);
@@ -373,7 +399,7 @@ exports.getDashboard = async (req, res) => {
 // @route   DELETE /api/payments/:id
 exports.deletePayment = async (req, res) => {
     try {
-        const payment = await Payment.findById(req.params.id);
+        const payment = await Payment.findOne({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!payment) {
             return res.status(404).json({ success: false, message: "To'lov topilmadi" });
         }
@@ -383,10 +409,10 @@ exports.deletePayment = async (req, res) => {
         const deletedYil = payment.yil;
 
         // To'lovni o'chirish
-        await Payment.findByIdAndDelete(req.params.id);
+        await Payment.deleteOne({ _id: req.params.id, ...(req.branchFilter || {}) });
 
         // O'quvchini topish
-        const student = await Student.findById(studentId);
+        const student = await Student.findOne({ _id: studentId, ...(req.branchFilter || {}) });
         if (!student) {
             return res.status(404).json({ success: false, message: "O'quvchi topilmadi" });
         }
@@ -440,7 +466,8 @@ exports.exportDebtors = async (req, res) => {
     try {
         const debtors = await Student.find({
             tolovHolati: { $in: ['tolanmagan', 'qarzdor'] },
-            holati: 'faol'
+            holati: 'faol',
+            ...(req.branchFilter || {})
         })
             .populate('kurs', 'nomi narx')
             .populate('guruh', 'nomi')
@@ -478,7 +505,7 @@ exports.deleteAllPayments = async (req, res) => {
     try {
         const { oy, yil } = req.query;
 
-        let query = {};
+        let query = { ...(req.branchFilter || {}) };
         if (oy) query.oy = parseInt(oy);
         if (yil) query.yil = parseInt(yil);
 

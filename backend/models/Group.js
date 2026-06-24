@@ -87,6 +87,12 @@ const groupSchema = new mongoose.Schema({
             type: String,
             default: ''
         }
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true,

@@ -25,6 +25,11 @@ const broadcastLogSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'Muvaffaqiyatli'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        required: false
     }
 }, {
     timestamps: true

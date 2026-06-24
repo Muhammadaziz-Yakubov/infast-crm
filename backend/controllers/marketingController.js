@@ -8,7 +8,7 @@ const BroadcastLog = require('../models/BroadcastLog');
 // @route   GET /api/marketing/campaigns
 exports.getCampaigns = async (req, res) => {
     try {
-        const campaigns = await Campaign.find().sort({ createdAt: -1 });
+        const campaigns = await Campaign.find(req.branchFilter || {}).sort({ createdAt: -1 });
         res.status(200).json({ success: true, count: campaigns.length, data: campaigns });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
@@ -19,7 +19,8 @@ exports.getCampaigns = async (req, res) => {
 // @route   POST /api/marketing/campaigns
 exports.createCampaign = async (req, res) => {
     try {
-        const campaign = await Campaign.create(req.body);
+        const campaignData = { ...req.body, ...(req.branchFilter || {}) };
+        const campaign = await Campaign.create(campaignData);
         res.status(201).json({ success: true, data: campaign });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
@@ -30,13 +31,14 @@ exports.createCampaign = async (req, res) => {
 // @route   PUT /api/marketing/campaigns/:id
 exports.updateCampaign = async (req, res) => {
     try {
-        const campaign = await Campaign.findByIdAndUpdate(req.params.id, req.body, {
+        const filter = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const campaign = await Campaign.findOneAndUpdate(filter, req.body, {
             new: true,
             runValidators: true
         });
 
         if (!campaign) {
-            return res.status(404).json({ success: false, message: 'Kampaniya topilmadi' });
+            return res.status(404).json({ success: false, message: 'Kampaniya topilmadi yoki filial ruxsati yo\'q' });
         }
 
         res.status(200).json({ success: true, data: campaign });
@@ -49,10 +51,11 @@ exports.updateCampaign = async (req, res) => {
 // @route   DELETE /api/marketing/campaigns/:id
 exports.deleteCampaign = async (req, res) => {
     try {
-        const campaign = await Campaign.findByIdAndDelete(req.params.id);
+        const filter = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const campaign = await Campaign.findOneAndDelete(filter);
 
         if (!campaign) {
-            return res.status(404).json({ success: false, message: 'Kampaniya topilmadi' });
+            return res.status(404).json({ success: false, message: 'Kampaniya topilmadi yoki filial ruxsati yo\'q' });
         }
 
         res.status(200).json({ success: true, message: 'Kampaniya muvaffaqiyatli o\'chirildi' });
@@ -68,7 +71,7 @@ exports.deleteCampaign = async (req, res) => {
 // @route   GET /api/marketing/templates
 exports.getTemplates = async (req, res) => {
     try {
-        const templates = await Template.find().sort({ createdAt: -1 });
+        const templates = await Template.find(req.branchFilter || {}).sort({ createdAt: -1 });
         res.status(200).json({ success: true, count: templates.length, data: templates });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
@@ -79,7 +82,8 @@ exports.getTemplates = async (req, res) => {
 // @route   POST /api/marketing/templates
 exports.createTemplate = async (req, res) => {
     try {
-        const template = await Template.create(req.body);
+        const templateData = { ...req.body, ...(req.branchFilter || {}) };
+        const template = await Template.create(templateData);
         res.status(201).json({ success: true, data: template });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
@@ -90,10 +94,11 @@ exports.createTemplate = async (req, res) => {
 // @route   DELETE /api/marketing/templates/:id
 exports.deleteTemplate = async (req, res) => {
     try {
-        const template = await Template.findByIdAndDelete(req.params.id);
+        const filter = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const template = await Template.findOneAndDelete(filter);
 
         if (!template) {
-            return res.status(404).json({ success: false, message: 'Shablon topilmadi' });
+            return res.status(404).json({ success: false, message: 'Shablon topilmadi yoki filial ruxsati yo\'q' });
         }
 
         res.status(200).json({ success: true, message: 'Shablon o\'chirildi' });
@@ -109,7 +114,7 @@ exports.deleteTemplate = async (req, res) => {
 // @route   GET /api/marketing/broadcast-logs
 exports.getBroadcastLogs = async (req, res) => {
     try {
-        const logs = await BroadcastLog.find().sort({ createdAt: -1 });
+        const logs = await BroadcastLog.find(req.branchFilter || {}).sort({ createdAt: -1 });
         res.status(200).json({ success: true, count: logs.length, data: logs });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
@@ -120,7 +125,8 @@ exports.getBroadcastLogs = async (req, res) => {
 // @route   POST /api/marketing/broadcast-logs
 exports.createBroadcastLog = async (req, res) => {
     try {
-        const log = await BroadcastLog.create(req.body);
+        const logData = { ...req.body, ...(req.branchFilter || {}) };
+        const log = await BroadcastLog.create(logData);
         res.status(201).json({ success: true, data: log });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });

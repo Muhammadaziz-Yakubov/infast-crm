@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { protect } = require('../middleware/auth');
+const { protect, checkBranchAccess } = require('../middleware/auth');
 const {
     createTask,
     getTaskSubmissions,
@@ -17,16 +17,19 @@ const {
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+router.use(protect);
+router.use(checkBranchAccess);
+
 // Admin routes
-router.post('/', protect, upload.single('image'), createTask);
-router.get('/:taskId/submissions', protect, getTaskSubmissions);
-router.patch('/submissions/:id/grade', protect, gradeSubmission);
-router.patch('/:id/complete', protect, completeTask);
-router.patch('/:id/reopen', protect, reopenTask);
-router.delete('/:id', protect, deleteTask);
+router.post('/', upload.single('image'), createTask);
+router.get('/:taskId/submissions', getTaskSubmissions);
+router.patch('/submissions/:id/grade', gradeSubmission);
+router.patch('/:id/complete', completeTask);
+router.patch('/:id/reopen', reopenTask);
+router.delete('/:id', deleteTask);
 
 // Student routes
-router.get('/my', protect, getMyTasks);
-router.post('/submit', protect, upload.array('images', 5), submitTask);
+router.get('/my', getMyTasks);
+router.post('/submit', upload.array('images', 5), submitTask);
 
 module.exports = router;

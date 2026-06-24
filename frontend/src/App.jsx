@@ -16,6 +16,7 @@ const StudentPayments = React.lazy(() => import('./pages/student/StudentPayments
 const StudentProfile = React.lazy(() => import('./pages/student/StudentProfile'));
 const Students = React.lazy(() => import('./pages/Students'));
 const Users = React.lazy(() => import('./pages/Users'));
+const Branches = React.lazy(() => import('./pages/Branches'));
 const Groups = React.lazy(() => import('./pages/Groups'));
 const Courses = React.lazy(() => import('./pages/Courses'));
 const Payments = React.lazy(() => import('./pages/Payments'));
@@ -109,6 +110,7 @@ const AppContent = () => {
                         <Route path="/leaderboard" element={<Leaderboard />} />
                         <Route path="/students" element={<Students />} />
                         <Route path="/users" element={<Users />} />
+                        <Route path="/branches" element={<Branches />} />
                         <Route path="/groups" element={<Groups />} />
                         <Route path="/groups/:id" element={<GroupView />} />
                         <Route path="/curriculum" element={<CurriculumManager />} />

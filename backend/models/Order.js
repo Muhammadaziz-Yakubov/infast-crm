@@ -19,6 +19,12 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'completed', 'cancelled'],
         default: 'pending'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        required: false,
+        index: true
     }
 }, {
     timestamps: true

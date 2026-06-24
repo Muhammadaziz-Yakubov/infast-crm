@@ -5,7 +5,12 @@ const User = require('../models/User');
 // @access  Private (superadmin, admin)
 exports.getUsers = async (req, res) => {
     try {
-        const users = await User.find().select('-password').sort({ createdAt: -1 });
+        let query = {};
+        if (req.user.role !== 'superadmin') {
+            query.branchId = req.user.branchId;
+        }
+
+        const users = await User.find(query).select('-password').sort({ createdAt: -1 });
         res.json({
             success: true,
             count: users.length,
@@ -25,6 +30,12 @@ exports.getUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: 'Foydalanuvchi topilmadi' });
         }
+
+        // Ruxsat tekshiruvi
+        if (req.user.role !== 'superadmin' && user.branchId?.toString() !== req.user.branchId?.toString()) {
+            return res.status(403).json({ success: false, message: 'Ruxsat etilmagan' });
+        }
+
         res.json({ success: true, data: user });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server xatosi', error: error.message });
@@ -36,7 +47,7 @@ exports.getUser = async (req, res) => {
 // @access  Private (superadmin, admin)
 exports.createUser = async (req, res) => {
     try {
-        const { username, password, fullName, role } = req.body;
+        const { username, password, fullName, role, branchId } = req.body;
 
         // Check if user already exists
         const userExists = await User.findOne({ username });
@@ -44,12 +55,13 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Ushbu foydalanuvchi nomi band' });
         }
 
-        // Create user (default role is 'admin')
+        // Create user
         const user = await User.create({
             username,
             password,
             fullName: fullName || 'Administrator',
-            role: role || 'admin'
+            role: role || 'admin',
+            branchId: branchId || null
         });
 
         // Hide password in response
@@ -71,11 +83,16 @@ exports.createUser = async (req, res) => {
 // @access  Private (superadmin, admin)
 exports.updateUser = async (req, res) => {
     try {
-        const { username, fullName, role, password } = req.body;
+        const { username, fullName, role, password, branchId } = req.body;
         
         let user = await User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({ success: false, message: 'Foydalanuvchi topilmadi' });
+        }
+
+        // Ruxsat tekshiruvi
+        if (req.user.role !== 'superadmin' && user.branchId?.toString() !== req.user.branchId?.toString()) {
+            return res.status(403).json({ success: false, message: 'Ruxsat etilmagan' });
         }
 
         // If username is being changed, check if new username is taken
@@ -90,6 +107,7 @@ exports.updateUser = async (req, res) => {
         if (fullName) user.fullName = fullName;
         if (role) user.role = role;
         if (password) user.password = password; // pre-save will hash it
+        if (branchId !== undefined) user.branchId = branchId;
 
         await user.save();
 
@@ -114,6 +132,11 @@ exports.deleteUser = async (req, res) => {
         const user = await User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({ success: false, message: 'Foydalanuvchi topilmadi' });
+        }
+
+        // Ruxsat tekshiruvi
+        if (req.user.role !== 'superadmin' && user.branchId?.toString() !== req.user.branchId?.toString()) {
+            return res.status(403).json({ success: false, message: 'Ruxsat etilmagan' });
         }
 
         // Prevent self deletion

@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import { userAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 import {
     HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineSearch,
-    HiOutlineUsers, HiOutlineShieldCheck, HiOutlineUser, HiOutlineKey
+    HiOutlineUsers, HiOutlineShieldCheck, HiOutlineUser, HiOutlineKey,
+    HiOutlineOfficeBuilding
 } from 'react-icons/hi';
 
 const Users = () => {
+    const { user: currentUser, branches } = useAuth();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
@@ -22,7 +25,8 @@ const Users = () => {
         username: '',
         fullName: '',
         password: '',
-        role: 'admin'
+        role: 'admin',
+        branchId: ''
     });
 
     useEffect(() => {
@@ -46,7 +50,8 @@ const Users = () => {
             username: '',
             fullName: '',
             password: '',
-            role: 'admin' // default value as requested
+            role: 'admin',
+            branchId: ''
         });
         setModalOpen(true);
     };
@@ -56,8 +61,9 @@ const Users = () => {
         setForm({
             username: user.username,
             fullName: user.fullName || '',
-            password: '', // empty by default (only filled if updating)
-            role: user.role || 'admin'
+            password: '',
+            role: user.role || 'admin',
+            branchId: user.branchId && typeof user.branchId === 'object' ? user.branchId._id : (user.branchId || '')
         });
         setModalOpen(true);
     };
@@ -65,20 +71,22 @@ const Users = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const payload = { ...form };
+            if (!payload.branchId) {
+                payload.branchId = null;
+            }
             if (selectedUser) {
-                // If password is not provided, remove it from update payload
-                const updateData = { ...form };
-                if (!updateData.password) {
-                    delete updateData.password;
+                if (!payload.password) {
+                    delete payload.password;
                 }
-                await userAPI.update(selectedUser._id, updateData);
+                await userAPI.update(selectedUser._id, payload);
                 toast.success("Foydalanuvchi ma'lumotlari yangilandi");
             } else {
-                if (!form.password || form.password.length < 6) {
+                if (!payload.password || payload.password.length < 6) {
                     toast.error("Parol kamida 6 ta belgidan iborat bo'lishi shart");
                     return;
                 }
-                await userAPI.create(form);
+                await userAPI.create(payload);
                 toast.success("Yangi foydalanuvchi qo'shildi");
             }
             setModalOpen(false);
@@ -168,6 +176,7 @@ const Users = () => {
                             <tr className="border-b border-gray-100 dark:border-zinc-900 text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider bg-gray-50/50 dark:bg-zinc-900/30">
                                 <th className="px-6 py-4">Foydalanuvchi</th>
                                 <th className="px-6 py-4">Foydalanuvchi nomi</th>
+                                <th className="px-6 py-4">Filial</th>
                                 <th className="px-6 py-4">Roli</th>
                                 <th className="px-6 py-4">Yaratilgan sana</th>
                                 <th className="px-6 py-4 text-right">Amallar</th>
@@ -176,7 +185,7 @@ const Users = () => {
                         <tbody className="divide-y divide-gray-100 dark:divide-zinc-900/60">
                             {filteredUsers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="px-6 py-12 text-center text-zinc-400">
+                                    <td colSpan="6" className="px-6 py-12 text-center text-zinc-400">
                                         <HiOutlineUsers className="w-10 h-10 mx-auto mb-3 opacity-60" />
                                         <p className="text-sm">Foydalanuvchilar topilmadi</p>
                                     </td>
@@ -196,6 +205,16 @@ const Users = () => {
                                         </td>
                                         <td className="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-300 font-medium">
                                             @{user.username}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-zinc-600 dark:text-zinc-300 font-medium">
+                                            {user.branchId && typeof user.branchId === 'object' ? (
+                                                <span className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400">
+                                                    <HiOutlineOfficeBuilding className="w-3.5 h-3.5" />
+                                                    {user.branchId.name}
+                                                </span>
+                                            ) : (
+                                                <span className="text-xs text-zinc-400 dark:text-zinc-500">Tizim bo'yicha</span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold border ${getRoleBadgeStyle(user.role)}`}>
@@ -246,7 +265,7 @@ const Users = () => {
                                     type="text"
                                     value={form.fullName}
                                     onChange={e => setForm({ ...form, fullName: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
+                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
                                     placeholder="Masalan: Sardor Rahimov"
                                     required
                                 />
@@ -262,7 +281,7 @@ const Users = () => {
                                     type="text"
                                     value={form.username}
                                     onChange={e => setForm({ ...form, username: e.target.value })}
-                                    className="w-full pl-8 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
+                                    className="w-full pl-8 pr-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
                                     placeholder="sardor_r"
                                     required
                                 />
@@ -278,7 +297,7 @@ const Users = () => {
                                     type="password"
                                     value={form.password}
                                     onChange={e => setForm({ ...form, password: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
+                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
                                     placeholder={selectedUser ? "••••••••" : "Kamida 6 ta belgi"}
                                     required={!selectedUser}
                                 />
@@ -292,17 +311,36 @@ const Users = () => {
                                 <select
                                     value={form.role}
                                     onChange={e => setForm({ ...form, role: e.target.value })}
-                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white appearance-none"
+                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white appearance-none"
                                     required
                                 >
                                     <option value="admin">Admin</option>
                                     <option value="teacher">O'qituvchi</option>
                                     <option value="accountant">Hisobchi</option>
-                                    <option value="superadmin">Super Admin</option>
+                                    {currentUser?.role === 'superadmin' && <option value="superadmin">Super Admin</option>}
                                 </select>
                                 <HiOutlineShieldCheck className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 w-4.5 h-4.5 pointer-events-none" />
                             </div>
                         </div>
+
+                        {currentUser?.role === 'superadmin' && (form.role === 'admin' || form.role === 'teacher' || form.role === 'accountant') && (
+                            <div>
+                                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-2">Birlashgan filial (Branch) *</label>
+                                <div className="relative">
+                                    <select
+                                        value={form.branchId}
+                                        onChange={e => setForm({ ...form, branchId: e.target.value })}
+                                        className="w-full px-4 py-2.5 rounded-lg bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:border-[#0066FF] outline-none text-sm font-semibold text-gray-800 dark:text-white"
+                                        required
+                                    >
+                                        <option value="">Tizim bo'yicha (Barcha filiallar)</option>
+                                        {branches.map(b => (
+                                            <option key={b._id} value={b._id}>{b.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex gap-3 justify-end pt-4 border-t border-gray-100 dark:border-zinc-900/60">

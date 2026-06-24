@@ -37,6 +37,12 @@ const taskSchema = new mongoose.Schema({
         type: String,
         enum: ['active', 'completed'],
         default: 'active'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true

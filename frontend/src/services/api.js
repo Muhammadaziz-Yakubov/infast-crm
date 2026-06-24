@@ -10,12 +10,16 @@ const api = axios.create({
     }
 });
 
-// Request interceptor - token qo'shish
+// Request interceptor - token va filial qo'shish
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+        }
+        const selectedBranchId = localStorage.getItem('selectedBranchId');
+        if (selectedBranchId) {
+            config.headers['X-Branch-ID'] = selectedBranchId;
         }
         return config;
     },
@@ -221,6 +225,15 @@ export const testAPI = {
     getTestForTaking: (id) => api.get(`/tests/${id}/take`),
     submitTest: (id, data) => api.post(`/tests/${id}/submit`, data),
     getStats: () => api.get('/tests/my/stats'),
+};
+
+// Filiallar (Branches) API
+export const branchAPI = {
+    getAll: () => api.get('/branches'),
+    getOne: (id) => api.get(`/branches/${id}`),
+    create: (data) => api.post('/branches', data),
+    update: (id, data) => api.put(`/branches/${id}`, data),
+    toggleStatus: (id) => api.patch(`/branches/${id}/toggle`),
 };
 
 export default api;

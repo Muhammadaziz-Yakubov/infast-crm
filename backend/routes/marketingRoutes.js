@@ -11,11 +11,12 @@ const {
     getBroadcastLogs,
     createBroadcastLog
 } = require('../controllers/marketingController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, checkBranchAccess } = require('../middleware/auth');
 
 // Faqat admin ruxsati uchun himoyalangan yo'nalishlar
 router.use(protect);
-router.use(authorize('admin'));
+router.use(checkBranchAccess);
+router.use(authorize('superadmin', 'admin'));
 
 // Campaigns
 router.get('/campaigns', getCampaigns);

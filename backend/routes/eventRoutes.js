@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const eventController = require('../controllers/eventController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, checkBranchAccess } = require('../middleware/auth');
 
 // Public or student routes
 router.use(protect);
+router.use(checkBranchAccess);
 router.get('/upcoming', eventController.getStudentUpcomingEvents);
 router.post('/:id/register', eventController.registerForEvent);
 
 // Admin routes
-router.use(authorize('admin', 'teacher'));
+router.use(authorize('superadmin', 'admin', 'teacher'));
 router.route('/')
     .get(eventController.getEvents)
     .post(eventController.createEvent);

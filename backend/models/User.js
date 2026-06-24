@@ -15,8 +15,13 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['superadmin', 'admin', 'teacher', 'accountant'],
+        enum: ['superadmin', 'admin', 'teacher', 'accountant', 'student'],
         default: 'admin'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null
     },
 
     fullName: {

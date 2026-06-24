@@ -1,15 +1,15 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import BranchSelector from './BranchSelector';
 import {
     HiOutlineHome, HiOutlineUserGroup, HiOutlineAcademicCap, HiOutlineBookOpen,
     HiOutlineCreditCard, HiOutlineExclamationCircle, HiOutlineLogout,
     HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineCalendar, HiOutlineUserCircle,
     HiOutlineClipboardList, HiOutlineTrendingUp, HiOutlineShoppingBag,
     HiOutlineDatabase, HiOutlineShieldCheck, HiOutlineFire, HiOutlineCollection,
-    HiOutlineSpeakerphone, HiOutlineUsers
+    HiOutlineSpeakerphone, HiOutlineUsers, HiOutlineOfficeBuilding
 } from 'react-icons/hi';
-
 
 import Logo from '../infastacademy.jpg';
 
@@ -30,9 +30,7 @@ const adminMenu = [
     { path: '/market-manager', label: 'Market', icon: HiOutlineShoppingBag },
     { path: '/coin-manager', label: 'Coin Boshqaruvi', icon: HiOutlineDatabase },
     { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
-
     { path: '/settings', label: 'Sozlamalar', icon: HiOutlineShieldCheck },
-
 ];
 
 const studentMenu = [
@@ -44,10 +42,8 @@ const studentMenu = [
     { path: '/tests', label: 'Testlar', icon: HiOutlineClipboardList },
     { path: '/events', label: 'Tadbirlar', icon: HiOutlineCalendar },
     { path: '/market', label: 'Market', icon: HiOutlineShoppingBag },
-
     { path: '/leaderboard', label: 'Reyting', icon: HiOutlineTrendingUp },
     { path: '/profile', label: 'Mening profilim', icon: HiOutlineUserCircle },
-
 ];
 
 const publicMenu = [
@@ -61,14 +57,25 @@ const Sidebar = ({ isOpen, onClose }) => {
 
     let menuItems = publicMenu;
     if (user) {
-        menuItems = user.role === 'student' ? studentMenu : adminMenu;
+        if (user.role === 'student') {
+            menuItems = studentMenu;
+        } else if (user.role === 'superadmin') {
+            // Insert Filiallar route at index 2
+            menuItems = [
+                ...adminMenu.slice(0, 2),
+                { path: '/branches', label: 'Filiallar', icon: HiOutlineOfficeBuilding },
+                ...adminMenu.slice(2)
+            ];
+        } else {
+            menuItems = adminMenu;
+        }
     }
 
     return (
         <>
             {isOpen && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden" onClick={onClose} />}
             <aside className={`fixed top-0 left-0 h-full w-[240px] bg-white/80 dark:bg-[#111111]/80 backdrop-blur-xl border-r border-gray-100 dark:border-zinc-900/80 z-50 transition-transform duration-200 ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
-                <div className="p-6 pb-6 flex items-center justify-between">
+                <div className="p-6 pb-4 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg overflow-hidden border border-gray-100 dark:border-zinc-800 transition-transform duration-300">
                             <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
@@ -82,7 +89,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                         <HiOutlineX className="w-5 h-5" />
                     </button>
                 </div>
-                <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto max-h-[calc(100vh-180px)] scrollbar-none">
+
+                {/* Branch selector dropdown/badge */}
+                <BranchSelector />
+
+                <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto max-h-[calc(100vh-230px)] scrollbar-none">
                     {menuItems.map((item) => (
                         <NavLink key={item.path} to={item.path} onClick={onClose}
                             className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all duration-150 font-medium text-sm ${isActive ? 'bg-[#0066FF] text-white' : 'text-zinc-500 dark:text-zinc-400 hover:bg-gray-100/50 dark:hover:bg-zinc-800/50'}`}>

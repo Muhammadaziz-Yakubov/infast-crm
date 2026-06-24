@@ -25,7 +25,8 @@ exports.createTest = async (req, res) => {
             tugashVaqti,
             savollar,
             urinishlarSoni: urinishlarSoni || 1,
-            yaratuvchi: req.user._id
+            yaratuvchi: req.user._id,
+            branchId: req.branchId || req.user.branchId
         });
 
         // Telegram guruhlariga e'lon yuborish (fon rejimida)
@@ -51,7 +52,7 @@ exports.createTest = async (req, res) => {
 exports.getAdminTests = async (req, res) => {
     try {
         const { kurs, guruh, search } = req.query;
-        let query = {};
+        let query = { ...(req.branchFilter || {}) };
 
         if (kurs) query.kurs = kurs;
         if (guruh) query.guruhlar = guruh;
@@ -93,7 +94,7 @@ exports.getAdminTests = async (req, res) => {
 // @access  Private (Admin/Teacher)
 exports.getTest = async (req, res) => {
     try {
-        const test = await Test.findById(req.params.id)
+        const test = await Test.findOne({ _id: req.params.id, ...(req.branchFilter || {}) })
             .populate('kurs', 'nomi')
             .populate('guruhlar', 'nomi');
 
@@ -115,7 +116,7 @@ exports.getTest = async (req, res) => {
 // @access  Private (Admin/Teacher)
 exports.updateTest = async (req, res) => {
     try {
-        const test = await Test.findByIdAndUpdate(req.params.id, req.body, {
+        const test = await Test.findOneAndUpdate({ _id: req.params.id, ...(req.branchFilter || {}) }, req.body, {
             new: true,
             runValidators: true
         });
@@ -139,7 +140,7 @@ exports.updateTest = async (req, res) => {
 // @access  Private (Admin/Teacher)
 exports.deleteTest = async (req, res) => {
     try {
-        const test = await Test.findByIdAndDelete(req.params.id);
+        const test = await Test.findOneAndDelete({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!test) {
             return res.status(404).json({ success: false, message: 'Test topilmadi' });
         }
@@ -161,7 +162,7 @@ exports.deleteTest = async (req, res) => {
 // @access  Private (Admin/Teacher)
 exports.cloneTest = async (req, res) => {
     try {
-        const original = await Test.findById(req.params.id);
+        const original = await Test.findOne({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!original) {
             return res.status(404).json({ success: false, message: 'Asl test topilmadi' });
         }
@@ -181,6 +182,7 @@ exports.cloneTest = async (req, res) => {
             })),
             urinishlarSoni: original.urinishlarSoni,
             yaratuvchi: req.user._id,
+            branchId: original.branchId,
             sentNotifications: {
                 oneDayBefore: false,
                 oneHourBefore: false,
@@ -207,7 +209,7 @@ exports.cloneTest = async (req, res) => {
 // @access  Private (Admin/Teacher)
 exports.getTestResults = async (req, res) => {
     try {
-        const test = await Test.findById(req.params.id).populate('guruhlar');
+        const test = await Test.findOne({ _id: req.params.id, ...(req.branchFilter || {}) }).populate('guruhlar');
         if (!test) {
             return res.status(404).json({ success: false, message: 'Test topilmadi' });
         }
@@ -220,7 +222,8 @@ exports.getTestResults = async (req, res) => {
         // Test bog'langan guruhlardagi barcha o'quvchilarni olish
         const totalStudentsInGroups = await Student.find({
             guruh: { $in: test.guruhlar.map(g => g._id) },
-            holati: 'faol'
+            holati: 'faol',
+            ...(req.branchFilter || {})
         }).populate('guruh', 'nomi');
 
         const submittedStudentIds = results.map(r => r.student?._id.toString());
@@ -544,7 +547,8 @@ exports.getDashboardWidgets = async (req, res) => {
         const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
 
         const todayTestsCount = await Test.countDocuments({
-            boshlanishVaqti: { $gte: startOfToday, $lte: endOfToday }
+            boshlanishVaqti: { $gte: startOfToday, $lte: endOfToday },
+            ...(req.branchFilter || {})
         });
 
         // 2. Shu haftadagi testlar
@@ -556,11 +560,17 @@ exports.getDashboardWidgets = async (req, res) => {
         const endOfWeek = new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000 - 1000);
 
         const weekTestsCount = await Test.countDocuments({
-            boshlanishVaqti: { $gte: startOfWeek, $lte: endOfWeek }
+            boshlanishVaqti: { $gte: startOfWeek, $lte: endOfWeek },
+            ...(req.branchFilter || {})
         });
 
         // 3. Jami topshirilgan testlar bo'yicha o'rtacha natija (foizda)
-        const results = await TestResult.find({});
+        let resultMatch = {};
+        if (req.branchFilter && req.branchFilter.branchId) {
+            const studentIds = await Student.find(req.branchFilter).distinct('_id');
+            resultMatch.student = { $in: studentIds };
+        }
+        const results = await TestResult.find(resultMatch);
         let avgResultPercentage = 0;
         if (results.length > 0) {
             avgResultPercentage = Math.round(results.reduce((acc, r) => acc + r.percentage, 0) / results.length);
@@ -570,7 +580,8 @@ exports.getDashboardWidgets = async (req, res) => {
         const nowTime = new Date();
         const activeTests = await Test.find({
             boshlanishVaqti: { $lte: nowTime },
-            tugashVaqti: { $gte: nowTime }
+            tugashVaqti: { $gte: nowTime },
+            ...(req.branchFilter || {})
         });
 
         let totalNotSubmittedCount = 0;
@@ -579,7 +590,8 @@ exports.getDashboardWidgets = async (req, res) => {
             // Guruhlardagi jami active o'quvchilar
             const totalStudentsInGroups = await Student.countDocuments({
                 guruh: { $in: test.guruhlar },
-                holati: 'faol'
+                holati: 'faol',
+                ...(req.branchFilter || {})
             });
 
             // Topsirgan o'quvchilar

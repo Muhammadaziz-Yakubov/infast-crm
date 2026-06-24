@@ -30,6 +30,11 @@ const campaignSchema = new mongoose.Schema({
     result: {
         type: String,
         default: '-'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        required: false
     }
 }, {
     timestamps: true

@@ -45,6 +45,12 @@ const eventSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true,

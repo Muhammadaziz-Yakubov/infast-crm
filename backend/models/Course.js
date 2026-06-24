@@ -25,6 +25,12 @@ const courseSchema = new mongoose.Schema({
         type: String,
         enum: ['faol', 'nofaol'],
         default: 'faol'
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true

@@ -6,11 +6,12 @@ const {
     getPublicProfile, bulkDeleteStudents, bulkMoveGroup, getLeaderboard, resetPaymentsStatus,
     sendDebtSMS, toggleBlock
 } = require('../controllers/studentController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, checkBranchAccess } = require('../middleware/auth');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.use(protect);
+router.use(checkBranchAccess);
 
 router.get('/me/dashboard', getMyData);
 router.put('/me/update', updateMe);

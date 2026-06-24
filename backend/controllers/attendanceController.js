@@ -17,12 +17,13 @@ exports.getAttendance = async (req, res) => {
 
         let attendance = await Attendance.findOne({
             guruh: groupId,
-            sana: { $gte: startOfDay, $lte: endOfDay }
+            sana: { $gte: startOfDay, $lte: endOfDay },
+            ...(req.branchFilter || {})
         }).populate('oquvchilar.oquvchi', 'ism telefon');
 
         // Agar davomat hali qilinmagan bo'lsa, guruhdagi o'quvchilar ro'yxatini qaytarish
         if (!attendance) {
-            const students = await Student.find({ guruh: groupId, holati: 'faol' }).sort({ ism: 1 });
+            const students = await Student.find({ guruh: groupId, holati: 'faol', ...(req.branchFilter || {}) }).sort({ ism: 1 });
             return res.json({
                 success: true,
                 isNew: true,
@@ -53,7 +54,7 @@ exports.saveAttendance = async (req, res) => {
     try {
         const { guruh, sana, oquvchilar, izoh } = req.body;
 
-        const groupObj = await require('../models/Group').findById(guruh);
+        const groupObj = await require('../models/Group').findOne({ _id: guruh, ...(req.branchFilter || {}) });
         if (!groupObj) {
             return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
         }
@@ -85,7 +86,8 @@ exports.saveAttendance = async (req, res) => {
 
         let attendance = await Attendance.findOne({
             guruh,
-            sana: { $gte: startOfDay, $lte: endOfDay }
+            sana: { $gte: startOfDay, $lte: endOfDay },
+            ...(req.branchFilter || {})
         });
 
         if (attendance) {
@@ -145,7 +147,8 @@ exports.saveAttendance = async (req, res) => {
                 guruh,
                 sana: startOfDay,
                 oquvchilar: processedOquvchilar,
-                izoh
+                izoh,
+                branchId: req.branchId || req.user.branchId
             });
 
             // Coinlarni qo'shish
@@ -244,7 +247,8 @@ exports.scanAttendance = async (req, res) => {
                         ball: isScanningStudent ? 100 : 0,
                         coinAmount: isScanningStudent ? 100 : -50
                     };
-                })
+                }),
+                branchId: student.branchId
             });
         } else {
             // Mavjud o'quvchini "Keldi" deb belgilash
@@ -311,7 +315,8 @@ exports.sendAttendanceReport = async (req, res) => {
 
         const attendance = await Attendance.findOne({
             guruh: groupId,
-            sana: { $gte: startOfDay, $lte: endOfDay }
+            sana: { $gte: startOfDay, $lte: endOfDay },
+            ...(req.branchFilter || {})
         }).populate('oquvchilar.oquvchi', 'ism');
 
         if (!attendance) {

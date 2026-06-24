@@ -15,12 +15,14 @@ exports.manualCoinUpdate = async (req, res) => {
 
         let students = [];
 
+        let filter = { role: 'student', ...(req.branchFilter || {}) };
+
         if (targetType === 'all') {
-            students = await Student.find({ role: 'student' });
+            students = await Student.find(filter);
         } else if (targetType === 'group') {
-            students = await Student.find({ guruh: targetId, role: 'student' });
+            students = await Student.find({ guruh: targetId, ...filter });
         } else if (targetType === 'students') {
-            students = await Student.find({ _id: { $in: targetId }, role: 'student' });
+            students = await Student.find({ _id: { $in: targetId }, ...filter });
         }
 
         if (students.length === 0) {
@@ -28,7 +30,6 @@ exports.manualCoinUpdate = async (req, res) => {
         }
 
         // Barcha tanlangan o'quvchilarga coinlarni yangilash
-        // Logika: ketma-ket bajarish (promise all ishlatsa bo'ladi, lekin bazani urib qo'ymaslik uchun ehtiyotkorlik bilan)
         const updatePromises = students.map(s => updateCoins(s._id, parseInt(amount), reason));
         await Promise.all(updatePromises);
 
@@ -44,7 +45,13 @@ exports.manualCoinUpdate = async (req, res) => {
 exports.getGlobalLogs = async (req, res) => {
     try {
         const CoinLog = require('../models/CoinLog');
-        const logs = await CoinLog.find()
+        let matchFilter = {};
+        if (req.branchFilter && req.branchFilter.branchId) {
+            const studentIds = await Student.find(req.branchFilter).distinct('_id');
+            matchFilter.student = { $in: studentIds };
+        }
+
+        const logs = await CoinLog.find(matchFilter)
             .populate('student', 'ism familya phone')
             .sort('-sana')
             .limit(100);

@@ -45,7 +45,8 @@ exports.createTask = async (req, res) => {
             deadline,
             group: groupId,
             image: imageUrl,
-            creator: req.user._id
+            creator: req.user._id,
+            branchId: req.branchId || req.user.branchId
         });
 
         // Telegram guruh chatiga xabar yuborish
@@ -72,6 +73,11 @@ exports.createTask = async (req, res) => {
 // Get Submissions for a Task
 exports.getTaskSubmissions = async (req, res) => {
     try {
+        const task = await Task.findOne({ _id: req.params.taskId, ...(req.branchFilter || {}) });
+        if (!task) {
+            return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
+        }
+
         const submissions = await Submission.find({ task: req.params.taskId })
             .populate('student', 'ism telefon username')
             .sort('-submittedAt');
@@ -95,6 +101,11 @@ exports.gradeSubmission = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Topshiriq topilmadi' });
         }
 
+        const task = await Task.findOne({ _id: submission.task, ...(req.branchFilter || {}) });
+        if (!task) {
+            return res.status(403).json({ success: false, message: 'Ruxsat etilmagan' });
+        }
+
         submission.score = score;
         submission.status = 'graded';
         await submission.save();
@@ -113,7 +124,7 @@ exports.gradeSubmission = async (req, res) => {
 // Complete/Archive Task
 exports.completeTask = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
+        const task = await Task.findOne({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!task) {
             return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
         }
@@ -133,7 +144,7 @@ exports.completeTask = async (req, res) => {
 // Reopen Task
 exports.reopenTask = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
+        const task = await Task.findOne({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!task) {
             return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
         }
@@ -153,7 +164,7 @@ exports.reopenTask = async (req, res) => {
 // Delete Task
 exports.deleteTask = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
+        const task = await Task.findOne({ _id: req.params.id, ...(req.branchFilter || {}) });
         if (!task) {
             return res.status(404).json({ success: false, message: 'Vazifa topilmadi' });
         }
@@ -195,8 +206,8 @@ exports.getMyTasks = async (req, res) => {
                 };
             });
         } else {
-            // Admin sees all tasks
-            tasks = await Task.find().populate('group', 'nomi').sort('-createdAt');
+            // Admin/Superadmin sees tasks for their branch (or all if superadmin and none selected)
+            tasks = await Task.find(req.branchFilter || {}).populate('group', 'nomi').sort('-createdAt');
             console.log("Admin tasks found:", tasks.length);
         }
 

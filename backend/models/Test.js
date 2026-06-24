@@ -72,6 +72,12 @@ const testSchema = new mongoose.Schema({
         tenMinutesBefore: { type: Boolean, default: false },
         started: { type: Boolean, default: false },
         ended: { type: Boolean, default: false }
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true

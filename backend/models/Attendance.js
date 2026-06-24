@@ -36,6 +36,12 @@ const attendanceSchema = new mongoose.Schema({
         type: String,
         trim: true,
         default: ''
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true

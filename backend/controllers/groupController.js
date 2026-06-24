@@ -6,7 +6,9 @@ const Course = require('../models/Course');
 // @route   GET /api/groups
 exports.getGroups = async (req, res) => {
     try {
-        const groups = await Group.find()
+        const query = { ...(req.branchFilter || {}) };
+        
+        const groups = await Group.find(query)
             .populate('kurs', 'nomi narx')
             .populate('oquvchilarSoni')
             .sort({ createdAt: -1 });
@@ -24,7 +26,8 @@ exports.getGroups = async (req, res) => {
 // @route   GET /api/groups/:id
 exports.getGroup = async (req, res) => {
     try {
-        const group = await Group.findById(req.params.id)
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const group = await Group.findOne(query)
             .populate('kurs', 'nomi narx davomiyligi')
             .populate('oquvchilarSoni');
 
@@ -32,8 +35,8 @@ exports.getGroup = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
         }
 
-        // Guruh o'quvchilarini ham olish
-        const students = await Student.find({ guruh: req.params.id })
+        // Guruh o'quvchilarini ham olish (faqat shu filial o'quvchilari)
+        const students = await Student.find({ guruh: req.params.id, ...(req.branchFilter || {}) })
             .populate('kurs', 'nomi')
             .sort({ ism: 1 });
 
@@ -53,7 +56,17 @@ exports.getGroup = async (req, res) => {
 // @route   POST /api/groups
 exports.createGroup = async (req, res) => {
     try {
-        const group = await Group.create(req.body);
+        // Filial ID sini biriktirish
+        const groupData = {
+            ...req.body,
+            branchId: req.branchId || req.body.branchId || req.user.branchId
+        };
+
+        if (!groupData.branchId && req.user.role !== 'superadmin') {
+            return res.status(400).json({ success: false, message: 'Filial tanlanishi shart' });
+        }
+
+        const group = await Group.create(groupData);
         const populated = await Group.findById(group._id)
             .populate('kurs', 'nomi narx');
 
@@ -71,12 +84,13 @@ exports.createGroup = async (req, res) => {
 // @route   PUT /api/groups/:id
 exports.updateGroup = async (req, res) => {
     try {
-        const oldGroup = await Group.findById(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const oldGroup = await Group.findOne(query);
         if (!oldGroup) {
             return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
         }
 
-        const group = await Group.findByIdAndUpdate(req.params.id, req.body, {
+        const group = await Group.findOneAndUpdate(query, req.body, {
             new: true,
             runValidators: true
         }).populate('kurs', 'nomi narx');
@@ -86,19 +100,19 @@ exports.updateGroup = async (req, res) => {
         const curriculumOzgardi = req.body.curriculumKalit && req.body.curriculumKalit !== oldGroup.curriculumKalit;
 
         if (kursOzgardi || curriculumOzgardi) {
-            // 1. Progressni nolga tushirish (agar progress kiritilmagan bo'lsa)
+            // 1. Progressni dars progressiga bog'liq holatda tushirish
             if (req.body.darsProgress === undefined) {
                 group.darsProgress = 0;
                 await group.save();
             }
 
-            // 2. Agar Kurs o'zgargan bo'lsa, o'quvchilarni ham yangilash
+            // 2. Agar Kurs o'zgargan bo'lsa, o'quvchilarni ham yangilash (faqat shu filial doirasida)
             if (kursOzgardi) {
-                const newCourse = await Course.findById(req.body.kurs);
+                const newCourse = await Course.findOne({ _id: req.body.kurs, ...(req.branchFilter || {}) });
                 if (newCourse) {
-                    // 2a. Barcha o'quvchilarning kursini yangilash
+                    // 2a. Bacha o'quvchilarning kursini yangilash
                     await Student.updateMany(
-                        { guruh: group._id },
+                        { guruh: group._id, ...(req.branchFilter || {}) },
                         {
                             kurs: newCourse._id,
                             tolovHolati: 'tolanmagan'
@@ -107,7 +121,7 @@ exports.updateGroup = async (req, res) => {
                     
                     // 2b. FAQAT maxsus narxi yo'q o'quvchilar narxini yangilash
                     await Student.updateMany(
-                        { guruh: group._id, maxsusNarx: { $ne: true } },
+                        { guruh: group._id, maxsusNarx: { $ne: true }, ...(req.branchFilter || {}) },
                         { oylikTolov: newCourse.narx }
                     );
                 }
@@ -128,7 +142,8 @@ exports.updateGroup = async (req, res) => {
 // @route   DELETE /api/groups/:id
 exports.deleteGroup = async (req, res) => {
     try {
-        const group = await Group.findByIdAndDelete(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const group = await Group.findOneAndDelete(query);
         if (!group) {
             return res.status(404).json({ success: false, message: 'Guruh topilmadi' });
         }
@@ -146,8 +161,8 @@ exports.deleteGroup = async (req, res) => {
 exports.updateGroupProgress = async (req, res) => {
     try {
         const { completedLessons, currentTopic, nextLesson } = req.body;
-
-        const group = await Group.findById(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const group = await Group.findOne(query);
 
         if (!group) {
             return res.status(404).json({ success: false, message: 'Guruh topilmadi' });

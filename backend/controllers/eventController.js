@@ -28,7 +28,7 @@ const processEventCoin = async (studentId, event, newStatus, oldStatus = null) =
 exports.getEvents = async (req, res) => {
     try {
         const { status, activeOnly } = req.query;
-        let query = {};
+        let query = { ...(req.branchFilter || {}) };
         if (status) query.status = status;
         if (activeOnly === 'true') query.isActive = true;
 
@@ -44,7 +44,11 @@ exports.getEvents = async (req, res) => {
 // @route   POST /api/events
 exports.createEvent = async (req, res) => {
     try {
-        const event = await Event.create(req.body);
+        const eventData = {
+            ...req.body,
+            branchId: req.branchId || req.body.branchId || req.user.branchId
+        };
+        const event = await Event.create(eventData);
         res.status(201).json({ success: true, message: "Tadbir muvaffaqiyatli yaratildi", data: event });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
@@ -55,7 +59,8 @@ exports.createEvent = async (req, res) => {
 // @route   PUT /api/events/:id
 exports.updateEvent = async (req, res) => {
     try {
-        const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const event = await Event.findOneAndUpdate(query, req.body, { new: true, runValidators: true });
         if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
         res.json({ success: true, message: "Tadbir muvaffaqiyatli yangilandi", data: event });
     } catch (error) {
@@ -67,7 +72,8 @@ exports.updateEvent = async (req, res) => {
 // @route   DELETE /api/events/:id
 exports.deleteEvent = async (req, res) => {
     try {
-        const event = await Event.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true });
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const event = await Event.findOneAndUpdate(query, { isActive: false }, { new: true });
         if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
         res.json({ success: true, message: "Tadbir arxivlandi" });
     } catch (error) {
@@ -79,7 +85,8 @@ exports.deleteEvent = async (req, res) => {
 // @route   GET /api/events/:id
 exports.getEvent = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id).populate('registrationsCount');
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const event = await Event.findOne(query).populate('registrationsCount');
         if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
         res.json({ success: true, data: event });
     } catch (error) {
@@ -91,7 +98,8 @@ exports.getEvent = async (req, res) => {
 // @route   POST /api/events/:id/register
 exports.registerForEvent = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const event = await Event.findOne(query);
         if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
         if (!event.isActive || event.status !== 'UPCOMING') {
             return res.status(400).json({ success: false, message: "Bu tadbirga yozilish imkoni yo'q" });
@@ -122,7 +130,8 @@ exports.saveAttendance = async (req, res) => {
     session.startTransaction();
     try {
         const { attendanceData } = req.body; // Array of { studentId, status }
-        const event = await Event.findById(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const event = await Event.findOne(query);
         if (!event) throw new Error("Tadbir topilmadi");
 
         for (const data of attendanceData) {
@@ -165,6 +174,10 @@ exports.saveAttendance = async (req, res) => {
 exports.getEventAnalytics = async (req, res) => {
     try {
         const eventId = req.params.id;
+        const query = { _id: eventId, ...(req.branchFilter || {}) };
+        const event = await Event.findOne(query);
+        if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
+
         const registrations = await EventRegistration.find({ event: eventId });
         
         const stats = {
@@ -193,7 +206,8 @@ exports.getStudentUpcomingEvents = async (req, res) => {
     try {
         const events = await Event.find({
             isActive: true,
-            status: { $in: ['UPCOMING', 'ONGOING'] }
+            status: { $in: ['UPCOMING', 'ONGOING'] },
+            ...(req.branchFilter || {})
         }).sort({ startDate: 1 });
 
         // Check which ones student is registered for
@@ -216,7 +230,12 @@ exports.getStudentUpcomingEvents = async (req, res) => {
 // @route   GET /api/events/:id/registrations
 exports.getEventRegistrations = async (req, res) => {
     try {
-        const registrations = await EventRegistration.find({ event: req.params.id })
+        const eventId = req.params.id;
+        const query = { _id: eventId, ...(req.branchFilter || {}) };
+        const event = await Event.findOne(query);
+        if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
+
+        const registrations = await EventRegistration.find({ event: eventId })
             .populate('student', 'ism username guruh telefon')
             .populate({
                 path: 'student',
@@ -232,7 +251,8 @@ exports.getEventRegistrations = async (req, res) => {
 // @route   POST /api/events/:id/attendance/auto-absent
 exports.autoMarkAbsents = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id);
+        const query = { _id: req.params.id, ...(req.branchFilter || {}) };
+        const event = await Event.findOne(query);
         if (!event) return res.status(404).json({ success: false, message: "Tadbir topilmadi" });
 
         const registrations = await EventRegistration.find({ 

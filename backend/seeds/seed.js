@@ -15,14 +15,18 @@ const seedData = async () => {
             await User.create({
                 username: 'Muhammadaziz',
                 password: 'Mirzajonovna',
-                role: 'admin',
-                fullName: 'Muhammadaziz (Admin)'
+                role: 'superadmin',
+                fullName: 'Muhammadaziz (Superadmin)'
             });
-            console.log('✅ Admin foydalanuvchi yaratildi');
+            console.log('✅ Superadmin foydalanuvchi yaratildi');
             console.log('   Login: Muhammadaziz');
             console.log('   Parol: Mirzajonovna');
         } else {
-            console.log('ℹ️ Admin foydalanuvchi allaqachon mavjud');
+            // Update existing user to superadmin just in case
+            existingUser.role = 'superadmin';
+            existingUser.fullName = 'Muhammadaziz (Superadmin)';
+            await existingUser.save();
+            console.log('ℹ️ Admin foydalanuvchi superadmin roliga o\'tkazildi');
         }
 
 

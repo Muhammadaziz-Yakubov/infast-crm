@@ -34,6 +34,12 @@ const leadSchema = new mongoose.Schema({
     notes: {
         type: String,
         trim: true
+    },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        default: null,
+        index: true
     }
 }, {
     timestamps: true
