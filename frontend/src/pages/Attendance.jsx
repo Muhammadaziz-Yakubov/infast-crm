@@ -59,53 +59,59 @@ const Attendance = () => {
         }
     };
 
-    const handleToggle = (studentId, status) => {
-        setAttendanceData(prev => ({
-            ...prev,
-            oquvchilar: prev.oquvchilar.map(item =>
-                item.oquvchi._id === studentId ? { ...item, keldi: status, ball: status ? (item.ball || 100) : 0 } : item
-            )
-        }));
-    };
-
-    const handleBallChange = (studentId, ball) => {
-        const value = Math.min(100, Math.max(0, Number(ball)));
-        setAttendanceData(prev => ({
-            ...prev,
-            oquvchilar: prev.oquvchilar.map(item =>
-                item.oquvchi._id === studentId ? { ...item, ball: value } : item
-            )
-        }));
-    };
-
-    const handleMarkAll = (status) => {
-        setAttendanceData(prev => ({
-            ...prev,
-            oquvchilar: prev.oquvchilar.map(item => ({ ...item, keldi: status }))
-        }));
-        toast.success(status ? "Barcha o'quvchilar 'Keldi' deb belgilandi" : "Barcha o'quvchilar 'Kelmadi' deb belgilandi");
-    };
-
-    const handleSave = async () => {
+    const saveAttendanceDirectly = async (oquvchilarList, currentIzoh) => {
         try {
             setSaving(true);
             const payload = {
                 guruh: selectedGroup,
                 sana: selectedDate,
-                oquvchilar: attendanceData.oquvchilar.map(item => ({
+                oquvchilar: oquvchilarList.map(item => ({
                     oquvchi: item.oquvchi._id,
                     keldi: item.keldi,
-                    ball: item.ball || 0
+                    ball: item.keldi ? 100 : 0
                 })),
-                izoh
+                izoh: currentIzoh
             };
             await attendanceAPI.save(payload);
-            toast.success("Davomat saqlandi");
-            fetchAttendance();
         } catch (err) {
-            toast.error(err.response?.data?.message || "Saqlashda xatolik");
+            toast.error(err.response?.data?.message || "Avtomatik saqlashda xatolik");
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleToggle = async (studentId, status) => {
+        const updatedOquvchilar = attendanceData.oquvchilar.map(item =>
+            item.oquvchi._id === studentId ? { ...item, keldi: status, ball: status ? 100 : 0 } : item
+        );
+
+        setAttendanceData(prev => ({
+            ...prev,
+            oquvchilar: updatedOquvchilar
+        }));
+
+        await saveAttendanceDirectly(updatedOquvchilar, izoh);
+    };
+
+    const handleMarkAll = async (status) => {
+        const updatedOquvchilar = attendanceData.oquvchilar.map(item => ({
+            ...item,
+            keldi: status,
+            ball: status ? 100 : 0
+        }));
+
+        setAttendanceData(prev => ({
+            ...prev,
+            oquvchilar: updatedOquvchilar
+        }));
+
+        await saveAttendanceDirectly(updatedOquvchilar, izoh);
+        toast.success(status ? "Barcha o'quvchilar belgilandi" : "Barcha o'quvchilar kelmagan deb belgilandi");
+    };
+
+    const handleIzohBlur = async () => {
+        if (attendanceData) {
+            await saveAttendanceDirectly(attendanceData.oquvchilar, izoh);
         }
     };
 
@@ -217,19 +223,20 @@ const Attendance = () => {
                             </div>
                         </div>
 
-                        {/* Save Button */}
-                        <button
-                            onClick={handleSave}
-                            disabled={saving}
-                            className="w-full btn-primary flex items-center justify-center gap-2 py-3"
-                        >
+                        {/* Auto-save Status Indicator */}
+                        <div className="bg-white dark:bg-[#111111] rounded-xl p-4 border border-gray-100 dark:border-zinc-900/60 flex items-center justify-center gap-2.5">
                             {saving ? (
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                <>
+                                    <div className="w-4 h-4 border-2 border-[#0066FF] border-t-transparent rounded-full animate-spin" />
+                                    <span className="text-xs font-semibold text-zinc-550 dark:text-zinc-400">Avtomatik saqlanmoqda...</span>
+                                </>
                             ) : (
-                                <HiOutlineSave className="w-5 h-5" />
+                                <>
+                                    <HiOutlineCheckCircle className="w-5 h-5 text-[#00C853]" />
+                                    <span className="text-xs font-semibold text-zinc-550 dark:text-zinc-400">O'zgarishlar saqlandi</span>
+                                </>
                             )}
-                            <span className="text-sm font-semibold">{saving ? 'Saqlanmoqda...' : 'Saqlash va Tasdiqlash'}</span>
-                        </button>
+                        </div>
 
                         {/* Telegram Report Button */}
                         <button
@@ -267,14 +274,18 @@ const Attendance = () => {
                                         <div className="flex items-center gap-3">
                                             <div className="relative">
                                                 <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold text-sm border uppercase ${item.keldi
-                                                    ? 'bg-[#0066FF] border-[#0066FF]/20'
-                                                    : 'bg-zinc-400 border-zinc-500 grayscale'
+                                                    ? 'bg-[#00C853]/10 border-[#00C853]/20 text-[#00C853]'
+                                                    : 'bg-[#FF3B30]/10 border-[#FF3B30]/20 text-[#FF3B30]'
                                                     }`}>
                                                     {item.oquvchi.ism?.charAt(0)}
                                                 </div>
-                                                {item.keldi && (
+                                                {item.keldi ? (
                                                     <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#00C853] border border-white dark:border-zinc-950 rounded-full flex items-center justify-center shadow-sm">
                                                         <HiOutlineCheck className="w-2.5 h-2.5 text-white" />
+                                                    </div>
+                                                ) : (
+                                                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#FF3B30] border border-white dark:border-zinc-950 rounded-full flex items-center justify-center shadow-sm">
+                                                        <HiOutlineX className="w-2.5 h-2.5 text-white" />
                                                     </div>
                                                 )}
                                             </div>
@@ -284,7 +295,9 @@ const Attendance = () => {
                                                     {item.oquvchi.ism}
                                                 </h4>
                                                 <div className="flex items-center gap-2 mt-0.5 text-[10px] text-zinc-400">
-                                                    <span>{item.keldi ? 'Kelgan' : 'Kelmadi'}</span>
+                                                    <span className={item.keldi ? 'text-[#00C853]' : 'text-[#FF3B30]'}>
+                                                        {item.keldi ? '✓' : '✗'}
+                                                    </span>
                                                     <span>•</span>
                                                     <span>{item.oquvchi.telefon}</span>
                                                 </div>
@@ -292,42 +305,26 @@ const Attendance = () => {
                                         </div>
 
                                         <div className="flex items-center justify-between sm:justify-end gap-4">
-                                            {item.keldi && (
-                                                <div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-900 p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-850">
-                                                    <div className="flex flex-col items-center">
-                                                        <span className="text-[9px] text-zinc-400 font-medium">BALL</span>
-                                                        <span className="text-xs font-bold text-gray-900 dark:text-white leading-none mt-0.5">{item.ball || 0}</span>
-                                                    </div>
-                                                    <input
-                                                        type="number"
-                                                        value={item.ball || ''}
-                                                        onChange={(e) => handleBallChange(item.oquvchi._id, e.target.value)}
-                                                        placeholder="0"
-                                                        className="w-12 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 outline-none rounded px-1.5 py-1 text-center font-semibold text-xs focus:border-[#0066FF] transition-all"
-                                                        max="100"
-                                                        min="0"
-                                                    />
-                                                </div>
-                                            )}
-
                                             <div className="flex items-center p-0.5 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-850">
                                                 <button
                                                     onClick={() => handleToggle(item.oquvchi._id, true)}
-                                                    className={`px-3 py-1.5 rounded text-[10px] font-semibold transition-all ${item.keldi
+                                                    className={`p-2 rounded transition-all ${item.keldi
                                                         ? 'bg-white dark:bg-zinc-800 text-[#00C853] shadow-sm border border-zinc-200 dark:border-zinc-700'
-                                                        : 'text-zinc-400 hover:text-zinc-600'
+                                                        : 'text-zinc-400 hover:text-[#00C853]'
                                                     }`}
+                                                    title="Keldi"
                                                 >
-                                                    KELDI
+                                                    <HiOutlineCheck className="w-5 h-5" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleToggle(item.oquvchi._id, false)}
-                                                    className={`px-3 py-1.5 rounded text-[10px] font-semibold transition-all ${!item.keldi
+                                                    className={`p-2 rounded transition-all ${!item.keldi
                                                         ? 'bg-white dark:bg-zinc-800 text-[#FF3B30] shadow-sm border border-zinc-200 dark:border-zinc-700'
-                                                        : 'text-zinc-400 hover:text-zinc-600'
+                                                        : 'text-zinc-400 hover:text-[#FF3B30]'
                                                     }`}
+                                                    title="Kelmadi"
                                                 >
-                                                    KELMADI
+                                                    <HiOutlineX className="w-5 h-5" />
                                                 </button>
                                             </div>
                                         </div>
@@ -344,6 +341,7 @@ const Attendance = () => {
                                 <textarea
                                     value={izoh}
                                     onChange={(e) => setIzoh(e.target.value)}
+                                    onBlur={handleIzohBlur}
                                     className="w-full min-h-[80px] p-3 rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-800 dark:text-white placeholder-gray-400 focus:border-[#0066FF] transition-all outline-none resize-none text-xs"
                                     placeholder="Darsda o'tilgan mavzular, sababli darsga kelmaganlar yoki boshqa muhim eslatmalar..."
                                 />
