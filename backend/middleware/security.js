@@ -21,20 +21,20 @@ const setupSecurity = (app) => {
     // Rate limiting
     const limiter = rateLimit({
         windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100, // limit each IP to 100 requests per windowMs
+        max: 2000, // limit each IP to 2000 requests per windowMs (to support classroom labs with single IP)
         message: 'Juda ko\'p so\'rov. Iltimos 15 daqiqadan keyin urinib ko\'ring.'
     });
 
     // Apply limiter to all requests under /api
     app.use('/api', limiter);
 
-    // Specific limiters for auth
+    // Specific limiters for login
     const authLimiter = rateLimit({
-        windowMs: 60 * 60 * 1000, // 1 hour
-        max: 20, // 20 requests per hour for login/register
-        message: 'Siz juda ko\'p urinishlar qildingiz. Bir soatdan keyin urinib ko\'ring.'
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 300, // limit login attempts
+        message: 'Siz juda ko\'p urinishlar qildingiz. Iltimos birozdan keyin qayta urinib ko\'ring.'
     });
-    app.use('/api/auth', authLimiter);
+    app.use('/api/auth/login', authLimiter);
 };
 
 module.exports = setupSecurity;
