@@ -10,11 +10,12 @@ import {
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 
-const toLocalDatetimeValue = (dateStr) => {
+const toTashkentDatetimeValue = (dateStr) => {
     if (!dateStr) return '';
     const d = new Date(dateStr);
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+    // Tashkent is UTC+5, so we add 5 hours to UTC time
+    const tashkentTime = new Date(d.getTime() + (5 * 60 * 60 * 1000));
+    return tashkentTime.toISOString().slice(0, 16);
 };
 
 const Events = () => {
@@ -63,8 +64,8 @@ const Events = () => {
             description: event.description,
             bannerUrl: event.bannerUrl || '',
             location: event.location,
-            startDate: toLocalDatetimeValue(event.startDate),
-            endDate: event.endDate ? toLocalDatetimeValue(event.endDate) : '',
+            startDate: toTashkentDatetimeValue(event.startDate),
+            endDate: event.endDate ? toTashkentDatetimeValue(event.endDate) : '',
             maxParticipants: event.maxParticipants || '',
             coinReward: event.coinReward,
             coinPenalty: event.coinPenalty,
@@ -79,8 +80,8 @@ const Events = () => {
         
         const submitData = {
             ...form,
-            startDate: form.startDate ? new Date(form.startDate).toISOString() : '',
-            endDate: form.endDate ? new Date(form.endDate).toISOString() : ''
+            startDate: form.startDate ? new Date(form.startDate + "+05:00").toISOString() : '',
+            endDate: form.endDate ? new Date(form.endDate + "+05:00").toISOString() : ''
         };
 
         try {

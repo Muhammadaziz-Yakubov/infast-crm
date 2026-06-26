@@ -186,8 +186,8 @@ const AdminTests = () => {
         setModalMode('edit');
         setEditingTestId(test._id);
         
-        const start = test.boshlanishVaqti ? toLocalDatetimeValue(test.boshlanishVaqti) : '';
-        const end = test.tugashVaqti ? toLocalDatetimeValue(test.tugashVaqti) : '';
+        const start = test.boshlanishVaqti ? toTashkentDatetimeValue(test.boshlanishVaqti) : '';
+        const end = test.tugashVaqti ? toTashkentDatetimeValue(test.tugashVaqti) : '';
 
         setForm({
             nomi: test.nomi,
@@ -228,8 +228,8 @@ const AdminTests = () => {
 
         const submitData = {
             ...form,
-            boshlanishVaqti: form.boshlanishVaqti ? new Date(form.boshlanishVaqti).toISOString() : '',
-            tugashVaqti: form.tugashVaqti ? new Date(form.tugashVaqti).toISOString() : ''
+            boshlanishVaqti: form.boshlanishVaqti ? new Date(form.boshlanishVaqti + "+05:00").toISOString() : '',
+            tugashVaqti: form.tugashVaqti ? new Date(form.tugashVaqti + "+05:00").toISOString() : ''
         };
 
         try {
