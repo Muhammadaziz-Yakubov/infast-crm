@@ -26,7 +26,7 @@ const StudentTests = () => {
 
     useEffect(() => {
         fetchStudentTests();
-    }, []);
+    }, [activeTab]);
 
     const fetchStudentTests = async () => {
         try {
@@ -325,9 +325,18 @@ const StudentTests = () => {
 
     return (
         <div className="space-y-6 animate-fade-in max-w-4xl mx-auto pb-10">
-            <div>
-                <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Mening testlarim</h1>
-                <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">Bilimingizni tekshiring, test topshiring va o'zlashtirishni nazorat qiling</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-semibold text-[#0A0A0A] dark:text-[#F5F5F5] tracking-tight">Mening testlarim</h1>
+                    <p className="text-sm text-[#6B6B6B] dark:text-[#8A8A8A] mt-1 font-medium">Bilimingizni tekshiring, test topshiring va o'zlashtirishni nazorat qiling</p>
+                </div>
+                <button
+                    onClick={fetchStudentTests}
+                    className="self-end sm:self-auto px-3.5 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-650 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all flex items-center gap-1.5"
+                >
+                    <span>Yangilash</span>
+                    <span>🔄</span>
+                </button>
             </div>
 
             {/* Tabs */}
