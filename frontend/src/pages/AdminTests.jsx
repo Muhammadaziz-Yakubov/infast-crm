@@ -9,11 +9,13 @@ import {
 } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
-const toLocalDatetimeValue = (dateStr) => {
+const toTashkentDatetimeValue = (dateStr) => {
     if (!dateStr) return '';
     const d = new Date(dateStr);
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+    if (isNaN(d.getTime())) return '';
+    // Tashkent is UTC+5, so we add 5 hours to UTC time
+    const tashkentTime = new Date(d.getTime() + (5 * 60 * 60 * 1000));
+    return tashkentTime.toISOString().slice(0, 16);
 };
 
 const AdminTests = () => {
