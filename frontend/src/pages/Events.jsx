@@ -10,6 +10,13 @@ import {
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 
+const toLocalDatetimeValue = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+};
+
 const Events = () => {
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
@@ -56,8 +63,8 @@ const Events = () => {
             description: event.description,
             bannerUrl: event.bannerUrl || '',
             location: event.location,
-            startDate: new Date(event.startDate).toISOString().slice(0, 16),
-            endDate: event.endDate ? new Date(event.endDate).toISOString().slice(0, 16) : '',
+            startDate: toLocalDatetimeValue(event.startDate),
+            endDate: event.endDate ? toLocalDatetimeValue(event.endDate) : '',
             maxParticipants: event.maxParticipants || '',
             coinReward: event.coinReward,
             coinPenalty: event.coinPenalty,
@@ -69,12 +76,19 @@ const Events = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        const submitData = {
+            ...form,
+            startDate: form.startDate ? new Date(form.startDate).toISOString() : '',
+            endDate: form.endDate ? new Date(form.endDate).toISOString() : ''
+        };
+
         try {
             if (selectedEvent) {
-                await eventAPI.update(selectedEvent._id, form);
+                await eventAPI.update(selectedEvent._id, submitData);
                 toast.success("Tadbir yangilandi");
             } else {
-                await eventAPI.create(form);
+                await eventAPI.create(submitData);
                 toast.success("Tadbir yaratildi");
             }
             setModalOpen(false);

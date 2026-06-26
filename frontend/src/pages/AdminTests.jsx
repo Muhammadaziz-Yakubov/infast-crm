@@ -9,6 +9,13 @@ import {
 } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
+const toLocalDatetimeValue = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+};
+
 const AdminTests = () => {
     const [tests, setTests] = useState([]);
     const [courses, setCourses] = useState([]);
@@ -179,8 +186,8 @@ const AdminTests = () => {
         setModalMode('edit');
         setEditingTestId(test._id);
         
-        const start = test.boshlanishVaqti ? new Date(test.boshlanishVaqti).toISOString().substring(0, 16) : '';
-        const end = test.tugashVaqti ? new Date(test.tugashVaqti).toISOString().substring(0, 16) : '';
+        const start = test.boshlanishVaqti ? toLocalDatetimeValue(test.boshlanishVaqti) : '';
+        const end = test.tugashVaqti ? toLocalDatetimeValue(test.tugashVaqti) : '';
 
         setForm({
             nomi: test.nomi,
@@ -219,12 +226,18 @@ const AdminTests = () => {
             }
         }
 
+        const submitData = {
+            ...form,
+            boshlanishVaqti: form.boshlanishVaqti ? new Date(form.boshlanishVaqti).toISOString() : '',
+            tugashVaqti: form.tugashVaqti ? new Date(form.tugashVaqti).toISOString() : ''
+        };
+
         try {
             if (modalMode === 'create') {
-                await testAPI.create(form);
+                await testAPI.create(submitData);
                 toast.success('Test yaratildi va Telegramga yuborildi 📢');
             } else {
-                await testAPI.update(editingTestId, form);
+                await testAPI.update(editingTestId, submitData);
                 toast.success('Test muvaffaqiyatli tahrirlandi ✨');
             }
             setShowModal(false);
