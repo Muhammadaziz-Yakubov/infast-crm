@@ -49,9 +49,14 @@ const Events = () => {
 
     const openAddModal = () => {
         setSelectedEvent(null);
+        
+        const now = new Date();
+        const start = toTashkentDatetimeValue(now);
+        const end = toTashkentDatetimeValue(new Date(now.getTime() + 24 * 60 * 60 * 1000)); // Default to 24 hours later
+
         setForm({
             title: '', description: '', bannerUrl: '', location: '', 
-            startDate: '', endDate: '', maxParticipants: '', 
+            startDate: start, endDate: end, maxParticipants: '', 
             coinReward: 500, coinPenalty: 500, status: 'UPCOMING', isActive: true
         });
         setModalOpen(true);

@@ -162,13 +162,18 @@ const AdminTests = () => {
     const openCreateModal = () => {
         setModalMode('create');
         setEditingTestId(null);
+        
+        const now = new Date();
+        const start = toTashkentDatetimeValue(now);
+        const end = toTashkentDatetimeValue(new Date(now.getTime() + 24 * 60 * 60 * 1000)); // Default to 24 hours later
+
         setForm({
             nomi: '',
             kurs: courses[0]?._id || '',
             guruhlar: [],
             vaqtLimiti: 30,
-            boshlanishVaqti: '',
-            tugashVaqti: '',
+            boshlanishVaqti: start,
+            tugashVaqti: end,
             urinishlarSoni: 1,
             savollar: [
                 {
