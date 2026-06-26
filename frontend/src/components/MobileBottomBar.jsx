@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { HiOutlineHome, HiOutlineUserCircle, HiOutlineClipboardList, HiOutlineShoppingBag, HiOutlineFire } from 'react-icons/hi';
+import { HiOutlineHome, HiOutlineUserCircle, HiOutlineClipboardList, HiOutlineShoppingBag, HiOutlineClipboardCheck } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 
 const MobileBottomBar = () => {
@@ -9,7 +9,7 @@ const MobileBottomBar = () => {
     const navItems = [
         { path: '/', icon: HiOutlineHome, label: 'Asosiy' },
         { path: user ? '/tasks' : '/login', icon: HiOutlineClipboardList, label: 'Vazifa' },
-
+        { path: user ? '/tests' : '/login', icon: HiOutlineClipboardCheck, label: 'Testlar' },
         { path: user ? '/market' : '/login', icon: HiOutlineShoppingBag, label: 'Market' },
         { path: user ? '/profile' : '/login', icon: HiOutlineUserCircle, label: user ? 'Profil' : 'Kirish' },
     ];

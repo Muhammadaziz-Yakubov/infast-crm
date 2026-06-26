@@ -6,7 +6,8 @@ import {
     HiOutlineInformationCircle, HiOutlineCheckCircle, HiOutlineXCircle,
     HiOutlineClock, HiOutlineShoppingBag, HiOutlineLightningBolt,
     HiOutlineSparkles, HiOutlineLibrary, HiOutlineUserGroup,
-    HiOutlineTrendingUp, HiOutlineArrowRight, HiOutlineLocationMarker
+    HiOutlineTrendingUp, HiOutlineArrowRight, HiOutlineLocationMarker,
+    HiOutlineClipboardList, HiOutlineClipboardCheck
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
@@ -206,7 +207,7 @@ const StudentHome = () => {
                 {/* --- 5. NAVIGATION UNIVERSE --- */}
                 <div className="space-y-3">
                     <h3 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Asosiy bo'limlar</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <NavCard
                             to="/market"
                             icon={HiOutlineShoppingBag}
@@ -224,6 +225,12 @@ const StudentHome = () => {
                             icon={HiOutlineTrendingUp}
                             title="Reyting"
                             color={{ bg: 'bg-[#00C853]/5 text-[#00C853]', text: 'text-[#00C853]' }}
+                        />
+                        <NavCard
+                            to="/tests"
+                            icon={HiOutlineClipboardCheck}
+                            title="Testlar"
+                            color={{ bg: 'bg-[#FF9500]/5 text-[#FF9500]', text: 'text-[#FF9500]' }}
                         />
                     </div>
                 </div>
