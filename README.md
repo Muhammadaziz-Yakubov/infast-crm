@@ -6,7 +6,7 @@ InFast CRM — o'quv markazlarining kundalik operatsion ishlarini (talabalar baz
 
 🟢 **Hozirda 20+ o'quv markaz InFast CRM'dan foydalanmoqda.**
 
-🔗 **Live demo:** [infast-crm-beta.vercel.app](https://infast-crm-beta.vercel.app)
+🔗 **Live demo:** [infastacademy.uz](https://infastacademy.uz)
 
 ---
 
