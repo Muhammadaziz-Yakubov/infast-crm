@@ -33,7 +33,11 @@ api.interceptors.response.use(
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/login';
+            const publicPaths = ['/', '/programs', '/about', '/team', '/contact'];
+            const isPublicPage = publicPaths.includes(window.location.pathname) || window.location.pathname.startsWith('/join');
+            if (!isPublicPage && !window.location.pathname.startsWith('/login')) {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }

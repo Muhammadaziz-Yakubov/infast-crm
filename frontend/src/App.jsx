@@ -83,7 +83,7 @@ const AppContent = () => {
     return (
         <Suspense fallback={<LoadingSpinner text="Sahifa yuklanmoqda..." />}>
             <Routes>
-                <Route path="/" element={<PublicRoute><LandingHome /></PublicRoute>} />
+                <Route path="/" element={<LandingHome />} />
                 <Route path="/programs" element={<LandingPrograms />} />
                 <Route path="/about" element={<LandingAbout />} />
                 <Route path="/team" element={<LandingTeam />} />
