@@ -6,17 +6,44 @@
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="InFast CRM - O'quv markazi boshqaruv tizimi" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
   <title>InFast CRM - O'quv Markazi</title>
+
+  <!-- Yandex RTB -->
+  <script>
+    window.yaContextCb = window.yaContextCb || [];
+  </script>
+  <script
+    src="https://yandex.ru/ads/system/context.js"
+    async>
+  </script>
 </head>
 
 <body>
+
   <div id="root"></div>
   <div id="modal-root"></div>
+
+  <!-- Yandex RTB Floor Ad -->
+  <script>
+    window.yaContextCb.push(() => {
+      Ya.Context.AdvManager.render({
+        "blockId": "R-A-19758552-1",
+        "type": "floorAd",
+        "platform": "desktop"
+      });
+    });
+  </script>
+
   <script type="module" src="/src/main.jsx"></script>
+
 </body>
 
 </html>
